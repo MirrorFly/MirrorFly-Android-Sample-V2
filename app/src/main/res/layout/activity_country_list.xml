@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/white_color"
+    tools:context=".activities.CountryListActivity">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/common_toolbar" />
+
+    <com.contusfly.views.CustomRecyclerView
+        android:id="@+id/view_country_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tool_bar"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:footerDividersEnabled="true"
+        android:listSelector="@drawable/selector_settings_opt" />
+
+    <include
+        android:id="@+id/txt"
+        layout="@layout/view_empty_data" />
+
+</RelativeLayout>

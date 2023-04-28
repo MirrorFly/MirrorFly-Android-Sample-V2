@@ -1,0 +1,38 @@
+<resources>
+
+    <style name="MyTheme" parent="CustomTheme">
+        <item name="actionOverflowButtonStyle">@style/OverFlow</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="actionModeCloseDrawable">@drawable/close_startaction_mode</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="searchViewStyle">@style/searchView</item>
+    </style>
+
+    <style name="floating_action_button">
+        <item name="android:paddingTop">60dp</item>
+    </style>
+
+    <style name="searchView" parent="Widget.AppCompat.SearchView.ActionBar">
+        <item name="android:queryBackground">@color/color_transparent</item>
+        <item name="android:background">@color/color_transparent</item>
+        <item name="android:submitBackground">@color/color_transparent</item>
+        <item name="android:closeIcon">@drawable/close_search</item>
+        <item name="closeIcon">@drawable/close_search</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/corner_curved</item>
+    </style>
+
+</resources>

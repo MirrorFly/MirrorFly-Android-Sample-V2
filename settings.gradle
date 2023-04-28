@@ -1,0 +1,9 @@
+include ':app', ':sdk:imagecropper', ':sdk:pix', ':sdk:mediapicker',':sdk:biometric-auth', ':sdk:zoomimageview'
+include ':call'
+include ':app'
+rootProject.name = "UI-Kit"
+include ':sdk:cameraview'
+include ':sdk:googletranslation'
+include ':sdk:spinnerview'
+
+

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Pix</string>
+    <string name="selection_limiter_pix">Can\'t select more than %d items.</string>
+    <string name="pix_bottom_message_without_video">Drag images up for gallery</string>
+    <string name="pix_bottom_message_with_video">Hold for video, tap for photo</string>
+    <string name="pix_ok">OK</string>
+    <string name="pix_tap_to_select">Tap photo to select</string>
+    <string name="pix_selected">Selected</string>
+    <string name="pix_recent">Recent</string>
+    <string name="pix_last_month">Last Month</string>
+    <string name="pix_last_week">Last Week</string>
+  <string name="cannot_click_image_pix">Can not add more than %s images</string>
+    <string name="audio_record_permission_label">Audio record permission is needed for recording features</string>
+    <string name="ok_label">OK</string>
+</resources>

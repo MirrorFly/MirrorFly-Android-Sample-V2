@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ArchivedChatsActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/CustomToolBar"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_toolbar_title"
+            style="@style/ToolbarTitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="?android:attr/actionBarSize"
+            android:text="@string/archived_chats"
+            app:fontFamily="@font/sf_ui_display_medium" />
+
+        <ProgressBar
+            android:id="@+id/progress_spinner"
+            android:layout_width="@dimen/margin_24"
+            android:layout_height="@dimen/margin_24"
+            android:layout_gravity="end"
+            android:indeterminate="true"
+            android:theme="@style/WhiteAccent"
+            android:visibility="gone" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.contusfly.views.CustomRecyclerView
+        android:id="@+id/view_list_chats"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:footerDividersEnabled="true"
+        android:listSelector="@android:color/transparent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/no_archived_message"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/no_archived_chats"
+        android:textSize="@dimen/text_size_16"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

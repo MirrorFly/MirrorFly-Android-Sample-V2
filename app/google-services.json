@@ -1,0 +1,126 @@
+{
+  "project_info": {
+    "project_number": "719522206274",
+    "project_id": "mirrorfly-uikit",
+    "storage_bucket": "mirrorfly-uikit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719522206274:android:df54ba1969d80aeba2d3db",
+        "android_client_info": {
+          "package_name": "com.mirrorfly.uikit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "719522206274-02m46muuhlm5mhsrsk195lnn5hbjhnvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "f2e6cce5db55425b8fb5e6da0db05cd82bd76a48"
+          }
+        },
+        {
+          "client_id": "719522206274-66ac86djehicmdp84d16gtnagdqg6rh3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "f31bed22c544b5ccb71f4b366e3bb85236f82548"
+          }
+        },
+        {
+          "client_id": "719522206274-6mrsl8u9t517i368jvk9h9pjl8oeff7i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "be037b8a41f0de559b56e0d2efbb6f4605a415a4"
+          }
+        },
+        {
+          "client_id": "719522206274-dltltlss04rl634v6hbrcva9lt4sh6na.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "c96cdf893d6f4e261a40de8fcbb72c941d1b9d5f"
+          }
+        },
+        {
+          "client_id": "719522206274-h3bjb2tssuvob7jqdbr2ljh83n0ia95o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "157f705e923c9438e4f37e8f4395c3fe175a226b"
+          }
+        },
+        {
+          "client_id": "719522206274-jnajvj8h0dihbj53u9lpb69915ptuk11.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "aa51308db6f291a737a75ba30e9e30ee2c3af94f"
+          }
+        },
+        {
+          "client_id": "719522206274-lf38u1it7lnoi832u2d1ts5hm8pvmsak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "ecc03419cd9441fa8a886e1a473c4d3fcd3b3396"
+          }
+        },
+        {
+          "client_id": "719522206274-lo2h8kh3uq4eov0ouu1dv15e2055bbev.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "be081c4ac9a99e4f3df9f41bfd80634ec50b309b"
+          }
+        },
+        {
+          "client_id": "719522206274-r7o9etj59m0lcnceo1grpn47gkihto9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "da6b5443ca203b98095c59c3e2aaf8709f23865b"
+          }
+        },
+        {
+          "client_id": "719522206274-v4rtfg20du3vq7ttcnq5i5or10gll8nf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrorfly.uikit",
+            "certificate_hash": "8c2da227ebf0eba1a66a1d0283e15d6259e760d2"
+          }
+        },
+        {
+          "client_id": "719522206274-9vomc8pihmd5trrrq9bn1u36s237h888.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsDgqVCPQkReMH5BlmXGxRirPYzKgSdE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "719522206274-9vomc8pihmd5trrrq9bn1u36s237h888.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "719522206274-ha6u1m9frvtap20j75edg5e1cnssmnne.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mirrorfly.uikit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

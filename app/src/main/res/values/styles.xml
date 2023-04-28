@@ -1,0 +1,1061 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="MyTheme" parent="CustomTheme" />
+
+    <style name="ChatTheme" parent="CustomTheme" >
+        <item name="android:actionOverflowButtonStyle">@style/MyTheme.OverFlow</item>
+        <item name="android:windowBackground">@drawable/chat_background_drawable</item>
+    </style>
+
+    <style name="MyTheme.OverFlow">
+        <item name="android:src">@drawable/menu_overflow_image</item>
+
+    </style>
+
+    <style name="CustomTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="color_black">@color/color_black</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
+        <item name="actionModeCloseDrawable">@drawable/close_startaction_mode</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="searchViewStyle">@style/searchView</item>
+
+        <item name="dashboard_toolbar_text_color">@color/dashboard_toolbar_text_color</item>
+        <item name="chat_list_view_bg_color">@color/color_white</item>
+        <item name="no_message_view_bg_color">@color/color_white</item>
+        <item name="error_message_black">@color/color_error_message_black</item>
+        <item name="error_message_gray">@color/color_error_message_gray</item>
+        <item name="transparent_color">@color/color_transparent</item>
+        <item name="divider_color">@color/color_divider</item>
+        <item name="chat_list_time_color">@color/color_chat_list_time</item>
+        <item name="unread_count_bg_color">@color/colorSecondary</item>
+        <item name="circular_img_bg_color">@color/color_circular_img_bg</item>
+        <item name="chat_list_name_color">@color/color_chat_list_name</item>
+        <item name="chat_list_message_color">@color/color_chat_list_message</item>
+        <item name="chat_list_unseen_count_color">@color/color_white</item>
+        <item name="blue_color">@color/colorAccent</item>
+        <item name="white_color">@color/color_white</item>
+        <item name="contacts_list_bg_color">@color/color_white</item>
+        <item name="contact_status_color">@color/color_contact_status</item>
+        <item name="black_transparent_color">@color/color_black_transparent</item>
+        <item name="white_transparent_color">@color/color_white_transparent</item>
+        <item name="menu_text_color">@color/color_menu_text</item>
+        <item name="menu_divider_color">@color/color_menu_divider</item>
+        <item name="country_name_color">@color/color_country_name</item>
+        <item name="light_gray_color">@color/color_light_gray</item>
+        <item name="red_color">@color/color_red</item>
+        <item name="otp_gray_color">@color/color_otp_gray</item>
+        <item name="otp_text_color">@color/color_otp_text</item>
+        <item name="profile_text_color">@color/color_profile_text</item>
+        <item name="profile_values_color">@color/color_profile_values</item>
+        <item name="your_status_color">@color/color_your_status</item>
+        <item name="status_list_color">@color/color_status_list</item>
+        <item name="selected_status_color">@color/color_selected_status</item>
+        <item name="button_disabled_color">@color/color_button_disabled</item>
+        <item name="tab_text_indicator_color">@color/colorSecondary</item>
+        <item name="white_hint_color">@color/color_white_hint</item>
+        <item name="tab_text_color">@color/color_tab_text</item>
+    </style>
+
+    <style name="PreviewTheme" parent="@style/Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+<!--        <item name="android:windowNoTitle">true</item>-->
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+<!--        <item name="android:windowFullscreen">true</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="windowActionBar">false</item>-->
+    </style>
+
+    <style name="OverFlow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_overflow</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/corner_curved</item>
+    </style>
+
+    <!-- Dashboard Toolbar Style -->
+    <style name="Dashboard_ToolBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="elevation">0dp</item>
+        <item name="titleTextAppearance">@style/ToolbarTitleStyle</item>
+    </style>
+
+    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/sf_ui_display_bold</item>
+        <item name="font_name">@font/sf_ui_display_bold</item>
+        <item name="android:textColor">?attr/dashboard_toolbar_text_color</item>
+        <item name="android:textSize">@dimen/toolbar_header_size</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="CustomToolBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="elevation">0dp</item>
+        <item name="android:titleTextColor" tools:targetApi="M">?attr/dashboard_toolbar_text_color</item>
+        <item name="titleTextAppearance">@style/ToolbarTitleStyle</item>
+    </style>
+
+    <style name="ToolbarSeparatorStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?attr/menu_divider_color</item>
+    </style>
+
+    <style name="ToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:elevation" tools:targetApi="lollipop">0dp</item>
+        <item name="android:navigationIcon" tools:ignore="NewApi">
+            @drawable/ic_back
+        </item>
+        <item name="contentInsetStartWithNavigation">30dp</item>
+        <item name="android:titleTextAppearance" tools:targetApi="lollipop">
+            @style/ToolbarTitleStyle1
+        </item>
+    </style>
+
+    <style name="searchView" parent="Widget.AppCompat.SearchView.ActionBar">
+        <item name="android:queryBackground">@color/color_transparent</item>
+        <item name="android:background">@color/color_transparent</item>
+        <item name="android:submitBackground">@color/color_transparent</item>
+        <item name="android:closeIcon">@drawable/ic_close</item>
+        <item name="closeIcon">@drawable/ic_close</item>
+    </style>
+
+    <style name="ToolbarTitleStyle1" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/dashboard_toolbar_text_color</item>
+        <item name="android:textSize">@dimen/toolbar_header_size</item>
+    </style>
+
+    <style name="MyTabLayoutTextAppearance" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">?attr/tab_text_indicator_color</item>
+        <item name="tabIndicatorHeight">@dimen/margin_3</item>
+        <item name="tabBackground">@drawable/tab_background</item>
+    </style>
+
+    <style name="AllMediaTabLayoutTextAppearance" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorAccent</item>
+        <item name="tabIndicatorHeight">@dimen/margin_3</item>
+        <item name="tabTextColor">@color/text_black_dark</item>
+        <item name="tabSelectedTextColor">@color/colorAccent</item>
+        <item name="tabBackground">@color/color_white</item>
+        <item name="tabTextAppearance">@style/TabTextAppearanceTab</item>
+        <item name="tabIndicator">@drawable/tab_indicator</item>
+    </style>
+
+    <style name="TabTextAppearanceTab" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+    </style>
+
+    <style name="CustomTab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/tab_text_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+    </style>
+
+    <style name="no_messages1">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:layout_marginTop">@dimen/margin_15</item>
+        <item name="android:textColor">?attr/error_message_black</item>
+    </style>
+
+    <style name="no_messages2">
+        <item name="android:fontFamily">@font/sf_ui_display_light</item>
+        <item name="font_name">@font/sf_ui_display_light</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:layout_marginTop">@dimen/margin_15</item>
+        <item name="android:textColor">?attr/error_message_gray</item>
+    </style>
+
+    <style name="TextLightSmallGrayStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_light</item>
+        <item name="android:textColor">?attr/chat_list_time_color</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="EmojiTextRegularSmallGreyStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">?attr/chat_list_message_color</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="TextRegularStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/chat_list_name_color</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="TextRegularStyleBold" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+    </style>
+
+    <style name="TextRegularStyleLight" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+    </style>
+
+    <style name="TextMediumRegularStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+    </style>
+
+    <style name="TextSmallGreyStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/text_black_light</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="EmojiTextSemiBoldStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/chat_list_name_color</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="TextUnSeenCountStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">?attr/chat_list_unseen_count_color</item>
+        <item name="android:textSize">@dimen/text_size_11</item>
+        <item name="android:background">@drawable/drawable_unread_count</item>
+    </style>
+
+    <style name="TextParticipantStatusStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/color_contact_status</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextMediumStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">?attr/menu_text_color</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+
+    <style name="ToolbarTitleSemiBoldStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+    </style>
+
+    <!-- Start AlertDialog -->
+    <style name="AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/color_white</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">
+            @color/colorAccent
+        </item>
+        <item name="android:textColorPrimary">@color/color_error_message_gray</item>
+        <item name="android:windowTitleSize">@style/AlertDialogTitleStyle</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="AlertDialogTitleStyle" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/color_error_message_gray</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="TrasparentAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/popup_background</item>
+        <item name="android:colorAccent">@color/color_blue</item>
+    </style>
+
+    <style name="AdminBlockAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/color_white</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">
+            @color/color_blue
+        </item>
+        <item name="android:textColorPrimary">@color/text_color_black</item>
+        <item name="android:windowTitleSize">@style/AdminBlockAlertDialogTitleStyle</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="AdminBlockAlertDialogTitleStyle" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/text_color_black</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="ReportUserAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/color_white</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">
+            @color/colorAccent
+        </item>
+        <item name="android:textColorPrimary">@color/text_black_dark</item>
+        <item name="android:windowTitleSize">@style/AlertDialogTitleStyle</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="ReportUserAlertDialogTitleStyle" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/text_black_dark</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+
+    <style name="ChatTagRemoveAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/color_white</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="android:textColorPrimary">@color/text_black_dark</item>
+        <item name="android:windowTitleSize">@style/AlertDialogTitleStyle</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/color_red</item>
+    </style>
+
+    <!-- ENd AlertDialog -->
+
+    <style name="Report_User_TitleMedium">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_medium</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/color_red_light</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="TextBoldStyle">
+        <item name="font_name">@font/sf_ui_display_bold</item>
+        <item name="android:textColor">?attr/profile_text_color</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="TextSemiBoldStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/profile_text_color</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="TextLightGreyStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_light</item>
+        <item name="android:textColor">?attr/error_message_gray</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="NewTextSemiBoldMediumStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_medium</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">?attr/country_name_color</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="NewTextSemiBoldStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/country_name_color</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="TextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">?attr/red_color</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="ToolbarCollapsedTitleStyle">
+        <item name="android:fontFamily">@font/sf_ui_display_bold</item>
+        <item name="font_name">@font/sf_ui_display_bold</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+    </style>
+
+    <style name="ResendTextStyle">
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">?attr/country_name_color</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">?attr/blue_color</item>
+        <item name="android:textColorPrimary">?attr/dashboard_toolbar_text_color</item>
+    </style>
+
+    <style name="NewTextSemiBoldExtraLargeStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/dashboard_toolbar_text_color</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+    </style>
+
+    <style name="UserNameStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/color_black</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="ProfileValueStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">?attr/profile_values_color</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="YourCurrentStatus">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/your_status_color</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="StatusList">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/color_status_list</item><!-- Need to be changed in production app -->
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="SelectedStatus">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_medium</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">?attr/selected_status_color</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/drawable_splash</item>
+    </style>
+
+    <style name="style_chat_controls">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:contentDescription">@string/title_content_description</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+       <style name="ChatRevNameView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/color_selected_status</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+    </style>
+
+    <style name="ReplyViewTextStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/color_selected_status</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ReplyViewSentTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/color_selected_status</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+    </style>
+
+    <style name="TextRegularLight" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_light</item>
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+    </style>
+
+    <style name="ReceiverTextRegularLight" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_light</item>
+        <item name="android:textColor">@color/color_selected_status</item>
+    </style>
+
+    <style name="CallLinkView" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/color_menu_text</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <!--Audio Recipient SeekBar-->
+    <style name="RecipientSeekBarStyle" parent="Base.Widget.AppCompat.SeekBar">
+        <item name="android:progressDrawable">@drawable/drawable_recipient_seek_bar_track</item>
+        <item name="android:thumb">@drawable/drawable_recipient_seek_bar_thumb</item>
+        <item name="android:thumbOffset">16dp</item>
+        <item name="android:max">100</item>
+        <item name="android:progress">0</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:minWidth">100dp</item>
+    </style>
+
+    <!--Audio Recipient SeekBar-->
+    <style name="SenderSeekBarStyle" parent="Base.Widget.AppCompat.SeekBar">
+        <item name="android:progressDrawable">@drawable/drawable_sender_seek_bar_track</item>
+        <item name="android:thumb">@drawable/drawable_recipient_seek_bar_thumb</item>
+        <item name="android:thumbOffset">16dp</item>
+        <item name="android:max">100</item>
+        <item name="android:progress">0</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:minWidth">100dp</item>
+    </style>
+
+    <style name="MsgInfoView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">1dp</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:background">@color/color_light_gray</item>
+    </style>
+
+    <style name="ChatTimeTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">@dimen/text_size_11</item>
+        <item name="android:textColor">@color/color_sent_message_time</item>
+    </style>
+
+    <style name="TextLightStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_light</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="chatTextMessageLayoutStyle">
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginTop">9dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:layout_marginBottom">9dp</item>
+    </style>
+
+    <style name="chatJoinLinkMessageLayoutStyle">
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingBottom">9dp</item>
+    </style>
+
+    <style name="chatTextMessageReceiverLayoutStyle">
+        <item name="android:layout_marginTop">9dp</item>
+        <item name="android:layout_marginBottom">9dp</item>
+    </style>
+
+    <style name="ChatTimeLayoutStyle">
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:minWidth">20dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ChatView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:elevation" tools:targetApi="lollipop">0dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="chatImageReplyViewStyle">
+        <item name="android:layout_margin">@dimen/margin_3</item>
+    </style>
+
+    <style name="chatImageMessageLayoutStyle">
+        <item name="android:layout_margin">@dimen/margin_3</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
+    <style name="TextMediumNotificationStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="TextMediumStyles" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="TextSmallStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/color_chat_list_time</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="TranslationTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="style_setting_view" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/color_country_name</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:padding">@dimen/padding_18</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="style_setting_line">
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:background">@color/color_list_divider_color</item>
+    </style>
+
+    <style name="RetryViewStyle">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:background">@drawable/shape_download_shadow</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+    </style>
+
+    <style name="chatVideoReplyViewStyle">
+        <item name="android:layout_margin">@dimen/margin_3</item>
+    </style>
+
+    <style name="GroupChatSenderNameView">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxEms">15</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:visibility">visible</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:textColor">@color/color_text_grey</item>
+    </style>
+
+    <style name="RecipientReplyViewTextStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/color_selected_status</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+
+    <style name="TitleSemiBold">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/text_black_dark</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="TitleMedium">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_medium</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/text_black_dark</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+
+    <style name="SubTitleRegular">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/text_black_light</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+
+    <style name="DividerStyle">
+        <item name="android:background">@color/color_divider</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.2dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_5</item>
+        <item name="android:layout_marginEnd">@dimen/margin_15</item>
+    </style>
+
+    <style name="TextLightBlackStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_light</item>
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+
+    <style name="TextRegularBlackStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/color_selected_status</item>
+        <item name="android:textSize">@dimen/text_size_7</item>
+    </style>
+
+    <style name="CollapsedToolbarTitleStyle" parent="TitleSemiBold">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="ExpandedToolbarTitleStyle" parent="TitleSemiBold">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
+    <style name="AudioDevicesDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/color_white</item>
+        <item name="android:textColorPrimary">@color/color_black</item>
+        <item name="android:windowAnimationStyle">@style/AudioDevicesDialogAnimation</item>
+    </style>
+
+    <style name="AudioDevicesDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/alpha_show</item>
+        <item name="android:windowExitAnimation">@anim/alpha_hide</item>
+    </style>
+
+    <style name="CustomCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="colorAccent">@color/color_black</item>
+        <item name="android:textColorSecondary">@color/color_light_gray</item>
+    </style>
+
+    <style name="WhiteAccent" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/color_black</item>
+    </style>
+
+    <style name="ToolbarExpandedTitleStyle">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:textSize">@dimen/text_size_22</item>
+    </style>
+
+    <style name="Connection_status">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textColor">@color/text_color_black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/connection_status</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+    </style>
+
+    <style name="divider_starred_msg">
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:background">#E2E2E2</item>
+    </style>
+
+    <style name="chatStarredLayoutStyle">
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minWidth">20dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="style_contact_us_header">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:layout_marginTop">15dp</item>
+    </style>
+
+    <style name="style_contact_us_child">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="keyboard_row">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="keyboard_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:background">@drawable/keyboard_button_bg</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="keyboard_number_button" parent="keyboard_button">
+        <item name="android:tag">number_button</item>
+    </style>
+
+    <style name="NewTextSemiBoldMediumSmallStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="HomeToolBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="elevation">0dp</item>
+        <item name="titleTextAppearance">@style/ToolbarTitleStyle</item>
+    </style>
+
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeBottomRight">8dp</item>
+    </style>
+
+    <style name="roundedReplyImageView" parent="">
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeBottomRight">6dp</item>
+        <item name="cornerSizeTopRight">6dp</item>
+    </style>
+
+    <style name="roundedReplyPreviewView" parent="">
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeBottomRight">3dp</item>
+        <item name="cornerSizeTopRight">3dp</item>
+    </style>
+
+    <style name="StarredMessageDate">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/color_starred_message_date</item>
+        <item name="android:textSize">@dimen/text_size_11</item>
+    </style>
+
+    <style name="roundedLinkImageView" parent="">
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerSizeBottomLeft">6dp</item>
+        <item name="cornerSizeTopLeft">6dp</item>
+    </style>
+
+    <style name="scrollbar_style">
+        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb</item>
+        <item name="android:scrollbarTrackVertical">@drawable/scrollbar_track</item>
+        <item name="android:scrollbarSize">@dimen/margin_5</item>
+        <item name="android:scrollbarFadeDuration">800</item>
+        <item name="android:scrollbarDefaultDelayBeforeFade">500</item>
+    </style>
+
+    <style name="spinnerHintTheme">
+        <item name="android:textColor">@color/text_black_dark</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="BackupProgressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/backup_progress_drawable</item>
+        <item name="android:minHeight">6dp</item>
+        <item name="android:maxHeight">8dp</item>
+    </style>
+
+    <style name="TextRegularStyleSDK" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/color_text_label_sdk</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+    </style>
+
+    <style name="BackupDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/color_blue</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:background">@color/color_white</item>
+        <item name="android:textAppearanceSmall">@font/sf_ui_display_light</item>
+        <item name="android:textAppearanceMedium">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextMediumNotificationStyleSDK" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!--Chat Tag-->
+    <style name="ChatTag_semibold">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/text_black_dark</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="ChatTag_regular">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_regular</item>
+        <item name="font_name">@font/sf_ui_display_regular</item>
+        <item name="android:textColor">@color/text_black_dark</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="ChatTag_list_title_semibold">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">@color/text_black_dark</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="ChatTag_list_info_light">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_light</item>
+        <item name="font_name">@font/sf_ui_display_light</item>
+        <item name="android:textColor">@color/text_black_light</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+    </style>
+
+    <style name="ChatTag_medium_add_view">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_medium</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="ChatTag_subtitle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/sf_ui_display_medium</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/text_black_dark</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <style name="SlideDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slide_down</item>
+    </style>
+
+    <style name="DialogSlideAnim" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/SlideDialogAnimation</item>
+    </style>
+
+    <style name="ShapeAppearance.Image.PILL" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+</resources>

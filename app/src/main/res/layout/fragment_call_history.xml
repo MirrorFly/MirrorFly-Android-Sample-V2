@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <com.contusfly.views.CustomRecyclerView
+        android:id="@+id/list_call_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:footerDividersEnabled="true"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/margin_150"
+        android:listSelector="@android:color/transparent" />
+
+    <include
+        android:id="@+id/view_no_call_history"
+        android:visibility="gone"
+        layout="@layout/view_no_call_history" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/margin_16dp"
+        android:layout_marginBottom="@dimen/margin_75"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_make_video_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            app:fabCustomSize="@dimen/fab_mini_size"
+            app:iconSize="@dimen/fab_mini_icon_size"
+            app:pressedTranslationZ="@dimen/elevation_extra_small"
+            app:srcCompat="@drawable/ic_fab_video_call" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_make_voice_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            app:fabCustomSize="@dimen/fab_mini_size"
+            app:iconSize="@dimen/fab_mini_icon_size"
+            app:pressedTranslationZ="@dimen/elevation_extra_small"
+            app:srcCompat="@drawable/ic_fab_voice_call" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@null"
+            app:fabCustomSize="@dimen/fab_normal_size"
+            app:iconSize="@dimen/fab_normal_icon_size"
+            app:pressedTranslationZ="@dimen/elevation_extra_small"
+            app:elevation="0dp"
+            app:srcCompat="@drawable/ic_fab_add"
+            />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

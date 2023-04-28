@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="0dp"
+    android:paddingStart="0dp"
+    android:paddingTop="@dimen/padding_6"
+    android:paddingEnd="@dimen/padding_1"
+    android:paddingBottom="@dimen/margin_10">
+
+    <RelativeLayout
+        android:id="@+id/rl_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <io.github.rockerhieu.emojicon.EmojiconTextView
+            android:id="@+id/txt_caption_rev_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:autoLink="all"
+            android:breakStrategy="simple"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="3dp"
+            android:linksClickable="true"
+            android:text="test send"
+            android:textColor="@android:color/black"
+            android:textColorLink="@color/color_black"
+            android:textSize="13sp"
+            android:visibility="visible"
+            app:emojiconSize="19sp"
+            app:fontFamily="@font/sf_ui_display_regular"
+            tools:targetApi="M" />
+
+        <LinearLayout
+            android:id="@+id/translated_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_caption_rev_chat"
+            android:layout_marginBottom="@dimen/padding_20"
+            android:background="@color/color_divider"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/view_translated"
+                android:layout_width="2.3dp"
+                android:layout_height="match_parent"
+                android:background="@color/color_translate_bar" />
+
+            <androidx.emoji.widget.EmojiAppCompatTextView
+                android:id="@+id/txt_caption_rev_chat_translated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:paddingTop="@dimen/padding_3"
+                android:paddingBottom="@dimen/padding_3"
+                android:fontFamily="@font/sf_ui_display_regular"
+                android:gravity="center_vertical"
+                android:maxWidth="250dp"
+                android:text="不错不错的图..."
+                android:textColor="@android:color/black"
+                android:textColorLink="@color/color_black"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:emojiconSize="19sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ic_star_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/caption_text_receive_time"
+            android:layout_alignBottom="@+id/caption_text_receive_time"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_toStartOf="@+id/caption_text_receive_time"
+            android:contentDescription="@null"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_star_receiver"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/caption_text_receive_time"
+            style="@style/ChatTimeTextView"
+            android:layout_alignBottom="@+id/txt_caption_rev_chat"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/margin_1"
+            android:layout_marginEnd="@dimen/padding_5"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:text="@android:string/cancel"
+            android:textColor="@color/grey" />
+    </RelativeLayout>
+</RelativeLayout>

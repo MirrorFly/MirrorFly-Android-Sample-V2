@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ToolbarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/text_color_black">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/backBtn"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                app:srcCompat="@drawable/ic_back_black" />
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_title"
+                style="@style/TextBoldStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/chat_backup"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mainBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="18dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/server_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/last_backup_textview"
+                    style="@style/TextMediumNotificationStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/last_backup"
+                    android:textSize="16sp"
+                    app:fontFamily="@font/sf_ui_display_semi_bold"
+                    app:layout_constraintBottom_toTopOf="@+id/backupInfoText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/backupInfoText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:fontFamily="@font/sf_ui_display_regular"
+                    android:lineSpacingExtra="8dp"
+                    android:text="@string/backup_info_text"
+                    android:textColor="#767676"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@+id/date_box"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/last_backup_textview" />
+
+                <LinearLayout
+                    android:id="@+id/date_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/size_box"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/backupInfoText">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Last Backup :"
+                        android:textColor="#767676"
+                        android:textSize="14sp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/last_backup_date"
+                        style="@style/TextMediumNotificationStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_12dp"
+                        android:text="--"
+                        app:fontFamily="@font/sf_ui_display_semi_bold" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/size_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/functionalBox"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/date_box">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Size :"
+                        android:textColor="#767676"
+                        android:textSize="14sp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/last_backup_size"
+                        style="@style/TextMediumNotificationStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_12dp"
+                        android:text="--"
+                        app:fontFamily="@font/sf_ui_display_semi_bold" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/functionalBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/size_box">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/backup"
+                        android:layout_width="136dp"
+                        android:layout_height="40dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/blue_rounded_corners"
+                        android:text="Backup Now"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/progressBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="@dimen/margin_16dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <ProgressBar
+                                android:id="@+id/workProgress"
+                                style="@style/BackupProgressBarHorizontal"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="10"
+                                android:max="100"
+                                android:progress="0" />
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/cancelBackup"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginStart="8dp"
+                                android:adjustViewBounds="true"
+                                android:visibility="visible"
+                                app:srcCompat="@drawable/ic_backup_remove" />
+
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/uploadingProgressText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="@font/sf_ui_display_light"
+                            android:text="Uploading : 0KB of 0KB (0%)"
+                            android:textColor="#767676"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/driveBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_18"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/server_box">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".5" />
+
+                <View
+                    android:id="@+id/dividerOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/color_list_divider_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/auto_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16dp"
+                    android:gravity="center"
+                    android:weightSum="10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerOne">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/autoBackupTitle"
+                        style="@style/TextMediumNotificationStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8.5"
+                        android:gravity="center|start"
+                        android:text="@string/auto_backup"
+                        android:textSize="16sp"
+                        app:fontFamily="@font/sf_ui_display_semi_bold" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/auto_switch"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:padding="@dimen/padding_5"
+                        android:thumb="@drawable/thumb_selector"
+                        app:track="@drawable/track_selector" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/scheduleBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/margin_4"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/auto_box">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:gravity="center|start"
+                        android:text="@string/scheduled_your_backup" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/frequencyText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="4"
+                        android:gravity="center|end"
+                        android:textColor="#313131"
+                        app:fontFamily="@font/sf_ui_display_medium" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="18dp"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@null"
+                        android:scaleType="center"
+                        app:srcCompat="@drawable/ic_right_arrow" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/dividerTwo"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/color_list_divider_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/scheduleBox" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/drive_settings_textview"
+                    style="@style/TextMediumNotificationStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:text="@string/google_drive_settings"
+                    android:textSize="16sp"
+                    app:fontFamily="@font/sf_ui_display_semi_bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerTwo" />
+
+
+                <RelativeLayout
+                    android:id="@+id/accountBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_18"
+                    android:background="?android:attr/selectableItemBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drive_settings_textview">
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/google_account_title"
+                        style="@style/TextMediumNotificationStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/image_google_account"
+                        android:text="Google Account" />
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/driveEmail"
+                        style="@style/TextSmallStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/google_account_title"
+                        android:layout_marginTop="@dimen/margin_5"
+                        android:layout_toStartOf="@+id/image_google_account"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/select_gmail_account" />
+
+                    <ImageView
+                        android:id="@+id/image_google_account"
+                        android:layout_width="18dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_right_icon" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/dividerFour"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
+                    android:background="@color/color_list_divider_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/accountBox" />
+
+                <RelativeLayout
+                    android:id="@+id/backupOverBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerFour">
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/backup_over_title"
+                        style="@style/TextMediumNotificationStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Back up Over" />
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/connectivityText"
+                        style="@style/TextSmallStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/backup_over_title"
+                        android:layout_marginTop="@dimen/margin_5"
+                        android:layout_toStartOf="@+id/image_backup_over"
+                        android:lineSpacingExtra="2dp"
+                        android:text="Wifi Only" />
+
+                    <ImageView
+                        android:id="@+id/image_backup_over"
+                        android:layout_width="18dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_right_icon" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/dividerFive"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
+                    android:background="@color/color_list_divider_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/backupOverBox" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/localBackupRestoreText"
+                    style="@style/TextMediumNotificationStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:text="@string/local_backup_amp_restore"
+                    android:textSize="16sp"
+                    app:fontFamily="@font/sf_ui_display_semi_bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerFive" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/localBackupRestoreInfoText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:fontFamily="@font/sf_ui_display_regular"
+                    android:lineSpacingExtra="8dp"
+                    android:text="@string/download_info"
+                    android:textColor="#767676"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/localBackupRestoreText" />
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/downloadBackup"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/margin_24"
+                    android:layout_marginEnd="@dimen/margin_8"
+                    android:background="@drawable/grey_rounded_corners"
+                    android:gravity="center"
+                    android:text="@string/download"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_blue"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/localBackupRestoreInfoText" />
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/restoreData"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="@dimen/margin_8"
+                    android:layout_marginTop="@dimen/margin_24"
+                    android:background="@drawable/blue_border_bg"
+                    android:gravity="center"
+                    android:text="@string/restore"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_blue"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/localBackupRestoreInfoText" />
+
+                <LinearLayout
+                    android:id="@+id/localProgressBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_24"
+                    android:layout_marginBottom="@dimen/margin_16dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/localBackupRestoreInfoText">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <ProgressBar
+                            android:id="@+id/localWorkProgress"
+                            style="@style/BackupProgressBarHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="10"
+                            android:max="100"
+                            android:progress="0" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/localCancelBackup"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginStart="8dp"
+                            android:adjustViewBounds="true"
+                            android:visibility="visible"
+                            app:srcCompat="@drawable/ic_backup_remove" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/localProgressText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/sf_ui_display_light"
+                        android:text="Uploading : 0KB of 0KB (0%)"
+                        android:textColor="#767676"
+                        android:textSize="12sp" />
+
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/media_view_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_docs_type"
+        android:layout_width="19.1dp"
+        android:layout_height="@dimen/margin_24"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginTop="@dimen/margin_18"
+        android:layout_marginBottom="@dimen/margin_18"
+        app:layout_constraintBottom_toTopOf="@+id/docs_separator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_media_pdf" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_docs_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_12"
+        android:layout_marginEnd="@dimen/margin_12"
+        android:fontFamily="@font/sf_ui_display_regular"
+        android:includeFontPadding="false"
+        android:textColor="@color/text_black_dark"
+        android:textSize="@dimen/text_size_13"
+        app:layout_constraintBottom_toTopOf="@+id/text_docs_size"
+        app:layout_constraintEnd_toStartOf="@+id/text_docs_date"
+        app:layout_constraintStart_toEndOf="@+id/image_docs_type"
+        app:layout_constraintTop_toTopOf="@+id/image_docs_type"
+        tools:text="134.pdf" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_docs_size"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_12"
+        android:layout_marginEnd="@dimen/margin_12"
+        android:fontFamily="@font/sf_ui_display_regular"
+        android:includeFontPadding="false"
+        android:textColor="@color/text_grey_light"
+        android:textSize="@dimen/text_size_11"
+        app:layout_constraintBottom_toBottomOf="@+id/image_docs_type"
+        app:layout_constraintEnd_toStartOf="@+id/text_docs_date"
+        app:layout_constraintStart_toEndOf="@+id/image_docs_type"
+        app:layout_constraintTop_toBottomOf="@+id/text_docs_name"
+        tools:text="79kB" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_docs_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:fontFamily="@font/sf_ui_display_regular"
+        android:includeFontPadding="false"
+        android:textColor="@color/text_grey_light"
+        android:textSize="@dimen/text_size_11"
+        app:layout_constraintBottom_toTopOf="@+id/docs_separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="5/4/21" />
+
+
+    <View
+        android:id="@+id/docs_separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_0.5"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginEnd="@dimen/margin_15"
+        android:background="@color/color_list_divider_color"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

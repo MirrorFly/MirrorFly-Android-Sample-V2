@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/parent_view"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/padding_50"
+        android:layout_marginTop="@dimen/margin_10">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/margin_10">
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/chat_tag_name_tv"
+                    style="@style/ChatTag_list_title_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|right"
+                    android:text="@string/recommended_chat_tag"/>
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/chat_tag_information_tv"
+                    style="@style/ChatTag_list_info_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|right"
+                    android:text="@string/recommended_chat_tag"
+                    android:layout_marginTop="@dimen/margin_8"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center|right">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/add_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ChatTag_medium_add_view"
+                android:background="@drawable/bg_button_state_list"
+                android:gravity="center"
+                android:paddingStart="@dimen/padding_20"
+                android:paddingLeft="@dimen/padding_20"
+                android:paddingTop="@dimen/padding_8"
+                android:paddingEnd="@dimen/padding_20"
+                android:paddingRight="@dimen/padding_20"
+                android:paddingBottom="@dimen/padding_8"
+                android:text="@string/title_add"
+                android:textColor="?attr/white_color"
+                android:textAllCaps="true"
+                android:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/right_arrow_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_right_icon"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_list_divider_color"
+        android:layout_marginTop="@dimen/margin_5"/>
+
+</LinearLayout>

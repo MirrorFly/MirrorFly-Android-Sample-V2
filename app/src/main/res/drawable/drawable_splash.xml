@@ -1,0 +1,9 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <item android:drawable="@drawable/drawable_splash_gradient" />
+    <item android:gravity="center">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/ic_logo_splash" />
+    </item>
+</layer-list>

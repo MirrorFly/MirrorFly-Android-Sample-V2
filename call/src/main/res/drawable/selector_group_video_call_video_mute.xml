@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_group_video_active_icon" android:state_activated="false" />
+    <item android:drawable="@drawable/ic_group_video_call_active_attend_state" android:state_enabled="true" />
+    <item android:drawable="@drawable/ic_group_video_ring_state" />
+
+</selector>

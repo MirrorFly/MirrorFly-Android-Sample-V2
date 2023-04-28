@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="4dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="2dp"
+        app:contentPadding="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:minHeight="40dp"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <View
+                android:layout_width="0.05dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:background="@color/color_black" />
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/selectedUsers"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="4"
+                android:gravity="center|start"
+                android:maxLines="4"
+                android:text="@string/no_user_selected"
+                android:textColor="@color/color_black_transparent2"
+                android:textSize="14sp" />
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/next"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_next"
+                android:textColor="@color/color_black"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tool_bar"
+        style="@style/ToolbarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp" />
+
+    <com.contusfly.views.CustomRecyclerView
+        android:id="@+id/view_list_recent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_below="@id/tool_bar"
+        android:layout_marginTop="2dp"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:footerDividersEnabled="true"
+        android:listSelector="@android:color/transparent" />
+
+    <include
+        android:id="@+id/empty_data"
+        layout="@layout/view_empty_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

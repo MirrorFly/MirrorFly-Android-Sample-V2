@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2019 ContusFly LTD. All rights reserved.
+  ~ @licence http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_chat_space" />
+
+    <RelativeLayout
+        android:id="@+id/row_chat_audio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_8"
+        android:paddingTop="@dimen/margin_2"
+        android:paddingEnd="@dimen/padding_18"
+        android:paddingBottom="@dimen/margin_2">
+
+        <RelativeLayout
+            android:id="@+id/rl_header_sender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/header_starred_message_receiver"
+                layout="@layout/row_starred_message_header_sender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="start|center_vertical"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_chat_date"
+                style="@style/StarredMessageDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:maxWidth="250dp"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_header_sender"
+            android:background="@null"
+            android:gravity="end"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="@dimen/margin_250"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chat_shape_sender_audio"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/view_text_sent_reply_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_3"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <include
+                        android:id="@+id/view_text_sent_reply"
+                        layout="@layout/list_chat_reply_sent_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/audio_sent_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/drawable_audio_message_sender_background"
+                    android:padding="@dimen/margin_5"
+                    app:layout_constraintTop_toBottomOf="@+id/view_text_sent_reply_layout">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/image_audio_type"
+                        android:layout_width="@dimen/margin_32"
+                        android:layout_height="@dimen/margin_32"
+                        android:layout_margin="@dimen/margin_5"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/image_audio_action"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_audio_music_icon" />
+
+                    <ImageView
+                        android:id="@+id/image_audio_action"
+                        android:layout_width="@dimen/audio_play_ic_dimens"
+                        android:layout_height="@dimen/audio_play_ic_dimens"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:layout_marginEnd="@dimen/margin_8"
+                        android:padding="@dimen/margin_2"
+                        android:contentDescription="@null"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/download_progress_layout"
+                        app:layout_constraintStart_toEndOf="@id/image_audio_type"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_play_audio_recipient" />
+
+                    <RelativeLayout
+                        android:id="@+id/download_progress_layout"
+                        android:layout_width="@dimen/margin_28"
+                        android:layout_height="@dimen/margin_28"
+                        android:layout_marginStart="@dimen/margin_5"
+                        android:layout_marginEnd="@dimen/margin_5"
+                        android:background="@drawable/bg_upload_progress"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/audio_retry_layout"
+                        app:layout_constraintStart_toEndOf="@+id/image_audio_action"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ProgressBar
+                            android:id="@+id/progress_audio_upload"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/margin_2"
+                            android:layout_alignParentBottom="true"
+                            android:contentDescription="@string/content_downloading"
+                            android:indeterminate="false"
+                            android:progressDrawable="@drawable/horizontal_file_sender_progress_bar"
+                            android:scrollbarSize="@dimen/margin_2"
+                            android:visibility="visible" />
+
+                        <ProgressBar
+                            android:id="@+id/progress_buffer"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/margin_3"
+                            android:layout_alignParentBottom="true"
+                            android:contentDescription="@string/content_downloading"
+                            android:indeterminate="true"
+                            android:indeterminateTint="@color/color_recipient_seek_thumb"
+                            android:scaleY="2"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/image_audio_cancel"
+                            android:layout_width="@dimen/margin_14"
+                            android:layout_height="@dimen/margin_14"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@string/content_downloading"
+                            app:srcCompat="@drawable/ic_cancel_white" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/audio_retry_layout"
+                        android:layout_width="@dimen/margin_28"
+                        android:layout_height="@dimen/margin_28"
+                        android:layout_marginStart="@dimen/margin_5"
+                        android:layout_marginEnd="@dimen/margin_5"
+                        android:background="@drawable/bg_upload_progress"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/audio_carbon_retry_layout"
+                        app:layout_constraintStart_toEndOf="@+id/download_progress_layout"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/view_retry"
+                            android:layout_width="@dimen/margin_14"
+                            android:layout_height="@dimen/margin_14"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:contentDescription="@string/content_not_downloaded"
+                            app:srcCompat="@drawable/ic_file_upload_light" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/audio_carbon_retry_layout"
+                        android:layout_width="@dimen/margin_28"
+                        android:layout_height="@dimen/margin_28"
+                        android:layout_marginStart="@dimen/margin_5"
+                        android:layout_marginEnd="@dimen/margin_5"
+                        android:background="@drawable/bg_upload_progress"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/seek_audio_progress"
+                        app:layout_constraintStart_toEndOf="@+id/audio_retry_layout"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/view_carbon_retry"
+                            android:layout_width="@dimen/margin_14"
+                            android:layout_height="@dimen/margin_14"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:contentDescription="@string/content_not_downloaded"
+                            app:srcCompat="@drawable/ic_file_download_grey" />
+                    </RelativeLayout>
+
+                    <com.contusfly.views.MirrorFlySeekBar
+                        android:id="@+id/seek_audio_progress"
+                        style="@style/SenderSeekBarStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_5"
+                        android:layout_marginEnd="@dimen/margin_8"
+                        android:paddingTop="@dimen/padding_8"
+                        android:paddingBottom="@dimen/padding_8"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/audio_carbon_retry_layout"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_audio_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sf_ui_display_light"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/color_sent_message_time"
+                        android:paddingTop="@dimen/padding_20"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/seek_audio_progress"
+                        tools:text="10:09"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/image_audio_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5"
+                    android:contentDescription="@null"
+                    android:paddingStart="@dimen/margin_0"
+                    android:paddingEnd="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/image_audio_status"
+                    app:layout_constraintRight_toLeftOf="@+id/image_audio_status"
+                    app:layout_constraintTop_toBottomOf="@+id/audio_sent_view"
+                    app:srcCompat="@drawable/ic_star" />
+
+                <ImageView
+                    android:id="@+id/image_audio_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5"
+                    android:contentDescription="@string/NotAcknowledge_content_description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/text_audio_time"
+                    app:layout_constraintRight_toLeftOf="@+id/text_audio_time"
+                    app:layout_constraintTop_toBottomOf="@+id/audio_sent_view"
+                    app:srcCompat="@drawable/ic_message_unsent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_audio_time"
+                    style="@style/ChatTimeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:layout_marginBottom="@dimen/margin_5"
+                    android:includeFontPadding="false"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="@dimen/margin_7"
+                    android:fontFamily="@font/sf_ui_display_regular"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/audio_sent_view"
+                    android:layout_gravity="end|bottom|center_vertical"
+                    android:gravity="center_vertical"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_divider"
+        style="@style/divider_starred_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp" />
+
+</LinearLayout>

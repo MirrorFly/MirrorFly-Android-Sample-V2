@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@null"
+    android:orientation="vertical"
+    app:elevation="0dp">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/chat_toolbar"
+        style="@style/CustomToolBar"
+        android:background="@color/colorPrimary"
+        android:contentInsetStart="0dp"
+        android:contentInsetLeft="0dp"
+        android:contentInsetEnd="0dp"
+        android:contentInsetRight="0dp"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:titleTextAppearance="@style/ToolbarTitleStyle">
+
+        <LinearLayout
+            android:id="@+id/view_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/padding_10"
+            android:paddingEnd="@dimen/padding_5">
+
+            <androidx.emoji.widget.EmojiAppCompatTextView
+                style="@style/NewTextSemiBoldMediumStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_2"
+                android:ellipsize="end"
+                android:fontFamily="@font/sf_ui_display_semi_bold"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/label_contact_to_send"/>
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_selected_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/sf_ui_display_light"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textColor="@color/text_grey_light"
+                android:textSize="@dimen/text_size_13"
+                android:text="@string/label_contact_selected"/>
+
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+</com.google.android.material.appbar.AppBarLayout>

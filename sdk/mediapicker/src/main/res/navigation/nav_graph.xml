@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FolderListFragment">
+
+    <fragment
+        android:id="@+id/FolderListFragment"
+        android:name="com.contusfly.mediapicker.ui.FolderListFragment"
+        tools:layout="@layout/fragment_folder_list">
+
+        <action
+            android:id="@+id/action_FolderListFragment_to_ImageListFragment"
+            app:destination="@id/ImageListFragment"
+            app:enterAnim="@anim/push_up_in"
+            app:exitAnim="@anim/push_up_out"
+            app:popEnterAnim="@anim/push_down_in"
+            app:popExitAnim="@anim/push_down_out"/>
+    </fragment>
+    <fragment
+        android:id="@+id/ImageListFragment"
+        android:name="com.contusfly.mediapicker.ui.ImageListFragment"
+        tools:layout="@layout/fragment_image_list">
+
+        <argument
+            android:name="folder_name"
+            app:argType="string" />
+        <argument
+            android:name="image_position"
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_ImageListFragment_to_FolderListFragment"
+            app:destination="@id/FolderListFragment" />
+    </fragment>
+</navigation>

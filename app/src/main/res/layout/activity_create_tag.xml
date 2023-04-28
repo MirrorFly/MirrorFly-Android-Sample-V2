@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chatTag.activities.CreateTagActivity"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+
+    <include
+        android:id="@+id/toolbar_view"
+        layout="@layout/chat_tag_common_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_45"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/margin_20">
+
+        <com.contusfly.views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/tag_name"
+            android:gravity="center"
+            style="@style/ChatTag_subtitle"/>
+
+        <com.contusfly.views.CustomEditText
+            android:id="@+id/tag_name_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:layout_marginRight="@dimen/margin_10"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/text_size_12"
+            android:fontFamily="@font/sf_ui_display_medium"
+            android:textColor="@color/text_black_dark"
+            android:textColorHint="@color/text_black_light"
+            android:hint="@string/tag_name_hint"
+            android:maxLines="1"
+            android:inputType="textMultiLine"
+            android:foregroundTint="@color/text_black_dark"/>
+
+    </LinearLayout>
+
+    <com.contusfly.views.CustomTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tag_people_add_title"
+        android:layout_marginLeft="@dimen/margin_18"
+        android:layout_marginTop="@dimen/margin_20"
+        android:textSize="@dimen/text_size_14"
+        android:fontFamily="@font/sf_ui_display_medium"
+        android:textColor="@color/text_black_dark"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_people_button_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_50"
+        android:background="@drawable/bg_curve_button"
+        android:layout_margin="@dimen/margin_15"
+        android:textSize="@dimen/text_size_13"
+        android:fontFamily="@font/sf_ui_display_medium"
+        android:textColor="@color/color_sent_message_background"
+        android:text="@string/add_people_or_group"
+        android:textAllCaps="false"
+        android:foreground="?attr/selectableItemBackground"/>
+
+    <com.contusfly.views.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_people_info"
+        android:layout_marginTop="@dimen/margin_5"
+        android:textSize="@dimen/text_size_12"
+        android:fontFamily="@font/sf_ui_display_regular"
+        android:textColor="@color/text_black_light"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/margin_20"
+        android:layout_marginRight="@dimen/margin_20"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"/>
+
+</LinearLayout>

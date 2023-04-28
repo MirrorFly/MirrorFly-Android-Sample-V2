@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_row"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/common_toolbar" />
+
+    <com.contusfly.views.CustomRecyclerView
+        android:id="@+id/view_contact_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/call_now_layout"
+        android:layout_below="@+id/tool_bar"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:footerDividersEnabled="true"
+        android:listSelector="@drawable/selector_settings_opt" />
+
+    <include layout="@layout/view_empty_data" />
+
+    <RelativeLayout
+        android:id="@+id/call_now_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/selector_add_participants_in_call"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/call_now_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/call_now_text_view"
+            android:contentDescription="@string/title_image"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            app:srcCompat="@drawable/ic_phone_call_button" />
+
+        <TextView
+            android:id="@+id/call_now_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:includeFontPadding="false"
+            android:textColor="@color/color_white"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
+
+</RelativeLayout>

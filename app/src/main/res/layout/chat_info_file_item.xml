@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_chat_file"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_2"
+    android:layout_marginBottom="@dimen/margin_2"
+    android:elevation="0dp"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/padding_8"
+    android:paddingEnd="@dimen/padding_18"
+    tools:targetApi="LOLLIPOP">
+
+    <LinearLayout
+        android:id="@+id/view_send_file"
+        android:layout_width="@dimen/margin_250"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:background="@drawable/bg_chat_shape_sender"
+        android:orientation="vertical">
+
+
+        <include
+            layout="@layout/list_chat_reply_sent_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_3" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_2"
+            android:background="@drawable/drawable_file_message_sender_background">
+
+            <ImageView
+                android:id="@+id/img_send_doc"
+                android:layout_width="@dimen/margin_24.6"
+                android:layout_height="@dimen/margin_31"
+                android:layout_margin="@dimen/margin_8"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_media_pdf"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/txt_send_file_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_8"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:ellipsize="end"
+                android:fontFamily="@font/sf_ui_display_regular"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:maxLines="2"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/text_size_13"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/img_send_doc"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_6"
+            android:paddingEnd="@dimen/padding_5"
+            android:paddingBottom="@dimen/padding_6">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_file_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_ui_display_regular"
+                android:includeFontPadding="false"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/text_size_7"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ic_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:contentDescription="@null"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_send_file_time"
+                app:layout_constraintEnd_toStartOf="@+id/file_send_status"
+                app:layout_constraintRight_toLeftOf="@+id/file_send_status"
+                app:layout_constraintTop_toTopOf="@+id/txt_send_file_time"
+                app:srcCompat="@drawable/ic_star" />
+
+            <ImageView
+                android:id="@+id/file_send_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:contentDescription="@string/NotAcknowledge_content_description"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_send_file_time"
+                app:layout_constraintEnd_toStartOf="@+id/txt_send_file_time"
+                app:layout_constraintRight_toLeftOf="@+id/txt_send_file_time"
+                app:layout_constraintTop_toTopOf="@+id/txt_send_file_time"
+                app:srcCompat="@drawable/ic_message_unsent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_send_file_time"
+                style="@style/ChatTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_ui_display_regular"
+                android:includeFontPadding="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="10:10 AM" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</LinearLayout>

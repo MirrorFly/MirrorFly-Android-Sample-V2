@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.SelectMapViewActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/address_layout"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/view_map_toolbar" />
+
+        <fragment
+            android:id="@+id/view_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_above="@+id/address_layout"
+        android:background="@drawable/address_background" />
+
+    <LinearLayout
+        android:id="@+id/address_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_120"
+        android:background="@color/color_white"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_18"
+                android:layout_marginTop="@dimen/margin_15"
+                android:text="@string/title_send_this_location"
+                android:fontFamily="@font/sf_ui_display_regular"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/text_size_14"
+                android:textColor="@color/colorSecondary" />
+
+            <TextView
+                android:id="@+id/address_line_1"
+                style="@style/NewTextSemiBoldMediumStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_18"
+                android:layout_marginTop="@dimen/margin_7"
+                android:maxWidth="@dimen/margin_232"
+                android:maxLines="2"
+                android:text="@string/title_address_line_1"
+                android:textAlignment="textStart" />
+
+            <TextView
+                android:id="@+id/address_line_2"
+                style="@style/TextLightBlackStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_18"
+                android:layout_marginTop="@dimen/margin_2"
+                android:textColor="@color/color_text_grey"
+                android:maxLines="1"
+                android:text="@string/title_address_line_2"
+                android:textAlignment="textStart" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/location_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/ic_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

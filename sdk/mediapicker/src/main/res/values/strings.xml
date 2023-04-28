@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_activity_media_picker">MediaPickerActivity</string>
+
+    <string name="next">Next</string>
+    <string name="folder_list_title">Send to %s</string>
+    <string name="error_no_folder_label">No media found</string>
+    <string name="action_select_multiple">Select multiple media</string>
+    <string name="action_select_done">done</string>
+    <string name="multi_select_title">Tap Photo to select</string>
+    <string name="multi_selected_title">%d/%d Selected</string>
+    <string name="message_max_limit_restriction">Can\'t share more than %d media items</string>
+    <string name="message_unsupported_file">The file format is not supported.</string>
+    <string name="media_max_limit_restriction">File size is too large. Try uploading file size below %dMB</string>
+</resources>

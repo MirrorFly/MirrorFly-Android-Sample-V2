@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/preview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="#DDDDDDDD"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/selection"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_dark"
+        android:padding="16dp"
+        android:src="@drawable/ic_check_black_24dp" />
+
+    <ImageView
+        android:id="@+id/isVideo"
+        android:layout_width="20dp"
+        android:layout_height="15dp"
+        android:layout_gravity="left|bottom"
+        android:layout_margin="5dp"
+        android:src="@drawable/ic_videocam_black_24dp" />
+
+</FrameLayout>

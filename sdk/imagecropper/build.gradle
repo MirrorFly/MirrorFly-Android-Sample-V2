@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion rootProject.ext.targetSdkVersion
+    }
+
+    sourceSets {
+        main {
+            manifest {
+                srcFile 'AndroidManifest.xml'
+            }
+            java {
+                srcDir 'src'
+            }
+            res {
+                srcDir 'res'
+            }
+            assets {
+                srcDir 'assets'
+            }
+            resources {
+                srcDir 'src'
+            }
+        }
+    }
+    buildTypes {
+        debug {
+
+        }
+
+        qa {
+
+        }
+
+        uat {
+
+        }
+
+        release {
+        }
+
+        releaseDebug {
+
+        }
+    }
+
+    dependencies {
+        implementation deps.exif.support
+    }
+}

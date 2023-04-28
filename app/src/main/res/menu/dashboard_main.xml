@@ -1,0 +1,61 @@
+<!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_group_chat"
+        android:title="@string/new_group_label"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/clear_call_log"
+        android:title="@string/clear_all_call_log"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/settings_label"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_web_settings"
+        android:title="@string/action_web_settings"
+        app:showAsAction="never" />
+
+    <!--<item
+        android:id="@+id/action_add_contact"
+        android:title="@string/action_add_contact"
+        app:showAsAction="never"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/action_refresh"
+        android:title="@string/action_refresh"
+        app:showAsAction="never"
+        android:visible="false" /> -->
+
+    <item
+        android:id="@+id/action_new"
+        android:icon="@drawable/ic_invite_contacts"
+        android:orderInCategory="100"
+        android:title="@string/invite_contact_label"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_toolbar_search"
+        android:orderInCategory="99"
+        android:title="@string/search_label"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+
+
+</menu>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusMessanger
+  ~ @version 1.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2017 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<resources>
+    <item name="rv_item_click_support" type="id" />
+</resources>

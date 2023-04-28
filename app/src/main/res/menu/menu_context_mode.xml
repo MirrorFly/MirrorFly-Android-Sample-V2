@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2019 ContusFly LTD. All rights reserved.
+  ~ @licence http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_reply"
+        android:icon="@drawable/ic_menu_reply"
+        android:orderInCategory="95"
+        android:title="@string/action_reply"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_info"
+        android:icon="@drawable/ic_menu_info"
+        android:orderInCategory="96"
+        android:title="@string/action_information"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_forward"
+        android:icon="@drawable/ic_menu_forward"
+        android:orderInCategory="97"
+        android:title="@string/action_forward"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_favourite"
+        android:icon="@drawable/ic_menu_favorite"
+        android:orderInCategory="98"
+        android:title="@string/title_favourite"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_unfavourite"
+        android:icon="@drawable/ic_menu_unfavourite"
+        android:orderInCategory="99"
+        android:title="@string/title_unfavourite"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_copy"
+        android:icon="@drawable/ic_menu_copy"
+        android:orderInCategory="100"
+        android:title="@string/action_copy"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_menu_share"
+        android:orderInCategory="101"
+        android:title="@string/action_share"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_menu_delete"
+        android:orderInCategory="102"
+        android:title="@string/delete_conversation"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_pin"
+        android:icon="@drawable/ic_artboardpin"
+        android:orderInCategory="103"
+        android:title="chat pin"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_un_pin"
+        android:icon="@drawable/ic_artboardunpin"
+        android:orderInCategory="104"
+        android:title="chat unpin"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_mute"
+        android:icon="@drawable/ic_mute_recent"
+        android:orderInCategory="105"
+        android:title="mute notification"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_unmute"
+        android:icon="@drawable/ic_unmute_recent"
+        android:orderInCategory="106"
+        android:title="unmute notification"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_mark_as_read"
+        android:icon="@drawable/ic_mark_read_black_24dp"
+        android:orderInCategory="107"
+        android:title="Mark as read"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_mark_as_unread"
+        android:icon="@drawable/ic_mark_unread_black_24dp"
+        android:orderInCategory="108"
+        android:title="Mark as unread"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_archive_chat"
+        android:icon="@drawable/ic_archive_black"
+        android:orderInCategory="109"
+        android:title="Archive Chat"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_add_chat_shortcuts"
+        android:orderInCategory="110"
+        android:title="@string/menu_add_shortcut"
+        app:showAsAction="never" />
+
+</menu>

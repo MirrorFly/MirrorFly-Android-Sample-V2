@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_menu_delete"
+        android:orderInCategory="99"
+        android:title="@string/action_delete"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_mute"
+        android:icon="@drawable/ic_mute_recent"
+        android:orderInCategory="100"
+        android:title="@string/txt_mute"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_unmute"
+        android:icon="@drawable/ic_unmute_recent"
+        android:orderInCategory="101"
+        android:title="Unmute"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_unarchive"
+        android:icon="@drawable/ic_unarchive_black"
+        android:orderInCategory="102"
+        android:title="Unarchive"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_mark_read"
+        android:icon="@drawable/ic_mark_read_black_24dp"
+        android:orderInCategory="103"
+        android:title="Mark as Read"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_mark_unread"
+        android:icon="@drawable/ic_mark_unread_black_24dp"
+        android:orderInCategory="104"
+        android:title="Mark as Unread"
+        app:showAsAction="always" />
+
+</menu>

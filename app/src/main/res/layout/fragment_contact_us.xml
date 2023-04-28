@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_18">
+
+        <TextView
+            style="@style/ResendTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4"
+            android:text="@string/label_title" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/title_edit_text"
+            style="@style/ProfileValueStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/white_color"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="100"
+            android:paddingTop="@dimen/margin_13"
+            android:paddingBottom="@dimen/margin_8"
+            android:textSize="@dimen/text_size_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/color_list_divider_color" />
+
+        <TextView
+            style="@style/ResendTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_22"
+            android:text="@string/feedback_description" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/description_edit_text"
+            style="@style/ProfileValueStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/white_color"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="512"
+            android:paddingTop="@dimen/margin_13"
+            android:paddingBottom="@dimen/margin_8"
+            android:textSize="@dimen/text_size_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/color_list_divider_color" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/send_button"
+            style="@style/NewTextSemiBoldMediumStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_45"
+            android:background="@drawable/bg_button_shape"
+            android:focusable="false"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_40"
+            android:paddingTop="@dimen/padding_10"
+            android:paddingEnd="@dimen/padding_40"
+            android:paddingBottom="@dimen/padding_10"
+            android:text="@string/action_send"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_14"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</ScrollView>

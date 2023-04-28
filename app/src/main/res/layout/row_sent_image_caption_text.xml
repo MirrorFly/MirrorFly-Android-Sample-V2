@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_10"
+    android:layout_marginEnd="0dp"
+    android:paddingStart="0dp"
+    android:paddingTop="@dimen/padding_3"
+    android:paddingEnd="@dimen/margin_10"
+    android:paddingBottom="@dimen/margin_7">
+
+    <io.github.rockerhieu.emojicon.EmojiconTextView
+        android:id="@+id/txt_caption_sent_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_vertical"
+        android:autoLink="all"
+        android:breakStrategy="simple"
+        android:fontFamily="@font/sf_ui_display_regular"
+        android:gravity="center_vertical"
+        android:includeFontPadding="true"
+        android:lineSpacingExtra="@dimen/margin_2"
+        android:linksClickable="true"
+        android:textColor="@color/color_black"
+        android:textColorLink="@color/color_black"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="visible"
+        app:emojiconSize="19sp"
+        app:fontFamily="@font/sf_ui_display_regular"
+        tools:targetApi="M" />
+
+
+    <ImageView
+        android:id="@+id/ic_star"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/caption_text_send_image_time"
+        android:layout_alignBottom="@+id/caption_text_send_image_time"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginStart="4dp"
+        android:layout_toStartOf="@+id/caption_image_send_status"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_star"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/caption_image_send_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/caption_text_send_image_time"
+        android:layout_alignBottom="@+id/caption_text_send_image_time"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_toStartOf="@+id/caption_text_send_image_time"
+        android:contentDescription="@string/acknowledge_content_description"
+        android:src="@drawable/ic_message_acknowledged" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/caption_text_send_image_time"
+        style="@style/ChatTimeTextView"
+        android:layout_alignBottom="@+id/txt_caption_sent_chat"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/margin_1"
+        android:includeFontPadding="false"
+        android:fontFamily="@font/sf_ui_display_regular"/>
+
+</RelativeLayout>

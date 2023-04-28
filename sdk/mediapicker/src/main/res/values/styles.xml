@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="ef_AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/ef_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/ef_colorPrimaryDark</item>
+        <item name="colorAccent">@color/ef_colorAccent</item>
+    </style>
+
+    <style name="ef_ImagePickerTheme" parent="ef_AppTheme">
+        <item name="android:actionModeBackground">@color/ef_colorPrimary</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@color/ef_colorPrimary</item>
+    </style>
+
+    <style name="ef_CustomToolbarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/ef_colorTextPrimary</item>
+        <item name="actionMenuTextColor">@color/ef_colorTextPrimary</item>
+    </style>
+
+</resources>

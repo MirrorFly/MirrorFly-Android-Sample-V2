@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical"
+    tools:context=".fragments.NotificationsFragment">
+
+    <RelativeLayout
+        android:id="@+id/layout_notification_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingStart="25dp"
+        android:paddingTop="17dp"
+        android:paddingEnd="25dp"
+        android:paddingBottom="17dp">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_notification_alert"
+            style="@style/TextMediumNotificationStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/image_notification_alert"
+            android:layout_toLeftOf="@+id/image_notification_alert"
+            android:text="@string/notification_alert"/>
+
+        <com.contusfly.views.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_notification_alert"
+            android:layout_toStartOf="@+id/image_notification_alert"
+            android:layout_toLeftOf="@+id/image_notification_alert"
+            android:text="@string/label_notification_alert"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/text_black_light"
+            android:textSize="@dimen/text_size_13" />
+
+        <ImageView
+            android:id="@+id/image_notification_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_right_arrow" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/color_list_divider_color" />
+
+    <RelativeLayout
+        android:id="@+id/layout_notification_tone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingStart="25dp"
+        android:paddingTop="17dp"
+        android:paddingEnd="25dp"
+        android:paddingBottom="17dp">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_notification_tone"
+            style="@style/TextMediumNotificationStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/image_notification_tone"
+            android:layout_toLeftOf="@+id/image_notification_tone"
+            android:text="@string/notification_tone"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/notification_tone_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_notification_tone"
+            android:layout_toStartOf="@+id/image_notification_tone"
+            android:layout_toLeftOf="@+id/image_notification_tone"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_notification_tone"
+            android:textColor="@color/text_black_light"
+            android:textSize="@dimen/text_size_13" />
+
+        <ImageView
+            android:id="@+id/image_notification_tone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_right_arrow" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/color_list_divider_color" />
+
+    <RelativeLayout
+        android:id="@+id/layout_notification_permission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingStart="25dp"
+        android:paddingTop="17dp"
+        android:paddingEnd="25dp"
+        android:paddingBottom="17dp">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_notification_permission"
+            style="@style/TextMediumNotificationStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/image_notification_permission"
+            android:layout_toLeftOf="@+id/image_notification_permission"
+            android:text="@string/notification_not_working"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/notification_permission_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_notification_permission"
+            android:layout_toStartOf="@+id/image_notification_permission"
+            android:layout_toLeftOf="@+id/image_notification_permission"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_notification_not_working"
+            android:textColor="@color/text_black_light"
+            android:textSize="@dimen/text_size_13" />
+
+        <ImageView
+            android:id="@+id/image_notification_permission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_right_arrow" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/color_list_divider_color" />
+</LinearLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:minHeight="@dimen/margin_60"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical"
+    android:layout_margin="@dimen/margin_10"
+    android:id="@+id/parent_view"
+    android:foreground="?attr/selectableItemBackground">
+
+    <com.contusfly.views.CircularImageView
+        android:id="@+id/image_chat_picture"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/margin_50"
+        android:layout_weight="0.3"
+        android:layout_marginStart="@dimen/margin_5"
+        android:contentDescription="@null"
+        android:onClick="onClick"
+        app:srcCompat="@drawable/ic_profile" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.7"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <androidx.emoji.widget.EmojiAppCompatTextView
+            android:id="@+id/text_chat_name"
+            style="@style/EmojiTextSemiBoldStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            tools:text="userName"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_chat_person"
+            style="@style/EmojiTextRegularSmallGreyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:gravity="center_vertical"
+            android:visibility="visible"
+            tools:text="userName"/>
+
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.5"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="?attr/menu_divider_color"/>
+
+    </LinearLayout>
+
+</LinearLayout>

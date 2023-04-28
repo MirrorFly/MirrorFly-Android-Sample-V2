@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.contusfly.views.RoundedCornerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".fragments.ProfileDialogFragment">
+
+    <FrameLayout
+        android:id="@+id/user_profile_image_layout"
+        android:layout_width="280dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:background="@color/black_transparent">
+
+        <ImageView
+            android:id="@+id/user_profile_image_viewer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profile_img" />
+
+        <TextView
+            android:id="@+id/user_name"
+            style="@style/chatImageMessageLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_profile_popup_gradient"
+            android:ellipsize="end"
+            android:gravity="start|center_vertical"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padding_20"
+            android:paddingEnd="0dp" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:background="@android:color/background_light"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/open_chat_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/action_start_chat"
+                app:srcCompat="@drawable/user_profile_popup_ic_chat_img_24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/audio_call_linearlayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/audio_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/audio_call"
+                app:srcCompat="@drawable/user_profile_popup_ic_voice_call_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/video_call_linearlayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/video_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/video_call"
+                app:srcCompat="@drawable/user_profile_popup_ic_video_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/info_linearlayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/open_user_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/profile_label"
+                app:srcCompat="@drawable/user_profile_popup_ic_info_24dp" />
+        </LinearLayout>
+    </LinearLayout>
+</com.contusfly.views.RoundedCornerLayout>

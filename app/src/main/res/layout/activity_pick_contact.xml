@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_toolbar" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/single_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:clipToPadding="true"
+        app:cardCornerRadius="3dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/color_light_gray" />
+
+            <com.contusfly.views.CustomRecyclerView
+                android:id="@+id/view_list_numbers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.contusfly.views.CustomRecyclerView
+        android:id="@+id/contacts_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+</LinearLayout>

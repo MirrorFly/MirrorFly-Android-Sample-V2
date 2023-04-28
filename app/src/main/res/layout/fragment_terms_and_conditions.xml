@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:padding="15dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_of_service"
+                android:textSize="16sp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/terms_of_service_content"
+                android:textSize="15sp"
+                android:lineSpacingExtra="7dp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_prohibited_use"
+                android:textSize="16sp"
+                style="@style/ToolbarCollapsedTitleStyle"
+                android:layout_marginTop="15dp" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_prohibited_use_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_post_sales_support"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_post_sales_support_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_website_visitors"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_website_visitors_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_changes"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_changes_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_termination"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_termination_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_disclaimer_warranties"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_disclaimer_warranties_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_limitation_liability"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_limitation_liability_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_general_representation_warranty"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_general_representation_warranty_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_indemnification"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_indemnification_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_license_agreement"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_license_agreement_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_service_business_relation"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_service_business_relation_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_illegal_distribution"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_illegal_distribution_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/color_list_divider_color" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_liabilities"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                style="@style/ToolbarCollapsedTitleStyle" />
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:paddingBottom="15dp"
+                android:lineSpacingExtra="7dp"
+                android:text="@string/terms_liabilities_content"
+                android:textSize="15sp"
+                app:font_name="@string/font_roboto_light" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
