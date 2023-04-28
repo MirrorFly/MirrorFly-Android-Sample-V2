@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_speaker_active" android:state_activated="true" />
+    <item android:drawable="@drawable/ic_speaker_inactive" />
+</selector>

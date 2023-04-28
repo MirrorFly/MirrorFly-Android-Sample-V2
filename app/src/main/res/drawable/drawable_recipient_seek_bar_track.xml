@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 3.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2018 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@android:id/background"
+        android:left="-18dp"
+        android:right="-18dp">
+        <selector>
+            <item>
+                <shape android:shape="line">
+                    <stroke
+                        android:width="3dp"
+                        android:color="@color/color_recipient_seek_secondary_progress" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+    <item
+        android:id="@android:id/secondaryProgress"
+        android:left="-18dp"
+        android:right="-18dp">
+        <clip>
+            <scale android:scaleWidth="100%">
+                <selector>
+                    <item android:state_enabled="false">
+                        <color android:color="@color/color_transparent" />
+                    </item>
+                    <item>
+                        <shape android:shape="line">
+                            <stroke
+                                android:width="3dp"
+                                android:color="@color/color_recipient_seek_secondary_progress" />
+                        </shape>
+                    </item>
+                </selector>
+            </scale>
+        </clip>
+    </item>
+    <item
+        android:id="@android:id/progress"
+        android:left="-18dp"
+        android:right="-18dp">
+        <clip>
+            <scale android:scaleWidth="100%">
+                <selector>
+                    <item android:state_enabled="false">
+                        <color android:color="@android:color/transparent" />
+                    </item>
+                    <item>
+                        <shape android:shape="line">
+                            <stroke
+                                android:width="3dp"
+                                android:color="@color/color_recipient_seek_thumb" />
+                        </shape>
+                    </item>
+                </selector>
+            </scale>
+        </clip>
+    </item>
+</layer-list>

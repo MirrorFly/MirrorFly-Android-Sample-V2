@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text Font Size -->
+    <dimen name="toolbar_header_size">20sp</dimen>
+    <dimen name="text_size_6">6sp</dimen>
+    <dimen name="text_size_7">7sp</dimen>
+    <dimen name="text_size_9">9sp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_15">15sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_17">17sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_19">19sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_23">23sp</dimen>
+    <dimen name="text_size_25">25sp</dimen>
+    <dimen name="text_size_28">28sp</dimen>
+
+    <!-- Fab Chat icon sizes -->
+    <dimen name="big_icon_width_height">60dp</dimen>
+    <dimen name="small_icon_width_height">20dp</dimen>
+
+    <!-- Profile icon sizes -->
+    <dimen name="profile_icon_width_height">145dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_1">1dp</dimen>
+    <dimen name="padding_3">3dp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+    <dimen name="padding_6">6dp</dimen>
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_12">12dp</dimen>
+    <dimen name="padding_13">13dp</dimen>
+    <dimen name="padding_14">14dp</dimen>
+    <dimen name="padding_15">15dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_17">17dp</dimen>
+    <dimen name="padding_18">18dp</dimen>
+    <dimen name="padding_19">19dp</dimen>
+    <dimen name="padding_20">20dp</dimen>
+    <dimen name="padding_25">25dp</dimen>
+    <dimen name="padding_30">30dp</dimen>
+    <dimen name="padding_40">40dp</dimen>
+    <dimen name="padding_50">50dp</dimen>
+
+    <!-- Margin -->
+    <dimen name="margin_0">0dp</dimen>
+    <dimen name="margin_0.2">0.2dp</dimen>
+    <dimen name="margin_0.3">0.3dp</dimen>
+    <dimen name="margin_0.5">0.5dp</dimen>
+    <dimen name="margin_1">1dp</dimen>
+    <dimen name="margin_2">2dp</dimen>
+    <dimen name="margin_2.5">2.5dp</dimen>
+    <dimen name="margin_3">3dp</dimen>
+    <dimen name="margin_3.5">3.5dp</dimen>
+    <dimen name="margin_4">4dp</dimen>
+    <dimen name="margin_4.5">4.5dp</dimen>
+    <dimen name="margin_5">5dp</dimen>
+    <dimen name="margin_7">7dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_9">9dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
+    <dimen name="margin_11">11dp</dimen>
+    <dimen name="margin_12">12dp</dimen>
+    <dimen name="margin_12.5">12.5dp</dimen>
+    <dimen name="margin_13">13dp</dimen>
+    <dimen name="margin_14">14dp</dimen>
+    <dimen name="margin_15">15dp</dimen>
+    <dimen name="margin_16">16dp</dimen>
+    <dimen name="margin_18">18dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="margin_21">21dp</dimen>
+    <dimen name="margin_22">22dp</dimen>
+    <dimen name="margin_24">24dp</dimen>
+    <dimen name="margin_24.6">24.6dp</dimen>
+    <dimen name="margin_25">25dp</dimen>
+    <dimen name="margin_27">27dp</dimen>
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_29">29dp</dimen>
+    <dimen name="margin_30">30dp</dimen>
+    <dimen name="margin_31">31dp</dimen>
+    <dimen name="margin_32">32dp</dimen>
+    <dimen name="margin_34">34dp</dimen>
+    <dimen name="margin_35">35dp</dimen>
+    <dimen name="margin_36">36dp</dimen>
+    <dimen name="margin_36.3">36.3dp</dimen>
+    <dimen name="margin_38">38dp</dimen>
+    <dimen name="margin_40">40dp</dimen>
+    <dimen name="margin_41">41dp</dimen>
+    <dimen name="margin_45">45dp</dimen>
+    <dimen name="margin_46">46dp</dimen>
+    <dimen name="margin_48">48dp</dimen>
+    <dimen name="margin_50">50dp</dimen>
+    <dimen name="margin_55">55dp</dimen>
+    <dimen name="margin_60">60dp</dimen>
+    <dimen name="margin_65">65dp</dimen>
+    <dimen name="margin_70">70dp</dimen>
+    <dimen name="margin_75">75dp</dimen>
+    <dimen name="margin_78">78dp</dimen>
+    <dimen name="margin_80">80dp</dimen>
+    <dimen name="margin_90">90dp</dimen>
+    <dimen name="margin_100">100dp</dimen>
+    <dimen name="margin_105">105dp</dimen>
+    <dimen name="margin_120">120dp</dimen>
+    <dimen name="margin_125">125dp</dimen>
+    <dimen name="margin_130">130dp</dimen>
+    <dimen name="margin_150">150dp</dimen>
+    <dimen name="margin_171">171dp</dimen>
+    <dimen name="margin_180">180dp</dimen>
+    <dimen name="margin_200">200dp</dimen>
+    <dimen name="margin_220">220dp</dimen>
+    <dimen name="margin_232">232dp</dimen>
+    <dimen name="margin_250">250dp</dimen>
+    <dimen name="margin_280">280dp</dimen>
+    <dimen name="margin_300">300dp</dimen>
+
+    <!--Image height,width START-->
+    <dimen name="call_profile_image_width">135dp</dimen>
+    <!--Image height,width END-->
+    <dimen name="fab_normal_size">67dp</dimen>
+    <dimen name="fab_normal_icon_size">36dp</dimen>
+    <dimen name="fab_mini_size">51dp</dimen>
+    <dimen name="fab_mini_icon_size">24dp</dimen>
+    <!--    elevation-->
+    <dimen name="elevation_small">5dp</dimen>
+    <dimen name="elevation_extra_small">2dp</dimen>
+    <!--    elevation-->
+
+    <!-- Audio / Document Message Item -->
+    <dimen name="audio_play_ic_dimens">22dp</dimen>
+    <dimen name="progress_play_layout_dimens">32dp</dimen>
+    <dimen name="audio_music_layout_dimens">44dp</dimen>
+    <dimen name="music_ic_dimens">16dp</dimen>
+    <dimen name="upload_download_ic_dimens">16dp</dimen>
+    <dimen name="audio_doc_cancel_ic_dimens">16dp</dimen>
+
+    <!-- PinLock Keyboard -->
+    <dimen name="numeric_bottom_keypad">20dp</dimen>
+    <dimen name="numeric_forget_keypad">70dp</dimen>
+
+</resources>

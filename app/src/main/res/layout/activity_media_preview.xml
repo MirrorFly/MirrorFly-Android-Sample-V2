@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_black"
+    android:fitsSystemWindows="true"
+    tools:context=".activities.MediaPreviewActivity">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.03" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.97" />
+
+    <RelativeLayout
+        android:id="@+id/toolbar_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/margin_20"
+            app:srcCompat="@drawable/ic_back_arrow_white" />
+
+        <com.contusfly.views.CircularImageView
+            android:id="@+id/image_chat_picture"
+            android:layout_width="@dimen/margin_30"
+            android:layout_height="@dimen/margin_30"
+            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginBottom="@dimen/margin_20"
+            android:layout_toEndOf="@+id/back_arrow"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_profile" />
+
+        <ImageView
+            android:id="@+id/delete_media"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/margin_20"
+            app:srcCompat="@drawable/ic_delete_media" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_layout"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_layout">
+
+        <com.contusfly.views.CustomViewPager
+            android:id="@+id/media_list"
+            android:layout_width="match_parent"
+            android:layout_height="600dp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_black_opacity_55"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintBottom_toTopOf="@+id/emojicons">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.03" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.97" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_add_more"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:constraint_referenced_ids="add_more_media, separator_view"
+            app:layout_constraintBottom_toBottomOf="@+id/image_caption"
+            app:layout_constraintEnd_toStartOf="@+id/emoji"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/image_caption" />
+
+        <ImageView
+            android:id="@+id/add_more_media"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="@dimen/margin_50"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/margin_15"
+            app:layout_constraintBottom_toBottomOf="@+id/image_caption"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/image_caption"
+            app:srcCompat="@drawable/ic_add_more_media" />
+
+        <View
+            android:id="@+id/separator_view"
+            android:layout_width="@dimen/margin_0.5"
+            android:layout_height="@dimen/margin_25"
+            android:background="@color/color_text_hint"
+            app:layout_constraintBottom_toBottomOf="@+id/image_caption"
+            app:layout_constraintEnd_toStartOf="@+id/emoji"
+            app:layout_constraintStart_toEndOf="@+id/add_more_media"
+            app:layout_constraintTop_toTopOf="@+id/image_caption" />
+
+        <TextView
+            android:id="@+id/caption_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_14"
+            android:paddingStart="@dimen/margin_18"
+            android:paddingEnd="@dimen/margin_0"
+            android:textColor="@color/color_text_hint"
+            android:fontFamily="@font/sf_ui_display_regular"
+            app:layout_constraintStart_toStartOf="@id/emoji"
+            app:layout_constraintBottom_toTopOf="@+id/emoji"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/emoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_15"
+            android:paddingTop="@dimen/margin_15"
+            android:paddingBottom="@dimen/margin_15"
+            android:paddingEnd="@dimen/margin_0"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/image_caption"
+            app:layout_constraintEnd_toStartOf="@+id/image_caption"
+            app:layout_constraintStart_toEndOf="@+id/separator_view"
+            app:srcCompat="@drawable/ic_emoji_black" />
+
+
+        <io.github.rockerhieu.emojicon.EmojiconEditText
+            android:id="@+id/image_caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_60"
+            android:background="@null"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:hint="@string/title_hint_caption"
+            android:imeOptions="actionDone"
+            android:inputType="textCapSentences"
+            android:lineSpacingExtra="@dimen/margin_5"
+            android:maxLines="6"
+            android:paddingStart="@dimen/margin_15"
+            android:paddingTop="@dimen/margin_15"
+            android:paddingEnd="@dimen/margin_0"
+            android:paddingBottom="@dimen/margin_15"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbVertical="@drawable/scroll_focused"
+            android:scrollbars="vertical"
+            android:textColor="@color/color_white"
+            android:textColorHint="@color/color_text_hint"
+            android:textSize="@dimen/text_size_16"
+            app:layout_constraintBottom_toTopOf="@+id/group_to_user"
+            app:layout_constraintEnd_toEndOf="@+id/right_guideline"
+            app:layout_constraintStart_toEndOf="@+id/emoji" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_to_user"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:constraint_referenced_ids="image_right_arrow, to_user_text_view"
+            app:layout_constraintBottom_toBottomOf="@+id/to_user_text_view"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline"
+            app:layout_constraintTop_toTopOf="@+id/to_user_text_view" />
+
+        <ImageView
+            android:id="@+id/image_right_arrow"
+            android:layout_width="@dimen/padding_6"
+            android:layout_height="@dimen/margin_9"
+            android:layout_marginStart="@dimen/margin_12"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_12"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/to_user_text_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/to_user_text_view"
+            app:srcCompat="@drawable/ic_right_arrow" />
+
+        <TextView
+            android:id="@+id/to_user_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:includeFontPadding="false"
+            android:textColor="@color/color_text_black_bg"
+            android:textSize="@dimen/text_size_13"
+            app:layout_constraintBottom_toTopOf="@+id/images_preview_list"
+            app:layout_constraintStart_toEndOf="@+id/image_right_arrow" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/images_preview_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/send_media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_send_media"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_layout"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_right"
+        app:layout_constraintTop_toTopOf="@+id/bottom_layout" />
+
+    <FrameLayout
+        android:id="@+id/emojicons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_250"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <include
+        android:id="@+id/preview_progress"
+        layout="@layout/progress_view" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

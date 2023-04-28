@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <corners
+        android:bottomLeftRadius="2dp"
+        android:bottomRightRadius="10dp"
+        android:topLeftRadius="10dp"
+        android:topRightRadius="10dp">
+    </corners>
+    <stroke android:color="@color/color_received_message_border" android:width="@dimen/margin_1"/>
+    <solid android:color="@color/color_white">
+    </solid>
+</shape>

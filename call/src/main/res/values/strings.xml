@@ -1,0 +1,97 @@
+<!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<resources>
+   
+    <!--Call Screen START-->
+    <string name="action_remote_video_pause">%s\'s video paused</string>
+    <string name="action_remote_audio_mute_and_video_pause">%s muted audio and paused video</string>
+    <string name="call_retry_info">Seems like no one attended the call</string>
+    <string name="call_try_again_info">"Unavailable, Try again later"</string>
+    <string name="start_timer">00:00</string>
+    <string name="you_missed_call">You missed&#160;</string>
+    <string name="new_missed_call">New Missed Call</string>
+    <string name="new_incoming_call">New Incoming Call</string>
+    <string name="new_outgoing_call">Outgoing Call</string>
+    <string name="new_ongoing_call">Ongoing Call</string>
+    <string name="call_you">You</string>
+    <string name="group_call">Group Call</string>
+    <string name="call_link">Call Link</string>
+    <string name="link_copied_clipboard">Link copied to clipboard</string>
+    <string name="msg_add_participant">Add participant to the call</string>
+    <string name="msg_selected_user_call">Call Now (%d)</string>
+    <string name="msg_add_participants">Add participant to the call (%d)</string>
+    <string name="msg_no_selected_user_call">Call Now</string>
+    <string name="msg_user_call_limit">You can only select %d participants</string>
+    <string name="msg_user_call_limit_one_user">You can only select %d participant</string>
+    <string name="call_info">Call Info</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="msg_ongoing_call_alert_for_group_call">Not able to place Mirrorfly Group call when you are already in the other call</string>
+    <string name="title_remove_call_log">Remove from call log</string>
+    <string name="msg_unblockGroupAudioCall">Unblock %s to make an audio call</string>
+    <string name="msg_unblockGroupVideoCall">Unblock %s to make a video call</string>
+    <string name="msg_unblockAddParticipantCall">Unblock %s to add into the call</string>
+
+    <string name="trying_to_connect">Trying to Connect</string>
+    <string name="reconnecting">Reconnecting…</string>
+    <string name="calling_after_10s">User Seems to be Offline, Trying to Connect</string>
+    <string name="incoming_audio_call">Incoming audio call</string>
+    <string name="incoming_audio_group_call">Incoming audio group call</string>
+    <string name="fly_action_cancel">Cancel</string>
+    <string name="action_call_again">Call Again</string>
+    <string name="video_call">Video Call</string>
+    <string name="incoming_video_call">Incoming video call</string>
+    <string name="incoming_video_group_call">Incoming video group call</string>
+    <string name="call_permission_denied">Please enable permission to attend the call</string>
+    <string name="audio_call">Audio Call</string>
+    <!--Call Screen END-->
+
+    <string name="msg_telephony_call_alert">You are already on another telephone call</string>
+    <string name="msg_ongoing_call_alert">You are already on another call</string>
+    <string name="action_Ok">OK</string>
+    <string name="msg_unblockAudioCall">Unblock to make an audio call</string>
+    <string name="msg_unblockVideoCall">Unblock to make a video call</string>
+    <string name="action_unblock">Unblock</string>
+    <string name="action_remote_audio_mute">%s\'s microphone turned off</string>
+    <string name="action_remote_video_mute">%s\'s camera turned off</string>
+    <string name="action_remote_audio_and_video_mute">%s muted audio and video</string>
+    <string name="action_invite">INVITE</string>
+    <string name="action_search">Search</string>
+    <string name="action_switch">Switch</string>
+    <string name="add_participants">Add Participants</string>
+    <string name="msg_no_results">No Contacts found </string>
+    <string name="error_select_atleast_one">Select at least one Contact</string>
+    <string name="action_clear_call_log_message">Do you want to clear your entire call log?</string>
+    <plurals name="action_delete_call_log_message">
+        <item quantity="one">Do you want to delete a call log?</item>
+        <item quantity="other">Do you want to delete the selected call logs?</item>
+    </plurals>
+    <string name="info_call_members_limit">Maximum %d members allowed in call</string>
+    <string name="click_grid_view">Click grid view</string>
+    <string name="click_tile_view">Click tile view</string>
+    <string name="call_members_name">You and %s</string>
+    <string name="call_member_joined">%s Joined</string>
+    <string name="call_member_left">%s Left</string>
+    <string name="call_member_count">+%d</string>
+
+    <string name="join_link_meeting_lable">%1$s video call</string>
+    <string name="join_video_meeting_lable">Join video call</string>
+    <string name="join_now_lable">Join Now</string>
+    <string name="already_in_call">You\'re already in a call</string>
+    <string name="already_in_call_msg">Do you want to leave your call to join this one?</string>
+    <string name="all_members_already_in_group_call">All members of the group are already in the call</string>
+    <string name="all_members_already_in_call">All members of your contacts are already in the call</string>
+    <string name="call_ended_text">Call Ended!</string>
+    <string name="call_ended_text_message">No one else is here</string>
+    <string name="invalid_call_link">Invalid call link</string>
+    <string name="invalid_link">Invalid link</string>
+    <string name="return_to_chat">Return to chat</string>
+    <string name="max_members_in_call">Maximum %s members allowed in call</string>
+    <string name="check_internet_connection">Please check your internet connection</string>
+    <string name="connecting_label">Connecting, please wait…</string>
+</resources>

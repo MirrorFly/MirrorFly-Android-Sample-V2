@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+        }
+
+        qa {
+
+        }
+
+        uat {
+
+        }
+
+        release {
+        }
+
+        releaseDebug {
+
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //Android - versions.gradle
+    implementation deps.android.appcompat
+    implementation deps.android.material
+    //Junit - versions.gradle
+    testImplementation deps.junit.junit
+    //Espresso - versions.gradle
+    androidTestImplementation deps.espresso.bioauthcore
+}

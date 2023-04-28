@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusFly
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2019 ContusFly LTD. All rights reserved.
+  ~ @licence http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    android:thickness="5dp">
+    <corners android:radius="3dp" />
+
+    <solid android:color="@color/colorPrimary" />
+
+</shape>

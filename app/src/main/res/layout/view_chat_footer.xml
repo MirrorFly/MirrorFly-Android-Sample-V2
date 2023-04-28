@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="@android:color/white"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/chat_footer_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/chat_footer_divider_color"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/view_chat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginLeft="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_9"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_marginRight="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_9"
+        android:background="@drawable/bg_chat_footer_shape"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="4.5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/layoutViewAudio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/image_chat_smiley"
+            style="@style/style_chat_controls"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:contentDescription="@string/title_content_description"
+            app:srcCompat="@drawable/ic_input_emoji" />
+
+        <View
+            android:id="@+id/view_audio_record_space"
+            android:layout_width="@dimen/margin_5"
+            android:layout_height="@dimen/margin_1"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin_7"
+            android:layout_weight="0"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/image_audio_record"
+            style="@style/style_chat_controls"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:contentDescription="@string/title_content_description"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_audio_record" />
+
+        <TextView
+            android:id="@+id/text_audio_record_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:includeFontPadding="false"
+            android:padding="@dimen/padding_5"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_14"
+            android:visibility="gone"
+            tools:text="00:00" />
+
+        <ImageView
+            android:id="@+id/image_audio_record_delete"
+            style="@style/style_chat_controls"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:contentDescription="@string/title_content_description"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_audio_record_delete" />
+
+        <io.github.rockerhieu.emojicon.EmojiconEditText
+            android:id="@+id/edit_chat_msg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/color_white"
+            android:hint="@string/title_hint_msg"
+            android:imeOptions="actionNext"
+            android:inputType="textCapSentences|textMultiLine"
+            android:lineSpacingExtra="@dimen/margin_5"
+            android:maxWidth="@dimen/margin_280"
+            android:maxLines="5"
+            android:padding="@dimen/padding_5"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/color_chat_list_time"
+            android:textSize="@dimen/text_size_15"
+            app:emojiconSize="@dimen/text_size_23" />
+
+        <ImageView
+            android:id="@+id/action_attachment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_8"
+            android:layout_weight="0"
+            android:contentDescription="@string/title_content_description"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:minWidth="@dimen/margin_27"
+            android:minHeight="@dimen/margin_27"
+            android:padding="@dimen/margin_4"
+            android:scaleType="centerInside"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_attach" />
+
+        <LinearLayout
+            android:layout_width="@dimen/margin_30"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/image_action_attach_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:layout_weight="0"
+                android:contentDescription="@string/title_content_description"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:minWidth="@dimen/margin_27"
+                android:minHeight="@dimen/margin_27"
+                android:padding="@dimen/margin_4"
+                android:scaleType="centerInside"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_microphone" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/margin_29">
+
+            <TextView
+                android:id="@+id/text_audio_record_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:fontFamily="@font/sf_ui_display_light"
+                android:includeFontPadding="false"
+                android:padding="@dimen/margin_5"
+                android:text="@string/cancel"
+                android:textColor="@color/text_red"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/text_audio_slide_to_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawablePadding="@dimen/margin_5"
+                android:fontFamily="@font/sf_ui_display_light"
+                android:includeFontPadding="false"
+                android:paddingStart="@dimen/margin_0"
+                android:paddingTop="@dimen/margin_2"
+                android:paddingEnd="@dimen/margin_20"
+                android:paddingBottom="@dimen/margin_2"
+                android:text="@string/slide_to_cancel"
+                android:textColor="@color/text_black"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_noun_arrow" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutViewAudio"
+        android:layout_width="@dimen/margin_50"
+        android:layout_height="@dimen/margin_50"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/image_chat_send"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/title_content_description"
+            app:srcCompat="@drawable/ic_audio_recording_icon" />
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_chat_send"
+        android:layout_width="@dimen/margin_30"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/margin_9"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:contentDescription="@string/title_content_description"
+        android:padding="@dimen/padding_3"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_send_inactive" />
+
+    <com.contusfly.views.CustomTextView
+        android:id="@+id/text_no_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingStart="@dimen/padding_8"
+        android:paddingTop="@dimen/padding_12"
+        android:paddingEnd="@dimen/padding_8"
+        android:paddingBottom="@dimen/padding_12"
+        android:text="@string/msg_not_participant"
+        android:textColor="@color/color_dark_gray"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone"
+        app:fontFamily="@font/sf_ui_display_regular"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/chat_footer_bottom_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,91 @@
+<!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <view
+        android:id="@+id/image"
+        class="eu.janmuller.android.simplecropimage.CropImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view_controls"
+
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:background="#55000000" />
+
+    <LinearLayout
+        android:id="@+id/view_controls"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/discard"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:background="#FFFFFF"
+            android:text="@string/cancel"
+            android:textColor="#000000" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <ImageButton
+            android:id="@+id/rotateLeft"
+            android:layout_width="60dp"
+            android:layout_height="fill_parent"
+            android:background="#FFFFFF"
+            android:visibility="visible"
+            android:src="@drawable/ic_rotate_left" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <ImageButton
+            android:id="@+id/rotateRight"
+            android:layout_width="60dp"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@id/rotateLeft"
+            android:background="#FFFFFF"
+            android:visibility="visible"
+            android:src="@drawable/ic_rotate_right" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@id/rotateRight"
+            android:layout_weight="1.0"
+            android:background="#FFFFFF"
+            android:text="@string/save"
+            android:textColor="#000000" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:background="@android:color/black" />
+
+    </LinearLayout>
+</RelativeLayout>

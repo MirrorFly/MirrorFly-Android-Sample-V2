@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/chat_toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/chat_xmpp_connection_status_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tool_bar"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/chat_xmpp_connection_text"
+            style="@style/Connection_status"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:text="@string/msg_no_internet" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_xmpp_connection_status_layout"
+        android:orientation="horizontal"
+        android:paddingTop="-5dp"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="@string/title_add"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color_black" />
+
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="match_parent"
+            android:background="@color/color_white" />
+
+        <Button
+            android:id="@+id/btn_block"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="@string/title_block"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color_black" />
+    </LinearLayout>
+
+    <include layout="@layout/view_empty_data" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/view_chat_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view_footer"
+        android:layout_below="@+id/ll_block"
+        android:paddingTop="@dimen/margin_0"
+        android:paddingBottom="@dimen/padding_5"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:id="@+id/layout_redirect_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/view_footer"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_10"
+        android:gravity="end"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/unread_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/drawable_unread_count"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_size_12"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/fb_redirect_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_redirect_last_message" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/view_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/view_chat_footer_layout"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/view_text_reply_layout"
+            layout="@layout/reply_view" />
+
+        <LinearLayout
+            android:id="@+id/suggestion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/suggestion_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/reply_close"
+                android:layout_width="@dimen/margin_15"
+                android:layout_height="@dimen/margin_15"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/margin_2"
+                android:background="@drawable/ic_close1"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/view_chat_footer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/view_chat_footer"
+            layout="@layout/view_chat_footer" />
+
+        <FrameLayout
+            android:id="@+id/emojicons"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_250"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
+</RelativeLayout>

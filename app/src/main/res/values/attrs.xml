@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularImageView">
+        <attr name="border" format="boolean" />
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="shadow" format="boolean" />
+        <attr name="is_circle" format="boolean" />
+    </declare-styleable>
+    <!-- Color references -->
+    <attr name="colorPrimary" format="color" />
+    <attr name="colorPrimaryDark" format="color" />
+    <attr name="colorAccent" format="color" />
+    <attr name="color_black" format="color" />
+    <attr name="dashboard_toolbar_text_color" format="color" />
+    <attr name="no_message_view_bg_color" format="color"/>
+    <attr name="chat_list_view_bg_color" format="color"/>
+    <attr name="error_message_black" format="color"/>
+    <attr name="error_message_gray" format="color"/>
+    <attr name="transparent_color" format="color"/>
+    <attr name="divider_color" format="color"/>
+    <attr name="chat_list_time_color" format="color"/>
+    <attr name="unread_count_bg_color" format="color"/>
+    <attr name="circular_img_bg_color" format="color"/>
+    <attr name="chat_list_name_color" format="color"/>
+    <attr name="chat_list_message_color" format="color"/>
+    <attr name="chat_list_unseen_count_color" format="color"/>
+    <attr name="blue_color" format="color"/>
+    <attr name="white_color" format="color"/>
+    <attr name="contacts_list_bg_color" format="color"/>
+    <attr name="contact_status_color" format="color"/>
+    <attr name="black_transparent_color" format="color"/>
+    <attr name="white_transparent_color" format="color"/>
+    <attr name="menu_text_color" format="color"/>
+    <attr name="menu_divider_color" format="color"/>
+    <attr name="country_name_color" format="color"/>
+    <attr name="light_gray_color" format="color"/>
+    <attr name="red_color" format="color"/>
+    <attr name="otp_gray_color" format="color"/>
+    <attr name="otp_text_color" format="color"/>
+    <attr name="profile_text_color" format="color"/>
+    <attr name="profile_values_color" format="color"/>
+    <attr name="your_status_color" format="color"/>
+    <attr name="status_list_color" format="color"/>
+    <attr name="selected_status_color" format="color"/>
+    <attr name="button_disabled_color" format="color"/>
+    <attr name="tab_text_indicator_color" format="color"/>
+    <attr name="white_hint_color" format="color"/>
+    <attr name="tab_text_color" format="color"/>
+
+
+    <declare-styleable name="Emojicon">
+        <attr name="emojiconSize" format="dimension" />
+        <attr name="emojiconTextStart" format="integer" />
+        <attr name="emojiconTextLength" format="integer" />
+    </declare-styleable>
+
+</resources>

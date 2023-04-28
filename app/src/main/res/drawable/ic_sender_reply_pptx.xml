@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/color_white" />
+    <item
+        android:bottom="@dimen/margin_8"
+        android:drawable="@drawable/ic_media_pptx"
+        android:left="@dimen/margin_10"
+        android:right="@dimen/margin_10"
+        android:top="@dimen/margin_8" />
+</layer-list>

@@ -1,0 +1,152 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_pip_mode"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/group_pip_background"
+    android:orientation="vertical"
+    android:visibility="gone"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
+
+        <com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
+            android:id="@+id/user_video_surface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignWithParentIfMissing="true" />
+
+        <ImageView
+            android:id="@+id/user_profile_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/title_image"
+            android:gravity="center"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/user_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/margin_7"
+            android:layout_marginBottom="@dimen/margin_4"
+            android:ellipsize="end"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:maxLines="1"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_size_11" />
+
+        <com.contus.call.SpeakingIndicatorView
+            android:id="@+id/view_speaking_indicator"
+            android:layout_width="@dimen/margin_18"
+            android:layout_height="@dimen/margin_18"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/margin_4"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/caller_status_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ic_caller_status_bg"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/caller_status_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/sf_ui_display_light"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/text_size_14" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
+
+        <com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
+            android:id="@+id/user_video_surface1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignWithParentIfMissing="true" />
+
+        <ImageView
+            android:id="@+id/user_profile_pic1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/title_image"
+            android:gravity="center"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/user_profile_name1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/margin_7"
+            android:layout_marginBottom="@dimen/margin_4"
+            android:layout_toStartOf="@+id/participants_count"
+            android:ellipsize="end"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:maxLines="1"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_size_11" />
+
+        <com.contus.call.SpeakingIndicatorView
+            android:id="@+id/view_speaking_indicator1"
+            android:layout_width="@dimen/margin_18"
+            android:layout_height="@dimen/margin_18"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/margin_4"
+            android:visibility="gone" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/participants_count"
+            style="@style/TextUnSeenCountStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/margin_10"
+            android:gravity="center"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:visibility="gone"
+            app:layout_constraintCircleAngle="45"
+            app:layout_constraintCircleRadius="@dimen/margin_24" />
+
+        <RelativeLayout
+            android:id="@+id/participant_status_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ic_caller_status_bg"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/participant_status_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/sf_ui_display_light"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/text_size_14" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

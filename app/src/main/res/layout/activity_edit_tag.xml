@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chatTag.activities.EditTagActivity"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_view"
+        layout="@layout/chat_tag_common_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ef_dimen_40"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/ic_chat_tag" />
+
+        <com.contusfly.views.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_10"
+            style="@style/ChatTag_regular"
+            android:text="@string/chat_tag_info"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/margin_15"
+        android:layout_marginRight="@dimen/margin_15">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/recommended_chat_tag_title"
+            style="@style/ChatTag_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center|right"
+            android:text="@string/recommended_chat_tag" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/margin_20">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/chat_tag_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/chat_tag_list_item_layout"
+                    tools:itemCount="3"
+                    android:layout_marginTop="@dimen/margin_10"
+                    />
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/create_chat_tag"
+                    style="@style/ChatTag_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/margin_40"
+                    android:gravity="center"
+                    android:text="@string/create_chat_tag"
+                    android:layout_marginTop="@dimen/margin_15"
+                    android:textColor="@color/color_blue" />
+
+                <LinearLayout
+                    android:id="@+id/edit_info_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/color_list_divider_color"
+                        android:layout_marginTop="@dimen/margin_5"/>
+
+                    <com.contusfly.views.CustomTextView
+                        style="@style/ChatTag_regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|right"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:text="@string/edit_tag_info" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

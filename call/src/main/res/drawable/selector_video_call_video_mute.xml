@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_video_mute_active" android:state_activated="false" />
+    <item android:drawable="@drawable/ic_video_call_active_attend_state" android:state_enabled="true" />
+    <item android:drawable="@drawable/ic_video_mute_inactive" />
+
+</selector>

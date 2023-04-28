@@ -1,0 +1,70 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_call_options"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ic_group_user_info_layout"
+    android:orientation="vertical"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_45"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginEnd="@dimen/margin_45"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/image_mute_audio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/selector_call_audio_mute" />
+
+        <ImageButton
+            android:id="@+id/image_switch_camera"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/selector_video_call_camera_switch"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/image_mute_video"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/selector_call_video_state" />
+
+        <ImageButton
+            android:id="@+id/img_speaker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/selector_call_speaker" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/image_end_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:background="@null"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_group_call_end_icon" />
+
+</LinearLayout>

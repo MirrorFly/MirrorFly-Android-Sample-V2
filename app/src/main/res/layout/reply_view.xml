@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_alignParentTop="false"
+    android:background="@color/color_sent_message_background"
+    android:padding="@dimen/margin_5">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/view_reply_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/reply_view_drawable"
+        android:minHeight="@dimen/margin_70"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <RelativeLayout
+            android:id="@+id/view_reply_data"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:gravity="center_vertical"
+            android:minWidth="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/msg_image_video"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_reply_user_name"
+                style="@style/ChatRevNameView"
+                tools:text="Robot"
+                android:ellipsize="end"
+                android:minWidth="100dp" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/msg_item_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_reply_user_name"
+                android:layout_alignTop="@+id/text_reply_chat"
+                android:layout_alignBottom="@+id/text_reply_chat"
+                android:layout_marginStart="@dimen/margin_0"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:contentDescription="@null"
+                android:gravity="center_vertical"
+                android:src="@drawable/ic_camera_reply"
+                android:visibility="gone" />
+
+            <com.contusfly.views.MessageTextView
+                android:id="@+id/text_reply_chat"
+                style="@style/ReplyViewTextStyle"
+                tools:text="Cool image…!!!"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_reply_user_name"
+                android:layout_marginTop="@dimen/margin_4"
+                android:layout_toEndOf="@+id/msg_item_icon"
+                android:breakStrategy="simple"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:lineSpacingExtra="3dp"
+                android:maxLines="1"
+                app:emojiconSize="14sp" />
+        </RelativeLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/msg_image_video"
+            android:layout_width="@dimen/margin_70"
+            android:layout_height="0dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_image_placeholder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/roundedReplyPreviewView" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_reply"
+            android:layout_width="@dimen/margin_22"
+            android:layout_height="@dimen/margin_22"
+            android:contentDescription="@null"
+            android:padding="@dimen/margin_3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_swipe_rounded_background_white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

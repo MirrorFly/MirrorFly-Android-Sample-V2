@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:id="@+id/layout_members_image"
+    android:orientation="horizontal">
+
+    <com.contusfly.views.CircularImageView
+        android:id="@+id/image_call_member_1"
+        android:layout_width="@dimen/margin_45"
+        android:layout_height="@dimen/margin_45"
+        android:padding="@dimen/margin_2"
+        android:gravity="center"
+        android:src="@drawable/ic_profile" />
+
+    <com.contusfly.views.CircularImageView
+        android:id="@+id/image_call_member_2"
+        android:layout_width="@dimen/margin_45"
+        android:layout_height="@dimen/margin_45"
+        android:padding="@dimen/margin_2"
+        android:gravity="center"
+        android:src="@drawable/ic_profile" />
+
+    <com.contusfly.views.CircularImageView
+        android:id="@+id/image_call_member_3"
+        android:layout_width="@dimen/margin_45"
+        android:layout_height="@dimen/margin_45"
+        android:padding="@dimen/margin_2"
+        android:gravity="center"
+        android:src="@drawable/ic_profile" />
+
+    <com.contusfly.views.CircularImageView
+        android:id="@+id/image_call_member_4"
+        android:layout_width="@dimen/margin_45"
+        android:layout_height="@dimen/margin_45"
+        android:padding="@dimen/margin_2"
+        android:gravity="center"
+        android:src="@drawable/ic_profile" />
+
+</LinearLayout>

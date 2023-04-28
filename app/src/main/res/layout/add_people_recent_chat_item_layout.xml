@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/parent_view">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:padding="@dimen/padding_10">
+
+        <com.contusfly.views.CircularImageView
+            android:id="@+id/chat_tag_image_chat_picture"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="@dimen/margin_50"
+            android:layout_marginStart="@dimen/margin_5"
+            android:contentDescription="@null"
+            android:onClick="onClick"
+            app:srcCompat="@drawable/ic_profile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/chat_tag_text_unseen_count"
+            style="@style/TextUnSeenCountStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:visibility="gone"
+            app:layout_constraintCircle="@id/chat_tag_image_chat_picture"
+            app:layout_constraintCircleAngle="45"
+            app:layout_constraintCircleRadius="@dimen/margin_24"
+            tools:ignore="MissingConstraints" />
+
+        <com.contusfly.views.CircularImageView
+            android:id="@+id/email_contact_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintCircle="@id/chat_tag_image_chat_picture"
+            app:layout_constraintCircleAngle="130"
+            app:layout_constraintCircleRadius="@dimen/margin_24"
+            app:srcCompat="@drawable/ic_email_contact"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.emoji.widget.EmojiAppCompatTextView
+            android:id="@+id/chat_tag_text_chat_name"
+            style="@style/EmojiTextSemiBoldStyle"
+            android:layout_width="@dimen/margin_0"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_15"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:layout_toStartOf="@+id/chat_tag_text_chat_time"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@+id/chat_tag_text_chat_message"
+            app:layout_constraintEnd_toStartOf="@+id/chat_tag_text_chat_time"
+            app:layout_constraintLeft_toRightOf="@id/chat_tag_image_chat_picture"
+            app:layout_constraintRight_toLeftOf="@+id/chat_tag_text_chat_time"
+            app:layout_constraintStart_toEndOf="@id/chat_tag_image_chat_picture"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/chat_tag_text_chat_person"
+            style="@style/EmojiTextRegularSmallGreyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginEnd="@dimen/margin_3"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/chat_tag_text_chat_message"
+            app:layout_constraintEnd_toStartOf="@+id/chat_tag_image_chat_status"
+            app:layout_constraintLeft_toLeftOf="@id/chat_tag_text_chat_name"
+            app:layout_constraintRight_toLeftOf="@+id/chat_tag_image_chat_status"
+            app:layout_constraintStart_toStartOf="@id/chat_tag_text_chat_name"
+            app:layout_constraintTop_toBottomOf="@+id/chat_tag_text_chat_name" />
+
+        <ImageView
+            android:id="@+id/chat_tag_image_chat_status"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/margin_0"
+            android:layout_marginTop="@dimen/margin_1"
+            android:layout_marginEnd="@dimen/margin_5"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/chat_tag_text_chat_message"
+            app:layout_constraintEnd_toStartOf="@+id/chat_tag_image_media_type"
+            app:layout_constraintLeft_toRightOf="@id/chat_tag_text_chat_person"
+            app:layout_constraintRight_toLeftOf="@+id/chat_tag_image_media_type"
+            app:layout_constraintStart_toEndOf="@id/chat_tag_text_chat_person"
+            app:layout_constraintTop_toTopOf="@id/chat_tag_text_chat_message" />
+
+        <ImageView
+            android:id="@+id/chat_tag_image_media_type"
+            android:layout_width="@dimen/margin_14"
+            android:layout_height="@dimen/margin_14"
+            android:layout_marginEnd="@dimen/margin_3"
+            android:layout_marginTop="@dimen/margin_2.5"
+            android:gravity="center_vertical"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/chat_tag_text_chat_message"
+            app:layout_constraintEnd_toStartOf="@+id/chat_tag_text_chat_message"
+            app:layout_constraintLeft_toRightOf="@id/chat_tag_image_chat_status"
+            app:layout_constraintRight_toLeftOf="@+id/chat_tag_text_chat_message"
+            app:layout_constraintStart_toEndOf="@id/chat_tag_image_chat_status"
+            app:layout_constraintTop_toTopOf="@id/chat_tag_text_chat_message" />
+
+        <io.github.rockerhieu.emojicon.EmojiconTextView
+            android:id="@+id/chat_tag_text_chat_message"
+            style="@style/EmojiTextRegularSmallGreyStyle"
+            android:layout_width="@dimen/margin_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/chat_tag_text_chat_name"
+            app:layout_constraintLeft_toRightOf="@id/chat_tag_image_media_type"
+            app:layout_constraintRight_toRightOf="@id/chat_tag_text_chat_name"
+            app:layout_constraintStart_toEndOf="@id/chat_tag_image_media_type"
+            app:layout_constraintTop_toBottomOf="@id/chat_tag_text_chat_name" />
+
+        <ImageView
+            android:id="@+id/mute"
+            android:layout_width="@dimen/margin_15"
+            android:layout_height="@dimen/margin_15"
+            android:layout_above="@+id/chat_tag_text_chat_time"
+            android:layout_below="@+id/chat_tag_text_chat_time"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginEnd="@dimen/margin_20"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="@id/chat_tag_text_chat_name"
+            app:layout_constraintTop_toTopOf="@+id/chat_tag_text_chat_time"
+            app:layout_constraintVertical_bias="0.4"
+            app:srcCompat="@drawable/ic_mute" />
+
+        <ImageView
+            android:id="@+id/pin"
+            android:layout_width="@dimen/margin_20"
+            android:layout_height="@dimen/margin_20"
+            android:layout_above="@+id/chat_tag_text_chat_time"
+            android:layout_marginTop="@dimen/margin_16"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="@id/chat_tag_text_chat_name"
+            app:layout_constraintTop_toTopOf="@+id/chat_tag_text_chat_time"
+            app:srcCompat="@drawable/ic_pinicon" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/chat_tag_text_chat_time"
+            style="@style/TextLightSmallGrayStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/mute"
+            android:layout_below="@+id/mute"
+            android:textColor="?attr/chat_list_time_color"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/select_icon"
+            android:layout_width="@dimen/margin_20"
+            android:layout_height="@dimen/margin_20"
+            android:layout_above="@+id/chat_tag_text_chat_time"
+            android:layout_marginTop="@dimen/margin_16"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/circle_unselect_bg"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_0.5"
+        android:layout_marginStart="@dimen/margin_78"
+        android:layout_marginEnd="@dimen/margin_15"
+        android:background="?attr/menu_divider_color"/>
+
+</LinearLayout>

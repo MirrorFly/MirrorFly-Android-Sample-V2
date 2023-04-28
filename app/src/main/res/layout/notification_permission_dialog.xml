@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintCircleRadius="@dimen/margin_10">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_100"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/top_corner_curve">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/dialog_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close"
+            android:padding="@dimen/padding_10"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/dialog_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_notification_alert"
+            android:padding="@dimen/padding_15"
+            android:background="@drawable/circle_notification_bg"/>
+
+        <TextView
+            android:id="@+id/title_tv"
+            style="@style/StatusList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="true"
+            android:paddingStart="@dimen/padding_12"
+            android:paddingTop="@dimen/padding_20"
+            android:paddingEnd="@dimen/padding_12"
+            android:paddingBottom="@dimen/padding_12"
+            android:gravity="center"
+            android:text="@string/notification_title"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_icon"
+            android:theme="@style/ChatTag_semibold"
+            android:textColor="@color/dashboard_toolbar_text_color"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:textSize="@dimen/padding_14"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/dialog_description"
+        style="@style/StatusList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="true"
+        android:paddingStart="@dimen/padding_19"
+        android:paddingTop="@dimen/padding_5"
+        android:paddingEnd="@dimen/padding_19"
+        android:paddingBottom="@dimen/padding_12"
+        android:gravity="center"
+        android:text="@string/notification_permission_denied_alert_label"
+        app:layout_constraintTop_toBottomOf="@+id/header_layout"
+        android:theme="@style/ChatTag_medium_add_view"
+        android:fontFamily="@font/sf_ui_display_medium"
+        android:textColor="@color/button_disable_color"
+        android:textSize="@dimen/padding_13"
+        android:background="@color/color_white"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_description"
+        android:background="@drawable/bottom_corner_curve"
+        android:paddingStart="@dimen/padding_12"
+        android:paddingTop="@dimen/padding_20"
+        android:paddingEnd="@dimen/padding_12"
+        android:paddingBottom="@dimen/padding_12"
+        >
+
+        <TextView
+            android:id="@+id/turn_on_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="true"
+            android:gravity="center"
+            app:textAllCaps="true"
+            android:paddingEnd="@dimen/padding_12"
+            android:paddingStart="@dimen/padding_12"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/turn_on_notification_label"
+            android:background="@drawable/bottom_corner_curve"
+            android:theme="@style/ChatTag_semibold"
+            android:textColor="@color/color_blue"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/not_now_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="true"
+            android:gravity="center"
+            app:textAllCaps="true"
+            android:paddingEnd="@dimen/padding_12"
+            android:paddingStart="@dimen/padding_12"
+            app:layout_constraintRight_toLeftOf="@+id/turn_on_tv"
+            android:text="@string/not_now_label"
+            android:background="@drawable/bottom_corner_curve"
+            android:theme="@style/ChatTag_semibold"
+            android:textColor="@color/color_blue"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

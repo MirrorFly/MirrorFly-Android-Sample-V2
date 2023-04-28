@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2019 ContusFly LTD. All rights reserved.
+  ~ @licence http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_email"
+        android:orderInCategory="98"
+        android:title="@string/title_email_conversation"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_clear_chat"
+        android:orderInCategory="99"
+        android:title="@string/title_clear_conversation"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_report"
+        android:orderInCategory="99"
+        android:title="@string/action_report"
+        app:showAsAction="never" />
+
+    <item
+        android:orderInCategory="100"
+        android:title="@string/action_custom_tone"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_video_call"
+        android:icon="@drawable/ic_video_call"
+        android:orderInCategory="94"
+        android:title="@string/video_call"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_audio_call"
+        android:icon="@drawable/ic_voice_call"
+        android:orderInCategory="95"
+        android:title="@string/audio_call"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_block"
+        android:orderInCategory="102"
+        android:title="@string/action_block"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_unblock"
+        android:orderInCategory="103"
+        android:title="@string/action_unblock"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_chat_search"
+        android:orderInCategory="104"
+        android:title="@string/action_search"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_add_chat_shortcuts"
+        android:orderInCategory="104"
+        android:title="@string/menu_add_shortcut"
+        app:showAsAction="never" />
+
+
+</menu>
