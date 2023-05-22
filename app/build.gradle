@@ -207,7 +207,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:MirrorFlySDK:7.3.0'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.3.2'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
