@@ -2,42 +2,47 @@ package com.contusfly.call.groupcall
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.*
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.os.*
-import android.view.*
-import android.widget.*
+import android.view.Gravity
+import android.view.KeyEvent
+import android.view.View
+import android.view.Window
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentTransaction
 import com.contus.call.CallActions
 import com.contus.call.CallConstants
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycall.webrtc.*
-import com.mirrorflysdk.flycall.webrtc.WebRtcCallService.Companion.setupVideoCapture
-import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
-import com.mirrorflysdk.flycall.webrtc.api.CallEventsListener
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.contus.call.CallConstants.CALL_UI
 import com.contusfly.*
 import com.contusfly.R
 import com.contusfly.activities.BaseActivity
-import com.contusfly.utils.MediaPermissions
-import com.mirrorflysdk.AppUtils
-import com.mirrorflysdk.views.CustomToast
-import com.contus.call.CallConstants.CALL_UI
-import com.mirrorflysdk.flycommons.Features
 import com.contusfly.call.groupcall.helpers.BaseCallViewHelper
 import com.contusfly.call.groupcall.helpers.DialogViewHelper
 import com.contusfly.call.groupcall.listeners.ActivityOnClickListener
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.ActivityGroupCallBinding
 import com.contusfly.utils.ChatUtils
+import com.contusfly.utils.MediaPermissions
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.views.PermissionAlertDialog
+import com.mirrorflysdk.AppUtils
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.mirrorflysdk.flycall.webrtc.*
+import com.mirrorflysdk.flycall.webrtc.WebRtcCallService.Companion.setupVideoCapture
+import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
+import com.mirrorflysdk.flycall.webrtc.api.CallEventsListener
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycommons.Features
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.views.CustomToast
 import kotlinx.android.synthetic.main.custom_toast.*
 import java.util.concurrent.atomic.AtomicBoolean
+
 
 /**
  * This call activity is handle the incoming and outgoing group calls for both audio and video
@@ -173,7 +178,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
     }
 
-    private fun notificationPermissionChecking(){
+    private fun notificationPermissionChecking() {
         MediaPermissions.requestNotificationPermission(
             this,
             permissionAlertDialog,
@@ -200,7 +205,6 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
         initViews()
         setUpCallDataAndUI()
-
         groupCallViewModel.checkInternetConnection()
     }
 

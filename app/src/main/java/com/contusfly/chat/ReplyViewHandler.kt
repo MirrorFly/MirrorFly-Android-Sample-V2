@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.*
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.utils.*
 import com.contusfly.viewmodels.ChatParentViewModel
 import com.contusfly.views.CustomTextView
@@ -72,10 +73,12 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
         if(replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted())
             showRecalledReplyMessage(replyMessage)
         else {
-            messageContent.text = ChatUtils.getSpannedText(context,replyMessage.getMessageTextContent())
+            messageContent.text = if(replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
+                MentionUtils.formatMentionText(context,replyMessage,false)
+            } else {
+                ChatUtils.getSpannedText(context,replyMessage.messageTextContent)
+            }
             messageSenderName.text = replyMessage.getSenderName()
-            val msg = ChatUtils.getSpannedText(context,replyMessage.getMessageTextContent())
-            messageContent.text = msg
         }
     }
 
@@ -98,13 +101,22 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
                 messageContent.text = context.getString(R.string.title_image)
             else
                 messageContent.text = context.getString(R.string.title_video)
-            if(Utils.returnEmptyStringIfNull(replyMessage.mediaChatMessage.getMediaCaptionText()).isNotEmpty())
-                messageContent.text = replyMessage.mediaChatMessage.getMediaCaptionText()
+
+            extendShowReplyImageVideoMessage(replyMessage)
             messageSenderName.text = replyMessage.getSenderName()
             ImageUtils.loadImageInView(context, replyMessage.mediaChatMessage.getMediaLocalStoragePath(), messageImageOrVideoThumb,
                     replyMessage.mediaChatMessage.getMediaThumbImage(), R.drawable.ic_image_placeholder)
             messageSenderName.text = replyMessage.getSenderName()
         }
+    }
+
+    private fun extendShowReplyImageVideoMessage(replyMessage: ChatMessage){
+        if(Utils.returnEmptyStringIfNull(replyMessage.mediaChatMessage.getMediaCaptionText()).isNotEmpty())
+            messageContent.text = if(replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
+                MentionUtils.formatMentionText(context,replyMessage,false)
+            } else {
+                replyMessage.mediaChatMessage.getMediaCaptionText()
+            }
     }
 
     /**

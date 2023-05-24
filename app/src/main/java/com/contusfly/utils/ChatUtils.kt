@@ -21,8 +21,15 @@ import com.contusfly.activities.MediaPreviewActivity
 import com.contusfly.call.CallPermissionUtils
 import com.contusfly.call.groupcall.GroupCallActivity
 import com.contusfly.call.groupcall.OnGoingCallPreviewActivity
+import com.contusfly.caption
+import com.contusfly.groupmention.MentionUser
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.views.CommonAlertDialog
+import com.contusfly.views.MessageTextView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mirrorflysdk.AppUtils
+import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
@@ -255,6 +262,110 @@ object ChatUtils {
         return message + text
     }
 
+    fun isMine(jid: String?): Boolean {
+        return if (jid != null) {
+            jid == SharedPreferenceManager.getCurrentUserJid()
+        } else false
+    }
+    /**
+     * Returns mentionformatted message
+     *
+     * @param context Context
+     * @param chatMessage ChatMessage content
+     * @return SpannableStringBuilder Result
+     */
+    fun setMentionFormattedTextForRecentChat(context: Context,chatMessage: ChatMessage) : SpannableStringBuilder{
+        return MentionUtils.getMentionTextForRecentChat(
+            context,
+            chatMessage
+        )
+    }
+    /**
+     * Convert mention original format to name for mention tag
+     *
+     * @param context Context
+     * @param replyMessage ChatMessage content
+     * @param textView MessageTextView
+     * @param messageMediaCaption String to set the messagecontent from mediaMEssage for message info
+     * @param isMediaMessage Boolean to identify image,video or text
+     **/
+    fun setReplyViewMessageFormat(replyMessage: ChatMessage, context:Context, textView: MessageTextView, messageMediaCaption: String,isMediaMessage: Boolean){
+        if(replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
+            val formattedSpanText = MentionUtils.formatMentionText(context,replyMessage,false)
+            textView.text = formattedSpanText
+        }
+        else {
+            if(isMediaMessage) {
+                if(messageMediaCaption == "")
+                    EmojiUtils.setMessageTextWithEllipsis(
+                        textView,
+                        getSpannedText(
+                            context,
+                            replyMessage.caption(context)
+                        ).toString()
+                    )
+                else EmojiUtils.setMessageTextWithEllipsis(
+                    textView,
+                    getSpannedText(
+                        context,
+                        messageMediaCaption
+                    ).toString()
+                )
+            }  else {
+                setReplyParentMessage(replyMessage,textView, context)
+            }
+        }
+    }
+    /**
+     * setReplyMessage
+     * @param replyMessage ChatMeasage
+     * @param textView MessageTextview
+     * @param context Context
+     */
+    private fun setReplyParentMessage(replyMessage: ChatMessage, textView: MessageTextView, context: Context){
+        if(replyMessage.getReplyParentChatMessage() != null) {
+            if(replyMessage.getReplyParentChatMessage().mentionedUsersIds != null && replyMessage.getReplyParentChatMessage().mentionedUsersIds.size > 0) {
+                val formattedSpanText = MentionUtils.formatMentionTextForReplyParent(
+                    context,
+                    replyMessage.getReplyParentChatMessage(),
+                    false
+                )
+                textView.text = formattedSpanText
+            } else {
+                EmojiUtils.setMessageTextWithEllipsis(
+                    textView,
+                    getSpannedText(
+                        context,
+                        replyMessage.getReplyParentChatMessage().getMessageTextContent()
+                    ).toString()
+                )
+            }
+        }
+        else {
+            EmojiUtils.setMessageTextWithEllipsis(
+                textView,
+                getSpannedText(
+                    context,
+                    replyMessage.getMessageTextContent()
+                ).toString()
+            )
+        }
+    }
+    /**
+     * Convert mentionuser model object into list
+     *
+     * @param mentionedUsersId mentioned usersids as modelclass
+     * @param mentionedUsersIds MutableList<String>
+     *
+     * @return mentionedUsersIds MutableList<String>
+     **/
+    fun setSelectedUserIdForMention(mentionedUsersId: List<MentionUser>, mentionedUsersIds: MutableList<String>) : MutableList<String>{
+        for(userIds in mentionedUsersId) {
+            mentionedUsersIds.add(userIds.userId)
+        }
+        return mentionedUsersIds
+    }
+
     fun getLastSeenTime(context: Context,time:String): String {
         return if (time==null || time.isEmpty()) Constants.EMPTY_STRING else if (time.equals(Constants.ONLINE_STATUS)) Constants.ONLINE else {
             var lastSeen=time.toLong()
@@ -266,5 +377,50 @@ object ChatUtils {
             if (todayDate[Calendar.DATE] - calendar[Calendar.DATE] == 1) status = "on Yesterday" // date are not equal to current date it's taken an yesterday
             String.format(context.getString(R.string.fly_info_status_last_seen), status)
         }
+    }
+
+    /**
+     * Get Width and Height for Mobile
+     *
+     * @param originalWidth original width of media
+     * @param originalHeight original height of media
+     */
+    fun getMobileWidthAndHeight(originalWidth: Int?, originalHeight: Int?): Pair<Int, Int> {
+
+        if (originalWidth == null || originalHeight == null)
+            return Pair(
+                Constants.MOBILE_IMAGE_MAX_WIDTH,
+                Constants.MOBILE_IMAGE_MAX_HEIGHT
+            )
+
+        var newWidth = originalWidth
+        var newHeight = originalHeight
+
+        // First check if we need to scale width
+        if (originalWidth > Constants.MOBILE_IMAGE_MAX_WIDTH) {
+            //scale width to fit
+            newWidth = Constants.MOBILE_IMAGE_MAX_WIDTH
+            //scale height to maintain aspect ratio
+            newHeight = newWidth * originalHeight / originalWidth
+        }
+
+        // then check if we need to scale even with the new height
+        if (newHeight > Constants.MOBILE_IMAGE_MAX_HEIGHT) {
+            //scale height to fit instead
+            newHeight = Constants.MOBILE_IMAGE_MAX_HEIGHT
+            //scale width to maintain aspect ratio
+            newWidth = newHeight * originalWidth / originalHeight
+        }
+
+        return Pair(if (newWidth > Constants.MOBILE_IMAGE_MIN_WIDTH) newWidth else Constants.MOBILE_IMAGE_MIN_WIDTH, if (newHeight > Constants.MOBILE_IMAGE_MIN_HEIGHT) newHeight else Constants.MOBILE_IMAGE_MIN_HEIGHT)
+    }
+
+    fun toUserList(list: ArrayList<ProfileDetails>): String? {
+        val gson = Gson()
+        return gson.toJson(list)
+    }
+    fun convertProfileDetailsList(value: String?): ArrayList<ProfileDetails?>? {
+        val listType = object : TypeToken<ArrayList<ProfileDetails?>?>() {}.type
+        return Gson().fromJson(value, listType)
     }
 }

@@ -288,5 +288,5 @@
         style="@style/divider_starred_msg"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 </LinearLayout>

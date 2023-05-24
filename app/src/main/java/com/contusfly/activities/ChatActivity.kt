@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -34,7 +35,9 @@ import com.contusfly.*
 import com.contusfly.R
 import com.contusfly.BuildConfig
 import com.contusfly.activities.parent.ChatParent
+import com.contusfly.activities.parent.DashboardParent
 import com.contusfly.adapters.ChatAdapter
+import com.contusfly.adapters.GroupTagAdapter
 import com.contusfly.adapters.ReplySuggestionsAdapter
 import com.contusfly.call.CallPermissionUtils
 import com.contusfly.call.groupcall.UsersSelectionActivity
@@ -45,6 +48,7 @@ import com.contusfly.chat.reply.MessageSwipeController
 import com.contusfly.checkInternetAndExecute
 import com.contusfly.constants.MobileApplication
 import com.contusfly.databinding.ActivityChatBinding
+import com.contusfly.groupmention.MentionUser
 import com.contusfly.interfaces.OnChatItemClickListener
 import com.contusfly.interfaces.PermissionDialogListener
 import com.contusfly.models.Chat
@@ -61,7 +65,9 @@ import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.utils.ConstantActions
 import com.mirrorflysdk.views.CustomToast
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.gson.Gson
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
+import com.mirrorflysdk.api.contacts.ProfileDetails
 import dagger.android.AndroidInjection
 import io.github.rockerhieu.emojicon.EmojiconGridFragment
 import io.github.rockerhieu.emojicon.EmojiconsFragment
@@ -78,11 +84,18 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     CommonAlertDialog.CommonDialogClosedListener,
     CommonAlertDialog.CommonTripleDialogClosedListener, View.OnClickListener,
     ReplySuggestionsAdapter.SuggestionClickListener,
-    AudioRecordView.RecordingListener {
+    AudioRecordView.RecordingListener, GroupTagAdapter.UserTagClickListener {
 
     private val TAG = ChatActivity::class.java.simpleName
 
     private var keyboardHeightProvider: KeyboardHeightProvider? = null
+    companion object{
+        var unSentMentionedUserIdList=ArrayList<ProfileDetails>()
+        var addMoreMediaClicked:Boolean=false
+    }
+    private var myApp:MobileApplication?=null
+    var mediaListCaption:MediaCaptionMentionList?=null
+
 
     @Inject
     lateinit var mainApplication: Application
@@ -105,7 +118,9 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private var userType:String = Constants.EMPTY_STRING
     private var handler: Handler? = null
     private var callType:String=""
-
+    private var mentionedUsersIds: MutableList<String> = mutableListOf()
+    private var sendTextMessageWithMentionFormat: CharSequence? = emptyString()
+    private var mentionFilterKey: String = emptyString()
     private val downloadPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         val writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: ChatUtils.checkWritePermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -224,15 +239,27 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         }
     }
 
+    private val loadNextRunnable = Runnable {
+        loadNextData()
+    }
+
+    private fun loadNextData() {
+        if (parentViewModel.getFetchingIsInProgress()) {
+            handler?.removeCallbacks(loadNextRunnable)
+            handler?.postDelayed(loadNextRunnable, 100)
+        } else {
+            parentViewModel.loadNextData()
+        }
+    }
+
     override fun onMessageReceived(message: ChatMessage) {
         message.let {
             if (message.isMessageSentByMe())
                 handleUnreadMessageSeparator(true)
-            val localInstanceOfMessage = FlyMessenger.getMessageOfId(message.messageId)
             if (chat.toUser == message.chatUserJid && (!message.isMessageSentByMe() || message.isItCarbonMessage())
-                && (localInstanceOfMessage != null && !localInstanceOfMessage.isMessageDeleted)) {
+                && !message.isMessageDeleted) {
                 removeUnReadMsgSeparatorOnMessageReceiver()
-                parentViewModel.loadNextData()
+                loadNextData()
                 playForgroundNotificationSound(this)
             }
         }
@@ -284,7 +311,11 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 }
             }
         selectedMessageIdForReply = ReplyHashMap.getReplyId(chat.toUser)
-        showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
+        if (!isGroupMemberListShowing)
+            showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
+        if (showChatKeyboard) {
+            showChatKeyboard = false
+        }
     }
 
     /**
@@ -370,6 +401,9 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         initObservers()
         handleOnNewIntent(intent)
         registerTelephonyCallListener()
+        initGroupTag()
+        myApp= application as MobileApplication
+        mediaListCaption = myApp?.getMediaCaptionObject()
     }
 
     private fun setRecyclerViewScrollListener() {
@@ -415,7 +449,13 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     override fun onStop() {
         super.onStop()
-        setUnsentMessageForAnUser(chatMessageEditText.text.toString())
+        if(chatMessageEditText.mentionedUsers!=null && chatMessageEditText.mentionedUsers.size>0) {
+            var sendTextMessageWithMentionFormat = chatMessageEditText.getMentionedTemplate()
+            setUnsentMessageForAnUser(sendTextMessageWithMentionFormat.toString())
+        } else {
+            setUnsentMessageForAnUser(chatMessageEditText.text.toString())
+            FlyMessenger.saveUnsentMentionedUserId(chat.toUser,"")
+        }
         if (selectedMessageIdForReply.isEmpty()) {
             SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_ID, Constants.EMPTY_STRING)
             SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_USER, Constants.EMPTY_STRING)
@@ -836,6 +876,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 sendChatMessage()
             }
             R.id.action_attachment -> {
+                addMoreMediaClicked=false
+                myApp?.clearMediaCaptionObject()
                 onAttachMenuClick()
                 suggestionLayout.gone()
             }
@@ -865,6 +907,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     private fun validateAndSendMessage(messageObject: MessageObject) {
+        FlyMessenger.saveUnsentMentionedUserId(chat.toUser,"")
+        unSentMentionedUserIdList.clear()
         if (isBlocked) {
             showBlockedAlert()
             messagesQueue.add(messageObject)
@@ -877,7 +921,16 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     private fun sendTextMessage() {
         isReplyTagged = false
-        val textMessage = messagingClient.composeTextMessage(chat.toUser, chatMessageEditText.text.toString().trim(), selectedMessageIdForReply)
+        Log.e("getMessageUerId",chatMessageEditText.mentionedUsers.toString())
+        mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
+        Log.e("getMessageUerIsd",mentionedUsersIds.toString())
+        sendTextMessageWithMentionFormat = if(mentionedUsersIds.size > 0) {
+            chatMessageEditText.getMentionedTemplate()
+        } else {
+            chatMessageEditText.text.toString().trim()
+        }
+        Log.e("sendTextMessageWithMentionFormat",sendTextMessageWithMentionFormat.toString())
+        val textMessage = messagingClient.composeTextMessage(chat.toUser, sendTextMessageWithMentionFormat.toString().trim(), selectedMessageIdForReply,mentionedUsersIds)
         validateAndSendMessage(textMessage)
         if(!FlyCore.isBusyStatusEnabled())
             chatMessageEditText.setText(Constants.EMPTY_STRING)
@@ -888,7 +941,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             CustomAlertDialog().showFeatureRestrictionAlert(this)
             return
         }
-        val imageMessage = messagingClient.composeImageMessage(chat.toUser, imagePath, Constants.EMPTY_STRING, selectedMessageIdForReply)
+        mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
+        val imageMessage = messagingClient.composeImageMessage(chat.toUser, imagePath, Constants.EMPTY_STRING, selectedMessageIdForReply,mentionedUsersIds)
         validateAndSendMessage(imageMessage)
     }
 
@@ -976,6 +1030,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         isLoadNextAvailable = parentViewModel.isLoadNextAvailable()
         messagingClient.sendMessage(messageObject, this@ChatActivity)
         chatMessageEditText.setText(Constants.EMPTY_STRING)
+        mentionedUsersIds.clear()
+        sendTextMessageWithMentionFormat = emptyString()
     }
 
 
@@ -1145,6 +1201,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         viewModel.getProfileDetails()
         addMessagesforSmartReply()
         handleOnResume()
+        showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
         removeUnReadMsgSeparator()
         if (mainList.isNotEmpty() && !parentViewModel.getFetchingIsInProgress())
             parentViewModel.loadNextData()
@@ -1185,12 +1242,14 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun handleCursorAndKeyboardVisibility() {
         if (showChatKeyboard) {
             chatMessageEditText.requestFocus()
-            chatMessageEditText.showSoftKeyboard()
+            showSoftKeyboard(this)
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            showChatKeyboard = false
         } else {
             chatMessageEditText.requestFocus()
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        }
+        if(chatMessageEditText.text!=null && chatMessageEditText.text!!.length>0){
+            chatMessageEditText.setSelection(chatMessageEditText.text!!.length)
         }
     }
 
@@ -1213,8 +1272,15 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             if (isSuccess) {
                 handleDialogResp(it, CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, 0)
                 if (action == CommonAlertDialog.DialogAction.SMART_REPLY_UNBLOCK) {
-                    messagesQueue.add(messagingClient.composeTextMessage(chat.toUser,
-                        chatMessageEditText.text.toString().trim(), selectedMessageIdForReply))
+                    mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
+                    Log.e("getMessageUerIsd",mentionedUsersIds.toString())
+                    sendTextMessageWithMentionFormat = if(mentionedUsersIds.size > 0) {
+                        chatMessageEditText.getMentionedTemplate()
+                    } else {
+                        chatMessageEditText.text.toString().trim()
+                    }
+                    messagesQueue.add(messagingClient.composeTextMessage(chat.toUser, sendTextMessageWithMentionFormat.toString(), selectedMessageIdForReply,mentionedUsersIds))
+                    sendTextMessageWithMentionFormat = emptyString()
                     chatMessageEditText.setText(Constants.EMPTY_STRING)
                 } else if(action == CommonAlertDialog.DialogAction.SMART_REPLY_BUSY) {
                     smartReply.let {
@@ -1852,10 +1918,12 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             CustomAlertDialog().showFeatureRestrictionAlert(this)
             return
         }
+        mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
+
 
         val videoDuration = Constants.VIDEO_DURATION_LIMIT//sharedPreferenceManager.getString(Constants.VIDEO_LIMIT).toLong()
 
-        val videoMessage = messagingClient.composeVideoMessage(chat.toUser, videoFilePath, videoCaption, selectedMessageIdForReply)
+        val videoMessage = messagingClient.composeVideoMessage(chat.toUser, videoFilePath, videoCaption, selectedMessageIdForReply, mentionedUsersIds)
 
         if (!videoMessage.first)
             showAudioVideoDurationValidationDialog(videoDuration.toString(), Constants.MSG_TYPE_VIDEO)
@@ -1874,7 +1942,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                         CustomAlertDialog().showFeatureRestrictionAlert(this)
                         return
                     }
-                    val imageMessage = messagingClient.composeImageMessage(chat.toUser, item.path, item.caption, replyMessageId)
+                    mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
+                    val imageMessage = messagingClient.composeImageMessage(chat.toUser, item.path, item.caption, replyMessageId, mentionedUsersIds)
                     validateAndSendMessage(imageMessage)
                 } else {
                     CustomToast.show(this, getString(R.string.file_not_supported))
@@ -2064,6 +2133,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     override fun onMemberRemovedFromGroup(groupJid: String, removedMemberJid: String, removedByMemberJid: String) {
         super.onMemberRemovedFromGroup(groupJid, removedMemberJid, removedByMemberJid)
         if (toUser == groupJid) {
+            leftUserJid=removedMemberJid
             viewModel.getProfileDetails()
             handleOnResume()
         }
@@ -2129,8 +2199,15 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     override fun onPause() {
         super.onPause()
-        keyboardHeightProvider?.onPause()
-        setUnsentMessageForAnUser(chatMessageEditText.text.toString())
+
+        if(chatMessageEditText.mentionedUsers!=null && chatMessageEditText.mentionedUsers.size>0){
+            var sendTextMessageWithMentionFormat = chatMessageEditText.getMentionedTemplate()
+            setUnsentMessageForAnUser(sendTextMessageWithMentionFormat.toString())
+            maintainReplacedMentionUserList()
+        } else {
+            setUnsentMessageForAnUser(chatMessageEditText.text.toString())
+        }
+
         if (selectedMessageIdForReply.isEmpty()) {
             SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_ID, Constants.EMPTY_STRING)
             SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_USER, Constants.EMPTY_STRING)
@@ -2147,6 +2224,22 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             chatAdapter.pauseMediaPlayer()
         if (isSoftKeyboardShown) showChatKeyboard = true
         sendAudioRecording()
+    }
+
+    private fun maintainReplacedMentionUserList(){
+        FlyMessenger.saveUnsentMentionedUserId(chat.toUser,"")
+        unSentMentionedUserIdList.clear()
+        for(mentionUser in chatMessageEditText.mentionedUsers){
+            val userid=mentionUser.userId
+            val jidFormation=FlyUtils.getJid(userid)
+            val profile=FlyCore.getUserProfile(jidFormation)
+            if (profile != null) {
+                unSentMentionedUserIdList.add(profile)
+            }
+        }
+        FlyMessenger.saveUnsentMentionedUserId(chat.toUser,
+            ChatUtils.toUserList(unSentMentionedUserIdList)!!
+        )
     }
 
     /**
@@ -2296,6 +2389,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
 
     override fun onRecordingStarted() {
+        showChatKeyboard=false
+        hideKeyboard()
         transparentView.gone()
         optionMenu?.get(R.id.action_audio_call)?.isEnabled = false
         optionMenu?.get(R.id.action_video_call)?.isEnabled = false
@@ -2358,6 +2453,97 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         }
     }
 
+    private fun filterGroupListTag(text: CharSequence){
+        if (mentionFilterKey.isNotEmpty()) {
+            groupTagAdapter.filter.filter(mentionFilterKey
+            ) { filteredResult ->
+                if (filteredResult == 0 && isGroupMemberListShowing) {
+                    hideGroupMentionMembersList()
+                }else if(filteredResult!=0 && isSoftKeyboardShown){
+                    setMentionPopupBackground()
+                }
+            }
+        } else {
+            if ((text.length >= 1 && text.substring(0).contains("")))
+                hideGroupMentionMembersList()
+            else
+                mentionViewModel.getParticipantsHashMap(chat.toUser)
+        }
+    }
+
+    private fun initGroupTag() {
+        if (chat.isGroupChat()) {
+            Log.e(TAG, "initGroupTag: group chat")
+            mentionViewModel.setUserJid(chat.toUser)
+            mentionViewModel.getParticipantsHashMap(chat.toUser)
+            groupTagAdapter = GroupTagAdapter(this, this)
+            groupTagRecycler.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            groupTagRecycler.addItemDecoration(CustomItemDecoration(this))
+            groupTagRecycler.adapter = groupTagAdapter
+            bindUserMention(userMentionConfig) { text  ->
+                if(chat.isGroupChat() && text != null && isSoftKeyboardShown) {
+                    mentionFilterKey = text.toString()
+                    filterGroupListTag(text)
+                } else {
+                    hideGroupMentionMembersList()
+                }
+            }
+        }
+        mentionViewModel.groupUsers.observe(this) {
+            groupTagAdapter.submitList(it)
+            setMentionPopupBackground()
+        }
+        mentionViewModel.getSelectedRecipient().observe(this) { profile ->
+            unSentMentionedUserIdList.add(profile)
+            FlyMessenger.saveUnsentMentionedUserId(chat.toUser,
+                ChatUtils.toUserList(unSentMentionedUserIdList)!!
+            )
+            val name = Utils.returnEmptyStringIfNull(profile.name)
+            val userId = getUserFromJid(profile.jid)
+            val mentionUser  = MentionUser(userId)
+            chatMessageEditText.replaceText(name,mentionUser)
+        }
+    }
+
+
+    private fun setMentionPopupBackground(){
+        if( groupTagAdapter.itemCount > 0 && isSoftKeyboardShown) {
+            viewChat.background = ContextCompat.getDrawable(
+                this@ChatActivity,
+                R.drawable.bg_chat_footer_shape_mention
+            )
+            viewChildLayout.background =
+                ContextCompat.getDrawable(this@ChatActivity, R.drawable.bg_shadow)
+            chatFooterDivider.visibility = View.GONE
+            groupUserTagLayout.visibility = View.VISIBLE
+            isGroupMemberListShowing=true
+        } else {
+            hideGroupMentionMembersList()
+        }
+    }
+
+    private fun hideGroupMentionMembersList(){
+        groupTagAdapter.clearList()
+        isGroupMemberListShowing=false
+        viewChat.background = ContextCompat.getDrawable(
+            this@ChatActivity,
+            R.drawable.bg_chat_footer_shape
+        )
+        viewChildLayout.background = null
+        groupUserTagLayout.visibility = View.GONE
+        chatFooterDivider.visibility = View.VISIBLE
+    }
+
+    fun getUserFromJid(jid: String): String {
+        var user =com.mirrorflysdk.flycommons.Constants.EMPTY_STRING;
+        val endIndex = jid.lastIndexOf('@')
+        if (endIndex != -1) {
+            user = jid.substring(0, endIndex)
+        }
+        return user
+    }
+
     override fun updateFeatureActions(features: Features) {
         updateMenuIcons(features)
         invalidateActionMode()
@@ -2366,6 +2552,15 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         if (ChatType.TYPE_GROUP_CHAT == chat.chatType) {
             setUpGroupChatEditText()
         }
+    }
+
+    override fun onUserTagClicked(profileDetails: ProfileDetails) {
+        groupTagRecycler.layoutManager = LinearLayoutManager(this)
+        groupTagRecycler.adapter = groupTagAdapter
+        groupTagRecycler.itemAnimator = null
+        groupUserTagLayout.gone()
+        chatFooterDivider.visibility = View.VISIBLE
+        mentionViewModel.onSelectionChange(profileDetails)
     }
 
 }

@@ -1,23 +1,20 @@
 package com.contusfly.utils
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.WindowManager
-import androidx.activity.result.contract.ActivityResultContracts
 import com.contusfly.R
-import com.contusfly.activities.ImageViewActivity.Companion.startActivity
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.databinding.PermissionInstructionDialogBinding
+import com.contusfly.views.PermissionAlertDialog
 import java.util.*
 
 
@@ -26,6 +23,7 @@ class AutoStartHelper private constructor() {
      * Xiaomi
      */
     private val BRAND_XIAOMI = "xiaomi"
+    private val BRAND_REDMI = "redmi"
     private val PACKAGE_XIAOMI_MAIN = "com.miui.securitycenter"
     private val PACKAGE_XIAOMI_COMPONENT =
         "com.miui.permcenter.autostart.AutoStartManagementActivity"
@@ -95,14 +93,19 @@ class AutoStartHelper private constructor() {
 
     fun getAutoStartPermission(context: Context) {
         if(!SharedPreferenceManager.getBoolean(Constants.ASK_PERMISSION)) {
-            val buildInfo = Build.BRAND.toLowerCase()
+            val buildInfo = Build.BRAND.lowercase()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 when (buildInfo) {
                     BRAND_ONEPLUS -> allowPermissiononeplus(context)
+                    BRAND_XIAOMI -> autoStartXiaomi(context)
+                    BRAND_REDMI -> autoStartRedmi(context)
+                    BRAND_OPPO -> autoStartOppo(context)
+                    BRAND_VIVO -> autoStartVivo(context)
                 }
             } else {
                 when (buildInfo) {
                     BRAND_XIAOMI -> autoStartXiaomi(context)
+                    BRAND_REDMI -> autoStartRedmi(context)
                     BRAND_OPPO -> autoStartOppo(context)
                     BRAND_VIVO -> autoStartVivo(context)
                 }
@@ -133,11 +136,11 @@ class AutoStartHelper private constructor() {
         val inflater: LayoutInflater = (context as Activity).layoutInflater
         val dialogBinding = PermissionInstructionDialogBinding.inflate(inflater)
         dialogBinding.dialogIcon.setImageResource(R.drawable.ic_group_setting)
-        dialogBinding.dialogDescription.text = "You will not receive notifications while the app is in background if you disable these permissions"
+        dialogBinding.dialogDescription.text = context.getString(R.string.notification_permission_locked_state_denied_alert_label)
         dialogBuilder.apply {
             setCancelable(false)
             setView(dialogBinding.root)
-            setPositiveButton(context.getString(R.string.continue_label),onClickListener)
+            setPositiveButton(context.getString(R.string.turn_on_notification_label),onClickListener)
             setNegativeButton(context.getString(R.string.not_now_label)) { dialog, _ ->
                 dialog.dismiss()
             }
@@ -155,6 +158,21 @@ class AutoStartHelper private constructor() {
     }
 
     private fun autoStartXiaomi(context: Context) {
+        if (isPackageExists(context, PACKAGE_XIAOMI_MAIN)) {
+            SharedPreferenceManager.setBoolean(Constants.ASK_PERMISSION, true)
+            showAlert(
+                context
+            ) { dialog: DialogInterface?, which: Int ->
+                try {
+                    xiaomiFloating(context,PACKAGE_XIAOMI_MAIN,PACKAGE_XIAOMI_WINDOW_COMPONENT)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun autoStartRedmi(context: Context) {
         if (isPackageExists(context, PACKAGE_XIAOMI_MAIN)) {
             SharedPreferenceManager.setBoolean(Constants.ASK_PERMISSION, true)
             showAlert(
@@ -245,19 +263,19 @@ class AutoStartHelper private constructor() {
     }
 
     private fun xiaomiFloating(context: Context,packageName: String, componentName: String){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context) && ("xiaomi" == Build.MANUFACTURER.toLowerCase())) {
-                    val intent = Intent("miui.intent.action.APP_PERM_EDITOR")
-                    intent.setClassName(
-                        packageName,
-                        componentName
-                    )
-                    intent.putExtra("extra_pkgname", context.packageName)
-                    context.startActivity(intent)
-
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context) && ("xiaomi" == Build.MANUFACTURER.lowercase())) {
+             try {
+                 val intent = Intent("miui.intent.action.APP_PERM_EDITOR")
+                 intent.setClassName(
+                     packageName,
+                     componentName)
+                 intent.putExtra("extra_pkgname", context.packageName)
+                 context.startActivity(intent)
+             } catch(e:Exception) {
+                 LogMessage.e("Error",e.toString())
+             }
 
         }
-
 
     }
 

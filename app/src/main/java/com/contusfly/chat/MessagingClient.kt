@@ -51,8 +51,8 @@ constructor(val application: Application) : CoroutineScope {
      * @param replyMessageId The message id for which this message will be sent as a reply message.
      * @return the prepared [MessageObject] object
      */
-    fun composeTextMessage(toJid: String, textMessage: String, replyMessageId: String = Constants.EMPTY_STRING): MessageObject {
-        return MessageObject(toJid, Constants.MSG_TYPE_TEXT, textMessage, replyMessageId)
+    fun composeTextMessage(toJid: String, textMessage: String, replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds:List<String> = listOf()): MessageObject {
+        return MessageObject(toJid, Constants.MSG_TYPE_TEXT, textMessage, replyMessageId, mentionedUsersIds)
     }
 
     fun sendMessage(messageObject: MessageObject, messageListener: MessageListener?) {
@@ -69,7 +69,7 @@ constructor(val application: Application) : CoroutineScope {
 
     private fun sendTextMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
-            FlyMessenger.sendTextMessage(messageObject.toJid, messageObject.textMessage, messageObject.replyMessageId, object : SendMessageListener {
+            FlyMessenger.sendTextMessage(messageObject.toJid, messageObject.textMessage, messageObject.replyMessageId,messageObject.mentionedUsersIds, object : SendMessageListener {
                 override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                     if (isSuccess && chatMessage != null && messageListener != null)
                         messageListener.onSendMessageSuccess(chatMessage)
@@ -131,7 +131,7 @@ constructor(val application: Application) : CoroutineScope {
         try {
             messageObject.file?.let {
                 FlyMessenger.sendImageMessage(messageObject.toJid, it, messageObject.base64Thumbnail,
-                    messageObject.caption, messageObject.replyMessageId, object : SendMessageListener {
+                    messageObject.caption, messageObject.replyMessageId, messageObject.mentionedUsersIds, object : SendMessageListener {
                         override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                             if (isSuccess && chatMessage != null && messageListener != null)
                                 messageListener.onSendMessageSuccess(chatMessage)
@@ -167,7 +167,7 @@ constructor(val application: Application) : CoroutineScope {
         try {
             messageObject.file?.let {
                 FlyMessenger.sendVideoMessage(messageObject.toJid, it, messageObject.caption,
-                    messageObject.replyMessageId, object : SendMessageListener {
+                    messageObject.replyMessageId,messageObject.mentionedUsersIds, object : SendMessageListener {
                         override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                             if (isSuccess && chatMessage != null && messageListener != null)
                                 messageListener.onSendMessageSuccess(chatMessage)
@@ -288,9 +288,9 @@ constructor(val application: Application) : CoroutineScope {
      * @return the prepared [MessageObject] object
      */
     fun composeImageMessage(toJid: String, imageFilePath: String, imageCaption: String = Constants.EMPTY_STRING,
-                            replyMessageId: String = Constants.EMPTY_STRING): MessageObject {
+                            replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds: List<String>): MessageObject {
         return MessageObject(toJid, Constants.MSG_TYPE_IMAGE, imageCaption,
-            ImageUtils.getImageThumbImage(imageFilePath), File(imageFilePath), replyMessageId)
+            ImageUtils.getImageThumbImage(imageFilePath), File(imageFilePath), replyMessageId, mentionedUsersIds)
     }
 
     /**
@@ -383,11 +383,11 @@ constructor(val application: Application) : CoroutineScope {
      * exceeds the limit or not.
      */
     fun composeVideoMessage(toJid: String, videoFilePath: String, videoCaption: String = Constants.EMPTY_STRING,
-                            replyMessageId: String = Constants.EMPTY_STRING): Pair<Boolean, MessageObject?> {
+                            replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds: List<String>): Pair<Boolean, MessageObject?> {
 
         val isVideoDurationUnderLimit = true
 
-        val messageObject = MessageObject(toJid, Constants.MSG_TYPE_VIDEO, videoCaption, File(videoFilePath), replyMessageId)
+        val messageObject = MessageObject(toJid, Constants.MSG_TYPE_VIDEO, videoCaption, File(videoFilePath), replyMessageId, mentionedUsersIds)
 
         return Pair(isVideoDurationUnderLimit, messageObject)
     }

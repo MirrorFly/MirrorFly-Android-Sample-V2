@@ -16,17 +16,18 @@ data class MessageObject(var toJid: String,
                          var caption: String,
                          var base64Thumbnail: String,
                          var audioDuration: Long,
-                         var isAudioRecorded: Boolean) {
+                         var isAudioRecorded: Boolean,
+                         var mentionedUsersIds: List<String>) {
     /**
      * Text Message Constructor
      */
     constructor(toJid: String,
                 messageType: String,
                 textMessage: String,
-                replyMessageId: String) :
+                replyMessageId: String, mentionedUsersIds: List<String>) :
             this(toJid, messageType, textMessage, replyMessageId, 0.0, 0.0,
                     Constants.EMPTY_STRING, listOf(), null, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, 0,false)
+                    Constants.EMPTY_STRING, 0,false,mentionedUsersIds)
 
     /**
      * Location Message Constructor
@@ -38,7 +39,8 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, latitude, longitude,
                     Constants.EMPTY_STRING, listOf(), null, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, 0, false)
+                    Constants.EMPTY_STRING, 0, false, listOf()
+            )
 
     /**
      * Contact Message Constructor
@@ -50,7 +52,8 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
                     contactName, contactNumbers, null, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, 0,false)
+                    Constants.EMPTY_STRING, 0,false, listOf()
+            )
 
     /**
      * Document Message Constructor
@@ -62,7 +65,8 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
                     Constants.EMPTY_STRING, listOf(), file, fileName, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, 0,false)
+                    Constants.EMPTY_STRING, 0,false, listOf()
+            )
 
     /**
      * Image Message Constructor
@@ -72,9 +76,9 @@ data class MessageObject(var toJid: String,
                 imageCaption: String,
                 base64Thumbnail: String,
                 file: File?,
-                replyMessageId: String) :
+                replyMessageId: String, mentionedUsersIds: List<String>) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
-                    Constants.EMPTY_STRING, listOf(), file, Constants.EMPTY_STRING, imageCaption, base64Thumbnail, 0,false)
+                    Constants.EMPTY_STRING, listOf(), file, Constants.EMPTY_STRING, imageCaption, base64Thumbnail, 0,false, mentionedUsersIds)
 
     /**
      * Audio Message Constructor
@@ -87,7 +91,8 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
                     Constants.EMPTY_STRING, listOf(), file, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, audioDuration,isAudioRecorded)
+                    Constants.EMPTY_STRING, audioDuration,isAudioRecorded, listOf()
+            )
 
     /**
      * Video Message Constructor
@@ -96,8 +101,8 @@ data class MessageObject(var toJid: String,
                 messageType: String,
                 videoCaption: String,
                 file: File?,
-                replyMessageId: String) :
+                replyMessageId: String, mentionedUsersIds: List<String>) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
                     Constants.EMPTY_STRING, listOf(), file, Constants.EMPTY_STRING, videoCaption,
-                    Constants.EMPTY_STRING, 0,false)
+                    Constants.EMPTY_STRING, 0,false, mentionedUsersIds)
 }

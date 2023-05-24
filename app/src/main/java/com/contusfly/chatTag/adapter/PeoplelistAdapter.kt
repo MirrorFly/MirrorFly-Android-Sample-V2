@@ -146,7 +146,7 @@ class PeoplelistAdapter(
     }
 
     private fun setChatTagPinnedIcon(item: RecentChat, holder: AddPeopleRecentChatItemLayoutBinding) {
-        if (item.isChatPinned && context.javaClass.simpleName != "ForwardMessageActivity")
+        if (item.isChatPinned && context.javaClass.simpleName != "groupmentionMessageActivity")
             holder.pin.show()
         else holder.pin.gone()
     }

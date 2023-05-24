@@ -462,6 +462,9 @@ fun String.checkIndexes(searchedKey: String): Int {
 
 fun Context.color(res: Int): Int = ContextCompat.getColor(this, res)
 
+fun ChatMessage.caption(context: Context): String {
+    return mediaChatMessage.mediaCaptionText.ifEmpty { if (isImageMessage()) context.getString(R.string.title_image) else context.getString(R.string.title_video) }
+}
 
 fun ReplyParentChatMessage.caption(context: Context): String {
     return if (mediaChatMessage.mediaCaptionText.isEmpty())

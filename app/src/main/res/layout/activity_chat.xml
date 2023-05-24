@@ -64,7 +64,7 @@
         android:id="@+id/view_chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/view_footer"
+        android:layout_above="@+id/view_footer1"
         android:layout_below="@+id/ll_block"
         android:paddingTop="@dimen/margin_0"
         android:paddingBottom="@dimen/padding_5"
@@ -74,7 +74,7 @@
         android:id="@+id/layout_redirect_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/view_footer"
+        android:layout_above="@+id/view_footer1"
         android:layout_marginEnd="@dimen/margin_10"
         android:layout_marginBottom="@dimen/margin_10"
         android:gravity="end"
@@ -100,42 +100,15 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/view_footer"
+        android:id="@+id/view_footer1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/view_chat_footer_layout"
         android:orientation="vertical">
-
-        <include
-            android:id="@+id/view_text_reply_layout"
-            layout="@layout/reply_view" />
-
-        <LinearLayout
-            android:id="@+id/suggestion_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_10"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/suggestion_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="visible" />
-
-            <ImageView
-                android:id="@+id/reply_close"
-                android:layout_width="@dimen/margin_15"
-                android:layout_height="@dimen/margin_15"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/margin_2"
-                android:background="@drawable/ic_close1"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:visibility="invisible"/>
     </LinearLayout>
 
     <LinearLayout

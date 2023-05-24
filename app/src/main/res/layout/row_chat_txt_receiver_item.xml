@@ -109,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <io.github.rockerhieu.emojicon.EmojiconTextView
+                        <TextView
                             android:id="@+id/text_rev_chat"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

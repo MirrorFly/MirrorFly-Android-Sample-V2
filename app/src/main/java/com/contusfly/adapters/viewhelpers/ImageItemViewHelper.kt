@@ -6,6 +6,7 @@
 package com.contusfly.adapters.viewhelpers
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import com.mirrorflysdk.flycommons.MediaDownloadStatus
 import com.mirrorflysdk.flycommons.MediaUploadStatus
 import com.contusfly.*
@@ -13,6 +14,7 @@ import com.contusfly.adapters.holders.ImageReceivedViewHolder
 import com.contusfly.adapters.holders.ImageSentViewHolder
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.chat.MessageUtils
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.interfaces.MessageItemListener
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.models.ChatMessage
@@ -36,7 +38,8 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
      */
     fun setImageWidthAndHeight(imgViewHolder: ImageSentViewHolder, messageItem: ChatMessage) {
         with(imgViewHolder) {
-            imageSenderLayout?.setWidthAndHeight(messageItem.mediaChatMessage.mediaFileHeight, messageItem.mediaChatMessage.mediaFileWidth)
+            val calculatedDimension = ChatUtils.getMobileWidthAndHeight(messageItem.getMediaChatMessage().getMediaFileWidth(), messageItem.getMediaChatMessage().getMediaFileHeight())
+            imageSenderLayout?.setWidthAndHeight(calculatedDimension.second, calculatedDimension.first)
         }
     }
 
@@ -94,14 +97,19 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
             if (Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaCaptionText()).isNotEmpty()) {
                 viewSendImageCaption.show()
                 txtChatSentCaption.maxWidth = ceil((AndroidUtils.getDensity(context) * 250).toDouble()).toInt()
-                txtChatSentCaption.text = getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText())
-                handleSenderImageCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()), imgViewHolder, searchEnabled, searchKey)
                 checkCaption(this)
                 txtSentCaptionTime.text = time
                 messageItemListener.setRecentChatStatus(imgSentImageCaptionStatus, messageItem.getMessageStatus())
                 messageItemListener.setStarredCaptionStatus(messageItem.isMessageStarred(), imgSentCaptionStar)
                 imgSentStarred.gone()
                 imgSentBalloon.gone()
+                if (messageItem.mentionedUsersIds != null && messageItem.mentionedUsersIds.size > 0 ) {
+                    val mentionText = MentionUtils.formatMentionText(context, messageItem,false)
+                    val mentionUserNames=MentionUtils.getMentionedUserId(context,messageItem,false)
+                    handleSenderImageCaptionSearchExceptMention(mentionText, imgViewHolder, searchEnabled, searchKey,mentionUserNames)
+                } else {
+                    handleSenderImageCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()), imgViewHolder, searchEnabled, searchKey)
+                }
             } else {
                 showViews(txtSendTime, imgSenderStatus)
                 viewSendImageCaption.gone()
@@ -124,6 +132,19 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
             val startIndex = htmlText.toString().checkIndexes(searchKey)
             val stopIndex = startIndex + searchKey.length
             EmojiUtils.setMediaTextHighLightSearched(context, holder.txtChatSentCaption, htmlText.toString(), startIndex, stopIndex)
+        } else {
+            holder.txtChatSentCaption.setBackgroundColor(context.color(android.R.color.transparent))
+            holder.txtChatSentCaption.setTextKeepState(htmlText)
+        }
+    }
+    private fun handleSenderImageCaptionSearchExceptMention(htmlText: CharSequence, holder: ImageSentViewHolder,
+                                               searchEnabled: Boolean, searchKey: String,mentionedUserName: SpannableStringBuilder
+    ) {
+        if (searchEnabled && searchKey.isNotEmpty()) {
+            val startIndex = htmlText.toString().checkIndexes(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            EmojiUtils.setMediaTextHighLightSearchedForMention(context, holder.txtChatSentCaption,
+                htmlText.toString(), startIndex, stopIndex, mentionedUserName)
         } else {
             holder.txtChatSentCaption.setBackgroundColor(context.color(android.R.color.transparent))
             holder.txtChatSentCaption.setTextKeepState(htmlText)
@@ -206,7 +227,8 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
      */
     fun setImageWidthAndHeight(imgViewHolder: ImageReceivedViewHolder, messageItem: ChatMessage) {
         with(imgViewHolder) {
-            imageRevLayout?.setWidthAndHeight(messageItem.mediaChatMessage.mediaFileHeight, messageItem.mediaChatMessage.mediaFileWidth)
+            val calculatedDimension = ChatUtils.getMobileWidthAndHeight(messageItem.getMediaChatMessage().getMediaFileWidth(), messageItem.getMediaChatMessage().getMediaFileHeight())
+            imageRevLayout?.setWidthAndHeight(calculatedDimension.second, calculatedDimension.first)
         }
     }
 
@@ -229,14 +251,19 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
             if (Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaCaptionText()).isNotEmpty()) {
                 viewRevImageCaption.show()
                 txtRevChatCaption.maxWidth = ceil((AndroidUtils.getDensity(context) * 250).toDouble()).toInt()
-                txtRevChatCaption.text = getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText())
-                handleReceiverImageCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()), imgViewHolder, searchEnabled, searchKey)
                 txtRevTime.gone()
                 imgStarred.gone()
                 txtRevCaptionTime.text = time
                 imgStarred.gone()
                 viewRevImageBalloon.gone()
                 messageItemListener.setStarredCaptionStatus(messageItem.isMessageStarred(), txtRevCaptionStar)
+                if (messageItem.mentionedUsersIds != null && messageItem.mentionedUsersIds.size > 0 ) {
+                    val mentionText = MentionUtils.formatMentionText(context, messageItem,false)
+                    val mentionUserNames=MentionUtils.getMentionedUserId(context,messageItem,false)
+                    handleReceiverImageCaptionSearchExceptMention(mentionText, imgViewHolder, searchEnabled,searchKey,mentionUserNames)
+                } else {
+                    handleReceiverImageCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()), imgViewHolder, searchEnabled, searchKey)
+                }
             } else {
                 viewRevImageCaption.gone()
                 txtRevTime.show()
@@ -311,6 +338,21 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
             val startIndex = htmlText.toString().checkIndexes(searchKey)
             val stopIndex = startIndex + searchKey.length
             EmojiUtils.setMediaTextHighLightSearched(context, holder.txtRevChatCaption, htmlText.toString(), startIndex, stopIndex)
+        } else {
+            holder.txtRevChatCaption.setBackgroundColor(context.color(android.R.color.transparent))
+            holder.txtRevChatCaption.setTextKeepState(htmlText)
+        }
+    }
+
+    private fun handleReceiverImageCaptionSearchExceptMention(
+        htmlText: CharSequence, holder: ImageReceivedViewHolder,
+        searchEnabled: Boolean, searchKey: String,mentionedUserName: SpannableStringBuilder
+    ) {
+        if (searchEnabled && searchKey.isNotEmpty()) {
+            val startIndex = htmlText.toString().checkIndexes(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            EmojiUtils.setMediaTextHighLightSearchedForMention(context, holder.txtRevChatCaption,
+                htmlText.toString(), startIndex, stopIndex,mentionedUserName)
         } else {
             holder.txtRevChatCaption.setBackgroundColor(context.color(android.R.color.transparent))
             holder.txtRevChatCaption.setTextKeepState(htmlText)

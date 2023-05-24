@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.emoji.widget.EmojiAppCompatTextView
 import com.contusfly.R
@@ -55,7 +56,7 @@ class TextReceivedViewHolder(mainView: View) : SenderNameHolder(mainView) {
     /**
      * Text message of the chat
      */
-    val txtChatReceiver: EmojiconTextView = mainView.findViewById(R.id.text_rev_chat)
+    val txtChatReceiver: TextView = mainView.findViewById(R.id.text_rev_chat)
 
     val translatedlinearlayout: LinearLayout? = mainView.findViewById(R.id.translated_layout)
 

@@ -101,34 +101,9 @@ class DecodeImageUtils
     fun loadImageInView(imageView: ImageView?, path: String?, base64: String, context: Context?, id: Int) {
         if (imageView == null)
             return
-        if (path != null && path.isNotEmpty()) {
-            val file = File(path)
-            if (file.exists()) {
-                loadImageWithGlide(context, file, imageView, id)
-            } else loadBase64(imageView, base64)
-        } else if (TextUtils.isEmpty(base64)) {
-            val file = File(path)
-            if (file.exists()) loadImageWithGlide(context, file, imageView, id)
-        } else loadBase64(imageView, base64)
+        MediaUtils.extendedLoadImageInView(imageView, path, base64, context, id)
     }
 
-    /**
-     * Load base64 of the image into image view
-     *
-     * @param imageView Image view to load
-     * @param base64    Base64 string
-     */
-    private fun loadBase64(imageView: ImageView, base64: String) {
-        try {
-            val array = Base64.decode(base64, Base64.DEFAULT)
-            val mBitmap = BitmapFactory.decodeByteArray(array, 0, array.size)
-            if (mBitmap != null) {
-                imageView.setImageBitmap(mBitmap)
-            }
-        } catch (e: Exception) {
-            LogMessage.e(e)
-        }
-    }
 
     companion object {
         /**

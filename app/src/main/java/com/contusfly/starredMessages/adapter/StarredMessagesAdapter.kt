@@ -46,11 +46,11 @@ import com.contusfly.chat.MapUtils
 import com.contusfly.chat.MediaController
 import com.contusfly.chat.reply.ReplyMessageUtils
 import com.contusfly.chat.reply.ReplyViewUtils
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.interfaces.MessageItemListener
 import com.contusfly.interfaces.OnChatItemClickListener
 import com.contusfly.models.MediaStatus
 import com.contusfly.utils.*
-import com.contusfly.utils.ChatUtils.getUserFromJid
 import com.contusfly.utils.ChatUtils.setSelectedChatItem
 import com.contusfly.utils.Constants
 import com.contusfly.utils.ImageUtils.loadMapWithGlide
@@ -59,7 +59,6 @@ import com.contusfly.utils.MediaUtils.loadImageWithGlideSecure
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.ChatManager.getUserProfileName
-import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.FlyMessenger.cancelMediaUploadOrDownload
 import com.mirrorflysdk.api.MessageStatus
 import com.mirrorflysdk.api.contacts.ProfileDetails
@@ -69,7 +68,6 @@ import io.github.rockerhieu.emojicon.EmojiconTextView
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  *
@@ -339,15 +337,27 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             replyViewUtils!!.showSenderReplyWindow(starredTxtSenderViewHolder, item, context!!)
             setSelectedChatItem(starredTxtSenderViewHolder.itemView, item, starredMessageMessages, context)
             with(starredTxtSenderViewHolder.txtChatSender) {
-                setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
-                setTextKeepState(getSpannedText(msg))
-                if (msg.contains(BuildConfig.WEB_CHAT_LOGIN))
-                    setJoinLinkView(starredTxtSenderViewHolder.txtChatSender, starredTxtSenderViewHolder.joinLinkView,
-                        starredTxtSenderViewHolder.joinLinkLogo)
-                isClickable = false
-                isLongClickable = false
+                if(item.mentionedUsersIds != null && item.mentionedUsersIds.size > 0) {
+                    isClickable = false
+                    isLongClickable = false
+                    val mentionText = MentionUtils.formatMentionText(context, item,false)
+                    val mentionUserNames=MentionUtils.getMentionedUserId(context,item,false)
+                    LogMessage.e(TAG, "Sender side--->mentioned User names::$mentionUserNames")
+                    setSearchTextHighlightMention(starredTxtSenderViewHolder.txtChatSender,mentionText,mentionUserNames)
+                } else {
+                    setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
+                    setTextKeepState(getSpannedText(msg))
+                    if (msg.contains(BuildConfig.WEB_CHAT_LOGIN))
+                        setJoinLinkView(
+                            starredTxtSenderViewHolder.txtChatSender,
+                            starredTxtSenderViewHolder.joinLinkView,
+                            starredTxtSenderViewHolder.joinLinkLogo
+                        )
+                    isClickable = false
+                    isLongClickable = false
+                    setSearchTextHighlight(starredTxtSenderViewHolder.txtChatSender, getSpannedText(msg))
+                }
             }
-            setSearchTextHighlight(starredTxtSenderViewHolder.txtChatSender, getSpannedText(msg))
             starredTxtSenderViewHolder.imageStar.visibility = View.VISIBLE
             if (position == starredMessageData!!.size - 1) {
                 starredTxtSenderViewHolder.viewDiver?.visibility = View.GONE
@@ -359,7 +369,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         }
     }
 
-    private fun setJoinLinkView(txtChat: EmojiconTextView, joinLinkView: LinearLayout, joinLinkLogo: ImageView) {
+    private fun setJoinLinkView(txtChat: TextView, joinLinkView: LinearLayout, joinLinkLogo: ImageView) {
         txtChat.autoLinkMask = Linkify.ALL
         txtChat.linksClickable = false
         txtChat.setTextColor(ContextCompat.getColor(context!!, R.color.light_blue))
@@ -396,15 +406,28 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         receiverItemClick(starredTxtReceiverViewHolder.viewRowItem, item, position)
         setSelectedChatItem(starredTxtReceiverViewHolder.itemView, item, starredMessageMessages, context)
         with(starredTxtReceiverViewHolder.txtChatReceiver) {
-            setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
-            setTextKeepState(getSpannedText(msg))
-            if (msg.contains(BuildConfig.WEB_CHAT_LOGIN))
-                setJoinLinkView(starredTxtReceiverViewHolder.txtChatReceiver, starredTxtReceiverViewHolder.receiverJoinLinkView,
-                    starredTxtReceiverViewHolder.receiverJoinLinkLogo)
-            isClickable = false
-            isLongClickable = false
+            if(item.mentionedUsersIds != null && item.mentionedUsersIds.size > 0) {
+                setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
+                isClickable = false
+                isLongClickable = false
+                val mentionText = MentionUtils.formatMentionText(context, item,false)
+                val mentionUserNames=MentionUtils.getMentionedUserId(context,item,false)
+                LogMessage.e(TAG, "Receiver side--->mentioned User names::$mentionUserNames")
+                setSearchTextHighlightMention(starredTxtReceiverViewHolder.txtChatReceiver,mentionText,mentionUserNames)
+            } else {
+                setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
+                setTextKeepState(getSpannedText(msg))
+                if (msg.contains(BuildConfig.WEB_CHAT_LOGIN))
+                    setJoinLinkView(
+                        starredTxtReceiverViewHolder.txtChatReceiver,
+                        starredTxtReceiverViewHolder.receiverJoinLinkView,
+                        starredTxtReceiverViewHolder.receiverJoinLinkLogo
+                    )
+                isClickable = false
+                isLongClickable = false
+                setSearchTextHighlight(starredTxtReceiverViewHolder.txtChatReceiver, getSpannedText(msg))
+            }
         }
-        setSearchTextHighlight(starredTxtReceiverViewHolder.txtChatReceiver, getSpannedText(msg))
         starredTxtReceiverViewHolder.imgReceivedStar.visibility = View.VISIBLE
         if (position == starredMessageData!!.size - 1) {
             starredTxtReceiverViewHolder.viewDiver?.visibility = View.GONE
@@ -416,7 +439,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     /*
    * This method is used to set the Text Highlight color for Searched keyword */
     private fun setSearchTextHighlight(
-        txtChat: EmojiconTextView,
+        txtChat: TextView,
         fromHtml: Spanned?
     ) {
         if (searchEnabled && searchKey.isNotEmpty() && fromHtml.toString().startsWithTextInWords(searchKey)) {
@@ -427,6 +450,21 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         } else {
             txtChat.setBackgroundColor(context!!.color(android.R.color.transparent))
             txtChat.setTextKeepState(fromHtml)
+        }
+    }
+
+    private fun setSearchTextHighlightMention(
+        txtChat: TextView,
+        fromHtml: Spanned?,mentionedUserName:SpannableStringBuilder
+    ) {
+        if (searchEnabled && searchKey.isNotEmpty()) {
+            var startIndex = fromHtml.toString().checkIndexes(searchKey)
+            if (startIndex < 0) startIndex = fromHtml.toString().indexOf(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            EmojiUtils.setEmojiTextAndHighLightSearchTextForMention(context, txtChat,fromHtml.toString(), startIndex, stopIndex,mentionedUserName)
+        } else {
+            txtChat.setBackgroundColor(context!!.color(android.R.color.transparent))
+            txtChat.text=fromHtml
         }
     }
 

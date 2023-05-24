@@ -91,7 +91,7 @@ open class BaseReceivedViewHolder(view: View) : SenderNameHolder(view) {
     /**
      * Receiver caption for image
      */
-    val txtRevChatCaption: EmojiconTextView = viewRevImageCaption.findViewById(R.id.txt_caption_rev_chat)
+    val txtRevChatCaption: TextView = viewRevImageCaption.findViewById(R.id.txt_caption_rev_chat)
 
     /**
      * Sent caption for image

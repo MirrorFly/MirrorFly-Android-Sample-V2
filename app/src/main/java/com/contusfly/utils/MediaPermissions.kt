@@ -117,6 +117,41 @@ object MediaPermissions {
         }
     }
 
+    fun requestAudioMediaFiles(
+        activity: Activity,
+        permissionAlertDialog: PermissionAlertDialog,
+        permissionsLauncher: ActivityResultLauncher<Array<String>>
+    ) {
+        val permissionsToRequest = mutableListOf<String>()
+        val hasReadMediaAudio = isPermissionAllowed(activity, Manifest.permission.READ_MEDIA_AUDIO)
+        if (!hasReadMediaAudio) {
+            permissionsToRequest.add(Manifest.permission.READ_MEDIA_AUDIO)
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            when {
+                ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.READ_MEDIA_AUDIO) -> {
+                    showPermissionPopUpForStorage(permissionsLauncher, permissionsToRequest, permissionAlertDialog)
+                }
+                SharedPreferenceManager.getBoolean(Constants.STORAGE_PERMISSION_ASKED) -> {
+                    permissionAlertDialog.showPermissionInstructionDialog(PermissionAlertDialog.MEDIA_PERMISSION_DENIED,
+                        object : PermissionDialogListener{
+                            override fun onPositiveButtonClicked() {
+                                openSettingsForPermissionWithoutSmackBar(activity)
+                            }
+
+                            override fun onNegativeButtonClicked() {
+                                //Not Needed
+                            }
+                        })
+                }
+                else -> {
+                    showPermissionPopUpForStorage(permissionsLauncher, permissionsToRequest, permissionAlertDialog)
+                }
+            }
+        }
+    }
+
     //Android 13 Notification permission checking
     fun runtimeNotificationPermissionEnabledStatus( activity: Activity):Boolean{
         var isPermissionEnabled:Boolean=true

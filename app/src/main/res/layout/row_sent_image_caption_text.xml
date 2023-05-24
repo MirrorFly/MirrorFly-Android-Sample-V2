@@ -11,7 +11,7 @@
     android:paddingEnd="@dimen/margin_10"
     android:paddingBottom="@dimen/margin_7">
 
-    <io.github.rockerhieu.emojicon.EmojiconTextView
+    <TextView
         android:id="@+id/txt_caption_sent_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

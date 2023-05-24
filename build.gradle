@@ -25,8 +25,9 @@ allprojects {
         google()
         jcenter()
         maven {
-            url "https://repo.mirrorfly.com/snapshot"
+            url "https://repo.mirrorfly.com/release"
         }
+
     }
 }
 
@@ -41,4 +42,5 @@ ext {
     minSdkVersion = 21
     versionCode = 3
     versionName = "2.2"
+    repoVersion = '7.4.0'
 }

@@ -31,6 +31,7 @@ open class ChatAttachmentDialog(
     private lateinit var dialogView: View
 
     private var isKeyboardOpened = false
+    private var isGroupMemberListShowing = false
     private var screenHeight = 0
 
     private lateinit var firstAttachment: TextView
@@ -263,9 +264,10 @@ open class ChatAttachmentDialog(
         anim.start()
     }
 
-    fun showDialog(isKeyboardOpened: Boolean, screenHeight: Int) {
+    fun showDialog(isKeyboardOpened: Boolean, screenHeight: Int, isGroupMemberListShowing:Boolean) {
         this.isKeyboardOpened = isKeyboardOpened
         this.screenHeight = screenHeight
+        this.isGroupMemberListShowing = isGroupMemberListShowing
         updateWindowView()
         show()
         initializeAttachments()
@@ -289,7 +291,10 @@ open class ChatAttachmentDialog(
             val rectf = Rect()
             footerDivider.getGlobalVisibleRect(rectf)
             val y = rectf.centerY()
-            lp.y = screenHeight - y + AndroidUtils.dp(5f, context)
+            lp.y = if (!isGroupMemberListShowing) screenHeight - y + AndroidUtils.dp(
+                5f,
+                context
+            ) else 295
             lp.dimAmount = 0f
         }
         setDialogBackground()

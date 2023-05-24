@@ -37,6 +37,8 @@ import com.mirrorflysdk.models.RecentSearch
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import com.google.android.material.tabs.TabLayout
+import com.mirrorflysdk.flycommons.exception.ErrorCode
+import com.mirrorflysdk.flycommons.exception.FlyException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -227,8 +229,9 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + Job()
 
-    override fun onConnectionNotAuthorized() {
-       showToast("The session has been logged out")
+    override fun onConnectionFailed(e: FlyException) {
+        if (e.errorCode == ErrorCode.AUTHORIZATION_ERROR)
+            showToast("The session has been logged out")
     }
 
     /**

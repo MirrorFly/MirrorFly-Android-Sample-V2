@@ -252,17 +252,7 @@ object RealPathUtil {
             val mimeType = getMimeTypeFromFilePath(context, fileUri)
 
             val filePath = getFilePath(fileName, mimeType, directoryName)
-            if (filePath.exists())
-                return filePath.path
-            val inputStream = context.contentResolver.openInputStream(fileUri)
-            val fileOutputStream = FileOutputStream(filePath)
-            return if (inputStream != null) {
-                ImagePickerUtils.copyStream(inputStream, fileOutputStream)
-                fileOutputStream.close()
-                inputStream.close()
-                filePath.path
-            } else
-                null
+            return checkFilePath(filePath,context,fileUri)
         } else {
             var cursor: Cursor? = null
             val column = MediaStore.Images.Media.DATA
@@ -286,11 +276,32 @@ object RealPathUtil {
         }
     }
 
-    private fun getFilePath(fileName: String?, mimeType: String, directoryName: String): File {
+    private fun checkFilePath(filePath: File?,context: Context,fileUri: Uri?): String?  {
+        if(filePath!=null){
+            if (filePath!!.exists())
+                return filePath.path
+            val inputStream = context.contentResolver.openInputStream(fileUri!!)
+            val fileOutputStream = FileOutputStream(filePath)
+            return if (inputStream != null) {
+                ImagePickerUtils.copyStream(inputStream, fileOutputStream)
+                fileOutputStream.close()
+                inputStream.close()
+                filePath.path
+            } else
+                null
+        } else {
+            return null
+        }
+    }
+
+    private fun getFilePath(fileName: String?, mimeType: String, directoryName: String): File? {
         return if (mimeType.startsWith("image", true) || mimeType.startsWith("video", true))
             ImagePickerUtils.getFile(directoryName, getExtension(fileName!!))
-        else
+        else {
+            ImagePickerUtils.createFolderIfNotExist(directoryName)
+            if(fileName==null){ return null}
             File(directoryName, fileName)
+        }
     }
 
     private fun getExtension(path: String): String {

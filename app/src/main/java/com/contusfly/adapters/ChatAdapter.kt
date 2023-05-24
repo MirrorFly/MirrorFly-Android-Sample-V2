@@ -7,15 +7,12 @@
 package com.contusfly.adapters
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.util.Linkify
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +38,7 @@ import com.contusfly.chat.MediaController
 import com.contusfly.chat.MessageUtils
 import com.contusfly.chat.reply.ReplyViewUtils
 import com.contusfly.checkInternetAndExecute
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.interfaces.MessageItemListener
 import com.contusfly.interfaces.OnChatItemClickListener
 import com.contusfly.models.MediaStatus
@@ -49,18 +47,14 @@ import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CustomTextView
 import com.contusfly.views.MirrorFlySeekBar
-import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.MessageStatus
-import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ContactChatMessage
 import com.mirrorflysdk.utils.Utils
 import com.location.googletranslation.GoogleTranslation
 import io.github.rockerhieu.emojicon.EmojiconTextView
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -891,7 +885,6 @@ class ChatAdapter(
             val time: String?
             try {
                 adjustPadding(space, position, mainlist)
-                val msg = item.getMessageTextContent()
                 time = chatMsgTime.getDaySentMsg(context, item.getMessageSentTime())
                 with(txtChatTime) {
                     text = time
@@ -916,35 +909,7 @@ class ChatAdapter(
                     joinLinkView.gone()
                     setStatus(item, imgChatStatus)
                     replyViewUtils.showSenderReplyWindow(this, item, context)
-                    with(txtChatSender) {
-                        setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
-                        setTextKeepState(getSpannedText(msg))
-                        handleSenderTextSearch(getSpannedText(msg), holder)
-                        if (msg.contains(BuildConfig.WEB_CHAT_LOGIN))
-                            setJoinLinkView(
-                                item.chatUserJid,
-                                txtChatSender,
-                                joinLinkView,
-                                joinLinkLogo
-                            )
-                        var movelink = ModifiedlinkMovementMethod(
-                            context,
-                            item.chatUserJid,
-                            selectedMessages,
-                            isLinkLongclick
-                        )
-                        movelink.setOnclicklistener(
-                            txtChatSender,
-                            longClickListener,
-                            item,
-                            position,
-                            linkClickListener,
-                            linkbuttonclickstatusListener
-                        )
-                        movementMethod = movelink
-                        isClickable = false
-                        isLongClickable = false
-                    }
+                    setSenderText(item, txtChatSender,txtSenderViewHolder,position)
                 }
                 replyViewUtils.markFavoriteItem(this, item)
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
@@ -955,9 +920,48 @@ class ChatAdapter(
         }
     }
 
+    private fun setSenderText(item: ChatMessage,txtChatSender:TextView,holder: TextSentViewHolder,position: Int){
+        val msg = item.messageTextContent
+        with(txtChatSender) {
+            setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
+            if (item.mentionedUsersIds != null && item.mentionedUsersIds.size > 0) {
+                val mentionText = MentionUtils.formatMentionText(context, item, false)
+                val mentionUserNames = MentionUtils.getMentionedUserId(context, item, false)
+                handleSenderTextSearchMention(mentionText, holder, mentionUserNames)
+            } else {
+                setTextKeepState(getSpannedText(msg))
+                handleSenderTextSearch(getSpannedText(msg), holder)
+            }
+            if (msg.contains(BuildConfig.WEB_CHAT_LOGIN))
+                setJoinLinkView(
+                    item.chatUserJid,
+                    txtChatSender,
+                    holder.joinLinkView,
+                    holder.joinLinkLogo
+                )
+            var movelink = ModifiedlinkMovementMethod(
+                context,
+                item.chatUserJid,
+                selectedMessages,
+                isLinkLongclick
+            )
+            movelink.setOnclicklistener(
+                txtChatSender,
+                longClickListener,
+                item,
+                position,
+                linkClickListener,
+                linkbuttonclickstatusListener
+            )
+            movementMethod = movelink
+            isClickable = false
+            isLongClickable = false
+        }
+    }
+
     private fun setJoinLinkView(
         userJid: String,
-        txtChat: EmojiconTextView,
+        txtChat: TextView,
         joinLinkView: LinearLayout,
         joinLinkLogo: ImageView
     ) {
@@ -994,6 +998,22 @@ class ChatAdapter(
                 startIndex,
                 stopIndex
             )
+        } else {
+            holder.txtChatSender.setBackgroundColor(context.color(android.R.color.transparent))
+            holder.txtChatSender.setTextKeepState(htmlText)
+        }
+    }
+
+    private fun handleSenderTextSearchMention(htmlText: CharSequence, holder: TextSentViewHolder, mentionedUserName:SpannableStringBuilder) {
+        if (searchEnabled && searchKey.isNotEmpty()) {
+            val startIndex = htmlText.toString().checkIndexes(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            EmojiUtils.setEmojiTextAndHighLightSearchTextForMention(
+                context,
+                holder.txtChatSender,
+                htmlText.toString(),
+                startIndex,
+                stopIndex,mentionedUserName)
         } else {
             holder.txtChatSender.setBackgroundColor(context.color(android.R.color.transparent))
             holder.txtChatSender.setTextKeepState(htmlText)
@@ -1119,6 +1139,7 @@ class ChatAdapter(
         item: ChatMessage,
         textViewHolder: TextReceivedViewHolder
     ) {
+        val msg = item.getMessageTextContent()
         with(textViewHolder) {
             if (item.isMessageRecalled()) {
                 textViewHolder.isRecallMessage = true
@@ -1132,9 +1153,15 @@ class ChatAdapter(
                 replyViewUtils.showReceiverReplyWindow(this, item, context)
                 with(txtChatReceiver) {
                     setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
-                    val msg = item.getMessageTextContent()
-                    setTextKeepState(getSpannedText(msg))
-                    handleReceiverTextSearch(getSpannedText(msg), textViewHolder)
+                    if(item.mentionedUsersIds != null && item.mentionedUsersIds.size > 0) {
+                        val mentionText = MentionUtils.formatMentionText(context, item,false)
+                        val mentionUserNames=MentionUtils.getMentionedUserId(context,item,false)
+                        handleReceiverTextSearchMention(mentionText,textViewHolder,mentionUserNames)
+                    } else {
+                        setTextKeepState(getSpannedText(msg))
+                        handleReceiverTextSearch(getSpannedText(msg), textViewHolder)
+                    }
+
                     if (msg.contains(BuildConfig.WEB_CHAT_LOGIN))
                         setJoinLinkView(
                             item.chatUserJid,
@@ -1147,7 +1174,6 @@ class ChatAdapter(
                         item.chatUserJid,
                         selectedMessages,
                         isLinkLongclick
-
                     )
                     movelink.setOnclicklistener(
                         txtChatReceiver,
@@ -1162,6 +1188,22 @@ class ChatAdapter(
                     isLongClickable = false
                 }
             }
+        }
+    }
+
+    private fun handleReceiverTextSearchMention(htmlText: CharSequence, holder: TextReceivedViewHolder, mentionedUserName:SpannableStringBuilder) {
+        if (searchEnabled && searchKey.isNotEmpty()) {
+            val startIndex = htmlText.toString().checkIndexes(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            EmojiUtils.setEmojiTextAndHighLightSearchTextForMention(
+                context,
+                holder.txtChatReceiver,
+                htmlText.toString(),
+                startIndex,
+                stopIndex,mentionedUserName)
+        } else {
+            holder.txtChatReceiver.setBackgroundColor(context.color(android.R.color.transparent))
+            holder.txtChatReceiver.setTextKeepState(htmlText)
         }
     }
 
@@ -1498,7 +1540,7 @@ class ChatAdapter(
 
     private fun checkAndTranslateMessage(
         holder: RecyclerView.ViewHolder,
-        txtRevChatCaption: EmojiconTextView,
+        txtRevChatCaption: TextView,
         txtTranslatedText: EmojiAppCompatTextView?,
         translatedLinearLayout: LinearLayout?
     ) {

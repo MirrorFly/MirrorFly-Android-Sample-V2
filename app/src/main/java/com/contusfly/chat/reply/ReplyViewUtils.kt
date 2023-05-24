@@ -90,7 +90,7 @@ class ReplyViewUtils {
                 replyMessageViewHolder.showSentReplyView()
             else
                 replyMessageViewHolder.showReceivedReplyView()
-            ReplyView().showReceiverReplyView(context, replyMessageViewHolder, item.getReplyParentChatMessage(), item.isGroupMessage())
+            ReplyView().showReceiverReplyView(context, replyMessageViewHolder, item, item.isGroupMessage())
         } else {
             replyMessageViewHolder.hideSentReplyView()
             replyMessageViewHolder.hideReceivedReplyView()

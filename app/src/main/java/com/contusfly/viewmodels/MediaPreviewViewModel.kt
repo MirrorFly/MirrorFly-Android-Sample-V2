@@ -88,7 +88,7 @@ constructor() : ViewModel() {
                                 selectedImage.path,
                                 Constants.EMPTY_STRING,
                                 Constants.EMPTY_STRING,
-                                false
+                                false, listOf()
                             )
                         )
                         selectedMediaList.postValue(selectedImageList)
@@ -101,7 +101,7 @@ constructor() : ViewModel() {
                             selectedImage.path,
                             Constants.EMPTY_STRING,
                             Constants.EMPTY_STRING,
-                            false
+                            false, listOf()
                         ))
                     selectedMediaList.postValue(selectedImageList)
                 }
@@ -112,7 +112,7 @@ constructor() : ViewModel() {
                             selectedImage.path,
                             Constants.EMPTY_STRING,
                             Constants.EMPTY_STRING,
-                            false
+                            false, listOf()
                         ))
                     selectedMediaList.postValue(selectedImageList)
                 }

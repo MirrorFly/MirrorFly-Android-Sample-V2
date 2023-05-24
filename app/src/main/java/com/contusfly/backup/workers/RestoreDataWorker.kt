@@ -1,22 +1,32 @@
 package com.contusfly.backup.workers
 
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
+import com.contusfly.R
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.activities.BackUpActivity
 import com.contusfly.activities.RestoreActivity
 import com.contusfly.backup.BackupConstants
 import com.contusfly.backup.WorkManagerController
+import com.contusfly.utils.Constants
 import com.mirrorflysdk.backup.RestoreListener
 import com.mirrorflysdk.backup.RestoreManager
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
+import java.lang.invoke.MethodHandles.Lookup.PACKAGE
+import kotlin.concurrent.thread
 
 class RestoreDataWorker(private val appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
 
-
     companion object {
+
+        val CHANNEL_ID="Restore_Process_Channel"
 
         private lateinit var workerProgress: BackUpActivity.WorkerProgress
 
@@ -51,6 +61,7 @@ class RestoreDataWorker(private val appContext: Context, workerParams: WorkerPar
                     }
 
                     override fun onProgressChanged(percentage: Int) {
+                        updateRestoreNotification(percentage)
                         LogMessage.e(
                             "RestoreDataWorker",
                             "RestoreManager.restoreData() onProgressChanged() percentage $percentage"
@@ -68,6 +79,7 @@ class RestoreDataWorker(private val appContext: Context, workerParams: WorkerPar
                             "RestoreManager.restoreData() onSuccess() "
                         )
                         workerProgressOnSuccess()
+                        restoreCompletedNotify()
                     }
 
                 })
@@ -99,6 +111,30 @@ class RestoreDataWorker(private val appContext: Context, workerParams: WorkerPar
             workerProgress.onSuccess()
         if (isRestoreWorkProgressInitialized())
             restoreWorkerProgress.onSuccess()
+    }
+
+    private fun updateRestoreNotification(progress: Int) {
+        val builder = NotificationCompat.Builder(appContext, CHANNEL_ID)
+            .setContentTitle("Restore Progress $progress%")
+            .setSmallIcon(R.drawable.ic_notification_blue)
+            .setOngoing(true)
+            .setProgress(100, progress, false)
+
+        val mNotifyManager =
+            appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mNotifyManager.notify(Constants.NOTIFICATION_ID, builder.build())
+
+    }
+
+    private fun restoreCompletedNotify() {
+        val builder=NotificationCompat.Builder(appContext, CHANNEL_ID)
+            .setContentTitle("Restore progress completed 100%")
+            .setSmallIcon(R.drawable.ic_notification_blue)
+            .setOngoing(false)
+            .setProgress(100, 100, false)
+
+        val mNotifyManager = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mNotifyManager.notify(Constants.NOTIFICATION_ID, builder.build())
     }
 
 }

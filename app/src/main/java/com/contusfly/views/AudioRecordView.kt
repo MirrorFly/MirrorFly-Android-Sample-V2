@@ -100,7 +100,8 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
     private fun setRecordAudioListener() {
 
         chatParent.voiceAttachment.setOnClickListener {
-           startRecordClickListener()
+            chatParent.chatMessageEditText.text?.clear()
+            startRecordClickListener()
         }
 
         chatParent.imageViewAudio.setOnClickListener {

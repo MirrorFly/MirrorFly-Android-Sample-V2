@@ -44,17 +44,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.WindowInsetsCompat
 import androidx.emoji.widget.EmojiAppCompatTextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.*
-import com.mirrorflysdk.flycommons.ChatType
-import com.mirrorflysdk.flycommons.Features
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycommons.models.MessageType
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.*
 import com.contusfly.activities.*
 import com.contusfly.adapters.ChatAdapter
+import com.contusfly.adapters.GroupTagAdapter
 import com.contusfly.adapters.ReplySuggestionsAdapter
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.chat.MessagingClient
@@ -63,6 +59,11 @@ import com.contusfly.chat.ReplyViewHandler
 import com.contusfly.constants.MobileApplication
 import com.contusfly.databinding.ActivityChatBinding
 import com.contusfly.di.factory.AppViewModelFactory
+import com.contusfly.groupmention.MentionEditGroupText
+import com.contusfly.groupmention.MentionUtils
+import com.contusfly.groupmention.OnMentionEventListener
+import com.contusfly.groupmention.TextUIConfig
+import com.contusfly.groupmention.UserMentionConfig
 import com.contusfly.helpers.MessagePaginationScrollListener
 import com.contusfly.interfaces.ChatAttachmentLister
 import com.contusfly.interfaces.MessageListener
@@ -77,22 +78,31 @@ import com.contusfly.utils.RequestCode
 import com.contusfly.utils.Utils
 import com.contusfly.viewmodels.ChatParentViewModel
 import com.contusfly.viewmodels.ChatViewModel
+import com.contusfly.viewmodels.MentionsViewModel
 import com.contusfly.views.*
+import com.fxn.pix.Options
+import com.fxn.pix.Pix
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.textChanges
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatActionListener
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycommons.ChatType
+import com.mirrorflysdk.flycommons.Features
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.flycommons.models.MessageType
 import com.mirrorflysdk.helpers.LocationUtils
 import com.mirrorflysdk.utils.*
-import com.fxn.pix.Options
-import com.fxn.pix.Pix
-import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.widget.textChanges
+import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import dagger.android.AndroidInjection
-import io.github.rockerhieu.emojicon.EmojiconEditText
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -124,6 +134,10 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     open val viewModel by lazy {
         ViewModelProviders.of(this, chatViewModelFactory).get(ChatViewModel::class.java)
+    }
+
+    protected val mentionViewModel by lazy {
+        ViewModelProvider(this).get(MentionsViewModel::class.java)
     }
 
     lateinit var chat: Chat
@@ -261,6 +275,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     var lastRefreshTime: Long = 0
 
     lateinit var replySuggestionAdapter: ReplySuggestionsAdapter
+    lateinit var groupTagAdapter: GroupTagAdapter
 
     protected var actionModeMenu: Menu? = null
 
@@ -314,6 +329,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private val filteredPosition = ArrayList<Int>()
 
     protected var typingList:MutableList<String> = ArrayList()
+
+    val userMentionConfig: UserMentionConfig = UserMentionConfig.Builder().build()
 
     private val editTextWatcher = object : TextWatcher {
         override fun afterTextChanged(p0: Editable?) {
@@ -464,6 +481,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
         if(readPermissionGranted) {
             selectAudioFileFromStorage()
+        } else if(ChatUtils.checkMediaPermission(this, Manifest.permission.READ_MEDIA_AUDIO)){
+            selectAudioFileFromStorage()
         }
     }
 
@@ -488,10 +507,10 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     /**
      * Edit text which used to add the message in the chat view to send the user
      */
-    val chatMessageEditText by bindView<EmojiconEditText>(R.id.edit_chat_msg)
+    val chatMessageEditText by bindView<MentionEditGroupText>(R.id.edit_chat_msg)
 
     private val chatFooter by bindView<ConstraintLayout>(R.id.view_chat_footer)
-    private val chatFooterDivider by bindView<View>(R.id.chat_footer_divider)
+    val chatFooterDivider by bindView<View>(R.id.chat_footer_divider)
     private val chatFooterBottomDivider by bindView<View>(R.id.chat_footer_bottom_divider)
 
     /**
@@ -516,7 +535,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private val layoutRedirectLastMessage by bindView<LinearLayout>(R.id.layout_redirect_message)
     protected val unreadMessageCountView by bindView<TextView>(R.id.unread_count)
     private val txtNoMsg by bindView<TextView>(R.id.text_no_msg)
-    private val viewChat by bindView<LinearLayout>(R.id.view_chat)
+    val viewChat by bindView<LinearLayout>(R.id.view_chat)
     protected val back by bindView<LinearLayout>(R.id.view_back)
     private val userNameLayout by bindView<LinearLayout>(R.id.view_info)
     private val searchEdit by bindView<CustomEditText>(R.id.search_edit)
@@ -545,7 +564,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private val emojiLayout by bindView<FrameLayout>(R.id.emojicons)
 
+    protected val groupTagRecycler by bindView<RecyclerView>(R.id.group_tag_name_recycler)
+    protected val groupUserTagLayout by bindView<LinearLayout>(R.id.group_user_tag_layout)
+    protected val viewChildLayout by bindView<LinearLayout>(R.id.view_child_footer)
+
     var isSoftKeyboardShown: Boolean = false
+
+    var isGroupMemberListShowing: Boolean = false
 
     var softKeyboardHeight: Int = 0
 
@@ -845,6 +870,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private fun setEditTextListener() {
         binding.viewChatFooter.editChatMsg.addTextChangedListener(editTextWatcher)
         binding.viewChatFooter.editChatMsg.setOnTouchListener { _, _ ->
+            showChatKeyboard = true
             if (attachmentDialog.isShowing)
                 closeControls()
             false
@@ -929,7 +955,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
 
         attachmentDialog.showDialog(isSoftKeyboardShown || emojiHandler.isEmojiShowing,
-            finalHeight)
+            finalHeight, isGroupMemberListShowing)
     }
 
     protected fun setUserProfileAndStatus() {
@@ -989,7 +1015,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     protected fun setChatStatus() {
         if (chat.isSingleChat()) {
-            if (profileDetails.isDeletedContact()) {
+            if (::profileDetails.isInitialized && profileDetails.isDeletedContact()) {
                 chatViewUtils.setUserPresenceStatus(this, Constants.EMPTY_STRING)
                 return
             }
@@ -1069,6 +1095,16 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         statusTextView.isSelected = true
     }
 
+    fun fromUserList(value: String?): ArrayList<ProfileDetails?>? {
+        val listType = object : TypeToken<ArrayList<ProfileDetails?>?>() {}.type
+        return Gson().fromJson(value, listType)
+    }
+
+    private fun unsentMentionListShowingPriority(unsentMessage: String) {
+        if (chatMessageEditText.mentionedUsers.isEmpty() && !isGroupMemberListShowing)
+            showUnsentmentionUsersMessage(unsentMessage)
+    }
+
     /**
      * Show unsent message on editor
      *
@@ -1076,12 +1112,10 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
      */
     protected fun showUnsentMessage(unsentMessage: String) {
         if (unsentMessage.isNotEmpty() && unsentMessage != null) {
+            unsentMentionListShowingPriority(unsentMessage)
             enableEdt = false
-            binding.viewChatFooter.editChatMsg.setText(unsentMessage)
             imgSend.setImageResource(R.drawable.ic_send_active)
             imgSend.show()
-            if (showChatKeyboard)
-                showChatKeyboard = false
         } else {
             binding.viewChatFooter.editChatMsg.setText(Constants.EMPTY_STRING)
             imgSend.gone()
@@ -1096,6 +1130,20 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         } else
             resetReplyMessageView()
         setEditTextListener()
+    }
+
+    private fun showUnsentmentionUsersMessage(unsentMessage: String) {
+        val texts = context!!.getString(R.string.chat_text)
+        val textMessage = unsentMessage + texts + texts
+        var mentions= FlyMessenger.getUnsentMentionedUserId(chat.toUser)
+         if(mentions!=null && mentions.isNotEmpty()){
+             var mentionUsersList=ChatUtils.convertProfileDetailsList(mentions)
+             var text=MentionUtils.formatUnSentMentionText(mentionUsersList,textMessage,this,chatMessageEditText)
+             binding.viewChatFooter.editChatMsg.setText(TextUtils.concat(text.trim(), " "))
+         } else{
+             binding.viewChatFooter.editChatMsg.setText(unsentMessage)
+         }
+
     }
 
     private fun getUserLastActivity() {
@@ -1604,8 +1652,12 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             messageId = Constants.EMPTY_STRING
             parentViewModel.loadInitialData(messageId)
         } else {
-            if (!parentViewModel.getFetchingIsInProgress())
-                parentViewModel.loadNextData()
+            if (parentViewModel.isLoadNextAvailable()) {
+                if (!parentViewModel.getFetchingIsInProgress())
+                    parentViewModel.loadNextData()
+            } else {
+                parentViewModel.addSentMessage(message) //If Sent message time is less than last received message time then it will add to the message list and shown in UI
+            }
         }
         handleUnreadMessageSeparator(true)
         Handler(Looper.getMainLooper()).postDelayed({
@@ -1713,7 +1765,15 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 )
             closeControls()
         } else {
-            selectAudioFileFromStorage()
+            if (ChatUtils.checkMediaPermission(this, Manifest.permission.READ_MEDIA_AUDIO)) {
+                selectAudioFileFromStorage()
+            } else {
+                MediaPermissions.requestAudioMediaFiles(
+                    this,
+                    permissionAlertDialog,
+                    audioSelectionPermissionLauncher)
+                closeControls()
+            }
         }
     }
 
@@ -2123,7 +2183,6 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     fun handleOnResume() {
         ChatManager.setOnGoingChatUser(chat.toUser)
         selectedMessageIdForReply = ReplyHashMap.getReplyId(chat.toUser)
-        showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
         sendMessageSeenStatus()
         NotificationManagerCompat.from(context!!).cancel(Constants.NOTIFICATION_ID)
         dismissProgress()
@@ -2171,6 +2230,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         if (parentViewModel.isGroupUserExist(chat.toUser, SharedPreferenceManager.getCurrentUserJid())) {
             setBottomChatFooterView()
         } else {
+            if(isGroupMemberListShowing){
+                groupUserTagLayout.visibility = View.GONE
+                chatMessageEditText.text?.clear()
+                isGroupMemberListShowing=false
+            }
             val view = this.currentFocus
             if (view != null) {
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -2784,5 +2848,19 @@ override fun onAttachDocument() {
         super.onDestroy()
         parentViewModel.searchkeydata.removeObservers(this)
     }
+
+    open fun bindUserMention(mentionConfig: UserMentionConfig, handler: OnMentionEventListener) {
+        if (chatMessageEditText is MentionEditGroupText) {
+            chatMessageEditText.bindUserMention(
+                mentionConfig,
+                TextUIConfig.Builders().setTextColor(ContextCompat.getColor(context!!,R.color.color_blue)).build(),
+                handler,
+                groupUserTagLayout,
+                null,
+                true
+            )
+        }
+    }
+
 
 }
