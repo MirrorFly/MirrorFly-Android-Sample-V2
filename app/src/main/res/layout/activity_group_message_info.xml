@@ -53,7 +53,7 @@
                 android:id="@+id/video_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout="@layout/chat_toolbar" />
+                android:layout="@layout/chat_info_video_item" />
 
             <ViewStub
                 android:id="@+id/audio_item"

@@ -95,7 +95,6 @@ class UserListActivity : BaseContactActivity() {
             override fun onQueryTextChange(searchString: String): Boolean {
                 searchKey = searchString.trim()
                 mHandler.removeCallbacksAndMessages(null)
-                mHandler.postDelayed({
                     mSearchAdapter.resetSearch()
                     if (searchKey.isEmpty()) {
                         mUserListType = UserListType.USER_LIST
@@ -105,9 +104,9 @@ class UserListActivity : BaseContactActivity() {
                         viewModel.addSearchLoaderToTheList()
                         viewModel.searchUserList(searchString, fromGroupInfo, groupId)
                     }
+
                     setAdapterBasedOnSearchType()
                     mSearchAdapter.setSearchKey(searchKey)
-                }, 500)
                 return true
             }
         })

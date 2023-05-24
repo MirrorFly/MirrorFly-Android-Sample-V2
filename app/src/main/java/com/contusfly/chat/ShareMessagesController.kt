@@ -30,7 +30,7 @@ constructor(private val messagingClient: MessagingClient){
     fun sendTextMessage(shareText: String, userIdList: List<String>) {
         val messageObjectList = ArrayList<MessageObject>()
         for (userId in userIdList) {
-            messageObjectList.add(messagingClient.composeTextMessage(userId, shareText))
+            messageObjectList.add(messagingClient.composeTextMessage(userId, shareText, "", listOf()))
         }
         sendMessage(messageObjectList)
     }
@@ -74,9 +74,9 @@ constructor(private val messagingClient: MessagingClient){
         for (userId in userIdList) {
                 for (fileObject in fileObjects) {
                     when (fileObject.fileMimeType) {
-                        IMAGE -> messageObjectList.add(messagingClient.composeImageMessage(userId, fileObject.filePath, fileObject.caption))
+                        IMAGE -> messageObjectList.add(messagingClient.composeImageMessage(userId, fileObject.filePath, fileObject.caption,"",fileObject.mentionedUsersIds))
                         VIDEO -> {
-                            val videoMessage = messagingClient.composeVideoMessage(userId, fileObject.filePath, fileObject.caption)
+                            val videoMessage = messagingClient.composeVideoMessage(userId, fileObject.filePath, fileObject.caption, "", fileObject.mentionedUsersIds)
                             addVideoMessage(videoMessage, messageObjectList)
                         }
                         AUDIO -> {

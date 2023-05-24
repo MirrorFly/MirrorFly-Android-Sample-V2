@@ -1,7 +1,7 @@
 package com.contusfly.adapters.viewhelpers
 
 import android.content.Context
-import android.text.Spanned
+import android.text.SpannableStringBuilder
 import com.mirrorflysdk.flycommons.MediaDownloadStatus
 import com.mirrorflysdk.flycommons.MediaUploadStatus
 import com.contusfly.*
@@ -9,6 +9,7 @@ import com.contusfly.adapters.holders.VideoReceivedViewHolder
 import com.contusfly.adapters.holders.VideoSentViewHolder
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.chat.MessageUtils
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.interfaces.MessageItemListener
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.models.ChatMessage
@@ -32,7 +33,8 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
      */
     fun setImageWidthAndHeight(videoSenderViewHolder: VideoSentViewHolder, messageItem: ChatMessage){
         with(videoSenderViewHolder) {
-            imageSenderLayout?.setWidthAndHeight(messageItem.mediaChatMessage.mediaFileHeight, messageItem.mediaChatMessage.mediaFileWidth)
+            val calculatedDimension = ChatUtils.getMobileWidthAndHeight(messageItem.getMediaChatMessage().getMediaFileWidth(), messageItem.getMediaChatMessage().getMediaFileHeight())
+            imageSenderLayout?.setWidthAndHeight(calculatedDimension.second, calculatedDimension.first)
         }
     }
 
@@ -103,14 +105,20 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
             if (Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaCaptionText()).isNotEmpty()) {
                 viewSendImageCaption.show()
                 txtChatSentCaption.maxWidth = ceil((AndroidUtils.getDensity(context) * messageItem.getMediaChatMessage().getMediaFileWidth()).toDouble()).toInt()
-                txtChatSentCaption.text = getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText())
-                handleSenderVideoCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()), videoSenderViewHolder, searchEnabled, searchKey)
                 makeViewsGone(imgSenderStatus, txtSendTime, imgSentStarred, imgSentBalloon)
                 txtSentCaptionTime.text = time
                 messageItemListener.setRecentChatStatus(imgSentImageCaptionStatus, messageItem.getMessageStatus())
                 messageItemListener.setStarredCaptionStatus(messageItem.isMessageStarred(), imgSentCaptionStar)
                 imgSentStarred.gone()
                 imgSentBalloon.gone()
+                if(messageItem.mentionedUsersIds != null && messageItem.mentionedUsersIds.size > 0) {
+                    val mentionText =  MentionUtils.formatMentionText(context, messageItem,false)
+                    val mentionUserNames=MentionUtils.getMentionedUserId(context,messageItem,false)
+                    handleSenderVideoCaptionSearchExceptMention(mentionText, videoSenderViewHolder, searchEnabled, searchKey,mentionUserNames)
+
+                } else {
+                    handleSenderVideoCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()), videoSenderViewHolder, searchEnabled, searchKey)
+                }
             } else {
                 viewSendImageCaption.gone()
                 showViews(txtSendTime, imgSenderStatus)
@@ -127,15 +135,28 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
         }
     }
 
-    private fun handleSenderVideoCaptionSearch(htmlText: CharSequence, holder: VideoSentViewHolder,
-                                               searchEnabled: Boolean, searchKey: String) {
-        if (searchEnabled && searchKey.isNotEmpty() && htmlText.toString().startsWithTextInWords(searchKey)) {
-            val startIndex = htmlText.toString().checkIndexes(searchKey)
-            val stopIndex = startIndex + searchKey.length
-            EmojiUtils.setMediaTextHighLightSearched(context, holder.txtChatSentCaption, htmlText.toString(), startIndex, stopIndex)
+    private fun handleSenderVideoCaptionSearch(videoHtmlText: CharSequence, videoHolder: VideoSentViewHolder,
+                                               videoSearchEnabled: Boolean, searchKey: String) {
+        if (videoSearchEnabled && searchKey.isNotEmpty() && videoHtmlText.toString().startsWithTextInWords(searchKey)) {
+            val videoStartIndex = videoHtmlText.toString().checkIndexes(searchKey)
+            val videoStopIndex = videoStartIndex + searchKey.length
+            EmojiUtils.setMediaTextHighLightSearched(context, videoHolder.txtChatSentCaption, videoHtmlText.toString(), videoStartIndex, videoStopIndex)
         } else {
-            holder.txtChatSentCaption.setBackgroundColor(context.color(android.R.color.transparent))
-            holder.txtChatSentCaption.setTextKeepState(htmlText)
+            videoHolder.txtChatSentCaption.setBackgroundColor(context.color(android.R.color.transparent))
+            videoHolder.txtChatSentCaption.setTextKeepState(videoHtmlText)
+        }
+    }
+
+    private fun handleSenderVideoCaptionSearchExceptMention(videoHtmlText: CharSequence, videoHolder: VideoSentViewHolder,
+                                               videoSearchEnabled: Boolean, searchKey: String, mentionedUserName: SpannableStringBuilder
+    ) {
+        if (videoSearchEnabled && searchKey.isNotEmpty()) {
+            val videoStartIndex = videoHtmlText.toString().checkIndexes(searchKey)
+            val videoStopIndex = videoStartIndex + searchKey.length
+            EmojiUtils.setMediaTextHighLightSearchedForMention(context, videoHolder.txtChatSentCaption,videoHtmlText.toString(), videoStartIndex, videoStopIndex,mentionedUserName)
+        } else {
+            videoHolder.txtChatSentCaption.setBackgroundColor(context.color(android.R.color.transparent))
+            videoHolder.txtChatSentCaption.setTextKeepState(videoHtmlText)
         }
     }
 
@@ -162,15 +183,15 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
      */
     private fun uploadImgProgressView(messageItem: ChatMessage, videoViewHolder: VideoSentViewHolder, fileUploadStatus: String) {
         with(videoViewHolder) {
-            val progressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaProgressStatus()))
+            val videoProgressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaProgressStatus()))
             if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
-                && progressPercentage > 0 && progressPercentage < 100) {
+                && videoProgressPercentage > 0 && videoProgressPercentage < 100) {
                 progressSender.show()
                 progressSenderRotation.gone()
                 progressSender.max = 100
-                progressSender.progress = progressPercentage
+                progressSender.progress = videoProgressPercentage
             } else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
-                && (progressPercentage < 1 || progressPercentage >= 100)) {
+                && (videoProgressPercentage < 1 || videoProgressPercentage >= 100)) {
                 progressSender.gone()
                 progressSenderRotation.show()
             }
@@ -185,7 +206,8 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
      */
     fun setImageWidthAndHeight(videoReceiverViewHolder: VideoReceivedViewHolder, messageItem: ChatMessage){
         with(videoReceiverViewHolder) {
-            imageRevLayout?.setWidthAndHeight(messageItem.mediaChatMessage.mediaFileHeight, messageItem.mediaChatMessage.mediaFileWidth)
+            val calculatedDimension = ChatUtils.getMobileWidthAndHeight(messageItem.getMediaChatMessage().getMediaFileWidth(), messageItem.getMediaChatMessage().getMediaFileHeight())
+            imageRevLayout?.setWidthAndHeight(calculatedDimension.second, calculatedDimension.first)
         }
     }
 
@@ -208,15 +230,21 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
             if (Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaCaptionText()).isNotEmpty()) {
                 viewRevImageCaption.show()
                 txtRevChatCaption.maxWidth = ceil((AndroidUtils.getDensity(context) * messageItem.getMediaChatMessage().getMediaFileWidth()).toDouble()).toInt()
-                txtRevChatCaption.text = getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText())
-                handleReceiverVideoCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()),
-                    videoReceiverViewHolder, searchEnabled, searchKey)
                 txtRevTime.gone()
                 imgStarred.gone()
                 txtRevCaptionTime.text = time
                 imgStarred.gone()
                 viewRevImageBalloon.gone()
                 messageItemListener.setStarredCaptionStatus(messageItem.isMessageStarred(), txtRevCaptionStar)
+                if(messageItem.mentionedUsersIds != null && messageItem.mentionedUsersIds.size > 0) {
+                    val videoMentionText =  MentionUtils.formatMentionText(context, messageItem,false)
+                    val mentionUserNames=MentionUtils.getMentionedUserId(context,messageItem,false)
+                    handleReceiverVideoCaptionSearchExceptMention(videoMentionText,
+                        videoReceiverViewHolder, searchEnabled, searchKey,mentionUserNames)
+                } else {
+                    handleReceiverVideoCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()),
+                        videoReceiverViewHolder, searchEnabled, searchKey)
+                }
             } else {
                 viewRevImageCaption.gone()
                 txtRevTime.show()
@@ -290,6 +318,18 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
             val startIndex = htmlText.toString().checkIndexes(searchKey)
             val stopIndex = startIndex + searchKey.length
             EmojiUtils.setMediaTextHighLightSearched(context, holder.txtRevChatCaption, htmlText.toString(), startIndex, stopIndex)
+        } else {
+            holder.txtRevChatCaption.setBackgroundColor(context.color(android.R.color.transparent))
+            holder.txtRevChatCaption.setTextKeepState(htmlText)
+        }
+    }
+
+    private fun handleReceiverVideoCaptionSearchExceptMention(htmlText: CharSequence, holder: VideoReceivedViewHolder,
+                                                 searchEnabled: Boolean, searchKey: String, mentionedUserName: SpannableStringBuilder) {
+        if (searchEnabled && searchKey.isNotEmpty()) {
+            val startIndex = htmlText.toString().checkIndexes(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            EmojiUtils.setMediaTextHighLightSearchedForMention(context, holder.txtRevChatCaption,htmlText.toString(), startIndex, stopIndex,mentionedUserName)
         } else {
             holder.txtRevChatCaption.setBackgroundColor(context.color(android.R.color.transparent))
             holder.txtRevChatCaption.setTextKeepState(htmlText)

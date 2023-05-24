@@ -4,15 +4,16 @@ import android.content.Context
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.emoji.widget.EmojiAppCompatTextView
-import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
 import com.contusfly.views.CustomTextView
 import com.contusfly.views.MessageTextView
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
 import io.github.rockerhieu.emojicon.EmojiconTextView
 import java.text.BreakIterator
@@ -79,7 +80,7 @@ object EmojiUtils {
         }
     }
 
-    fun setEmojiTextAndHighLightSearchText(context: Context?, textView: EmojiconTextView,
+    fun setEmojiTextAndHighLightSearchText(context: Context?, textView: TextView,
                                            text: String?, startIndex: Int, stopIndex: Int) {
         try {
             val userText = Utils.getUtfDecodedText(text)
@@ -91,6 +92,31 @@ object EmojiUtils {
             LogMessage.e(e)
         }
     }
+
+    fun setEmojiTextAndHighLightSearchTextForMention(context: Context?, textView: TextView,
+                                           text: String?, startIndex: Int, stopIndex: Int,mentionedUserName: SpannableStringBuilder
+    ) {
+        try {
+            val deliMeter="@"
+            val userText = Utils.getUtfDecodedText(text)
+            val textToHighlight: Spannable = SpannableString(userText)
+
+            val mentionedUserStringArray = mentionedUserName.split("[\\n$deliMeter]".toRegex()).toTypedArray()
+
+            for (i in 1 until  mentionedUserStringArray.size){
+                val indexElement = mentionedUserStringArray[i]
+                val index = textToHighlight.indexOf(indexElement)
+                textToHighlight.setSpan(ForegroundColorSpan(ContextCompat.getColor(context!!, R.color.color_blue)),
+                    index-1, index+indexElement.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            if (startIndex != -1 && stopIndex != -1) textToHighlight.setSpan(BackgroundColorSpan(ContextCompat.getColor(context!!, R.color.search_highlight)),
+                startIndex, stopIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            textView.text = SpannableStringBuilder.valueOf(textToHighlight)
+        } catch (e: java.lang.Exception) {
+            LogMessage.e(e)
+        }
+    }
+
 
     fun setEmojiTextAndHighLightSearchContact(context: Context?, textView: EmojiAppCompatTextView,
                                            text: String?, startIndex: Int, stopIndex: Int) {
@@ -125,6 +151,31 @@ object EmojiUtils {
             if (startIndex != -1 && stopIndex != -1) textToHighlight.setSpan(BackgroundColorSpan(ContextCompat.getColor(context!!, R.color.search_highlight)),
                     startIndex, stopIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             textView.text = textToHighlight
+        } catch (e: java.lang.Exception) {
+            LogMessage.e(e)
+        }
+    }
+
+    fun setMediaTextHighLightSearchedForMention(context: Context?, textView: TextView, text: String?, startIndex: Int, stopIndex: Int, mentionedUserName: SpannableStringBuilder) {
+        try {
+            val deliMeter="@"
+            val userText = Utils.getUtfDecodedText(text)
+            val textToHighlight: Spannable = SpannableString(userText)
+            val mentionedUserStringArray = mentionedUserName.split("[\\n$deliMeter]".toRegex()).toTypedArray()
+            for (i in 1 until  mentionedUserStringArray.size){
+                if(mentionedUserStringArray[i].isNotEmpty()) {
+                    val indexElement = mentionedUserStringArray[i]
+                    val index = textToHighlight.indexOf(indexElement)
+                    textToHighlight.setSpan(
+                        ForegroundColorSpan(ContextCompat.getColor(context!!, R.color.color_blue)),
+                        index - 1, index + indexElement.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+            }
+            if (startIndex != -1 && stopIndex != -1) textToHighlight.setSpan(BackgroundColorSpan(ContextCompat.getColor(context!!, R.color.search_highlight)),
+                startIndex, stopIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            textView.text = SpannableStringBuilder.valueOf(textToHighlight)
         } catch (e: java.lang.Exception) {
             LogMessage.e(e)
         }

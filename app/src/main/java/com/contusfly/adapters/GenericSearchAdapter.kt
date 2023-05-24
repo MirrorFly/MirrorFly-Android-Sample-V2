@@ -4,6 +4,8 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
+import com.contusfly.TAG
+import com.contusfly.utils.LogMessage
 
 /**
  *
@@ -55,6 +57,11 @@ abstract class GenericSearchAdapter<T, ViewBindingVH : BaseViewHolder>(itemList:
         notifyDataSetChanged()
     }
 
+    fun clearData(){
+        this.itemList= emptyList()
+        notifyDataSetChanged()
+    }
+
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence): FilterResults {
@@ -63,7 +70,7 @@ abstract class GenericSearchAdapter<T, ViewBindingVH : BaseViewHolder>(itemList:
 
                 if (constraint.isNotEmpty() && origList.isNotEmpty()) {
                     for (item in origList) {
-                        if (hasSearchKey(item, constraint.toString().trim()))
+                        if (hasSearchKey(item, constraint.toString()))
                             results.add(item)
                     }
 
@@ -78,8 +85,13 @@ abstract class GenericSearchAdapter<T, ViewBindingVH : BaseViewHolder>(itemList:
 
             override fun publishResults(constraint: CharSequence,
                                         results: FilterResults) {
-                itemList = ArrayList(results.values as ArrayList<T>)
-                notifyDataSetChanged()
+                try {
+                    itemList = ArrayList(results.values as ArrayList<T>)
+                    notifyDataSetChanged()
+                }catch (e:Exception){
+                    LogMessage.e(TAG,e.toString())
+                }
+
             }
         }
     }

@@ -12,8 +12,10 @@ import com.contusfly.adapters.holders.ReplyMessageViewHolder
 import com.contusfly.chat.ImageFileUtils
 import com.contusfly.chat.MapUtils
 import com.contusfly.utils.*
+import com.contusfly.utils.ChatUtils.setReplyViewMessageFormat
 import com.contusfly.views.CustomTextView
 import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ReplyParentChatMessage
 
 
@@ -50,7 +52,7 @@ class ReplyView {
                 MessageType.TEXT -> {
                     with(replyMessageViewHolder) {
                         txtChatReply?.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
-                        EmojiUtils.setMessageTextWithEllipsis(txtChatReply!!, ChatUtils.getSpannedText(context,replyMessage.getMessageTextContent()).toString())
+                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReply!!,"",false) }
                         makeViewsGone(imgSenderImageVideoPreview!!, imgSenderMessageType!!)
                     }
                 }
@@ -58,7 +60,7 @@ class ReplyView {
                     val decodeImageUtils by lazy { DecodeImageUtils() }
                     val mediaDetail = replyMessage.getMediaChatMessage()
                     with(replyMessageViewHolder) {
-                        EmojiUtils.setMessageTextWithEllipsis(txtChatReply!!, replyMessage.caption(context))
+                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReply!!,"",true) }
                         imgSenderMessageType?.setImageResource(if (replyMessage.isImageMessage()) R.drawable.ic_camera_reply
                         else R.drawable.ic_video_reply)
                         imgSenderImageVideoPreview?.show()
@@ -126,7 +128,8 @@ class ReplyView {
      * @param replyMessageViewHolder    the view used to inflate the reply content.
      * @param replyMessage              the reply message object of specific message that possessing the reply information.
      */
-    fun showReceiverReplyView(context: Context, replyMessageViewHolder: ReplyMessageViewHolder, replyMessage: ReplyParentChatMessage?, isGroupMessage: Boolean) {
+    fun showReceiverReplyView(context: Context, replyMessageViewHolder: ReplyMessageViewHolder, messageItem: ChatMessage, isGroupMessage: Boolean) {
+        val replyMessage = messageItem.getReplyParentChatMessage()
         with(replyMessageViewHolder) {
             showViews(imgReceivedReplyMessageType!!)
             makeViewsGone(imgReceivedReplyImageVideoPreview!!)
@@ -149,7 +152,7 @@ class ReplyView {
                 MessageType.TEXT -> {
                     with(replyMessageViewHolder) {
                         txtChatReceivedReply?.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
-                        EmojiUtils.setMessageTextWithEllipsis(txtChatReceivedReply!!, ChatUtils.getSpannedText(context,replyMessage.getMessageTextContent()).toString())
+                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReceivedReply!!,"",false) }
                         makeViewsGone(imgReceivedReplyImageVideoPreview!!, imgReceivedReplyMessageType!!)
                     }
                 }
@@ -157,7 +160,7 @@ class ReplyView {
                     val decodeImageUtils by lazy { DecodeImageUtils() }
                     val mediaDetail = replyMessage.getMediaChatMessage()
                     with(replyMessageViewHolder) {
-                        EmojiUtils.setMessageTextWithEllipsis(txtChatReceivedReply!!, replyMessage.caption(context))
+                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReceivedReply!!,"",true) }
                         imgReceivedReplyMessageType?.setImageResource(if (replyMessage.isImageMessage()) R.drawable.ic_camera_reply
                         else R.drawable.ic_video_receiver_reply)
                         imgReceivedReplyImageVideoPreview?.show()

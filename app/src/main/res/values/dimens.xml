@@ -119,6 +119,9 @@
     <dimen name="margin_250">250dp</dimen>
     <dimen name="margin_280">280dp</dimen>
     <dimen name="margin_300">300dp</dimen>
+    <dimen name="margin_350">350dp</dimen>
+    <dimen name="margin_400">400dp</dimen>
+
 
     <!--Image height,width START-->
     <dimen name="call_profile_image_width">135dp</dimen>

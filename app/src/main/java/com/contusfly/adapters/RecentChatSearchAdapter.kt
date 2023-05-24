@@ -7,6 +7,7 @@ import android.os.Build
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
@@ -14,11 +15,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.*
 import com.contusfly.databinding.RowProgressBarBinding
 import com.contusfly.databinding.RowSearchContactMessageBinding
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.utils.*
 import com.contusfly.views.CustomTextView
 import com.mirrorflysdk.api.FlyCore
@@ -211,6 +214,49 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
         }
     }
 
+    private fun setTextAndHighLightSearchTextForMention(context: Context?, textView: CustomTextView,
+                                                        text: String?, startIndex: Int, stopIndex: Int, mentionedUserName: SpannableStringBuilder
+    ) {
+        try {
+            val deliMeter="@"
+            val userText = Utils.getUtfDecodedText(text)
+            val textToHighlight: Spannable = SpannableString(userText)
+
+            val mentionedUserStringArray = mentionedUserName.split("[\\n$deliMeter]".toRegex()).toTypedArray()
+
+            for (i in 1 until  mentionedUserStringArray.size){
+                val indexElement = mentionedUserStringArray[i]
+                val index = textToHighlight.indexOf(indexElement)
+                textToHighlight.setSpan(ForegroundColorSpan(ContextCompat.getColor(context!!, R.color.color_blue)),
+                    index-1, index+indexElement.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            if (startIndex != -1 && stopIndex != -1) textToHighlight.setSpan(
+                ForegroundColorSpan(Color.BLUE),
+                startIndex,
+                stopIndex,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            textView.text = SpannableStringBuilder.valueOf(textToHighlight)
+        } catch (e: java.lang.Exception) {
+            com.mirrorflysdk.flycommons.LogMessage.e(e)
+        }
+    }
+
+    private fun setSearchTextHighlightExceptionMention(
+        txtChat: CustomTextView,
+        fromHtml: Spanned?, mentionedUserName:SpannableStringBuilder
+    ) {
+        if (searchKey.isNotEmpty() && fromHtml.toString().startsWithTextInWords(searchKey)) {
+            var startIndex = fromHtml.toString().checkIndexes(searchKey)
+            if (startIndex < 0) startIndex = fromHtml.toString().indexOf(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            setTextAndHighLightSearchTextForMention(context, txtChat,fromHtml.toString(), startIndex, stopIndex,mentionedUserName)
+        } else {
+            txtChat.setBackgroundColor(context!!.color(android.R.color.transparent))
+            txtChat.text=fromHtml
+        }
+    }
+
     /**
      * Set the message data from the message view
      *
@@ -228,13 +274,20 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
                 MessageType.TEXT == msgType -> {
                     val messageContent = if (message.isMessageRecalled()) setRecalledMessageText(viewBinding, message.isMessageSentByMe())
                     else Utils.getUtfDecodedText(message.getMessageTextContent())
-                    val textToHighlight = SpannableString(messageContent)
-                    val startIndex = messageContent!!.toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(Locale.getDefault()))
-                    if (startIndex.isValidIndex() && !message.isMessageRecalled()) {
-                        val stopIndex = startIndex + searchKey.length
-                        textToHighlight.setSpan(ForegroundColorSpan(Color.BLUE), startIndex, stopIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    if(message.mentionedUsersIds!=null && message.mentionedUsersIds.size>0){
+                        val mentionText = MentionUtils.formatMentionText(context, message,false)
+                        val mentionUserNames= MentionUtils.getMentionedUserId(context,message,false)
+                        setSearchTextHighlightExceptionMention(viewBinding.searchTextRecentChatmsg,mentionText,mentionUserNames)
+                    }else{
+                        val textToHighlight = SpannableString(messageContent)
+                        val startIndex = messageContent!!.toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(Locale.getDefault()))
+                        if (startIndex.isValidIndex() && !message.isMessageRecalled()) {
+                            val stopIndex = startIndex + searchKey.length
+                            textToHighlight.setSpan(ForegroundColorSpan(Color.BLUE), startIndex, stopIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        }
+                        viewBinding.searchTextRecentChatmsg.text = textToHighlight
                     }
-                    viewBinding.searchTextRecentChatmsg.text = textToHighlight
+
                 }
                 MessageType.NOTIFICATION == msgType -> viewBinding.searchTextRecentChatmsg.text = Utils.getUtfDecodedText(message.getMessageTextContent())
                 else -> {
@@ -245,6 +298,17 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
             setMessageStatus(message, viewBinding.searchImageRecentChatStatus)
         } catch (e: Exception) {
             com.mirrorflysdk.flycommons.LogMessage.e(e)
+        }
+    }
+
+    private fun imageCaptionHighlight(viewBinding: RowSearchContactMessageBinding,message: ChatMessage){
+        if(message.mentionedUsersIds!=null && message.mentionedUsersIds.size>0){
+            val mentionText = MentionUtils.formatMentionText(context, message,false)
+            val mentionUserNames= MentionUtils.getMentionedUserId(context,message,false)
+            setSearchTextHighlightExceptionMention(viewBinding.searchTextRecentChatmsg,mentionText,mentionUserNames)
+        }else {
+            viewBinding.searchTextRecentChatmsg.text =
+                message.mediaChatMessage.mediaCaptionText
         }
     }
 
@@ -262,14 +326,27 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
             }
             MessageType.IMAGE -> {
                 viewBinding.searchImageRecentChatType.setImageResource(R.drawable.ls_ic_camera)
-                if (message.getMediaChatMessage().getMediaCaptionText().isNotEmpty())
-                    viewBinding.searchTextRecentChatmsg.text = message.getMediaChatMessage().getMediaCaptionText()
+                if (message.mediaChatMessage.mediaCaptionText.isNotEmpty()) {
+                    imageCaptionHighlight(viewBinding, message)
+                }
                 else viewBinding.searchTextRecentChatmsg.text = context.getString(R.string.title_image)
             }
             MessageType.VIDEO -> {
                 viewBinding.searchImageRecentChatType.setImageResource(R.drawable.ls_ic_video)
-                if (message.getMediaChatMessage().getMediaCaptionText().isNotEmpty())
-                    viewBinding.searchTextRecentChatmsg.text = message.getMediaChatMessage().getMediaCaptionText()
+                if (message.mediaChatMessage.mediaCaptionText.isNotEmpty()) {
+                    if(message.mentionedUsersIds!=null && message.mentionedUsersIds.size>0) {
+                        val mentionText = MentionUtils.formatMentionText(context, message, false)
+                        val mentionUserNames =
+                            MentionUtils.getMentionedUserId(context, message, false)
+                        setSearchTextHighlightExceptionMention(
+                            viewBinding.searchTextRecentChatmsg,
+                            mentionText,
+                            mentionUserNames
+                        )
+                    }else
+                    viewBinding.searchTextRecentChatmsg.text =
+                        message.mediaChatMessage.mediaCaptionText
+                }
                 else viewBinding.searchTextRecentChatmsg.text = context.getString(R.string.title_video)
             }
             MessageType.LOCATION -> {

@@ -68,7 +68,7 @@ object NotifyRefererUtils {
      */
     val defaultVibrationPattern: LongArray
         get() {
-            val vibrationTime = com.mirrorflysdk.flycommons.Constants.DEFAULT_VIBRATE
+            val vibrationTime = Constants.DEFAULT_VIBRATE
             return longArrayOf(vibrationTime, vibrationTime,
                 vibrationTime, vibrationTime, vibrationTime)
         }
@@ -127,7 +127,7 @@ object NotifyRefererUtils {
         val isRing = SharedPreferenceManager.getBoolean(Constants.NOTIFICATION_SOUND)
         val channelName: CharSequence = chatChannelName?:packageContext.resources
                 .getString(R.string.channel_name)
-        val channelId = getNotificationChannelId(notificationManager,isSummaryNotification,chatChannelId)
+        val channelId = getNotificationChannelId(isSummaryNotification,chatChannelId)
         val cImportance = if (isVibrate) NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_LOW
         val channelDescription = packageContext.resources.getString(R.string.channel_description)
         val channelImportance = if (isRing && !isLastMessageRecalled) NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_LOW
@@ -220,14 +220,12 @@ object NotifyRefererUtils {
     }
 
     private fun getNotificationChannelId(
-        notificationManager: NotificationManager?,
         isSummaryNotification: Boolean,
         chatChannelId: String?
     ): String {
         var channelId:String=""
         val randomNumberGenerator = Random(System.currentTimeMillis())
         if(isSummaryNotification) {
-            deleteNotificationSummaryChannels(notificationManager)
             var summaryChannelId=randomNumberGenerator.nextInt().toString()
             SharedPreferenceManager.setString(Constants.KEY_NOTIIFCATION_SUMMARY_CHANNEL_ID, summaryChannelId)
             channelId=summaryChannelId
@@ -275,24 +273,6 @@ object NotifyRefererUtils {
         ActivityManager.getMyMemoryState(appProcessInfo)
         return appProcessInfo.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND ||
                 appProcessInfo.importance == RunningAppProcessInfo.IMPORTANCE_VISIBLE
-    }
-
-    @TargetApi(Build.VERSION_CODES.O)
-    fun deleteNotificationSummaryChannels(mNotificationManager: NotificationManager?) {
-        try {
-            val notificationChannelList: List<NotificationChannel>
-            if (mNotificationManager != null) {
-                notificationChannelList = mNotificationManager.notificationChannels
-                for (notificationChannel in notificationChannelList){
-                    if(notificationChannel.name.equals(NotificationBuilder.SUMMARY_CHANNEL_NAME)){
-                        mNotificationManager.deleteNotificationChannel(notificationChannel.id)
-                    }
-                }
-
-            }
-        } catch (e: Exception) {
-            LogMessage.e(TAG, e.message)
-        }
     }
 
     fun getDeviceVibrateMode(packageContext: Context): Boolean {

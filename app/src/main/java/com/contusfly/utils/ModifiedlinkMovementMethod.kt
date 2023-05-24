@@ -36,7 +36,7 @@ class ModifiedlinkMovementMethod(
 
     private var chatmodel: ChatMessage? = null
     private var pos: Int = 0
-    private var textview: EmojiconTextView? = null
+    private var textview: TextView? = null
 
     override fun onTouchEvent(widget: TextView, buffer: Spannable, event: MotionEvent): Boolean {
 
@@ -179,7 +179,7 @@ class ModifiedlinkMovementMethod(
     }
 
     fun setOnclicklistener(
-        view: EmojiconTextView,
+        view: TextView,
         listener: OnLinkLongClickListener,
         model: ChatMessage,
         position: Int,

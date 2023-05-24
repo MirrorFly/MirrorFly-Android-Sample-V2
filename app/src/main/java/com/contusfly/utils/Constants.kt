@@ -363,5 +363,18 @@ class Constants {
          */
         const val CONNECTION_TYPE_WIFI = PACKAGE_NAME + "connection_type_wifi"
 
+
+        const val WEB_IMAGE_MAX_WIDTH = 330
+        const val WEB_IMAGE_MIN_WIDTH = 240
+        const val WEB_IMAGE_MAX_HEIGHT = 338
+        const val WEB_IMAGE_MIN_HEIGHT = 83
+
+        const val MOBILE_IMAGE_MAX_WIDTH = 250
+        const val MOBILE_IMAGE_MIN_WIDTH = 210
+        const val MOBILE_IMAGE_MAX_HEIGHT = 320
+        const val MOBILE_IMAGE_MIN_HEIGHT = 80
+
+        const val DEFAULT_VIBRATE = 250L
+
     }
 }

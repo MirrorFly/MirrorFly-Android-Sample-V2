@@ -6,28 +6,34 @@ import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.*
 import com.contusfly.backup.*
 import com.contusfly.backup.models.BackupInfo
 import com.contusfly.backup.workers.CleanUpWorker
 import com.contusfly.backup.workers.RestoreDataWorker
 import com.contusfly.databinding.ActivityRestoreBinding
+import com.contusfly.interfaces.PermissionDialogListener
 import com.contusfly.utils.ChatUtils
 import com.contusfly.utils.Constants
 import com.contusfly.utils.MediaPermissions
@@ -48,6 +54,7 @@ import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.mirrorflysdk.backup.BackupManager
 import com.mirrorflysdk.flycommons.FlyCommons
+import com.mirrorflysdk.flycommons.LogMessage
 import kotlinx.android.synthetic.main.activity_back_up.*
 import kotlinx.android.synthetic.main.activity_back_up.driveEmail
 import kotlinx.android.synthetic.main.activity_restore.*
@@ -63,6 +70,10 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
     BackupRestoreParent.CommonBackupDialogListener {
 
     private lateinit var activityRestoreBinding: ActivityRestoreBinding
+
+    val CHANNEL_ID="Restore_Process_Channel"
+
+    val CHANNEL_NAME="Restore Updates"
 
     lateinit var driveHelper: DriveHelper
 
@@ -82,6 +93,10 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
      */
     private val workManager: WorkManager = WorkManager.getInstance(this)
 
+    private var builder: NotificationCompat.Builder? = null
+    private var mNotifyManager: NotificationManager? = null
+
+
     /**
      * Ids of the workers
      */
@@ -95,6 +110,15 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
     private lateinit var driveWorker: LiveData<WorkInfo>
 
     private var isExisting: Boolean = false
+    private lateinit var restoreImageViews: Array<ImageView>
+    private val imageResources = intArrayOf(
+        R.drawable.restore_1,
+        R.drawable.restore_2,
+        R.drawable.restore_3,
+        R.drawable.restore_4
+    )
+    private val duration = 1000L
+    private var imageQueue: MutableList<Int> = mutableListOf()
 
     protected val permissionAlertDialog: PermissionAlertDialog by lazy { PermissionAlertDialog(this) }
 
@@ -160,6 +184,63 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
             arrayOf(Manifest.permission.GET_ACCOUNTS),
             BackupConstants.REQUEST_CODE_SIGN_IN
         )
+    }
+
+    private fun notificationPermissionChecking(){
+        MediaPermissions.requestNotificationPermission(
+            this,
+            permissionAlertDialog,
+            notificationPermissionLauncher,false,permissionDeniedListener)
+
+    }
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        restoreClickPermission()
+    }
+
+    private val permissionDeniedListener = object : PermissionDialogListener {
+        override fun onPositiveButtonClicked() {
+            //Not Needed
+        }
+
+        override fun onNegativeButtonClicked() {
+            restoreClickPermission()
+        }
+    }
+
+    private fun switchImageView(){
+        restoreImageViews = arrayOf(
+            findViewById(R.id.ic_restore1),
+            findViewById(R.id.ic_restore2),
+            findViewById(R.id.ic_restore3),
+            findViewById(R.id.ic_restore4)
+        )
+        imageQueue.addAll(imageResources.toMutableList())
+        startImageSwitching()
+    }
+
+    private fun startImageSwitching() {
+        val lastImage = imageQueue.removeAt(imageQueue.size - 1)
+        imageQueue.add(0, lastImage)
+        updateImageViews()
+
+        // Schedule the next image switch
+        restoreImageViews[0].postDelayed({
+            startImageSwitching()
+        }, duration)
+    }
+
+    private fun stopImageSwitching() {
+        restoreImageViews[0].removeCallbacks {
+            startImageSwitching()
+        }
+    }
+
+    private fun updateImageViews() {
+        for (i in restoreImageViews.indices) {
+            restoreImageViews[i].setImageResource(imageQueue[i])
+        }
     }
 
     private fun setUpViews() {
@@ -262,16 +343,32 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
         }
 
         activityRestoreBinding.restore.setOnClickListener {
-            if (ChatUtils.checkWritePermission(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (!ChatUtils.checkNotificationPermission(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
                 )
-            ) onRestoreClicked() else MediaPermissions.requestContactStorageAccess(
-                this,
-                permissionAlertDialog,
-                downloadPermissionLauncher
-            )
+                    notificationPermissionChecking()
+                else
+                    restoreClickPermission()
+
+            }else {
+               restoreClickPermission()
+            }
         }
+    }
+
+    private fun restoreClickPermission(){
+        if (ChatUtils.checkWritePermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) onRestoreClicked() else MediaPermissions.requestContactStorageAccess(
+            this,
+            permissionAlertDialog,
+            downloadPermissionLauncher
+        )
     }
 
     private fun onRestoreClicked() {
@@ -290,7 +387,30 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
                 restoreWorkerID = workerIds.second
                 progressText.text = "Downloading : 0.0KB  of $fileSizeString (0%)"
             }
+            switchImageView()
+            createRestoreNotificationChannel()
+            showRestoreNotification()
         }
+    }
+
+    private fun createRestoreNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW)
+            val mNotifyManager= getSystemService(NotificationManager::class.java)
+            mNotifyManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun showRestoreNotification() {
+        builder=NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("Restore Progress 0%")
+            .setSmallIcon(R.drawable.ic_notification_blue)
+            .setOngoing(true)
+            .setProgress(100, 0, false)
+
+        mNotifyManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mNotifyManager!!.notify(Constants.NOTIFICATION_ID,builder!!.build())
+
     }
 
     private fun onAccountClicked() {
@@ -725,6 +845,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
                 Handler(Looper.getMainLooper()).post {
                     LogMessage.e(TAG, "Restore worker completed In UI StartActivity")
                     activityRestoreBinding.workProgress.progress = 100
+                    stopImageSwitching()
                 }
                 cleanupWorker()
                 goToProfile()

@@ -10,15 +10,7 @@ import androidx.core.provider.FontRequest
 import androidx.emoji.text.EmojiCompat
 import androidx.emoji.text.FontRequestEmojiCompatConfig
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.mirrorflysdk.flycommons.PendingIntentHelper
-import com.mirrorflysdk.flycall.webrtc.api.CallHelper
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.mirrorflysdk.flycall.webrtc.api.MissedCallListener
-import com.mirrorflysdk.flycall.webrtc.*
-import com.mirrorflysdk.flycall.webrtc.api.CallNameHelper
 import com.contusfly.*
-import com.contusfly.R
-import com.contusfly.BuildConfig
 import com.contusfly.activities.AdminBlockedActivity
 import com.contusfly.activities.BiometricActivity
 import com.contusfly.activities.PinActivity
@@ -31,18 +23,23 @@ import com.contusfly.database.UIKitDatabase
 import com.contusfly.di.components.DaggerAppComponent
 import com.contusfly.notification.AppNotificationManager
 import com.contusfly.utils.*
-import com.mirrorflysdk.ChatSDK
-import com.mirrorflysdk.GroupConfig
-import com.mirrorflysdk.api.*
-import com.mirrorflysdk.api.utils.NameHelper
 import com.facebook.stetho.Stetho
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.mirrorflysdk.ChatSDK
+import com.mirrorflysdk.GroupConfig
+import com.mirrorflysdk.api.*
+import com.mirrorflysdk.api.utils.NameHelper
+import com.mirrorflysdk.flycall.webrtc.*
+import com.mirrorflysdk.flycall.webrtc.api.CallHelper
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycall.webrtc.api.CallNameHelper
+import com.mirrorflysdk.flycall.webrtc.api.MissedCallListener
+import com.mirrorflysdk.flycommons.PendingIntentHelper
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import java.util.HashMap
 import javax.inject.Inject
 
 /**
@@ -67,6 +64,8 @@ class MobileApplication : Application(), HasAndroidInjector {
         }
     }
     private var defaultUncaughtHandler: Thread.UncaughtExceptionHandler? = null
+    private var mediaCaptionMentionList: MediaCaptionMentionList? = null
+
 
     override fun onCreate() {
         super.onCreate()
@@ -141,8 +140,17 @@ class MobileApplication : Application(), HasAndroidInjector {
         initializeCallSdk()
         Logger.enableDebugLogging(true)
         setupFirebaseRemoteConfig()
+        mediaCaptionMentionList = MediaCaptionMentionList()
+
     }
 
+    fun getMediaCaptionObject(): MediaCaptionMentionList? {
+        return mediaCaptionMentionList
+    }
+
+    fun clearMediaCaptionObject(){
+        mediaCaptionMentionList!!.mediaCaptionParameters.clear()
+    }
     private fun setAdminBlockListener() {
         ChatManager.setAdminBlockHelper(object : AdminBlockHelper {
             override fun onAdminBlockedOtherUser(jid: String, type: String, status: Boolean) {
@@ -234,7 +242,7 @@ class MobileApplication : Application(), HasAndroidInjector {
             }
         })
 
-        CallManager.keepConnectionInForeground(false)
+        CallManager.keepConnectionInForeground(true)
 
     }
 

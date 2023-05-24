@@ -20,7 +20,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProviders
 import com.mirrorflysdk.flycommons.*
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.R
@@ -112,11 +111,6 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
      * Alter dialog to display for the user action confirmation
      */
     private var mDialog: CommonAlertDialog? = null
-
-    /**
-     * To check whether the user registered
-     */
-    private var isLoginRequestSent = false
 
     /**
      * Store the account management option to manage account
@@ -769,7 +763,6 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
                             LogMessage.e(TAG, "Token updated successfully")
                     }
                 })
-            sendLoginRequest()
 
         } catch (e: Exception) {
             dismissProgress()
@@ -800,11 +793,6 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
     private fun deleteUserAccount() {
         progress.show()
         CommonUtils.navigateUserToLoggedOutUI(applicationContext)
-    }
-
-    private fun sendLoginRequest() {
-        ChatManager.connect()
-        isLoginRequestSent = true
     }
 
     override fun listOptionSelected(position: Int) {

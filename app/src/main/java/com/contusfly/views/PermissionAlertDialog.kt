@@ -92,6 +92,7 @@ class PermissionAlertDialog(private var activity: Activity) {
             VIDEO_CALL_PERMISSION -> activity.getString(R.string.video_call_permission_alert_label)
             VIDEO_CALL_PERMISSION_DENIED -> activity.getString(R.string.video_call_permission_denied_alert_label)
             NOTIFCATION_PERMISSION_DENIED -> activity.getString(R.string.notification_permission_denied_alert_label)
+            NOTIFICATION_LOCKED_STATE_PERMISSION_DENIED -> activity.getString(R.string.notification_permission_locked_state_denied_alert_label)
             else -> activity.getString(R.string.contact_and_media_permission_alert_label)
         }
     }
@@ -107,6 +108,7 @@ class PermissionAlertDialog(private var activity: Activity) {
             AUDIO_CALL_PERMISSION, AUDIO_CALL_PERMISSION_DENIED -> R.drawable.ic_mic_alert
             VIDEO_CALL_PERMISSION, VIDEO_CALL_PERMISSION_DENIED -> R.drawable.ic_video_call_alert
             NOTIFCATION_PERMISSION_DENIED -> R.drawable.ic_notification_alert
+            NOTIFICATION_LOCKED_STATE_PERMISSION_DENIED -> R.drawable.ic_notification_alert
             else -> R.drawable.ic_contact_media_alert
         }
     }
@@ -135,5 +137,6 @@ class PermissionAlertDialog(private var activity: Activity) {
         const val VIDEO_CALL_PERMISSION = "video_call_permission"
         const val VIDEO_CALL_PERMISSION_DENIED = "video_call_permission_denied"
         const val NOTIFCATION_PERMISSION_DENIED = "notification_permission_denied"
+        const val NOTIFICATION_LOCKED_STATE_PERMISSION_DENIED = "notification_permission_locked_state_denied"
     }
 }

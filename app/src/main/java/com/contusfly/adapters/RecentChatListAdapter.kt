@@ -316,7 +316,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
             when {
                 Constants.MSG_TYPE_TEXT.equals(msgType, ignoreCase = true) -> {
                     holder.imageMediaType.gone()
-                    holder.textChatMessage.setTextKeepState(getSpannedText(messageContent))
+                    setDataForTextMessage(chatMessage,holder,isRecall)
                 }
                 Constants.MSG_TYPE_NOTIFICATION.equals(msgType, ignoreCase = true) -> {
                     holder.textChatMessage.text = messageContent
@@ -324,11 +324,17 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
                 }
                 else -> {
                     holder.imageMediaType.show()
-                    setImageStatus(holder, msgType!!.toLowerCase(Locale.getDefault()), messageContent, chatMessage?.mediaChatMessage?.isAudioRecorded() ?: false)
+                    setImageStatus(holder, msgType!!.toLowerCase(Locale.getDefault()), messageContent, chatMessage,chatMessage?.mediaChatMessage?.isAudioRecorded() ?: false)
                 }
             }
             setChatStatus(holder, chatMessage, isFromSender, isRecall)
         }
+    }
+
+    private fun setDataForTextMessage(chatMessage: ChatMessage?,holder: RowRecentChatItemBinding, isRecall: Boolean){
+        if(chatMessage?.mentionedUsersIds != null && chatMessage.mentionedUsersIds.size > 0 && !isRecall)
+            holder.textChatMessage.text =ChatUtils.setMentionFormattedTextForRecentChat(context, chatMessage)
+        else  holder.textChatMessage.setTextKeepState(getSpannedText(messageContent))
     }
 
     private fun setGroupMessageSenderName(
@@ -426,7 +432,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
      * @param holder  The holder for the recent chat view
      * @param msgType Message type
      */
-    private fun setImageStatus(holder: RowRecentChatItemBinding, msgType: String, messageContent: String?, audioRecorded: Boolean) {
+    private fun setImageStatus(holder: RowRecentChatItemBinding, msgType: String, messageContent: String?,chatMessage: ChatMessage?,audioRecorded: Boolean) {
         when (msgType) {
              Constants.MSG_TYPE_AUDIO -> {
                 holder.imageMediaType.setImageResource(if (audioRecorded) R.drawable.ls_ic_record else R.drawable.ls_ic_music)
@@ -434,15 +440,11 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
             }
             Constants.MSG_TYPE_VIDEO -> {
                 holder.imageMediaType.setImageResource(R.drawable.ls_ic_video)
-                if (messageContent!!.isNotEmpty())
-                    holder.textChatMessage.text = messageContent
-                else holder.textChatMessage.text = context.getString(R.string.title_video)
+                setCaptionForImageAndVideo(chatMessage,holder,messageContent,context.getString(R.string.title_video))
             }
             Constants.MSG_TYPE_IMAGE -> {
                 holder.imageMediaType.setImageResource(R.drawable.ls_ic_camera)
-                if (messageContent!!.isNotEmpty())
-                    holder.textChatMessage.text = messageContent
-                else holder.textChatMessage.text = context.getString(R.string.title_image)
+                setCaptionForImageAndVideo(chatMessage,holder,messageContent,context.getString(R.string.title_image))
             }
             Constants.MSG_TYPE_LOCATION -> {
                 holder.imageMediaType.setImageResource(R.drawable.ls_ic_location)
@@ -458,6 +460,16 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
             }
             else -> holder.imageMediaType.gone()
         }
+    }
+
+    private fun setCaptionForImageAndVideo(chatMessage: ChatMessage?,holder:RowRecentChatItemBinding,
+                                           messageContent:String?,mediaType: String){
+        if (messageContent!!.isNotEmpty())
+            if(chatMessage?.mentionedUsersIds != null && chatMessage.mentionedUsersIds.size > 0)
+                holder.textChatMessage.text = ChatUtils.setMentionFormattedTextForRecentChat(context,chatMessage)
+            else
+                holder.textChatMessage.text = messageContent
+        else holder.textChatMessage.text = mediaType
     }
 
     /**

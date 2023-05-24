@@ -277,8 +277,7 @@ object NotificationBuilder {
         if (chatNotifications.size > 0) {
             val mNotificationManagerCompat: NotificationManagerCompat =
                 NotificationManagerCompat.from(context)
-            var id=SharedPreferenceManager.getString(Constants.KEY_NOTIIFCATION_SUMMARY_CHANNEL_ID)
-            mNotificationManagerCompat.notify(id.toInt(), summaryBuilder.build())
+            mNotificationManagerCompat.notify(SUMMARY_ID, summaryBuilder.build())
         }
     }
 

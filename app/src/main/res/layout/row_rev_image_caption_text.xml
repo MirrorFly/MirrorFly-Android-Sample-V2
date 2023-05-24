@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
 
 
-        <io.github.rockerhieu.emojicon.EmojiconTextView
+        <TextView
             android:id="@+id/txt_caption_rev_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

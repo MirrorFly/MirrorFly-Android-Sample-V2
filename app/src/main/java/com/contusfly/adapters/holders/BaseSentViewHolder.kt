@@ -2,15 +2,12 @@ package com.contusfly.adapters.holders
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
-import androidx.appcompat.widget.AppCompatImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.emoji.widget.EmojiAppCompatTextView
 import com.contusfly.R
 import com.contusfly.views.RoundRectCornerImageView
-import io.github.rockerhieu.emojicon.EmojiconTextView
 
 open class BaseSentViewHolder(view: View) : SenderNameHolder(view) {
     /**
@@ -94,7 +91,7 @@ open class BaseSentViewHolder(view: View) : SenderNameHolder(view) {
     /**
      * Sent caption for image
      */
-    val txtChatSentCaption: EmojiconTextView = viewSendImageCaption.findViewById(R.id.txt_caption_sent_chat)
+    val txtChatSentCaption: TextView = viewSendImageCaption.findViewById(R.id.txt_caption_sent_chat)
 
     /**
      * Chat type of the view

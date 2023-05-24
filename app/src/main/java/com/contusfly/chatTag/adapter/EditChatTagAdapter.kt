@@ -68,7 +68,8 @@ class EditChatTagAdapter (
 
         try {
             chatTagnamelist.removeAt(selectedPosition)
-            notifyDataSetChanged()
+            notifyItemRemoved(selectedPosition)
+            notifyItemChanged(selectedPosition)
         } catch(e:IndexOutOfBoundsException) {
             LogMessage.e("Error",e.toString())
         } catch(e:Exception) {

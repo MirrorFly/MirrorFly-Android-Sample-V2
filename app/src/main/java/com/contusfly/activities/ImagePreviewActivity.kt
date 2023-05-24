@@ -795,24 +795,24 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
                 img.imagePath.lastIndexOf('/') + 1
             )
         val destination = File(destinationPath)
-        var fileInputStream: FileInputStream? = null
-        var fileOutputStream: FileOutputStream? = null
+        var imageFileInputStream: FileInputStream? = null
+        var imageFileOutputStream: FileOutputStream? = null
         try {
-            fileInputStream = FileInputStream(source)
-            fileOutputStream = FileOutputStream(destination)
-            val inChannel = fileInputStream.channel
-            val outChannel = fileOutputStream.channel
+            imageFileInputStream = FileInputStream(source)
+            imageFileOutputStream = FileOutputStream(destination)
+            val inChannel = imageFileInputStream.channel
+            val outChannel = imageFileOutputStream.channel
             inChannel.transferTo(0, inChannel.size(), outChannel)
         } catch (e: IOException) {
             LogMessage.e(TAG, e.toString())
         } finally {
             try {
-                fileInputStream?.close()
+                imageFileInputStream?.close()
             } catch (e: IOException) {
                 LogMessage.e(TAG, e.toString())
             }
             try {
-                fileOutputStream?.close()
+                imageFileOutputStream?.close()
             } catch (e: IOException) {
                 LogMessage.e(TAG, e.toString())
             }
@@ -831,40 +831,40 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
         if (!dir.exists()) {
             dir.mkdirs()
         }
-        val sourcePath =
+        val sourceVideoPath =
             FilePathUtils.getExternalStorage().absolutePath + File.separator + Constants.LOCAL_PATH +
                     File.separator + "Video/Sent/" + img.substring(img.lastIndexOf('/') + 1)
-        val source = File(sourcePath)
-        val destinationPath =
+        val videoSource = File(sourceVideoPath)
+        val videoDestinationPath =
             FilePathUtils.getExternalStorage().absolutePath + File.separator + folderPath + File.separator + img.substring(
                 img.lastIndexOf('/') + 1
             )
-        val destination = File(destinationPath)
-        var fileInputStream: FileInputStream? = null
-        var fileOutputStream: FileOutputStream? = null
+        val videoDestination = File(videoDestinationPath)
+        var videoFileInputStream: FileInputStream? = null
+        var videoFileOutputStream: FileOutputStream? = null
         try {
-            fileInputStream = FileInputStream(source)
-            fileOutputStream = FileOutputStream(destination)
-            val inChannel = fileInputStream.channel
-            val outChannel = fileOutputStream.channel
+            videoFileInputStream = FileInputStream(videoSource)
+            videoFileOutputStream = FileOutputStream(videoDestination)
+            val inChannel = videoFileInputStream.channel
+            val outChannel = videoFileOutputStream.channel
             inChannel.transferTo(0, inChannel.size(), outChannel)
         } catch (e: IOException) {
             LogMessage.e(TAG, e.toString())
         } finally {
             try {
-                fileInputStream?.close()
+                videoFileInputStream?.close()
             } catch (e: IOException) {
                 LogMessage.e(TAG, e.toString())
             }
             try {
-                fileOutputStream?.close()
+                videoFileOutputStream?.close()
             } catch (e: IOException) {
                 LogMessage.e(TAG, e.toString())
             }
         }
         MediaScannerConnection.scanFile(
             this, arrayOf(
-                destinationPath
+                videoDestinationPath
             ), null
         ) { path: String, uri: Uri? -> Log.i("TAG", "Finished scanning $path") }
     }

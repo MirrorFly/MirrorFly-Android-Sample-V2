@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="rectangle">
+            <solid android:color="@color/chat_send_text_border" />
+            <corners android:radius="27dp"/>
+
+        </shape>
+    </item>
+    <item android:right="1.3dp" android:left="1.3dp" android:top="1.2dp" android:bottom="1.2dp" >
+        <shape
+            android:shape="rectangle">
+            <solid android:color="@android:color/white"/>
+            <corners android:radius="27dp"/>
+        </shape>
+    </item>
+</layer-list>

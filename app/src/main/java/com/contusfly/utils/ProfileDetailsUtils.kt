@@ -1,6 +1,5 @@
 package com.contusfly.utils
 
-import com.contusfly.getDisplayName
 import com.contusfly.interfaces.GetGroupUsersNameCallback
 import com.contusfly.isUnknownContact
 import com.contusfly.isValidIndex
@@ -8,6 +7,8 @@ import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import org.jxmpp.util.XmppStringUtils
+import com.mirrorflysdk.flycommons.SharedPreferenceManager
+import com.mirrorflysdk.utils.Utils
 import java.util.*
 
 object ProfileDetailsUtils {
@@ -20,7 +21,7 @@ object ProfileDetailsUtils {
     </ProfileDetails> */
     fun sortProfileList(profilesList: List<ProfileDetails>?): List<ProfileDetails> {
         profilesList?.let {
-            return it.sortedBy { profileDetails -> profileDetails.getDisplayName()?.toLowerCase() }
+            return it.sortedBy { profileDetails -> profileDetails.name?.toLowerCase() }
         }
         return listOf()
     }
@@ -38,10 +39,10 @@ object ProfileDetailsUtils {
                     val groupUsers = data[Constants.SDK_DATA] as ArrayList<ProfileDetails>
                     val userNames = mutableListOf<String>()
                     for (user in groupUsers.take(10)) {
-                        if (user.jid.equals(SharedPreferenceManager.getCurrentUserJid(), ignoreCase = true))
+                        if (user.jid.equals(SharedPreferenceManager.instance.currentUserJid, ignoreCase = true))
                             userNames.add("You")
                         else
-                            userNames.add(user.getDisplayName())
+                            userNames.add(user.name)
                     }
                     Collections.sort(userNames, String.CASE_INSENSITIVE_ORDER)
                     getGroupUsersNameCallback.onGroupUsersNamePrepared(userNames.joinToString(","))
@@ -62,15 +63,15 @@ object ProfileDetailsUtils {
     @JvmStatic
     fun sortGroupProfileList(profilesList: MutableList<ProfileDetails>?): MutableList<ProfileDetails> {
         profilesList?.let {
-            val index = it.indexOfFirst { it.jid == SharedPreferenceManager.getCurrentUserJid() }
+            val index = it.indexOfFirst { it.jid == SharedPreferenceManager.instance.currentUserJid }
             val user = if (index.isValidIndex())
                 it[index]
             else
-                getProfileDetails(SharedPreferenceManager.getCurrentUserJid())
+                getProfileDetails(SharedPreferenceManager.instance.currentUserJid)
             it.remove(user)
-            if(it.contains(getProfileDetails(SharedPreferenceManager.getCurrentUserJid())))
-                it.remove(getProfileDetails(SharedPreferenceManager.getCurrentUserJid()))
-            val sortedList = it.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.getDisplayName() })).toMutableList()
+            if(it.contains(getProfileDetails(SharedPreferenceManager.instance.currentUserJid)))
+                it.remove(getProfileDetails(SharedPreferenceManager.instance.currentUserJid))
+            val sortedList = it.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name })).toMutableList()
             if(index>=0) {
                 user?.nickName = AppConstants.YOU
                 user?.name  = AppConstants.YOU
@@ -103,13 +104,58 @@ object ProfileDetailsUtils {
     fun getDisplayName(jid: String?): String {
         if (jid == null)
             return Constants.EMPTY_STRING
-        val profileDetails = getProfileDetails(jid)
-        return profileDetails?.getDisplayName() ?: jid
+        return getProfileDetails(jid)?.name ?: jid
     }
 
     fun addContact(profileDetail: ProfileDetails) {
         val profileDetails = ContactManager.getProfileDetails(profileDetail.jid)
         if (profileDetails == null || profileDetails.isUnknownContact())
             UIKitContactUtils.addUIKitContact(profileDetail)
+    }
+
+    @JvmStatic
+    fun sortGroupProfileListWithoutOwn(profilesList: MutableList<ProfileDetails>?): MutableList<ProfileDetails> {
+        profilesList?.let {
+            val index =
+                it.indexOfFirst { it.jid == com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.currentUserJid }
+            val user = if (index.isValidIndex())
+                it[index]
+            else
+                getProfileDetails(com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.currentUserJid)
+            it.remove(user)
+            if (it.contains(getProfileDetails(SharedPreferenceManager.instance.currentUserJid)))
+                it.remove(getProfileDetails(SharedPreferenceManager.instance.currentUserJid))
+            return getSortedGroupProfileList(it)
+        }
+        return mutableListOf()
+    }
+    private fun getSortedGroupProfileList(profilesList: MutableList<ProfileDetails>): MutableList<ProfileDetails> {
+        val sortedList =
+            profilesList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.nickName }))
+                .toMutableList()
+        //Sorting the Phone book and Email contacts based on the name
+        val nameWithJidHashMap = HashMap<String, String>()
+        for (profileDetail in sortedList) {
+            val profile =
+                if (!profileDetail.jid.equals(SharedPreferenceManager.instance.currentUserJid) && profileDetail.isUnknownContact())
+                    getProfileDetails(profileDetail.jid) ?: profileDetail
+                else profileDetail
+            if (!profile.jid.equals(SharedPreferenceManager.instance.currentUserJid) && profile.isUnknownContact())
+                Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(profile.jid))
+            else
+                Utils.returnEmptyStringIfNull(profile.nickName)
+            nameWithJidHashMap[profileDetail.mobileNumber] = profileDetail.jid
+        }
+        // TreeMap to store values of HashMap
+        val sortedMap: MutableMap<String, String> = TreeMap(nameWithJidHashMap)
+        val groupsMembersProfileList: MutableList<ProfileDetails> = mutableListOf()
+        for (jid in sortedMap.values) {
+            for (profile in sortedList) {
+                if (jid == profile.jid) {
+                    groupsMembersProfileList.add(profile)
+                }
+            }
+        }
+        return groupsMembersProfileList
     }
 }

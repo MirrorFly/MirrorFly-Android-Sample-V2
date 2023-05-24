@@ -8,6 +8,7 @@ package com.contusfly.adapters.holders
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.emoji.widget.EmojiAppCompatTextView
 import com.contusfly.R
@@ -34,7 +35,7 @@ class TextSentViewHolder(mainView: View) : SenderNameHolder(mainView) {
     /**
      * Name of the chat
      */
-    val txtChatSender: EmojiconTextView = mainView.findViewById(R.id.text_send_chat)
+    val txtChatSender: TextView = mainView.findViewById(R.id.text_send_chat)
 
     /**
      * Time of the chat

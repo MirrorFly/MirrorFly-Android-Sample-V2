@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.*
 import android.text.Editable
 import android.text.InputFilter
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -18,52 +19,75 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.ContentFrameLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.*
+import com.contusfly.activities.ChatActivity.Companion.addMoreMediaClicked
+import com.contusfly.activities.ChatActivity.Companion.unSentMentionedUserIdList
 import com.contusfly.activities.parent.ChatParent
+import com.contusfly.adapters.GroupTagAdapter
 import com.contusfly.adapters.MediaPreviewAdapter
 import com.contusfly.adapters.MediaPreviewPagerAdapter
 import com.contusfly.chat.*
+import com.contusfly.constants.MobileApplication
 import com.contusfly.databinding.ActivityMediaPreviewBinding
 import com.contusfly.di.factory.AppViewModelFactory
+import com.contusfly.groupmention.MentionEditGroupText
+import com.contusfly.groupmention.MentionUser
+import com.contusfly.groupmention.MentionUtils
+import com.contusfly.groupmention.OnMentionEventListener
+import com.contusfly.groupmention.TextUIConfig
+import com.contusfly.groupmention.UserMentionConfig
 import com.contusfly.interfaces.MessageListener
 import com.contusfly.mediapicker.model.Image
+import com.contusfly.models.Chat
 import com.contusfly.models.FileObject
 import com.contusfly.models.MediaPreviewModel
 import com.contusfly.models.MessageObject
 import com.contusfly.utils.*
 import com.contusfly.viewmodels.MediaPreviewViewModel
+import com.contusfly.viewmodels.MentionsViewModel
 import com.contusfly.views.CustomAlertDialog
+import com.contusfly.views.CustomItemDecoration
 import com.contusfly.views.DoProgressDialog
 import com.contusfly.views.KeyboardHeightProvider
 import com.contusfly.views.PermissionAlertDialog
-import com.mirrorflysdk.AppUtils
-import com.mirrorflysdk.api.ChatManager
-import com.mirrorflysdk.api.models.ChatMessage
-import com.mirrorflysdk.utils.Utils
-import com.mirrorflysdk.views.CustomToast
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
+import com.mirrorflysdk.AppUtils
+import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycommons.FlyUtils
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.utils.ChatUtils.getUserFromJid
+import com.mirrorflysdk.utils.Utils
+import com.mirrorflysdk.views.CustomToast
 import dagger.android.AndroidInjection
-import io.github.rockerhieu.emojicon.EmojiconEditText
 import io.github.rockerhieu.emojicon.EmojiconGridFragment
 import io.github.rockerhieu.emojicon.EmojiconsFragment
 import io.github.rockerhieu.emojicon.emoji.Emojicon
+import kotlinx.coroutines.Dispatchers
 import java.io.File
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickListener,
     ViewPager.OnPageChangeListener, View.OnClickListener,
     EmojiconsFragment.OnEmojiconBackspaceClickedListener,
-    EmojiconGridFragment.OnEmojiconClickedListener {
+    EmojiconGridFragment.OnEmojiconClickedListener, GroupTagAdapter.UserTagClickListener {
 
     private lateinit var mediaPreviewBinding: ActivityMediaPreviewBinding
+    val userMentionConfig: UserMentionConfig = UserMentionConfig.Builder().build()
+    var mediaListCaptionAddedStatus=false
+
 
     @Inject
     lateinit var mediaPreviewViewModelFactory: AppViewModelFactory
@@ -71,6 +95,12 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         ViewModelProviders.of(this, mediaPreviewViewModelFactory)
             .get(MediaPreviewViewModel::class.java)
     }
+
+    protected val mentionViewModel by lazy {
+        ViewModelProvider(this).get(MentionsViewModel::class.java)
+    }
+    private val groupTagRecycler by lazy { mediaPreviewBinding.groupTagNameRecycler }
+    private val groupTagAdapter: GroupTagAdapter by lazy { GroupTagAdapter(this@MediaPreviewActivity, { onUserTagClicked(it) }) }
 
     @Inject
     lateinit var messagingClient: MessagingClient
@@ -188,9 +218,15 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
 
     private var remainingMessagesCount = 0
 
-    private var emojiEditText: EmojiconEditText? =null
+    private var emojiEditText: MentionEditGroupText? =null
 
-    /**
+    private var mentionedUsersIds: MutableList<String> = mutableListOf()
+    private var sendTextMessageWithMentionFormat: CharSequence? = emptyString()
+    private var mentionFilterKey: String = emptyString()
+    var mediaListCaption:MediaCaptionMentionList?=null
+    private var myApp:MobileApplication?=null
+
+            /**
      * View to the files number
      */
     @Inject
@@ -209,6 +245,26 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         AppLifecycleListener.isFromQuickShareForPin = true
         keyboardHeightProvider = KeyboardHeightProvider(this)
         keyboardHeightProvider?.addKeyboardListener(getKeyboardListener())
+        myApp= application as MobileApplication
+        mediaListCaption = myApp?.getMediaCaptionObject()
+    }
+
+    private fun addMediaCaptionMentionList(){
+        if(emojiEditText!!.mentionedUsers!=null && emojiEditText!!.mentionedUsers.size>0) {
+            selectedImageList[mediaPreviewBinding.mediaList.currentItem].caption =
+                emojiEditText!!.mentionedTemplate.toString()
+            selectedImageList[mediaPreviewBinding.mediaList.currentItem].mentionedUsersIds =
+                ChatUtils.setSelectedUserIdForMention(
+                    emojiEditText!!.mentionedUsers,
+                    mutableListOf()
+                )
+        }else{
+            selectedImageList[viewPagerPosition].caption=emojiEditText?.text.toString()
+        }
+
+        selectedImageList.forEach{
+            mediaListCaption?.mediaCaptionParameters?.add(MediaCaptionMentionList(path = it.path, caption = it.caption, mentionedUsersIds = it.mentionedUsersIds, isImage = it.isImage))
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -222,12 +278,12 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
 
         initViews()
         setObservers()
+        initMentionAdapter()
     }
 
     private fun initViews() {
         toUser?.let {
             viewModel.getProfileDetails(it)
-            viewModel.getUnsentMessage(it)
         }
 
         initializeCaptionListener()
@@ -413,9 +469,9 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             setUserName(participantsNameList.sorted().joinToString(", "))
         }
     }
-
+    lateinit var chat: Chat
     private fun setObservers() {
-        viewModel.profileDetails.observe(this, {
+        viewModel.profileDetails.observe(this) {
             it?.let {
                 if (isFromQuickShare && jidList?.size!! > 1) {
                     mediaPreviewBinding.imageChatPicture.visibility = View.INVISIBLE
@@ -423,18 +479,22 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 }
                 mediaPreviewBinding.imageChatPicture.loadUserProfileImage(this, it)
                 setUserName(it.name)
+                chat = Chat(it.getChatType(), it.jid)
+                with(Dispatchers.Main) {
+                    initGroupMentionTag()
+                    viewModel.getUnsentMessage(it.jid)
+                }
             }
-        })
-        viewModel.unsentMessage.observe(this, {
+        }
+        viewModel.unsentMessage.observe(this) {
             it?.let {
-                if (selectedImageList.isNotEmpty())
-                    selectedImageList[0].caption = it
-                emojiEditText!!.setText(it)
+                setCaptionEntryFirst(it)
+                firstIndexImageMentionUserId()
                 setCaptionLength(it.length)
             }
-        })
+        }
 
-        viewModel.selectedMediaList.observe(this, {
+        viewModel.selectedMediaList.observe(this) {
             mediaPreviewBinding.previewProgress.previewProgress.gone()
             if (it.isEmpty())
                 finish()
@@ -448,10 +508,47 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 setCaptionLength(message.length)
             }
             setAddMoreVisibility()
-        })
+        }
+    }
+
+    private fun setCaptionEntryFirst(it:String){
+        if (!addMoreMediaClicked) {
+            if (selectedImageList.isNotEmpty())
+                selectedImageList[0].caption = it
+            showUnSentMentionUsersMessage(it)
+        } else {
+            maintainAddedMentionUser(0)
+        }
+    }
+
+    private fun firstIndexImageMentionUserId(){
+        if(emojiEditText!!.mentionedUsers!=null && emojiEditText!!.mentionedUsers.size>0){
+            selectedImageList[0].mentionedUsersIds= emojiEditText!!.mentionedUsers as List<String>
+        }
+    }
+
+    private fun showUnSentMentionUsersMessage(unsentMessage: String) {
+        val texts = context!!.getString(R.string.chat_text)
+        val textMessage = unsentMessage + texts + texts
+        var mentions: String? =null
+        if (!addMoreMediaClicked) {
+            mentions = FlyMessenger.getUnsentMentionedUserId(toUser!!)
+        } else {
+            if (selectedImageList[0].mentionedUsersIds.isNotEmpty())
+                mentions = selectedImageList[0].mentionedUsersIds[0]
+        }
+        if(mentions!=null && mentions.isNotEmpty()){
+            var mentionUsersList=ChatUtils.convertProfileDetailsList(mentions)
+            var text= MentionUtils.formatUnSentMentionText(mentionUsersList,textMessage,this,emojiEditText!!)
+            emojiEditText?.setText(TextUtils.concat(text.trim(), " "))
+        } else{
+            emojiEditText?.setText(unsentMessage)
+        }
+
     }
 
     private fun handlePreviewFromCamera() {
+        mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(emojiEditText!!.mentionedUsers,mentionedUsersIds)
         if (intent.getBooleanExtra(Constants.FROM_FRONT_CAMERA, false)) {
             val image = Image(
                 0, intent
@@ -463,7 +560,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             viewModel.checkVideoSize(image, destinationFile)
         } else {
             val mediaPreviewModel = MediaPreviewModel(intent.getStringExtra(Constants.FILE_PATH)!!,
-                emojiEditText!!.text.toString().trim { it <= ' ' }, Constants.EMPTY_STRING, false)
+                emojiEditText!!.text.toString().trim { it <= ' ' }, Constants.EMPTY_STRING, false,mentionedUsersIds)
             SharedPreferenceManager.setBoolean(Constants.AUDIO_RECORD_PERMISSION_ASKED, true)
             selectedImageList.add(mediaPreviewModel)
             checkAndShowPreviewList()
@@ -474,6 +571,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     }
 
     private fun handleQuickShareInitialOperations() {
+        mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(emojiEditText!!.mentionedUsers,mentionedUsersIds)
         isFromQuickShare = true
         progressDialog = DoProgressDialog(this)
         fileObjects = intent.getParcelableArrayListExtra("FILE_OBJECTS")!!
@@ -510,16 +608,17 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         LogMessage.d(TAG, "log mime type in createAdapterObject = $mimeType")
         if (mimeType!!.startsWith("image/")) {
             multipleImages = MediaPreviewModel(filePathFromUri!!,
-                emojiEditText!!.text.toString().trim { it <= ' ' }, Constants.EMPTY_STRING, true)
+                emojiEditText!!.text.toString().trim { it <= ' ' }, Constants.EMPTY_STRING, true,mentionedUsersIds)
             selectedImageList.add(multipleImages)
         } else if (mimeType.startsWith("video/")) {
             multipleImages = MediaPreviewModel(filePathFromUri!!,
-                emojiEditText!!.text.toString().trim { it <= ' ' }, Constants.EMPTY_STRING, false)
+                emojiEditText!!.text.toString().trim { it <= ' ' }, Constants.EMPTY_STRING, false,mentionedUsersIds)
             selectedImageList.add(multipleImages)
         }
     }
 
     private fun handlePreviewFromGallery() {
+        mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(emojiEditText!!.mentionedUsers,mentionedUsersIds)
         if (isFromCamera) {
             val mediaPath = intent.getStringExtra(Constants.FILE_PATH)
             val uri =
@@ -536,8 +635,47 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         }
         mediaPreviewBinding.previewProgress.previewProgress.gone()
         selectedImages.forEach {
-            Log.d("selectedImages", "selectedImages after path:${it.path}")
-            selectedImageList.add(MediaPreviewModel(it.path, Constants.EMPTY_STRING, Constants.EMPTY_STRING, !it.isVideo))
+            if(mediaListCaption?.mediaCaptionParameters?.isNotEmpty()==true) {
+                mediaListCaption?.mediaCaptionParameters?.forEach { media ->
+                    if (it.path == media.path) {
+                        Log.d("selectedImages", "MediaCaption selectedImages after path:${it.path}")
+                        selectedImageList.add(
+                            MediaPreviewModel(
+                                it.path,
+                                media.caption,
+                                Constants.EMPTY_STRING,
+                                !it.isVideo,
+                                media.mentionedUsersIds
+                            )
+                        )
+                        mediaListCaptionAddedStatus=true
+                    }
+                }
+
+            } else {
+                Log.d("selectedImages", "selectedImages after path:${it.path}")
+                selectedImageList.add(
+                    MediaPreviewModel(
+                        it.path,
+                        Constants.EMPTY_STRING,
+                        Constants.EMPTY_STRING,
+                        !it.isVideo,
+                        mentionedUsersIds
+                    )
+                )
+            }
+            if (!mediaListCaptionAddedStatus && mediaListCaption?.mediaCaptionParameters?.isNotEmpty()==true) {
+                selectedImageList.add(
+                    MediaPreviewModel(
+                        it.path,
+                        Constants.EMPTY_STRING,
+                        Constants.EMPTY_STRING,
+                        !it.isVideo,
+                        mentionedUsersIds
+                    )
+                )
+            }
+            mediaListCaptionAddedStatus=false
         }
         checkAndShowPreviewList()
         initializeAdapterForViewPager()
@@ -558,6 +696,10 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     }
 
     override fun onBackPressed() {
+        addMoreMediaClicked=true
+        if (mediaListCaption?.mediaCaptionParameters?.isNotEmpty() == true)
+            myApp?.clearMediaCaptionObject()
+        addMediaCaptionMentionList()
         if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return
         lastClickTime = SystemClock.elapsedRealtime()
         emojiEditText!!.clearFocus()
@@ -600,7 +742,17 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
 
     override fun onItemClick(view: View?, position: Int) {
         if (isFromQuickShare) fileObjects[viewPagerPosition].caption = emojiEditText!!.text.toString().trim { it <= ' ' }
-        else selectedImageList[viewPagerPosition].caption = emojiEditText!!.text.toString().trim { it <= ' ' }
+        else {
+            if(emojiEditText!!.mentionedUsers!=null && emojiEditText!!.mentionedUsers.size>0){
+                val mentionedUsersIdsItemClick: MutableList<String> = mutableListOf()
+                selectedImageList[mediaPreviewBinding.mediaList.currentItem].caption=emojiEditText!!.getMentionedTemplate().toString()
+                selectedImageList[mediaPreviewBinding.mediaList.currentItem].mentionedUsersIds=ChatUtils.setSelectedUserIdForMention(emojiEditText!!.mentionedUsers,mentionedUsersIdsItemClick)
+            }
+            else {
+                selectedImageList[viewPagerPosition].caption =
+                    emojiEditText!!.text.toString().trim { it <= ' ' }
+            }
+        }
         mediaPreviewBinding.mediaList.currentItem = position
         mediaViewPagerAdapter.notifyDataSetChanged()
     }
@@ -630,10 +782,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 mediaPreviewBinding.captionCount.gone()
             }
         } else {
-            emojiEditText!!.setText(
-                if (Utils.returnEmptyStringIfNull(selectedImageList[position].caption).isNotEmpty())
-                    selectedImageList[position].caption else ""
-            )
+            maintainAddedMentionUser(position)
             setCaptionLength(emojiEditText!!.text.toString().length)
         }
         emojiEditText!!.setSelection(emojiEditText!!.text!!.length)
@@ -646,6 +795,36 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         mediaPreviewBinding.imagesPreviewList.scrollToPosition(position)
     }
 
+    private fun maintainAddedMentionUser(position:Int) {
+        if (selectedImageList[position].mentionedUsersIds != null && selectedImageList[position].mentionedUsersIds.size > 0 && selectedImageList[position].caption.isNotEmpty()) {
+            val texts = context!!.getString(R.string.chat_text)
+            val textMessage = selectedImageList[position].caption + texts + texts
+            val unSentMentionedUserIdList=ArrayList<ProfileDetails?>()
+            val mentionIdList=selectedImageList[position].mentionedUsersIds
+            for(mentionUser in mentionIdList){
+                val jidFormation= FlyUtils.getJid(mentionUser)
+                val profile= FlyCore.getUserProfile(jidFormation)
+                if (profile != null) {
+                    unSentMentionedUserIdList.add(profile)
+                }
+            }
+            var text = MentionUtils.formatUnSentMentionText(
+                unSentMentionedUserIdList,
+                textMessage,
+                this,
+                emojiEditText!!
+            )
+            emojiEditText!!.setText(TextUtils.concat(text.trim(), " "))
+        } else {
+            emojiEditText!!.setText(
+                if (Utils.returnEmptyStringIfNull(selectedImageList[position].caption)
+                        .isNotEmpty()
+                )
+                    selectedImageList[position].caption else ""
+            )
+        }
+    }
+
     override fun onPageScrollStateChanged(state: Int) {
         /*
           validate and store the caption while position view pager changes
@@ -655,8 +834,15 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 fileObjects[mediaPreviewBinding.mediaList.currentItem].caption =
                     emojiEditText!!.text.toString().trim { it <= ' ' }
             } else {
-                selectedImageList[mediaPreviewBinding.mediaList.currentItem].caption =
-                    emojiEditText!!.text.toString().trim { it <= ' ' }
+                if(emojiEditText!!.mentionedUsers!=null && emojiEditText!!.mentionedUsers.size>0){
+                    val mentionedUsersIdsScrollState: MutableList<String> = mutableListOf()
+                    selectedImageList[mediaPreviewBinding.mediaList.currentItem].caption=emojiEditText!!.getMentionedTemplate().toString()
+                    selectedImageList[mediaPreviewBinding.mediaList.currentItem].mentionedUsersIds= ChatUtils.setSelectedUserIdForMention(emojiEditText!!.mentionedUsers,mentionedUsersIdsScrollState)
+                }
+                else {
+                    selectedImageList[mediaPreviewBinding.mediaList.currentItem].caption =
+                        emojiEditText!!.text.toString().trim { it <= ' ' }
+                }
             }
         }
         viewPagerState = state
@@ -700,6 +886,10 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 mediaPreviewBinding.imagesPreviewList.gone()
             }
             R.id.add_more_media -> {
+                addMoreMediaClicked=true
+                if (mediaListCaption?.mediaCaptionParameters?.isNotEmpty() == true)
+                    myApp?.clearMediaCaptionObject()
+                addMediaCaptionMentionList()
                 val resultIntent = Intent()
                 resultIntent.putExtra("remaining_list", selectedImages)
                 setResult(Activity.RESULT_OK, resultIntent)
@@ -713,6 +903,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             }
             R.id.view_overlay -> {
                 hideKeyboard()
+                groupTagRecycler.gone()
                 if (emojiHandler!!.isEmojiShowing) {
                     emojiHandler!!.hideEmoji()
                     emojiEditText!!.clearFocus()
@@ -734,8 +925,11 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     private fun sendMedia() {
         hideKeyboard()
         mediaPreviewBinding.sendMedia.isEnabled = false
+        mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(emojiEditText!!.mentionedUsers,mentionedUsersIds)
+        setTextIncludingMention(mentionedUsersIds)
         if (isFromQuickShare) {
-            fileObjects[viewPagerPosition].caption = emojiEditText!!.text.toString().trim { it <= ' ' }
+            fileObjects[viewPagerPosition].caption = sendTextMessageWithMentionFormat.toString()
+            fileObjects[viewPagerPosition].mentionedUsersIds = mentionedUsersIds
             progressDialog = DoProgressDialog(this)
             progressDialog!!.showProgress()
             var isPermissionAvailable = true
@@ -800,7 +994,8 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     }
 
     private fun mediafileUpload(){
-        selectedImageList[viewPagerPosition].caption = emojiEditText!!.text.toString().trim { it <= ' ' }
+        selectedImageList[viewPagerPosition].caption = sendTextMessageWithMentionFormat.toString()
+        selectedImageList[viewPagerPosition].mentionedUsersIds = mentionedUsersIds
         if (toUser != null) {
             handleCaptionImage(toUser!!)
         }
@@ -861,8 +1056,10 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 mediaPreviewBinding.sendMedia.isEnabled = true
                 return
             }
+            setTextIncludingMention(mentionedUsersIds)
             val messageObject = messagingClient.composeVideoMessage(toUser, intent.getStringExtra(Constants.FILE_PATH)!!,
-                emojiEditText!!.text.toString().trim { it <= ' ' }, replyMessageId).second
+                sendTextMessageWithMentionFormat.toString(), replyMessageId, mentionedUsersIds).second
+
             messageObject?.let {
                 messagingClient.sendMessage(it, object : MessageListener {
                     override fun onSendMessageSuccess(message: ChatMessage) {
@@ -877,6 +1074,8 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                             Constants.EMPTY_STRING
                         )
                         viewModel.setUnSentMessageForAnUser(toUser, Constants.EMPTY_STRING)
+                        FlyMessenger.saveUnsentMentionedUserId(toUser,"")
+                        unSentMentionedUserIdList.clear()
                         ChatParent.startActivity(
                             this@MediaPreviewActivity,
                             toUser,
@@ -886,6 +1085,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 })
             }
         }
+        myApp?.clearMediaCaptionObject()
     }
 
     private fun sendGalleryAttachments(toUser: String, replyMessageId: String) {
@@ -900,7 +1100,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                     mediaPreviewBinding.sendMedia.isEnabled = true
                     break
                 }
-                messageObject = messagingClient.composeImageMessage(toUser, item.path, item.caption, replyMessageId)
+                messageObject = messagingClient.composeImageMessage(toUser, item.path, item.caption, replyMessageId,item.mentionedUsersIds)
             } else {
                 if (!ChatManager.getAvailableFeatures().isVideoAttachmentEnabled) {
                     mediaPreviewBinding.previewProgress.previewProgress.gone()
@@ -908,7 +1108,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                     mediaPreviewBinding.sendMedia.isEnabled = true
                     break
                 }
-                messageObject = messagingClient.composeVideoMessage(toUser, item.path, item.caption, replyMessageId).second
+                messageObject = messagingClient.composeVideoMessage(toUser, item.path, item.caption, replyMessageId,item.mentionedUsersIds).second
             }
             messageObject?.let {
                 messagingClient.sendMessage(it, object : MessageListener {
@@ -926,6 +1126,8 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 })
             }
         }
+        FlyMessenger.saveUnsentMentionedUserId(toUser,"")
+        unSentMentionedUserIdList.clear()
     }
 
     private fun removeSelectedFile() {
@@ -1008,7 +1210,6 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
 
     override fun onPause() {
         super.onPause()
-        keyboardHeightProvider?.onPause()
         if (emojiEditText!!.hasFocus() && !emojiHandler!!.isEmojiShowing) {
             isResumedNotCalled = true
         }
@@ -1039,4 +1240,73 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             onKeyboardVisibilityChanged(isShown)
         }
     }
+
+
+    private fun initMentionAdapter() {
+        groupTagRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        groupTagRecycler.addItemDecoration(CustomItemDecoration(this))
+        groupTagRecycler.adapter = groupTagAdapter
+        groupTagAdapter.submitList(emptyList())
+    }
+
+    /**
+     * Group mention functionaliity
+     */
+    private fun initGroupMentionTag() {
+        if (chat.isGroupChat()) {
+            mentionViewModel.setUserJid(chat.toUser)
+            mentionViewModel.getParticipantsHashMap(chat.toUser)
+             bindMediaUserMention(userMentionConfig) { text  ->
+                if (chat.isGroupChat() && text!=null && emojiEditText?.isFocused == true) {
+                    groupTagRecycler.show()
+                    mentionFilterKey = text.toString()
+                    if(mentionFilterKey.isNotEmpty())
+                        groupTagAdapter.filter.filter(mentionFilterKey)
+                    else  mentionViewModel.getParticipantsHashMap(chat.toUser)
+                } else{
+                    groupTagRecycler.gone()
+                }
+            }
+        }
+
+        mentionViewModel.groupUsers.observe(this) {
+            groupTagAdapter.submitList(it)
+        }
+        mentionViewModel.getSelectedRecipient().observe(this) { profile ->
+            val name = Utils.returnEmptyStringIfNull(profile.name)
+            val userId = getUserFromJid(profile.jid)
+            val mentionUser  = MentionUser(userId)
+            mediaPreviewBinding.imageCaption.replaceText(name,mentionUser)
+        }
+    }
+
+    override fun onUserTagClicked(profileDetails: ProfileDetails) {
+        groupTagRecycler.layoutManager = LinearLayoutManager(this)
+        groupTagRecycler.adapter = groupTagAdapter
+        groupTagRecycler.itemAnimator = null
+        groupTagRecycler.gone()
+        mentionViewModel.onSelectionChange(profileDetails)
+    }
+
+    fun bindMediaUserMention(mentionConfig: UserMentionConfig, handler: OnMentionEventListener) {
+        if (emojiEditText is MentionEditGroupText) {
+            (emojiEditText as MentionEditGroupText).bindUserMention(
+                mentionConfig,
+                TextUIConfig.Builders().setTextColor(ContextCompat.getColor(context!!,R.color.color_blue)).build(),
+                handler,
+                null,
+                groupTagRecycler,
+                false
+            )
+        }
+    }
+
+    private fun setTextIncludingMention(mentionedUsersIds:MutableList<String>){
+        sendTextMessageWithMentionFormat = if(mentionedUsersIds.size > 0) {
+            emojiEditText?.getMentionedTemplate()
+        } else {
+            emojiEditText!!.text.toString().trim { it <= ' ' }
+        }
+    }
+
 }

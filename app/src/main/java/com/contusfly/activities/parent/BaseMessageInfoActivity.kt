@@ -19,7 +19,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.emoji.widget.EmojiAppCompatTextView
 import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
@@ -33,7 +32,9 @@ import com.contusfly.activities.ImageViewActivity.Companion.startActivity
 import com.contusfly.chat.ImageFileUtils
 import com.contusfly.chat.MapUtils.getMapImageUri
 import com.contusfly.chat.MediaController
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.utils.*
+import com.contusfly.utils.ChatUtils.setReplyViewMessageFormat
 import com.contusfly.utils.MediaDetailUtils.getMediaDuration
 import com.contusfly.utils.MediaDetailUtils.getMediaDurationInSecs
 import com.contusfly.utils.MediaUtils.loadImageWithGlide
@@ -43,7 +44,6 @@ import com.contusfly.views.CommonAlertDialog.DIALOGTYPE
 import com.mirrorflysdk.api.FlyMessenger.getMessageOfId
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ContactChatMessage
-import com.mirrorflysdk.api.models.ReplyParentChatMessage
 import com.mirrorflysdk.utils.InviteContactUtils
 import com.mirrorflysdk.utils.Utils
 import io.github.rockerhieu.emojicon.EmojiconTextView
@@ -165,14 +165,19 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         val imgImageVideo: AppCompatImageView = replyLayout.findViewById(R.id.msg_image_video)
         ChatMessageUtils.setFavouriteStatus(imgFav, message!!.isMessageStarred())
         if (message.isThisAReplyMessage())
-            replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message.replyParentChatMessage)
+            replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
         else
             replyLayout.gone()
         loadMessageTime(message, txtTime)
         ChatMessageUtils.setChatStatus(imgChatStatus, message.getMessageStatus())
-        val msg = message.getMessageTextContent()
         txtMessage.maxWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
-        txtMessage.text = getSpannedText(msg)
+        if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
+            val mentionText = MentionUtils.formatMentionText(context!!, message,  false)
+            txtMessage.text = mentionText
+        } else {
+            txtMessage.text = getSpannedText(message.getMessageTextContent())
+        }
+
     }
 
     /**
@@ -359,7 +364,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
             imgFav = view.findViewById<ImageView>(R.id.ic_star)
             val balloon = view.findViewById<View>(R.id.balloon)
             val captionContent = view.findViewById<View>(R.id.view_sent_image_caption)
-            val caption: EmojiconTextView = captionContent.findViewById(R.id.txt_caption_sent_chat)
+            val caption = captionContent.findViewById<TextView>(R.id.txt_caption_sent_chat)
             captionStar = captionContent.findViewById<ImageView>(R.id.ic_star)
             val imgStatus = captionContent.findViewById<ImageView>(R.id.caption_image_send_status)
             val txtCaptionTime: AppCompatTextView = captionContent.findViewById(R.id.caption_text_send_image_time)
@@ -368,16 +373,16 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
             val imgIcon: AppCompatImageView = replyLayout.findViewById(R.id.msg_item_icon)
             val txtChat: MessageTextView = replyLayout.findViewById(R.id.text_reply_chat)
             val imgImageVideo: AppCompatImageView = replyLayout.findViewById(R.id.msg_image_video)
-            layoutSenderImg.setWidthAndHeight(message!!.getMediaChatMessage().getMediaFileHeight(), message.getMediaChatMessage().getMediaFileWidth())
+            val calculatedDimension = ChatUtils.getMobileWidthAndHeight(message!!.getMediaChatMessage().getMediaFileWidth(), message.getMediaChatMessage().getMediaFileHeight())
+            layoutSenderImg.setWidthAndHeight(calculatedDimension.second, calculatedDimension.first)
             if (message.isThisAReplyMessage()) {
-                replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message.getReplyParentChatMessage())
+                replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
             } else
                 replyLayout.gone()
             if (message.getMediaChatMessage().getMediaCaptionText() != null && message.getMediaChatMessage().getMediaCaptionText().isNotEmpty()) {
                 ChatMessageUtils.setFavouriteStatus(imgFav, false)
                 balloon.gone()
                 captionContent.show()
-                caption.text = getSpannedText(message.getMediaChatMessage().getMediaCaptionText())
                 ChatMessageUtils.setChatStatus(imgStatus, message.getMessageStatus())
                 loadMessageTime(message, txtCaptionTime)
                 val filePath = Utils.returnEmptyStringIfNull(message.getMediaChatMessage().getMediaLocalStoragePath())
@@ -385,7 +390,13 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                 val decodeImageUtils = DecodeImageUtils()
                 decodeImageUtils.loadImageInView(imageSenderImg, filePath, base64Img,
                         this, R.drawable.ic_image_placeholder)
-                ChatMessageUtils.setFavouriteStatus(captionStar, message.isMessageStarred())
+                if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
+                    val mentionText = MentionUtils.formatMentionText(context!!, message,  false)
+                    caption.text = mentionText
+                } else {
+                    caption.text = getSpannedText(message.getMediaChatMessage().getMediaCaptionText())
+                }
+
             } else {
                 ChatMessageUtils.setFavouriteStatus(imgFav, message.isMessageStarred())
                 balloon.show()
@@ -419,7 +430,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         imgFav = view.findViewById<ImageView>(R.id.ic_star)
         val captionContent = view.findViewById<View>(R.id.view_sent_image_caption)
         val layoutSenderVideo = view.findViewById<RelativeLayout>(R.id.view_chat_img_lay)
-        val captionText: EmojiconTextView = captionContent.findViewById(R.id.txt_caption_sent_chat)
+        val captionText=captionContent.findViewById<TextView>(R.id.txt_caption_sent_chat)
         captionStar = captionContent.findViewById<ImageView>(R.id.ic_star)
         val captionStatus = captionContent.findViewById<ImageView>(R.id.caption_image_send_status)
         val captionTime: AppCompatTextView = captionContent.findViewById(R.id.caption_text_send_image_time)
@@ -428,9 +439,10 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         val imgIcon: AppCompatImageView = replyLayout.findViewById(R.id.msg_item_icon)
         val txtChat: MessageTextView = replyLayout.findViewById(R.id.text_reply_chat)
         val imgImageVideo: AppCompatImageView = replyLayout.findViewById(R.id.msg_image_video)
-        layoutSenderVideo.setWidthAndHeight(message!!.getMediaChatMessage().getMediaFileHeight(), message.getMediaChatMessage().getMediaFileWidth())
+        val calculatedDimension = ChatUtils.getMobileWidthAndHeight(message!!.getMediaChatMessage().getMediaFileWidth(), message.getMediaChatMessage().getMediaFileHeight())
+        layoutSenderVideo.setWidthAndHeight(calculatedDimension.second, calculatedDimension.first)
         if (message.isThisAReplyMessage()) {
-            replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message.getReplyParentChatMessage())
+            replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
         } else
             replyLayout.gone()
         if (message.getMediaChatMessage().getMediaCaptionText() != null && message.getMediaChatMessage().getMediaCaptionText().isNotEmpty()) {
@@ -438,10 +450,15 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
             imgChatStatus?.gone()
             ChatMessageUtils.setFavouriteStatus(imgFav, false)
             captionContent.show()
-            captionText.text = getSpannedText(message.getMediaChatMessage().getMediaCaptionText())
             ChatMessageUtils.setChatStatus(captionStatus, message.getMessageStatus())
             loadMessageTime(message, captionTime)
             ChatMessageUtils.setFavouriteStatus(captionStar, message.isMessageStarred())
+            if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
+                val mentionText = MentionUtils.formatMentionText(context!!, message,  false)
+                captionText.text = mentionText
+            } else {
+               captionText.text = getSpannedText(message.getMediaChatMessage().getMediaCaptionText())
+            }
         } else {
             txtTime.show()
             imgChatStatus?.show()
@@ -487,7 +504,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         val imgImageVideo: AppCompatImageView = replyLayout.findViewById(R.id.msg_image_video)
         if (message.isThisAReplyMessage()) {
             textSentReplyLayout?.show()
-            replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message.getReplyParentChatMessage())
+            replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
         } else {
             textSentReplyLayout?.gone()
             replyLayout.gone()
@@ -590,7 +607,8 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                           imgIcon: AppCompatImageView,
                           txtChat: MessageTextView,
                           imgImageVideo: AppCompatImageView,
-                          replyMessage: ReplyParentChatMessage) {
+                          replyChatMessage: ChatMessage) {
+        val replyMessage = replyChatMessage.getReplyParentChatMessage()
         txtUsername.setTextColor(replyMessage.getSenderName().getColourCode())
         txtUsername.text = replyMessage.getSenderName()
         if (replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted()) {
@@ -599,7 +617,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
             when (replyMessage.getMessageType()) {
                 MessageType.TEXT -> {
                     txtChat.maxWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
-                    EmojiUtils.setMessageTextWithEllipsis(txtChat, replyMessage.getMessageTextContent())
+                    replyChatMessage?.let { setReplyViewMessageFormat(it,context!!,txtChat!!,"",false) }
                     imgImageVideo.gone()
                     layout.show()
                 }
@@ -632,7 +650,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                     imgIcon.setImageResource(R.drawable.ic_file_reply)
                     layout.show()
                 }
-                else -> mediaReplyView(layout, imgIcon, txtChat, imgImageVideo, replyMessage)
+                else -> mediaReplyView(layout, imgIcon, txtChat, imgImageVideo, replyChatMessage)
             }
         }
     }
@@ -641,7 +659,8 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                                imgIcon: AppCompatImageView,
                                txtChat: MessageTextView,
                                imgImageVideo: AppCompatImageView,
-                               replyMessage: ReplyParentChatMessage) {
+                               replyChatMessage: ChatMessage) {
+        val replyMessage = replyChatMessage.getReplyParentChatMessage()
         when (replyMessage.getMessageType()) {
             MessageType.IMAGE, MessageType.VIDEO -> {
                 val mediaDetail = replyMessage.getMediaChatMessage()
@@ -653,7 +672,8 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                     messageCaption = if (TextUtils.isEmpty(mediaDetail.getMediaCaptionText())) getString(R.string.title_video) else mediaDetail.getMediaCaptionText()
                     imgIcon.setImageResource(R.drawable.ic_video_reply)
                 }
-                EmojiUtils.setMessageTextWithEllipsis(txtChat, messageCaption)
+                replyChatMessage.let { setReplyViewMessageFormat(it,context!!,txtChat,messageCaption,true) }
+
                 imgIcon.show()
                 imgImageVideo.show()
                 decodeUtils!!.loadImageInView(
@@ -711,7 +731,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
 
     private fun checkAndEnableReplyView(replyLayout: View, txtUsername: CustomTextView, imgIcon: AppCompatImageView, txtChat: MessageTextView, imgImageVideo: AppCompatImageView, message: ChatMessage) {
         if (message.isThisAReplyMessage())
-            replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message.getReplyParentChatMessage())
+            replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
         else
             replyLayout.gone()
     }

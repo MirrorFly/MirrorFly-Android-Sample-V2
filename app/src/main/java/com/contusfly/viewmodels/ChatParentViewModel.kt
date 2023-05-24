@@ -287,6 +287,11 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         }
     }
 
+    fun addSentMessage(message: ChatMessage) { //If Sent message time is less than last received message time then it will add to the message list and shown in UI
+        paginationMessageList.addAll(arrayListOf(message))
+        nextMessageList.postValue(arrayListOf(message))
+    }
+
     private fun checkAndUpdateMessageList(messageList: java.util.ArrayList<ChatMessage>) {
         if (messageList.first().messageId == paginationMessageList.last().messageId) // for group sending message received from server again to handle that removing duplicate message
             messageList.removeAt(0)

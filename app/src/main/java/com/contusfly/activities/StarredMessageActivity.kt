@@ -29,6 +29,7 @@ import com.contusfly.*
 import com.contusfly.activities.parent.ChatParent
 import com.contusfly.databinding.ActivityStarredMessageBinding
 import com.contusfly.di.factory.AppViewModelFactory
+import com.contusfly.groupmention.MentionUtils
 import com.contusfly.interfaces.OnChatItemClickListener
 import com.contusfly.models.Chat
 import com.contusfly.starredMessages.StarredMessagesUtils
@@ -334,17 +335,38 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
 
     private fun isVideoCaptionContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
         return MessageType.VIDEO == message.messageType && message.mediaChatMessage.mediaCaptionText.isNotEmpty()
-                && message.mediaChatMessage.mediaCaptionText.lowercase().contains(filterKey.lowercase())
+                && isMentionUserIdAvailableInMediaMessage(message, filterKey)
     }
 
     private fun isImageCaptionContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
         return MessageType.IMAGE == message.messageType && message.mediaChatMessage.mediaCaptionText.isNotEmpty()
-                && message.mediaChatMessage.mediaCaptionText.lowercase().contains(filterKey.lowercase())
+                && isMentionUserIdAvailableInMediaMessage(message, filterKey)
     }
 
     private fun isTextMessageContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
         return MessageType.TEXT == message.messageType &&
-                message.messageTextContent.lowercase().contains(filterKey.lowercase())
+                isMentionUserIdAvailableInMessage(message, filterKey)
+    }
+
+    private fun isMentionUserIdAvailableInMediaMessage(message: ChatMessage, filterKey: String): Boolean {
+        return if (message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
+            val mentionText = MentionUtils.formatMentionText(this, message, false)
+            mentionText.toString().lowercase().contains(filterKey.lowercase())
+        } else {
+            message.mediaChatMessage.mediaCaptionText.lowercase().contains(filterKey.lowercase())
+        }
+    }
+
+    private fun isMentionUserIdAvailableInMessage(
+        message: ChatMessage,
+        filterKey: String
+    ): Boolean {
+        return if (message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
+            val mentionText = MentionUtils.formatMentionText(this, message, false)
+            mentionText.toString().lowercase().contains(filterKey.lowercase())
+        } else {
+            message.messageTextContent.lowercase().contains(filterKey.lowercase())
+        }
     }
 
     override fun onMessageStatusUpdated(messageId: String) {

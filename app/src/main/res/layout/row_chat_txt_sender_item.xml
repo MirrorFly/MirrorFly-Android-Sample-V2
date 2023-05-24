@@ -95,7 +95,7 @@
                         android:src="@drawable/ic_recall"
                         android:visibility="gone" />
 
-                    <io.github.rockerhieu.emojicon.EmojiconTextView
+                    <TextView
                         android:id="@+id/text_send_chat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
