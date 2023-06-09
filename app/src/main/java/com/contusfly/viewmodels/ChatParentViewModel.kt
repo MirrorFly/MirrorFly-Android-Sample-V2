@@ -2,6 +2,7 @@ package com.contusfly.viewmodels
 
 import androidx.lifecycle.*
 import com.contusfly.getData
+import com.contusfly.getParams
 import com.contusfly.isTextMessage
 import com.contusfly.isValidIndex
 import com.contusfly.repository.MessageRepository
@@ -21,6 +22,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage
 import com.google.firebase.ml.naturallanguage.smartreply.FirebaseTextMessage
 import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestion
+import com.mirrorflysdk.flycommons.ChatType
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -53,10 +55,22 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
     val loadSuggestion = MutableLiveData<Boolean>()
     val removeTempDateHeader = MutableLiveData<Boolean>()
     val searchkeydata = MutableLiveData<String>()
+    val swipeRefreshLoader = MutableLiveData<Boolean>()
 
     private var toUser: String? = null
 
+    private var participantChatType: String? = null
+
     val groupParticipantsName = MutableLiveData<String>()
+
+
+    fun setParticpantDetails(chatType:String) {
+        if(chatType == ChatType.TYPE_GROUP_CHAT) {
+            participantChatType=com.mirrorflysdk.flycommons.Constants.MESSAGE_HISTORY_GROUP_CHAT
+        } else {
+            participantChatType=com.mirrorflysdk.flycommons.Constants.MESSAGE_HISTORY_SINGLE_CHAT
+        }
+    }
 
     /**
      * get the message given to the smart reply
@@ -215,6 +229,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
     }
 
     fun loadInitialData(loadFromMessageId: String) {
+        swipeRefreshLoader.value=true
         viewModelScope.launch {
             messageListParams = FetchMessageListParams().apply {
                 chatJid = toUserJid
@@ -230,6 +245,30 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                     paginationMessageList.clear()
                     paginationMessageList.addAll(messageRepository.getMessageListWithDate(messageList))
                     initialMessageList.postValue(paginationMessageList)
+                    if (loadFromMessageId.isNotBlank() && messageListQuery.isValidMessageId(loadFromMessageId) && ChatManager.getAvailableFeatures().isChatHistoryEnabled){
+                        loadPreviousMessage()
+                    } else {
+                        loadPreviousData()
+                    }
+                    loadSuggestion.postValue(!isLoadNextAvailable())
+                }
+
+                swipeRefreshLoader.value=false
+            }
+        }
+    }
+
+    fun loadInitialMessages(loadFromMessageId: String) {
+        if(messageListQuery.isFetchingInProgress()){
+            return
+        }
+        viewModelScope.launch {
+            messageListQuery.loadLocalMessages { isSuccess, _, data ->
+                if (isSuccess) {
+                    val messageList = data.getData() as ArrayList<ChatMessage>
+                    paginationMessageList.clear()
+                    paginationMessageList.addAll(messageRepository.getMessageListWithDate(messageList))
+                    initialMessageList.postValue(paginationMessageList)
                     if (loadFromMessageId.isNotBlank())
                         loadPreviousData()
                     loadSuggestion.postValue(!isLoadNextAvailable())
@@ -238,9 +277,65 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         }
     }
 
-    fun loadPreviousData(searchedText: String="") {
+    fun loadNextMessage(searchedText: String="") {
+        if(messageListQuery.isFetchingInProgress()){
+            return
+        }
         viewModelScope.launch {
-            messageListQuery.loadPreviousMessages { isSuccess, _, data ->
+            messageListQuery.loadNextMessages { isSuccess, _, data ->
+                if (isSuccess) {
+                    val messageList = data.getData() as ArrayList<ChatMessage>
+                    if (messageList.isNotEmpty()) {
+                        var skipFirstMessage = false
+                        if (paginationMessageList.isNotEmpty()) {
+                            checkAndUpdateMessageList(messageList)
+                            skipFirstMessage = true
+                        }
+                        val nextMessages = messageRepository.getMessageListWithDate(messageList, skipFirstMessage)
+                        paginationMessageList.addAll(nextMessages)
+                        nextMessageList.postValue(nextMessages)
+                        searchDataShare(searchedText,Constants.NEXT_LOAD)
+                    } else {
+                        searchDataShare(searchedText,Constants.NO_DATA)
+                    }
+                }
+            }
+        }
+    }
+
+    fun loadPreviousMessage(searchedText: String="") {
+        if(messageListQuery.isFetchingInProgress()){
+            return
+        }
+        swipeRefreshLoader.value=true
+        viewModelScope.launch {
+            messageListQuery.loadPreviousMessages{ isSuccess, _, data ->
+                if (isSuccess) {
+                    val messageList = data.getData() as ArrayList<ChatMessage>
+                    if (messageList.isNotEmpty()) {
+                        val currentHeaderId: Long = messageRepository.getDateID(paginationMessageList.first())
+                        val previousHeaderId: Long = messageRepository.getDateID(messageList.last())
+                        removeTempDateHeader.postValue(currentHeaderId == previousHeaderId)
+                        val previousMessages = messageRepository.getMessageListWithDate(messageList)
+                        paginationMessageList.addAll(0, previousMessages)
+                        previousMessageList.postValue(previousMessages)
+                        searchDataShare(searchedText,Constants.PREV_LOAD)
+                    } else {
+                        searchDataShare(searchedText,Constants.NO_DATA)
+                    }
+                }
+                swipeRefreshLoader.value=false
+            }
+        }
+    }
+
+
+    fun loadPreviousData(searchedText: String="") {
+        if(messageListQuery.isFetchingInProgress()){
+            return
+        }
+        viewModelScope.launch {
+            messageListQuery.loadLocalPreviousMessages { isSuccess, _, data ->
                 if (isSuccess) {
                     val messageList = data.getData() as ArrayList<ChatMessage>
                     if (messageList.isNotEmpty()) {
@@ -265,8 +360,11 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
     }
 
     fun loadNextData(searchedText: String="") {
+        if(messageListQuery.isFetchingInProgress()) {
+            return
+        }
         viewModelScope.launch {
-            messageListQuery.loadNextMessages { isSuccess, _, data ->
+            messageListQuery.loadLocalNextMessages { isSuccess, _, data ->
                 if (isSuccess) {
                     val messageList = data.getData() as ArrayList<ChatMessage>
                     if (messageList.isNotEmpty()) {
@@ -311,5 +409,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
     fun isLoadNextAvailable() = messageListQuery.hasNextMessages()
 
     fun getFetchingIsInProgress() = messageListQuery.isFetchingInProgress()
+
+    fun isLastPageFetched() = messageListQuery.getLastPageFetched()
 
 }

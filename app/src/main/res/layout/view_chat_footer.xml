@@ -61,32 +61,6 @@
                 android:id="@+id/view_text_reply_layout"
                 layout="@layout/reply_view" />
 
-            <LinearLayout
-                android:id="@+id/suggestion_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_10"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/suggestion_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/reply_close"
-                    android:layout_width="@dimen/margin_15"
-                    android:layout_height="@dimen/margin_15"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="@dimen/margin_2"
-                    android:background="@drawable/ic_close1"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout

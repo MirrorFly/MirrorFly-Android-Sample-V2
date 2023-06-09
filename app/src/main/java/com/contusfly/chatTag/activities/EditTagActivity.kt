@@ -7,12 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.FlyCallback
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
 import com.contusfly.chatTag.adapter.EditChatTagAdapter
+import com.contusfly.chatTag.adapter.ReorderList
 import com.contusfly.chatTag.interfaces.DialogPositiveButtonClick
 import com.contusfly.chatTag.interfaces.ListItemClickListener
 import com.contusfly.databinding.ActivityEditTagBinding
@@ -25,9 +27,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.Collections
 import java.util.HashMap
 
-class EditTagActivity : AppCompatActivity() {
+class EditTagActivity : AppCompatActivity(),ReorderList {
 
     private val TAG: String = EditTagActivity::class.java.simpleName
 
@@ -108,7 +111,14 @@ class EditTagActivity : AppCompatActivity() {
                         LogMessage.e("Error",e.toString())
                     }
                 }
-            }, chatTagnamelist)
+
+                override fun itemEditClickListener(position: Int) {
+                    TODO("Not yet implemented")
+                }
+            }, chatTagnamelist,this@EditTagActivity)
+            val itemTouchHelperCallback = ItemTouchHelperCallback(chatTagadapter)
+            val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+            itemTouchHelper.attachToRecyclerView(binding.chatTagRecyclerview)
             binding.chatTagRecyclerview.adapter=chatTagadapter
         }
     }
@@ -159,6 +169,7 @@ class EditTagActivity : AppCompatActivity() {
     private fun createChatTagPageLaunch(){
         val intent= Intent(mContext,CreateTagActivity::class.java)
         intent.putExtra("tagname",tagName)
+        intent.putExtra(com.contusfly.utils.Constants.EDIT_CHAT_TAG_ITEMS,false)
         resultLauncher.launch(intent)
     }
 
@@ -183,6 +194,34 @@ class EditTagActivity : AppCompatActivity() {
                     }
                 } catch(e:Exception){
                     LogMessage.e(TAG,e.toString())
+                }
+            }
+
+        })
+    }
+
+    override fun onItemMoved(fromPosition: Int, toPosition: Int) {
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                Collections.swap(chatTagnamelist, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(chatTagnamelist, i, i - 1)
+            }
+        }
+        for(tagIndex in 0 until chatTagnamelist.size){
+            chatTagnamelist[tagIndex].order=tagIndex
+        }
+        chatTagadapter.notifyItemMoved(fromPosition, toPosition)
+        FlyCore.updateChatTagData(chatTagnamelist,object : FlyCallback {
+            override fun flyResponse(
+                isSuccess: Boolean,
+                throwable: Throwable?,
+                data: HashMap<String, Any>,
+            ) {
+                if (isSuccess) {
+                    setResult(Activity.RESULT_OK)
                 }
             }
 

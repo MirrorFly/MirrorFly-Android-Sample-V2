@@ -33,6 +33,7 @@ import com.contusfly.views.ShareDialog
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatActionListener
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.helpers.ResourceHelper
 import com.mirrorflysdk.views.CustomToast
@@ -373,6 +374,7 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
 
     private val onItemClickListener = object : RecyclerViewItemClick {
         override fun onItemClicked(position: Int, profileDetails: ProfileDetails) {
+            ContactManager.insertProfile(profileDetails)
             ProfileDetailsUtils.addContact(profileDetails)
             if (isSelected(profileDetails.jid))
                 selectedUsersWithNames.remove(profileDetails.jid)

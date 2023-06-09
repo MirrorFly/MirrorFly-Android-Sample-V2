@@ -14,7 +14,9 @@ import com.contusfly.*
 
 import androidx.recyclerview.widget.RecyclerView
 import com.contusfly.adapters.holders.ArchiveChatViewHolder
+import com.contusfly.adapters.holders.PaginationLoaderViewHolder
 import com.contusfly.databinding.RowLayoutArchivedBinding
+import com.contusfly.databinding.RowLayoutLoaderBinding
 import com.contusfly.databinding.RowRecentChatItemBinding
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.FlyCore
@@ -23,6 +25,7 @@ import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.mirrorflysdk.utils.Utils
 import com.jakewharton.rxbinding3.view.clicks
+import com.mirrorflysdk.api.contacts.ContactManager
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -43,6 +46,9 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
     private var msgType: String? = null
 
     private var archiveChatStatus: Triple<Boolean, Boolean, Int>? = null
+
+    private var isLoading:Boolean=false
+
 
     inner class RecentChatViewHolder(var viewBinding : RowRecentChatItemBinding) : RecyclerView.ViewHolder(viewBinding.root){
         val compositeDisposable: CompositeDisposable by lazy { CompositeDisposable() }
@@ -70,6 +76,10 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
                 val binding = RowLayoutArchivedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 ArchiveChatViewHolder(binding, parent.context)
             }
+            TYPE_LOADER  -> {
+                val binding = RowLayoutLoaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                PaginationLoaderViewHolder(binding, parent.context)
+            }
             else -> {
                 val binding = RowRecentChatItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 RecentChatViewHolder(binding)
@@ -80,17 +90,21 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
     override fun getItemViewType(position: Int): Int {
         return when (position) {
             0 -> TYPE_HEADER
-            mainlist.size - 1 -> TYPE_FOOTER
+            mainlist.size - 2 -> TYPE_FOOTER
+            mainlist.size - 1 -> TYPE_LOADER
             else -> TYPE_ITEM
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
           if (holder is ArchiveChatViewHolder) {
-            if (archiveChatStatus == null)
+            if (archiveChatStatus == null) {
                 holder.hideView()
-            else
+            } else {
                 holder.bindValues(archiveChatStatus!!, position)
+            }
+        } else if(holder is PaginationLoaderViewHolder){
+            holder.bindValues(isLoading)
         } else {
               val binding = holder as RecentChatViewHolder
               val item = mainlist[position]
@@ -135,6 +149,11 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
     fun setArchiveStatus(archiveChatStatus: Triple<Boolean, Boolean, Int>){
         this.archiveChatStatus = archiveChatStatus
         notifyItemChanged(0)
+        notifyItemChanged(mainlist.size - 2)
+    }
+
+    fun setLoader(isLoading:Boolean){
+        this.isLoading = isLoading
         notifyItemChanged(mainlist.size - 1)
     }
 
@@ -175,7 +194,8 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
     override fun getItemId(position: Int): Long {
         return when (position) {
             0 -> "header".hashCode().toLong()
-            mainlist.size - 1 -> "footer".hashCode().toLong()
+            mainlist.size - 2 -> "footer".hashCode().toLong()
+            mainlist.size - 1 -> "loader".hashCode().toLong()
             else -> mainlist[position].jid.hashCode().toLong()
         }
     }
@@ -423,6 +443,8 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
         if (!recent.isGroup)
             userBlockedMe = recent.isBlockedMe
         holder.imageChatPicture.loadUserProfileImage(context, recent)
+        var profile=ContactManager.getProfileDetails(recent.jid)
+        LogMessage.e("Error","${profile!!.contactType}")
         holder.textChatName.text = recent.profileName
     }
 
@@ -486,5 +508,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
         private const val TYPE_HEADER = 0
         private const val TYPE_FOOTER = 1
         private const val TYPE_ITEM = 2
+        private const val TYPE_LOADER = 3
+
     }
 }

@@ -36,7 +36,6 @@ import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
-import com.mirrorflysdk.models.RecentSearch
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import dagger.android.AndroidInjection
@@ -66,6 +65,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private lateinit var emptyView: TextView
 
     private var isAdapterNeedSync = true
+
+    private var isDeleteChat = false
 
     private val mAdapter by lazy {
         RecentChatListAdapter(this, viewModel.chatAdapter, viewModel.selectedChats, viewModel.typingAndGoneStatus)
@@ -580,6 +581,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                 return true
             }
             R.id.action_unarchive -> {
+                isDeleteChat = false
                 unArchiveSelectedChats()
                 actionMode?.finish()
                 return true
@@ -621,10 +623,21 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private fun updateArchiveChatsData(selectedJids: MutableList<String>, failedCount: Int) {
         updateArchiveChatsList(selectedJids)
         val chatsSize = selectedJids.size
-        if (chatsSize == 1)
-            CustomToast.showShortToast(context, String.format(context!!.getString(R.string.msg_chat_unarchived), chatsSize))
-        else if (chatsSize > 0)
-            CustomToast.showShortToast(context, String.format(context!!.getString(R.string.msg_multiple_chats_unarchived), chatsSize))
+        if(!isDeleteChat) {
+            if (chatsSize == 1)
+                CustomToast.showShortToast(
+                    context,
+                    String.format(context!!.getString(R.string.msg_chat_unarchived), chatsSize)
+                )
+            else if (chatsSize > 0)
+                CustomToast.showShortToast(
+                    context,
+                    String.format(
+                        context!!.getString(R.string.msg_multiple_chats_unarchived),
+                        chatsSize
+                    )
+                )
+        }
         LogMessage.e(TAG, "UnArchive Chats failed: $failedCount")
     }
 
@@ -734,33 +747,14 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     override fun onDialogClosed(dialogType: CommonAlertDialog.DIALOGTYPE?, isSuccess: Boolean) {
         if (!isSuccess)
             return
-        if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL)
-            deleteSelectedRecent(getJidFromList(viewModel.selectedChats))
+        if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL) {
+            isDeleteChat = true
+            unArchiveSelectedChats()
+        }
     }
 
     override fun listOptionSelected(position: Int) {
         LogMessage.d(TAG, position.toString())
-    }
-
-    /**
-     * List of Jid
-     *
-     * @param recentObjects add jid recent search
-     * @return jid
-     */
-    private fun getJidFromList(recentObjects: List<Any>): List<String> {
-        val jidList = ArrayList<String>()
-        var i = 0
-        val size = recentObjects.size
-        while (i < size) {
-            when (val recentObject = recentObjects[i]) {
-                is RecentChat -> jidList.add(recentObject.jid)
-                is RecentSearch -> jidList.add(recentObject.jid)
-                else -> throw ClassCastException("Unsupported object type")
-            }
-            i++
-        }
-        return jidList
     }
 
     private fun updateAdapter() {
@@ -785,6 +779,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                 setEmptyView(if (viewModel.chatAdapter.size <= 2) View.VISIBLE else View.GONE)
             }
         }
+        if (isDeleteChat)
+            deleteSelectedRecent(selectedJids)
         viewModel.selectedChats.clear()
     }
 

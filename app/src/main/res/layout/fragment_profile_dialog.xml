@@ -22,7 +22,7 @@
             android:layout_gravity="center"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/profile_img" />
+            tools:src="@drawable/profile_img" />
 
         <TextView
             android:id="@+id/user_name"

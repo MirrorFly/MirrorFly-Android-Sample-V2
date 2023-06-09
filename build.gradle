@@ -27,7 +27,6 @@ allprojects {
         maven {
             url "https://repo.mirrorfly.com/release"
         }
-
     }
 }
 
@@ -42,5 +41,6 @@ ext {
     minSdkVersion = 21
     versionCode = 3
     versionName = "2.2"
-    repoVersion = '7.4.0'
+    repoVersion = '7.4.3'
+    uatVersion = '_pre_01'
 }

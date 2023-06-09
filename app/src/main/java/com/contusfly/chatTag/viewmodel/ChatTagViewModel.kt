@@ -19,11 +19,19 @@ class ChatTagViewModel @Inject constructor() : ViewModel()  {
     val recentChatList = MutableLiveData<ArrayList<RecentChat>>()
     val recentChatAdapter: LinkedList<RecentChat> by lazy { LinkedList<RecentChat>() }
     val recentChatDiffResult = MutableLiveData<DiffUtil.DiffResult>()
+    val chatTagRecentItems = MutableLiveData<ArrayList<RecentChat>>()
 
     fun getRecentChats() {
         LogMessage.d(TAG, "getRecentChats() called to update the UI")
         viewModelScope.launch(Dispatchers.Main.immediate) {
                 recentChatList.value = ArrayList(FlyCore.getRecentChatList())
+        }
+    }
+
+    fun getRecentChatBasedOnChatTag(jidList:String){
+        LogMessage.d(TAG, "getChatTag Items")
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            chatTagRecentItems.value = ArrayList(FlyCore.getRecentChatListByChatTag(jidList))
         }
     }
 

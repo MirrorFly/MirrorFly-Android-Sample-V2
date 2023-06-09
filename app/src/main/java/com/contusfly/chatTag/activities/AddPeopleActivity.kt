@@ -19,6 +19,7 @@ import com.contusfly.chatTag.adapter.PeoplelistAdapter
 import com.contusfly.chatTag.interfaces.ChatTagClickListener
 import com.contusfly.chatTag.viewmodel.ChatTagViewModel
 import com.contusfly.databinding.ActivityAddPeopleBinding
+import com.contusfly.isDeletedContact
 import com.contusfly.utils.LogMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.google.gson.Gson
@@ -51,6 +52,7 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
         binding = ActivityAddPeopleBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mContext = this@AddPeopleActivity
+        binding.toolbarView.titleTv.text=resources.getString(R.string.add_people_title)
         observer()
         getChatlist()
     }
@@ -84,7 +86,6 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
             )
         )
         setRecentChatAdapter()
-        setSelectionListChatAdapter()
     }
 
     private fun setRecentChatAdapter() {
@@ -102,9 +103,9 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.selectedRecyclerview.layoutManager = layoutManager
         binding.selectedRecyclerview.apply {
+            itemAnimator = null
             adapter = mSelectionAdapter
         }
-
     }
 
     private fun getChatlist() {
@@ -114,7 +115,13 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
     private fun observer() {
         viewModel.recentChatList.observe(this, Observer {
             LogMessage.i(TAG, "recentChatDiffResult observed")
-            recentChatList = it as ArrayList<RecentChat>
+            val finalRecentChatList=ArrayList<RecentChat>()
+            for (recentItem in it) {
+                if (!recentItem.isAdminBlocked && !recentItem.isDeletedContact()) {
+                    finalRecentChatList.add(recentItem)
+                }
+            }
+            recentChatList = finalRecentChatList
             getIntentvalues()
         })
     }
@@ -165,6 +172,7 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
     override fun selectUnselectChat(position: Int, item: RecentChat, isSelectionlist: Boolean) {
 
         try {
+            val updatePosition = mSelectionAdapter.getItemPosition(item)
             if (!isSelectionlist) {
                 peopleSelectionChecking(position,item)
             } else {
@@ -177,9 +185,20 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
                 chatSelectedList.removeAt(position)
                 setResult()
             }
-
-            mAdapter.notifyDataSetChanged()
-            mSelectionAdapter.updateList(chatSelectedList)
+            if(chatSelectedList.size == 0) {
+                mAdapter.notifyDataSetChanged()
+                setSelectionListChatAdapter()
+                mSelectionAdapter.clear()
+            } else {
+                mAdapter.notifyDataSetChanged()
+                setSelectionListChatAdapter()
+                mSelectionAdapter.updateList(
+                    chatSelectedList,
+                    updatePosition,
+                    true,
+                    item.isSelected
+                )
+            }
             addButtonEnableDisable()
 
         } catch (e: Exception) {
@@ -208,7 +227,6 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
                 for (i in 0 until chatSelectedList.size) {
                     if (item.jid.equals(chatSelectedList.get(i).jid)) {
                         chatSelectedList.removeAt(i)
-                        setResult()
                         break
                     }
                 }
@@ -246,6 +264,7 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
                 }
             }
         }
+        setSelectionListChatAdapter()
     }
 
     private fun emptyDataChecking(){

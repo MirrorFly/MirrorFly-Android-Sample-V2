@@ -404,6 +404,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         initGroupTag()
         myApp= application as MobileApplication
         mediaListCaption = myApp?.getMediaCaptionObject()
+
     }
 
     private fun setRecyclerViewScrollListener() {
@@ -817,11 +818,31 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     private fun initialization() {
+        loaderShowHide(false)
+        loaderObserver()
+        parentViewModel.setParticpantDetails(chatType)
         FirebaseUtils.setAnalytics(FirebaseAnalytics.Event.VIEW_ITEM, "Chat View", "")
         startStickyService()
         initViews()
         setUpListeners()
         setRecyclerViewScrollListener()
+    }
+
+    private fun loaderObserver(){
+
+        parentViewModel.swipeRefreshLoader.observe(this) {
+            loaderShowHide(it)
+        }
+    }
+
+    private fun loaderShowHide(isShowStatus:Boolean){
+        if(isShowStatus){
+            swiperefreshlayout.isEnabled=true
+            swiperefreshlayout.isRefreshing=true
+        } else {
+            swiperefreshlayout.isEnabled=false
+            swiperefreshlayout.isRefreshing=false
+        }
     }
 
     private fun setUpListeners() {
@@ -1070,13 +1091,13 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             if (messageAndPosition.first != -1) {
                 refreshMessageStatusUpdated(mid, messageAndPosition)
             } else {
-                parentViewModel.getMessageAndPosition(mid).let { messageAndPosition2 ->
-                    if (messageAndPosition2.first != -1) {
-                        Handler(Looper.getMainLooper()).postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
+                    parentViewModel.getMessageAndPosition(mid).let { messageAndPosition2 ->
+                        if (messageAndPosition2.first != -1) {
                             refreshMessageStatusUpdated(mid, messageAndPosition2)
-                        }, 500)
+                        }
                     }
-                }
+                }, 500)
             }
         }
     }
@@ -1534,7 +1555,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                         highlightGivenMessageId(mainMessage.replyParentChatMessage.messageId)
                     } else {
                         messageId = mainMessage.replyParentChatMessage.messageId
-                        parentViewModel.loadInitialData(mainMessage.replyParentChatMessage.messageId)
+                        parentViewModel.loadInitialMessages(mainMessage.replyParentChatMessage.messageId)
                     }
                 }
             }
@@ -2188,7 +2209,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         if (messageIds.isEmpty()) {
             LogMessage.d(TAG, "onMessagesClearedOrDeleted message cleared")
             messageId = Constants.EMPTY_STRING
-            parentViewModel.loadInitialData(messageId)
+            parentViewModel.loadInitialMessages(messageId)
         } else {
             LogMessage.d(TAG, "onMessagesClearedOrDeleted message deleted")
             messageIds.forEach {
@@ -2372,13 +2393,13 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         override fun onReceive(context: Context?, intent: Intent?) {
             unregisterReceiver(this)
             if (mainList.isNotEmpty()) {
-                parentViewModel.loadInitialData(mainList[firstCompletelyVisibleItemPosition].messageId)
+                parentViewModel.loadInitialMessages(mainList[firstCompletelyVisibleItemPosition].messageId)
             }
         }
     }
 
     override fun restoreCompleted() {
-        parentViewModel.loadInitialData(messageId)
+        parentViewModel.loadInitialMessages(messageId)
     }
 
     private fun getKeyboardListener() = object : KeyboardHeightProvider.KeyboardListener {

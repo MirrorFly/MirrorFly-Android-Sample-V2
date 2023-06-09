@@ -147,6 +147,8 @@
     <string name="msg_timed_out_sms">Timed out waiting for SMS</string>
     <string name="msg_otp_validated">OTP validated successfully</string>
     <string name="max_profile_name_chars">Maximum of 30 Characters</string>
+    <string name="max_tag_name_chars">Tag name should be less than 20 characters</string>
+    <string name="max_tags_created">You have already created a maximum number of chat tags</string>
     <string name="msg_status_updated">Status updated successfully</string>
     <string name="msg_profile_pic_update_failure">Profile image upload failed</string>
     <string name="msg_are_you_sure_you_want_to_remove_photo">Are you sure you want to remove the photo?</string>
@@ -314,6 +316,7 @@
     <string name="label_view_all_media">View All Media</string>
     <string name="label_next">Next</string>
     <string name="label_create">Create</string>
+    <string name="label_update">Update</string>
     <string name="label_leave_group">Leave Group</string>
     <string name="action_leave">Leave</string>
     <string name="label_delete_group">Delete Group</string>
@@ -946,12 +949,16 @@
     <string name="recommended_chat_tag">Recommended Chat Tags</string>
     <string name="create_chat_tag">Create Chat Tag</string>
     <string name="create_tag">Create Tag</string>
+    <string name="edit_tag">Edit Tag</string>
+
     <string name="tag_name">Tag Name</string>
     <string name="tag_name_hint">Type Chat Tag name here...</string>
     <string name="tag_people_add_title">Include People or Group</string>
     <string name="add_people_or_group">Add people or group</string>
+    <string name="add_people_title">Add People</string>
     <string name="choose_people_info">Choose People or Group that will appear in this tag.</string>
-    <string name="empty_list">Please select any one peoples</string>
+    <string name="empty_list">Please select people or group</string>
+    <string name="tag_name_already_exist">Tag name already exist</string>
     <string name="remove_tag_title">Remove Group/People ?</string>
     <string name="remove_tag_message">This will delete your group from the tag you have created.</string>
     <string name="delete_lable">DELETE</string>

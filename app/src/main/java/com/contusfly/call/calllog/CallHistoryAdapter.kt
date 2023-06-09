@@ -258,8 +258,12 @@ class CallHistoryAdapter(val context: Context, private val callLogsList: ArrayLi
                 holder.txtChatPersonName.text = ProfileDetailsUtils.getDisplayName(callLog.groupId!!)
             }
         } else {
-            holder.txtChatPersonName.text = CallUtils.getCallLogUserNames(callLog.fromUser, callLog.userList)
-            holder.imgRoster.addImage(CallUtils.getCallLogUserJidList(callLog.fromUser, callLog.userList) as ArrayList<String>)
+            try{
+                holder.txtChatPersonName.text = CallUtils.getCallLogUserNames(callLog.fromUser, callLog.userList)
+                holder.imgRoster.addImage(CallUtils.getCallLogUserJidList(callLog.fromUser, callLog.userList) as ArrayList<String>)
+            } catch(e:Exception){
+                com.contusfly.utils.LogMessage.e("Error",e.toString())
+            }
         }
         holder.emailContactIcon.gone()
     }

@@ -11,7 +11,6 @@
         android:layout_height="@dimen/margin_60"
         android:layout_marginStart="@dimen/margin_5"
         android:contentDescription="@null"
-        app:srcCompat="@drawable/ic_profile"
         android:layout_marginTop="@dimen/margin_10"/>
 
     <ImageView
