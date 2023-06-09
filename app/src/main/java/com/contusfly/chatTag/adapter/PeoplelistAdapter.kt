@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
@@ -15,7 +14,6 @@ import com.contusfly.*
 import com.contusfly.chatTag.interfaces.ChatTagClickListener
 import com.contusfly.databinding.AddPeopleRecentChatItemLayoutBinding
 import com.contusfly.utils.*
-import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
@@ -60,8 +58,6 @@ class PeoplelistAdapter(
             binding.chatTagImageChatPicture.setImageDrawable(null)
             setChatTagUserView(item, binding)
             setChatTagMessageView(item, binding)
-            setChatTagPinnedIcon(item, binding)
-            switchChatTagBetweenMuteUnmute(item, binding)
             chatTagSelection(item, binding)
             chatTagonClick(item, binding,absoluteAdapterPosition)
         }
@@ -108,6 +104,8 @@ class PeoplelistAdapter(
                 holder.chatTagImageChatPicture.loadUserProfileImage(context, data)
         } else{
             holder.chatTagImageChatPicture.loadUserProfileImage(context, data)
+            if (data.isBlocked)
+                holder.containerLayout.alpha = 0.5f
         }
         holder.chatTagTextChatName.text = data.profileName
     }
@@ -143,16 +141,6 @@ class PeoplelistAdapter(
     private fun setChatTagMessageData(holder: AddPeopleRecentChatItemLayoutBinding, chatMessage: ChatMessage?) {
         val time = chatTimeOperations.getRecentChatTime(context, chatMessage!!.messageSentTime)
         holder.chatTagTextChatTime.text = time
-    }
-
-    private fun setChatTagPinnedIcon(item: RecentChat, holder: AddPeopleRecentChatItemLayoutBinding) {
-        if (item.isChatPinned && context.javaClass.simpleName != "groupmentionMessageActivity")
-            holder.pin.show()
-        else holder.pin.gone()
-    }
-
-    private fun switchChatTagBetweenMuteUnmute(recent: RecentChat, holder: AddPeopleRecentChatItemLayoutBinding) {
-        if (recent.isMuted && FlyCore.isUserUnArchived(recent.jid)) holder.mute.show() else holder.mute.gone()
     }
 
     private fun chatTagSelection(recent: RecentChat, binding: AddPeopleRecentChatItemLayoutBinding){
@@ -214,7 +202,7 @@ class PeoplelistAdapter(
 
                         val recentModel=recentChatList[i]
 
-                        var name=recentModel.nickName.lowercase()
+                        var name=recentModel.profileName.lowercase()
 
                         if(name.contains(queryString)){
 

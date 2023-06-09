@@ -10,7 +10,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
-import android.text.TextUtils
 import com.contusfly.interfaces.MessageListener
 import com.contusfly.models.ContactShareModel
 import com.contusfly.models.MessageObject
@@ -73,8 +72,7 @@ constructor(val application: Application) : CoroutineScope {
                 override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                     if (isSuccess && chatMessage != null && messageListener != null)
                         messageListener.onSendMessageSuccess(chatMessage)
-                }
-            })
+                }})
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -82,12 +80,14 @@ constructor(val application: Application) : CoroutineScope {
 
     private fun sendLocationMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
+
             FlyMessenger.sendLocationMessage(messageObject.toJid, messageObject.latitude, messageObject.longitude, messageObject.replyMessageId, object : SendMessageListener {
                 override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                     if (isSuccess && chatMessage != null && messageListener != null)
                         messageListener.onSendMessageSuccess(chatMessage)
                 }
             })
+
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -97,12 +97,15 @@ constructor(val application: Application) : CoroutineScope {
 
     private fun sendContactMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
+
             FlyMessenger.sendContactMessage(messageObject.toJid, messageObject.contactName, messageObject.contactNumbers, messageObject.replyMessageId, object : SendMessageListener {
                 override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                     if (isSuccess && chatMessage != null && messageListener != null)
                         messageListener.onSendMessageSuccess(chatMessage)
                 }
             })
+
+
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -113,13 +116,15 @@ constructor(val application: Application) : CoroutineScope {
     private fun sendDocumentMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
             messageObject.file?.let {
-                FlyMessenger.sendDocumentMessage(messageObject.toJid, it, messageObject.fileName, messageObject.replyMessageId, object : SendMessageListener {
-                    override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
-                        if (isSuccess && chatMessage != null && messageListener != null)
-                            messageListener.onSendMessageSuccess(chatMessage)
-                    }
-                })
+                FlyMessenger.sendDocumentMessage(messageObject.toJid,
+                    it, messageObject.fileName, messageObject.replyMessageId, object : SendMessageListener {
+                        override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
+                            if (isSuccess && chatMessage != null && messageListener != null)
+                                messageListener.onSendMessageSuccess(chatMessage)
+                        }})
             }
+
+
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -129,15 +134,18 @@ constructor(val application: Application) : CoroutineScope {
 
     private fun sendImageMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
+
             messageObject.file?.let {
-                FlyMessenger.sendImageMessage(messageObject.toJid, it, messageObject.base64Thumbnail,
+                FlyMessenger.sendImageMessage(messageObject.toJid,
+                    it, messageObject.base64Thumbnail,
                     messageObject.caption, messageObject.replyMessageId, messageObject.mentionedUsersIds, object : SendMessageListener {
                         override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                             if (isSuccess && chatMessage != null && messageListener != null)
                                 messageListener.onSendMessageSuccess(chatMessage)
-                        }
-                    })
+                        }})
             }
+
+
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -148,14 +156,15 @@ constructor(val application: Application) : CoroutineScope {
     private fun sendAudioMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
             messageObject.file?.let {
-                FlyMessenger.sendAudioMessage(messageObject.toJid, it, messageObject.audioDuration, messageObject.isAudioRecorded,
+                FlyMessenger.sendAudioMessage(messageObject.toJid,
+                    it, messageObject.audioDuration, messageObject.isAudioRecorded,
                     messageObject.replyMessageId, object : SendMessageListener {
                         override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                             if (isSuccess && chatMessage != null && messageListener != null)
                                 messageListener.onSendMessageSuccess(chatMessage)
-                        }
-                    })
+                        }})
             }
+
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -171,9 +180,9 @@ constructor(val application: Application) : CoroutineScope {
                         override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
                             if (isSuccess && chatMessage != null && messageListener != null)
                                 messageListener.onSendMessageSuccess(chatMessage)
-                        }
-                    })
+                        }})
             }
+
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {

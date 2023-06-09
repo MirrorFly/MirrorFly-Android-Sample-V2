@@ -63,6 +63,7 @@ abstract class BaseContactActivity : BaseActivity() {
     }
 
     protected fun listItemClicked(profileClicked : Boolean, profile: ProfileDetails) {
+        ContactManager.insertProfile(profile)
         ProfileDetailsUtils.addContact(profile)
         ContactManager.getUserProfile(profile.jid, true, false, FlyCallback { _, _, _ ->  })
         if (multiSelection) {

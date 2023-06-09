@@ -44,11 +44,19 @@ object GetMsgNotificationUtils {
      * @return String Summary of the message
      */
     internal fun getMessageSummary(context: Context, message: ChatMessage): String {
-        var lastMessageMentionContent = ChatUtils.getSpannedText(message.getMessageTextContent())
-        if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
-            lastMessageMentionContent = com.contusfly.utils.ChatUtils.setMentionFormattedTextForRecentChat(context, message).toString()
-        }
-        return if (MessageType.TEXT == message.getMessageType() || MessageType.NOTIFICATION == message.getMessageType()) if (message.isMessageRecalled()) deleted_message else lastMessageMentionContent else if (message.isMessageRecalled()) deleted_message else getMediaMessageContent(context, message)
+        return if (MessageType.TEXT == message.getMessageType() || MessageType.NOTIFICATION == message.getMessageType())
+            if (message.isMessageRecalled())
+                deleted_message
+            else {
+                var lastMessageMentionContent = ChatUtils.getSpannedText(message.getMessageTextContent())
+                if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
+                    lastMessageMentionContent = com.contusfly.utils.ChatUtils.setMentionFormattedTextForRecentChat(context, message).toString()
+                }
+                lastMessageMentionContent
+            }
+        else if (message.isMessageRecalled())
+            deleted_message
+        else getMediaMessageContent(context, message)
 
     }
 

@@ -28,7 +28,6 @@
             android:contentDescription="@null"
             android:onClick="onClick"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/ic_profile"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Image.PILL"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

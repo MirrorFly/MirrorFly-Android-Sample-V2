@@ -133,6 +133,8 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        recentChatBinding.itemsSwipeToRefresh.isEnabled=false
+        recentChatBinding.itemsSwipeToRefresh.isRefreshing=false
         chatTagAdapterinitialize()
         getChatTagData()
         getRecentChatData()
@@ -146,7 +148,9 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
     fun getRecentChatData() {
 
         viewModel.getInitialChatList()
+       // viewModel.getRecentChatHistoryList(recentChatPageNo)
     }
+
 
     private fun isListTypeRecentChat() =
         mRecentChatListType == DashboardParent.RecentChatListType.RECENT
@@ -191,7 +195,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
 
         clickSupport.setOnItemClickListener { _, position, _ ->
             if (mRecentChatListType == DashboardParent.RecentChatListType.RECENT && position.isValidIndex())
-                if (position > 0 && position < viewModel.recentChatList.value!!.size - 1)
+                if (position > 0 && position < viewModel.recentChatList.value!!.size - 2)
                     handleOnItemClicked(position)
                 else
                     startActivity(Intent(context, ArchivedChatsActivity::class.java))
@@ -300,6 +304,10 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
              * Here we're passing pinned chat count (viewModel.recentPinnedCount) as index value
              * because if new message is received it should placed under pinned chat list
              */
+            if (chatTagselectedposition != 0) {
+                viewModel.getRecentChatListBasedOnTagData(chatTagList.get(chatTagselectedposition).memberIdlist)
+                return@Observer
+            }
             if (recentPair.second.isValidIndex()) {
                 val bundle = Bundle()
                 when (recentPair.first) {
@@ -357,6 +365,21 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
             mAdapter.setArchiveStatus(it)
         }
 
+        viewModel.paginationLoader.observe(viewLifecycleOwner) {
+            mAdapter.setLoader(it)
+        }
+
+        viewModel.swipeRefreshLoader.observe(viewLifecycleOwner) {
+            if(it){
+                recentChatBinding.itemsSwipeToRefresh.isEnabled=true
+                recentChatBinding.itemsSwipeToRefresh.isRefreshing=true
+            } else {
+                recentChatBinding.itemsSwipeToRefresh.isEnabled=false
+                recentChatBinding.itemsSwipeToRefresh.isRefreshing=false
+            }
+        }
+
+
         viewModel.archiveChatUpdated.observe(viewLifecycleOwner) {
             updateArchiveChatsStatus(it.first, it.second)
         }
@@ -373,6 +396,9 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
             isRestartActivity=true
             getChatTagData()
         })
+        viewModel.chatTagDataPinUnpinLoad.observe(viewLifecycleOwner) {
+            getRecentChatListBasedOnTagData()
+        }
     }
 
     private fun chatTaglistUpdate(it: ArrayList<ChatTagModel>) {
@@ -410,6 +436,10 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
                     recentChatBinding.chatTagRecyclerview,
                     position
                 )
+            }
+
+            override fun itemEditClickListener(position: Int) {
+                TODO("Not yet implemented")
             }
 
         }, chatTagList)
@@ -665,8 +695,8 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
         /*
         * Hide empty view */
         if (viewModel.recentChatAdapter.isNotEmpty()) {
-            if (viewModel.recentChatAdapter.size == 2 &&
-                viewModel.recentChatAdapter[0].jid == null && viewModel.recentChatAdapter[1].jid == null
+            if (viewModel.recentChatAdapter.size == 3 &&
+                viewModel.recentChatAdapter[0].jid == null && viewModel.recentChatAdapter[2].jid == null
             ) {
                 emptyViewVisibleOrGone()
             } else {
@@ -739,7 +769,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
                 return if (searchKey.isNotBlank())
                     viewModel.getSearchUserListFetching()
                 else
-                    return false
+                    return viewModel.getRecentChatListFetching()
             }
         })
     }

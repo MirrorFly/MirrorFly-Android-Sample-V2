@@ -46,6 +46,7 @@ import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.ChatManager.biometricActivty
 import com.mirrorflysdk.api.ChatManager.pinActivity
 import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.helpers.ResourceHelper
 import com.mirrorflysdk.flydatabase.model.ContactMessage
@@ -932,6 +933,7 @@ class QuickShareActivity : BaseActivity(),
 
     private val onItemClickListener = object : RecyclerViewItemClick {
         override fun onItemClicked(position: Int, profileDetails: ProfileDetails) {
+            ContactManager.insertProfile(profileDetails)
             ProfileDetailsUtils.addContact(profileDetails)
             if (isSelected(profileDetails.jid))
                 selectedUsersWithNames.remove(profileDetails.jid)

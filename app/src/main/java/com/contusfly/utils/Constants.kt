@@ -310,6 +310,10 @@ class Constants {
         const val FROM_ADMIN_BLOCK_SCREEN = "fromAdminBlockScreen"
         const val IS_PIN_VALIDATED = "fromAdminBlockScreen"
 
+        const val CHAT_TAG_ID="chatTagId"
+        const val CHAT_TAG_POSITION="chatTagPosition"
+        const val EDIT_CHAT_TAG_ITEMS="editItems"
+
         val NOTIFICATION_SOUND: String = PACKAGE_NAME + "notification_sound"
         val NOTIFICATION_POPUP: String = PACKAGE_NAME + "notification_popup"
         val VIBRATION: String = PACKAGE_NAME + "vibration"
@@ -375,6 +379,10 @@ class Constants {
         const val MOBILE_IMAGE_MIN_HEIGHT = 80
 
         const val DEFAULT_VIBRATE = 250L
+
+        /* Message Direction */
+        const val LOAD_PREV_MESSAGE="backward"
+        const val LOAD_NEXT_MESSAGE="forward"
 
     }
 }

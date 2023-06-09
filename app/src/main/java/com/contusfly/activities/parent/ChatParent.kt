@@ -47,6 +47,7 @@ import androidx.emoji.widget.EmojiAppCompatTextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.contusfly.*
 import com.contusfly.activities.*
 import com.contusfly.adapters.ChatAdapter
@@ -545,6 +546,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     protected val statusTextView by bindView<TextView>(R.id.text_last_seen)
     protected val chatXmppConnectionText by bindView<TextView>(R.id.chat_xmpp_connection_text)
     protected val chatXmppConnectionStatusLayout by bindView<RelativeLayout>(R.id.chat_xmpp_connection_status_layout)
+    protected val swiperefreshlayout by bindView<SwipeRefreshLayout>(R.id.items_swipe_to_refresh)
 
     //Toolbar Views
     private val toolbarTitle by bindView<EmojiAppCompatTextView>(R.id.text_chat_name)
@@ -609,7 +611,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         layoutRedirectLastMessage.setOnClickListener {
             if (parentViewModel.isLoadNextAvailable()) {
                 messageId = Constants.EMPTY_STRING
-                parentViewModel.loadInitialData(messageId)
+                parentViewModel.loadInitialMessages(messageId)
             } else
                 listChats.scrollToPosition(mainList.size - 1)
         }
@@ -802,19 +804,19 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
     }
 
-    private fun setScrollListener(
-        layoutManager: LinearLayoutManager
-    ) {
+    fun setScrollListener(
+        layoutManager: LinearLayoutManager) {
+
         listChats.addOnScrollListener(object : MessagePaginationScrollListener(layoutManager) {
             override fun loadNextItems() {
-                parentViewModel.loadNextData()
+                parentViewModel.loadNextMessage()
             }
 
             override fun hasNextItems(): Boolean {
                 return parentViewModel.isLoadNextAvailable()
             }
             override fun loadPreviousItems() {
-                parentViewModel.loadPreviousData()
+                parentViewModel.loadPreviousMessage()
             }
 
             override fun hasPreviousItems(): Boolean {
@@ -824,8 +826,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             override fun isFetching(): Boolean {
                 return parentViewModel.getFetchingIsInProgress()
             }
-        })
-    }
+
+            override fun isLastpageFetched(): Boolean {
+                return parentViewModel.isLastPageFetched()
+            }
+    }) }
 
     protected fun setCallButtonVisibility() {
         audioCallDrawable = this.drawable(R.drawable.ic_call_log_voice_call)
@@ -1117,9 +1122,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             imgSend.setImageResource(R.drawable.ic_send_active)
             imgSend.show()
         } else {
-            binding.viewChatFooter.editChatMsg.setText(Constants.EMPTY_STRING)
-            imgSend.gone()
-            imgSend.setImageResource(R.drawable.ic_send_inactive)
+            try {
+                binding.viewChatFooter.editChatMsg.setText(Constants.EMPTY_STRING)
+                imgSend.gone()
+                imgSend.setImageResource(R.drawable.ic_send_inactive)
+            } catch(e : Exception) {
+                LogMessage.e("Exception",e.message)
+            }
         }
         if (selectedMessageIdForReply.isNotEmpty()) {
             showViews(replyMessageSentView, closeReplyMessage)
@@ -1650,7 +1659,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     override fun onSendMessageSuccess(message: ChatMessage) {
         if(isLoadNextAvailable) {
             messageId = Constants.EMPTY_STRING
-            parentViewModel.loadInitialData(messageId)
+            parentViewModel.loadInitialMessages(messageId)
         } else {
             if (parentViewModel.isLoadNextAvailable()) {
                 if (!parentViewModel.getFetchingIsInProgress())
@@ -2230,7 +2239,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         if (parentViewModel.isGroupUserExist(chat.toUser, SharedPreferenceManager.getCurrentUserJid())) {
             setBottomChatFooterView()
         } else {
-            if(isGroupMemberListShowing){
+            if(isGroupMemberListShowing) {
                 groupUserTagLayout.visibility = View.GONE
                 chatMessageEditText.text?.clear()
                 isGroupMemberListShowing=false

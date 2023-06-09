@@ -77,9 +77,11 @@
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/margin_40"
                     android:gravity="center"
+                    android:enabled="false"
+                    android:alpha="0.5"
                     android:text="@string/create_chat_tag"
                     android:layout_marginTop="@dimen/margin_15"
-                    android:textColor="@color/color_blue" />
+                    android:textColor="@color/color_grey" />
 
                 <LinearLayout
                     android:id="@+id/edit_info_layout"

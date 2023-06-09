@@ -52,7 +52,9 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.backup.BackupManager
+import com.mirrorflysdk.flycommons.FeaturesList
 import com.mirrorflysdk.flycommons.FlyCommons
 import com.mirrorflysdk.flycommons.LogMessage
 import kotlinx.android.synthetic.main.activity_back_up.*
@@ -449,7 +451,9 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
                 .putExtra(Constants.FROM_SPLASH, true)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         )
-        GroupManager.getAllGroups(true) { _, _, _ -> }
+        if (!ChatManager.getAvailableFeatures().isChatHistoryEnabled) {
+           GroupManager.getAllGroups(true) { _, _, _ -> }
+        }
         finish()
     }
 

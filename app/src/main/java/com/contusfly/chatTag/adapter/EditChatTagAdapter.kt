@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
+import com.contusfly.chatTag.interfaces.ItemTouchHelperAdapter
 import com.contusfly.chatTag.interfaces.ListItemClickListener
 import com.contusfly.databinding.EditChatTagListItemLayoutBinding
 import com.mirrorflysdk.api.FlyCore
@@ -15,8 +16,8 @@ import com.mirrorflysdk.flydatabase.model.ChatTagModel
 class EditChatTagAdapter (
     val mContext: Context,
     val itemclick: ListItemClickListener,
-    var chatTagnamelist: MutableList<ChatTagModel>
-) : RecyclerView.Adapter<EditChatTagAdapter.ViewHolder>() {
+    var chatTagnamelist: MutableList<ChatTagModel>,var reorderList: ReorderList
+) : RecyclerView.Adapter<EditChatTagAdapter.ViewHolder>(),ItemTouchHelperAdapter {
 
     private lateinit var binding: EditChatTagListItemLayoutBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -77,5 +78,18 @@ class EditChatTagAdapter (
         }
 
     }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        reorderList.onItemMoved(fromPosition,toPosition)
+    }
+
+    override fun onItemDismiss(position: Int) {
+        TODO("Not yet implemented")
+    }
+
+}
+
+interface ReorderList {
+    public fun onItemMoved(fromPosition: Int, toPosition: Int)
 
 }

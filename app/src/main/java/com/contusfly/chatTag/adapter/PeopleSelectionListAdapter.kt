@@ -17,7 +17,6 @@ import com.contusfly.databinding.PeopleViewListItemLayoutBinding
 import com.contusfly.loadUserProfileImage
 import com.contusfly.utils.*
 import com.contusfly.views.CircularImageView
-import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.models.RecentChat
 import java.io.IOException
@@ -42,15 +41,14 @@ class PeopleSelectionListAdapter(
             }
             else -> {
                 binding = PeopleSelectionListItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                ViewHolder()
+                PeopleSelectionViewHolder()
             }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        if (holder is ViewHolder) {
-
+        if (holder is PeopleSelectionViewHolder) {
             holder.setData(chatSelectedList[position])
             holder.setIsRecyclable(false)
 
@@ -78,7 +76,7 @@ class PeopleSelectionListAdapter(
         }
     }
 
-    inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
+    inner class PeopleSelectionViewHolder : RecyclerView.ViewHolder(binding.root) {
 
         fun setData(item: RecentChat) {
 
@@ -179,9 +177,34 @@ class PeopleSelectionListAdapter(
         }
     }
 
-     fun updateList(list:ArrayList<RecentChat>){
-        chatSelectedList=list
+    fun getItemPosition(item: RecentChat):Int{
+        return chatSelectedList.indexOf(item)
+    }
+
+    fun clear(){
+        chatSelectedList.clear()
         notifyDataSetChanged()
+    }
+    fun updateList(
+        list: ArrayList<RecentChat>,
+        updatedPosition: Int,
+        clickedCheckBox: Boolean,
+        itemSelected: Boolean,
+    ) {
+        try {
+            chatSelectedList = list
+            if (!clickedCheckBox) {
+                notifyDataSetChanged()
+            } else {
+                if (itemSelected) {
+                    notifyItemChanged(chatSelectedList.size - 1)
+                } else {
+                    notifyItemRemoved(updatedPosition)
+                }
+            }
+        }catch (e:Exception){
+            LogMessage.e(TAG,e.toString())
+        }
     }
 
     companion object{

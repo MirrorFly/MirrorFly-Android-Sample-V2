@@ -26,6 +26,7 @@ import com.contusfly.utils.*
 import com.contusfly.views.CustomTextView
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
@@ -162,8 +163,10 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
     }
 
     private fun recentSearchItemOnclick(position: Int){
-        if (recentSearchList[position].searchType == Constants.TYPE_SEARCH_CONTACT)
+        if (recentSearchList[position].searchType == Constants.TYPE_SEARCH_CONTACT) {
+            ContactManager.insertProfile(recentSearchList[position].profileDetails)
             ProfileDetailsUtils.addContact(recentSearchList[position].profileDetails)
+        }
         if (position >= 0 && (recentSearchList[position].searchType != Constants.TYPE_SEARCH_RECENT))
             onSearchItemClicked(position)
         else {

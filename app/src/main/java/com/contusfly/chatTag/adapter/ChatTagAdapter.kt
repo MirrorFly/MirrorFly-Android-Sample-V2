@@ -28,6 +28,11 @@ class ChatTagAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.setTagData(chatTagnamelist[position],position)
+        holder.itemView.setOnClickListener {
+            if (!chatTagnamelist[position].getisRecomendedTag()) {
+                itemtagclick.itemEditClickListener(position)
+            }
+        }
     }
 
     override fun getItemCount(): Int {

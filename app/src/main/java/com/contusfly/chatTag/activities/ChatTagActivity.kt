@@ -18,6 +18,7 @@ import com.contusfly.databinding.ActivityChatTagBinding
 import com.contusfly.getData
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
+import com.mirrorflysdk.views.CustomToast
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,10 +31,15 @@ class ChatTagActivity : AppCompatActivity() {
 
     private lateinit var mContext: Context
     private lateinit var binding: ActivityChatTagBinding
+    companion object{
+        var createdChatTagList=ArrayList<ChatTagModel>()
+        var chatTagMemberIdList:String=""
+    }
     var chatTagnamelist=ArrayList<ChatTagModel>()
     lateinit var chatTagadapter: ChatTagAdapter
     var isRecommendedTag:String="0"
     var tagName:String=""
+    var chatTagId:String=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -57,8 +63,10 @@ class ChatTagActivity : AppCompatActivity() {
             ) {
                 try{
                     if(isSuccess){
+                        createdChatTagList.clear()
                         isRecommendedTag= data.get(Constants.IS_RECOMMENDED_KEY) as String
                         chatTagnamelist= data.getData() as ArrayList<ChatTagModel>
+                        createdChatTagList=chatTagnamelist
                         chatTagAdapterset()
                         recommendedChatTagCheking()
                     } else {
@@ -102,6 +110,13 @@ class ChatTagActivity : AppCompatActivity() {
                     createChatTagPageLaunch()
                 }
 
+                override fun itemEditClickListener(position: Int) {
+                    tagName=chatTagnamelist.get(position).tagname
+                    chatTagId= chatTagnamelist.get(position).geTagId()
+                    chatTagMemberIdList= chatTagnamelist[position].memberIdlist
+                    editChatTagItemsPageLaunch(position)
+                }
+
             },chatTagnamelist)
             binding.chatTagRecyclerview.adapter=chatTagadapter
         }
@@ -115,7 +130,14 @@ class ChatTagActivity : AppCompatActivity() {
 
         binding.createChatTag.setOnClickListener{
             tagName=""
-            createChatTagPageLaunch()
+            if (chatTagnamelist.size < 10) {
+                createChatTagPageLaunch()
+            } else {
+                CustomToast.showShortToast(
+                    this@ChatTagActivity,
+                    getString(R.string.max_tags_created)
+                )
+            }
         }
 
         binding.toolbarView.toolbarActionTitleTv.setOnClickListener {
@@ -132,6 +154,16 @@ class ChatTagActivity : AppCompatActivity() {
     private fun createChatTagPageLaunch(){
         val intent= Intent(mContext,CreateTagActivity::class.java)
         intent.putExtra("tagname",tagName)
+        intent.putExtra(com.contusfly.utils.Constants.EDIT_CHAT_TAG_ITEMS,false)
+        resultLauncher.launch(intent)
+    }
+
+    private fun editChatTagItemsPageLaunch(chatTagPosition:Int){
+        val intent= Intent(mContext,CreateTagActivity::class.java)
+        intent.putExtra("tagname",tagName)
+        intent.putExtra(com.contusfly.utils.Constants.EDIT_CHAT_TAG_ITEMS,true)
+        intent.putExtra(com.contusfly.utils.Constants.CHAT_TAG_ID,chatTagId)
+        intent.putExtra(com.contusfly.utils.Constants.CHAT_TAG_POSITION,chatTagPosition)
         resultLauncher.launch(intent)
     }
 
