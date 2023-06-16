@@ -123,6 +123,7 @@ import kotlin.coroutines.CoroutineContext
 
 
 @SuppressLint("Registered")
+@SuppressWarnings("kotlin:S1874")
 open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     ChatAttachmentLister {
 
@@ -1526,7 +1527,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!
                 .toLong() / 1000
             val videoDuration =
-                Constants.VIDEO_DURATION_LIMIT.toLong()//sharedPreferenceManager.getString(Constants.VIDEO_LIMIT).toLong()
+                Constants.VIDEO_DURATION_LIMIT.toLong()
             dismissProgress()
             if (duration == videoDuration)
                 Toast.makeText(

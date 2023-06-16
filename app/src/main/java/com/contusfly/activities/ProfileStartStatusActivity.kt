@@ -93,7 +93,7 @@ class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonA
             handler!!.removeCallbacks(progressTimeoutRunnable)
         }
         try {
-            if(isFromSettingsProfile) profileStatus?.let { setMyProfileStatus(it, FlyCallback { _: Boolean, _: Throwable?, data: HashMap<String?, Any?>? -> }) }
+            if(isFromSettingsProfile) profileStatus?.let { setMyProfileStatus(it, FlyCallback { _: Boolean, _: Throwable?, _: HashMap<String?, Any?>? -> }) }
             if (progress != null)
                 progress!!.dismiss()
             EmojiUtils.setEmojiText(profileStartStatusBinding.textEdit, profileStatus)
@@ -106,7 +106,7 @@ class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonA
     override fun userProfileFetched(jid: String, profileDetails: ProfileDetails) {
         super.userProfileFetched(jid, profileDetails)
         if (profileStatus.isNullOrEmpty()) {
-            setMyProfileStatus(getString(R.string.default_status), FlyCallback { isSuccess: Boolean, throwable: Throwable?, data: HashMap<String?, Any?>? -> })
+            setMyProfileStatus(getString(R.string.default_status), FlyCallback { _: Boolean, _: Throwable?, _: HashMap<String?, Any?>? -> })
             profileStatus = getMyProfileStatus()?.status
         }
         EmojiUtils.setEmojiText(profileStartStatusBinding.textEdit, profileStatus)
@@ -135,7 +135,7 @@ class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonA
             if (isFromSettingsProfile) profileStatus = getMyProfileStatus()!!.status
             else profileStatus = Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_STATUS))
             if (profileStatus!!.isEmpty()) {
-                setMyProfileStatus(getString(R.string.default_status), FlyCallback { isSuccess: Boolean, throwable: Throwable?, data: HashMap<String?, Any?>? -> })
+                setMyProfileStatus(getString(R.string.default_status), FlyCallback { _: Boolean, _: Throwable?, _: HashMap<String?, Any?>? -> })
                 profileStatus = getMyProfileStatus()!!.status
             }
             /**
@@ -155,10 +155,10 @@ class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonA
             listAdapter = ProfileStartStatusAdapter(this)
             listAdapter!!.setStatus(statusList, profileStatus)
             listStatus.adapter = listAdapter
-            listStatus.onItemClickListener = AdapterView.OnItemClickListener { adapterView: AdapterView<*>?, view: View?, position: Int, l: Long ->
+            listStatus.onItemClickListener = AdapterView.OnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
                 updateStatus(statusList[position].status)
             }
-            listStatus.onItemLongClickListener = AdapterView.OnItemLongClickListener { adapterView: AdapterView<*>?, view: View?, position: Int, l: Long ->
+            listStatus.onItemLongClickListener = AdapterView.OnItemLongClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
                 statusToDelete = statusList[position]
                 if (getMyProfileStatus() != statusToDelete) commonAlertDialog!!.showListDialog(Constants.EMPTY_STRING, arrayOf(resources.getString(R.string.delete_status)))
                 true
@@ -186,7 +186,7 @@ class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonA
                     progress!!.dismiss()
                 } else {
                     status?.let {
-                        setMyProfileStatus(it, FlyCallback { isSuccess: Boolean, throws: Throwable?, data: HashMap<String?, Any?>? ->
+                        setMyProfileStatus(it, FlyCallback { isSuccess: Boolean, throws: Throwable?, _: HashMap<String?, Any?>? ->
                             if (isSuccess) {
                                 statusSuccessResult(status)
                             } else CustomToast.show(this, throws!!.message)
@@ -274,7 +274,7 @@ class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonA
             val mBuilder = AlertDialog.Builder(this, R.style.AlertDialogStyle)
             mBuilder.setMessage(this.getString(R.string.msg_status_delete))
             mBuilder.setPositiveButton(this.getString(R.string.yes_label)
-            ) { dialog: DialogInterface, which: Int ->
+            ) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 try {
                     statusToDelete?.let { deleteProfileStatus(it) }
@@ -286,7 +286,7 @@ class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonA
                 listAdapter!!.notifyDataSetChanged()
             }
             mBuilder.setNegativeButton(this.getString(R.string.no_label)
-            ) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
+            ) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
             val dialog = mBuilder.create()
             dialog.setCancelable(false)
             dialog.show()

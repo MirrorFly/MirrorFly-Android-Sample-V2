@@ -43,7 +43,7 @@ class GoogleDriveWorker(private val appContext: Context, workerParams: WorkerPar
     CoroutineWorker(appContext, workerParams), CoroutineScope, MediaHttpDownloaderProgressListener,
     MediaHttpUploaderProgressListener {
 
-    private val exceptionHandler = CoroutineExceptionHandler { context, exception ->
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         println("GoogleDriveWorker Coroutine Exception ${TAG}:  ${exception.printStackTrace()}")
     }
 

@@ -24,7 +24,7 @@ constructor() : ViewModel() {
 
 
     fun getParticipantsHashMap(jid: String) {
-        GroupManager.getGroupMembersList(false, jid) { isSuccess, throwable, data ->
+        GroupManager.getGroupMembersList(false, jid) { isSuccess, _, data ->
             if (isSuccess) {
                 var participantsNameList: List<ProfileDetails>
                 var groupsMembersProfileList: MutableList<ProfileDetails> = data[Constants.SDK_DATA] as MutableList<ProfileDetails>

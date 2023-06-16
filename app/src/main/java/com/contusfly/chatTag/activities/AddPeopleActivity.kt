@@ -145,7 +145,7 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
 
                 try {
 
-                    var value = p0.toString()
+                    var value = p0.toString().trim()
 
                     if (mAdapter != null) {
 

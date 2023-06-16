@@ -140,7 +140,7 @@ class EmojiHandler(context: AppCompatActivity) {
      * @param yourEditText Edit text for the Emoji
      */
     fun attachKeyboardListeners(yourEditText: EditText) {
-        yourEditText.setOnClickListener { view: View? ->
+        yourEditText.setOnClickListener { _: View? ->
             if (isEmojiShowing) {
                 fragmentCView.visibility = View.GONE
                 if (isBlackTheme)

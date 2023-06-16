@@ -35,7 +35,6 @@ import com.contusfly.*
 import com.contusfly.R
 import com.contusfly.BuildConfig
 import com.contusfly.activities.parent.ChatParent
-import com.contusfly.activities.parent.DashboardParent
 import com.contusfly.adapters.ChatAdapter
 import com.contusfly.adapters.GroupTagAdapter
 import com.contusfly.adapters.ReplySuggestionsAdapter
@@ -65,7 +64,6 @@ import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.utils.ConstantActions
 import com.mirrorflysdk.views.CustomToast
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.gson.Gson
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import dagger.android.AndroidInjection
@@ -1398,7 +1396,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 if (attachmentDialog.isShowing)
                     closeControls()
                 hideKeyboard()
-                //   emojiHandler.setKeypad(chatMessageEditText)
                 FlyCore.enableDisableBusyStatus(false)
             }
 
@@ -1691,7 +1688,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     override fun onCancelUploadClicked(messageItem: ChatMessage) {
-        if (!messageItem.isMediaUploaded())
+        if (!messageItem.isMediaUploaded() || !messageItem.isMediaDownloaded())
             handleCancelClickedOnMediaMessage(messageItem)
         else {
             LogMessage.d(TAG, getString(R.string.media_downloaded))
@@ -1942,7 +1939,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
 
 
-        val videoDuration = Constants.VIDEO_DURATION_LIMIT//sharedPreferenceManager.getString(Constants.VIDEO_LIMIT).toLong()
+        val videoDuration = Constants.VIDEO_DURATION_LIMIT
 
         val videoMessage = messagingClient.composeVideoMessage(chat.toUser, videoFilePath, videoCaption, selectedMessageIdForReply, mentionedUsersIds)
 

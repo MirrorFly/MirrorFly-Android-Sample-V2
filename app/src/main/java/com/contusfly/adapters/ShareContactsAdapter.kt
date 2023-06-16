@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.contusfly.R
-import com.contusfly.getDisplayName
 import com.contusfly.models.ContactShareModel
 import com.contusfly.views.CustomRecyclerView
 import com.contusfly.views.CustomTextView

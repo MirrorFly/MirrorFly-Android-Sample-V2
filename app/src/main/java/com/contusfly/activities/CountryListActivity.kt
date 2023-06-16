@@ -59,7 +59,6 @@ class CountryListActivity : BaseActivity() {
         setSupportActionBar(countryListBinding.toolBar.toolbar)
         actionBar = supportActionBar
         supportActionBar?.title = getString(R.string.select_country_label)
-        //UserInterfaceUtils.initializeCustomToolbar(this, countryListBinding.toolBar.toolbar)
         UserInterfaceUtils.setUpToolBar(this, countryListBinding.toolBar.toolbar, actionBar, getString(R.string.select_country_label))
         countryListBinding.toolBar.toolbar.navigationIcon?.applySrcInColorFilter(ContextCompat.getColor(this, R.color.dashboard_toolbar_text_color))
         countriesRecyclerView = countryListBinding.viewCountryList
@@ -87,7 +86,7 @@ class CountryListActivity : BaseActivity() {
              * Select the country while clicking on that
              */
             ItemClickSupport(countriesRecyclerView!!).addTo()
-                    .setOnItemClickListener { _: RecyclerView?, position: Int, v: View? ->
+                    .setOnItemClickListener { _: RecyclerView?, position: Int, _: View? ->
                         val intent = Intent()
                         intent.putExtra(Constants.COUNTRY_NAME, countries[position]
                                 .countryName)

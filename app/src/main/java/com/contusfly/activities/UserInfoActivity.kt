@@ -17,17 +17,14 @@ import com.contusfly.network.NetworkConnection
 import com.contusfly.utils.AppConstants
 import com.contusfly.utils.ChatUtils
 import com.contusfly.views.CommonAlertDialog
-import com.contusfly.views.CustomToast
 import com.contusfly.views.DoProgressDialog
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
-import com.mirrorflysdk.utils.MediaUtils
 import com.mirrorflysdk.utils.Utils
 import com.google.android.material.appbar.AppBarLayout
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
-import java.io.File
 
 class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener {
 

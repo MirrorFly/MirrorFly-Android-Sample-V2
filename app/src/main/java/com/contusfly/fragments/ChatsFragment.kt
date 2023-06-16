@@ -269,7 +269,7 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
      */
     private fun postLastSeenUserPreference() {
         if (AppUtils.isNetConnected(settingsActivity!!.applicationContext)) {
-            FlyCore.enableDisableHideLastSeen(!lastSeenEnabled, FlyCallback  { isSuccess, throwable, data ->
+            FlyCore.enableDisableHideLastSeen(!lastSeenEnabled, FlyCallback  { isSuccess, _, _ ->
                 if (isSuccess) {
                     runOnUiThread {
                         displayLastSeenPreference()

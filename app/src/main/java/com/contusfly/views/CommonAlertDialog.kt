@@ -104,13 +104,13 @@ class CommonAlertDialog(context: Context?) {
         builder.setMessage(msg)
         if (isCheckBoxShown) builder.setView(createAndSetCheckBox())
         if (dialogType == DIALOGTYPE.DIALOG_DUAL) {
-            builder.setNegativeButton(negativeString) { dialog: DialogInterface, which: Int ->
+            builder.setNegativeButton(negativeString) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 listener?.onDialogClosed(dialogType, false)
                 dialogListener?.onDialogClosed(dialogType, false)
             }
         }
-        builder.setPositiveButton(positiveString) { dialog: DialogInterface, which: Int ->
+        builder.setPositiveButton(positiveString) { dialog: DialogInterface, _: Int ->
             listener?.onDialogClosed(dialogType, true)
             dialogListener?.onDialogClosed(dialogType, true)
             dialog.dismiss()
@@ -139,12 +139,12 @@ class CommonAlertDialog(context: Context?) {
         val builder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
         builder.setMessage(msg)
         if (dialogType == DIALOGTYPE.DIALOG_DUAL) {
-            builder.setNegativeButton(negativeString) { dialog: DialogInterface, which: Int ->
+            builder.setNegativeButton(negativeString) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 dismissListener?.onDialogClosed(dialogAction, false)
             }
         }
-        builder.setPositiveButton(positiveString) { dialog: DialogInterface, which: Int ->
+        builder.setPositiveButton(positiveString) { dialog: DialogInterface, _: Int ->
             dialog.dismiss()
             dismissListener?.onDialogClosed(dialogAction, true)
         }
@@ -184,13 +184,13 @@ class CommonAlertDialog(context: Context?) {
                             neutralBtnText: String?, dialogType: DIALOGTYPE) {
         val builder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
         builder.setMessage(message)
-        builder.setPositiveButton(positiveBtnText) { dialog: DialogInterface, which: Int ->
+        builder.setPositiveButton(positiveBtnText) { dialog: DialogInterface, _: Int ->
             dialog.dismiss()
             if (commonTripleDialogClosedListener != null) commonTripleDialogClosedListener!!.onTripleOptionDialogClosed(dialogType, 0)
         }
-        builder.setNegativeButton(negativeBtnText) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
+        builder.setNegativeButton(negativeBtnText) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
         if (dialogType == DIALOGTYPE.DIALOG_TRIPLE) {
-            builder.setNeutralButton(neutralBtnText) { dialog: DialogInterface, which: Int ->
+            builder.setNeutralButton(neutralBtnText) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 if (listener != null) commonTripleDialogClosedListener!!.onTripleOptionDialogClosed(dialogType, 2)
             }
@@ -249,15 +249,15 @@ class CommonAlertDialog(context: Context?) {
         val builder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
         builder.setMessage(msg)
         if (isCheckBoxShown) builder.setView(createAndSetCheckBox())
-        builder.setNegativeButton(negativeString) { dialog: DialogInterface, which: Int ->
+        builder.setNegativeButton(negativeString) { dialog: DialogInterface, _: Int ->
             dialog.dismiss()
             if (commonTripleDialogClosedListener != null) commonTripleDialogClosedListener!!.onTripleOptionDialogClosed(dialogType, 0)
         }
-        builder.setPositiveButton(positiveString) { dialog: DialogInterface, which: Int ->
+        builder.setPositiveButton(positiveString) { dialog: DialogInterface, _: Int ->
             dialog.dismiss()
             if (commonTripleDialogClosedListener != null) commonTripleDialogClosedListener!!.onTripleOptionDialogClosed(dialogType, 1)
         }
-        builder.setNeutralButton(neutralString) { dialog: DialogInterface, which: Int ->
+        builder.setNeutralButton(neutralString) { dialog: DialogInterface, _: Int ->
             dialog.dismiss()
             if (listener != null) commonTripleDialogClosedListener!!.onTripleOptionDialogClosed(dialogType, 2)
         }

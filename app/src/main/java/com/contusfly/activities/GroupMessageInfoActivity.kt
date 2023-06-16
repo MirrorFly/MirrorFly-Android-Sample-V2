@@ -265,7 +265,7 @@ class GroupMessageInfoActivity : BaseMessageInfoActivity() {
         img: ImageView?,
         txt: TextView?
     ) {
-        listView!!.setOnGroupClickListener { parent: ExpandableListView?, v: View?, groupPosition: Int, id: Long ->
+        listView!!.setOnGroupClickListener { _: ExpandableListView?, _: View?, groupPosition: Int, _: Long ->
             val childcount = adapter!!.getChildrenCount(groupPosition)
             if (childcount == 0) {
                 img!!.visibility = View.VISIBLE

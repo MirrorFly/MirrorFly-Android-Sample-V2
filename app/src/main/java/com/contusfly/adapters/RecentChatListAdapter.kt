@@ -196,8 +196,16 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
             0 -> "header".hashCode().toLong()
             mainlist.size - 2 -> "footer".hashCode().toLong()
             mainlist.size - 1 -> "loader".hashCode().toLong()
-            else -> mainlist[position].jid.hashCode().toLong()
+            else -> getitemId(position)
         }
+    }
+
+    private fun getitemId(position: Int) : Long {
+        var item:Long=-1
+        if(mainlist[position].jid != null){
+            item= mainlist[position].jid.hashCode().toLong()
+        }
+        return item
     }
 
     override fun getItemCount(): Int {

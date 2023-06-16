@@ -34,7 +34,7 @@ class ContactViewModel @Inject constructor() : ViewModel() {
                 contactDetailsList.value = ProfileDetailsUtils.removeAdminBlockedProfiles(profileDetails, true)
                 getContactDiffResult()
             } else {
-                FlyCore.getRegisteredUsers(false) { isSuccess, throwable, data ->
+                FlyCore.getRegisteredUsers(false) { isSuccess, _, data ->
                     if (isSuccess) {
                         val profileDetails = data[SDK_DATA] as MutableList<ProfileDetails>
                         contactDetailsList.value = ProfileDetailsUtils.removeAdminBlockedProfiles(profileDetails, true)
@@ -56,7 +56,7 @@ class ContactViewModel @Inject constructor() : ViewModel() {
                     getContactDiffResult()
                 }
             } else {
-                FlyCore.getRegisteredUsers(true) { isSuccess, throwable, data ->
+                FlyCore.getRegisteredUsers(true) { isSuccess, _, data ->
                     if (isSuccess) {
                         val profileDetails = data[SDK_DATA] as MutableList<ProfileDetails>
                         viewModelScope.launch(Dispatchers.Main) {

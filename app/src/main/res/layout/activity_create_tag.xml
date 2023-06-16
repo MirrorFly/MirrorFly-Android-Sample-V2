@@ -29,7 +29,7 @@
             android:gravity="center"
             style="@style/ChatTag_subtitle"/>
 
-        <com.contusfly.views.CustomEditText
+        <com.contusfly.views.TagNameCustomEditText
             android:id="@+id/tag_name_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -40,7 +40,6 @@
             android:fontFamily="@font/sf_ui_display_medium"
             android:textColor="@color/text_black_dark"
             android:textColorHint="@color/text_black_light"
-            android:hint="@string/tag_name_hint"
             android:maxLines="1"
             android:inputType="textMultiLine"
             android:foregroundTint="@color/text_black_dark"/>

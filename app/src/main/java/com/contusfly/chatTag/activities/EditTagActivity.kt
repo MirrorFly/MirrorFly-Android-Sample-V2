@@ -20,7 +20,7 @@ import com.contusfly.chatTag.interfaces.ListItemClickListener
 import com.contusfly.databinding.ActivityEditTagBinding
 import com.contusfly.getData
 import com.contusfly.utils.CommonUtils
-import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
@@ -58,7 +58,7 @@ class EditTagActivity : AppCompatActivity(),ReorderList {
 
     fun getChatTagData(){
 
-        FlyCore.getChatTagdata(object: FlyCallback {
+        ChatManager.getChatTagdata(object: FlyCallback {
             override fun flyResponse(
                 isSuccess: Boolean,
                 throwable: Throwable?,
@@ -102,7 +102,7 @@ class EditTagActivity : AppCompatActivity(),ReorderList {
             chatTagadapter= EditChatTagAdapter(mContext, object: ListItemClickListener {
                 override fun itemclicklistener(position: Int) {
                     try {
-                        chatTagId=chatTagnamelist.get(position).geTagId()
+                        chatTagId = chatTagnamelist.get(position).geTagId()!!
                         itemSelectedPosition=position
                         chatTagRemoveDialogShow()
                     } catch(e:IndexOutOfBoundsException) {
@@ -146,7 +146,7 @@ class EditTagActivity : AppCompatActivity(),ReorderList {
 
         try{
 
-            FlyCore.deleteChatTag(deleteTagIdList,object: FlyCallback {
+            ChatManager.deleteChatTag(deleteTagIdList,object: FlyCallback {
                 override fun flyResponse(
                     isSuccess: Boolean,
                     throwable: Throwable?,
@@ -214,7 +214,7 @@ class EditTagActivity : AppCompatActivity(),ReorderList {
             chatTagnamelist[tagIndex].order=tagIndex
         }
         chatTagadapter.notifyItemMoved(fromPosition, toPosition)
-        FlyCore.updateChatTagData(chatTagnamelist,object : FlyCallback {
+        ChatManager.reorderChatTags(chatTagnamelist,object : FlyCallback {
             override fun flyResponse(
                 isSuccess: Boolean,
                 throwable: Throwable?,

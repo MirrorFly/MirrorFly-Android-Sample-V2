@@ -14,7 +14,6 @@ import android.view.WindowManager
 import com.contusfly.R
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.databinding.PermissionInstructionDialogBinding
-import com.contusfly.views.PermissionAlertDialog
 import java.util.*
 
 
@@ -116,7 +115,7 @@ class AutoStartHelper private constructor() {
 
     private fun allowPermissiononeplus(context: Context) {
             SharedPreferenceManager.setBoolean(Constants.ASK_PERMISSION, true)
-            showAlert(context) { dialog: DialogInterface, which: Int ->
+            showAlert(context) { dialog: DialogInterface, _: Int ->
                 try {
                     val intent = Intent(
                         Settings.ACTION_APP_NOTIFICATION_SETTINGS
@@ -162,7 +161,7 @@ class AutoStartHelper private constructor() {
             SharedPreferenceManager.setBoolean(Constants.ASK_PERMISSION, true)
             showAlert(
                 context
-            ) { dialog: DialogInterface?, which: Int ->
+            ) { _: DialogInterface?, _: Int ->
                 try {
                     xiaomiFloating(context,PACKAGE_XIAOMI_MAIN,PACKAGE_XIAOMI_WINDOW_COMPONENT)
                 } catch (e: Exception) {
@@ -177,7 +176,7 @@ class AutoStartHelper private constructor() {
             SharedPreferenceManager.setBoolean(Constants.ASK_PERMISSION, true)
             showAlert(
                 context
-            ) { dialog: DialogInterface?, which: Int ->
+            ) { _: DialogInterface?, _: Int ->
                 try {
                     xiaomiFloating(context,PACKAGE_XIAOMI_MAIN,PACKAGE_XIAOMI_WINDOW_COMPONENT)
                 } catch (e: Exception) {
@@ -194,7 +193,7 @@ class AutoStartHelper private constructor() {
             )
         ) {
             SharedPreferenceManager.setBoolean(Constants.ASK_PERMISSION, true)
-            showAlert(context) { dialog, which ->
+            showAlert(context) { _, _ ->
                 try {
                     startIntent(context, PACKAGE_OPPO_MAIN, PACKAGE_OPPO_COMPONENT)
                 } catch (e: Exception) {
@@ -225,7 +224,7 @@ class AutoStartHelper private constructor() {
             )
         ) {
             SharedPreferenceManager.setBoolean(Constants.ASK_PERMISSION, true)
-            showAlert(context) { dialog, which ->
+            showAlert(context) { _, _ ->
                 try {
                     startIntent(context, PACKAGE_VIVO_MAIN, PACKAGE_VIVO_COMPONENT)
                 } catch (e: Exception) {

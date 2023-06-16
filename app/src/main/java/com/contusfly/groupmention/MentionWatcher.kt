@@ -27,7 +27,6 @@ internal class MentionWatcher(
             if (index >= 0 && index + trigger.length <= cursorStart) {
                 keyword = src.subSequence(index + trigger.length, cursorStart)
             }
-           // Log.d("++ found index = %d, keyword=%s", index+keyword)
             handler.onMentionTextDetectStateChanged(keyword != null, keyword)
         }
     }

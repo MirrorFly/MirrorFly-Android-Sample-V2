@@ -30,7 +30,6 @@ import com.contusfly.adapters.RecentChatSearchAdapter
 import com.contusfly.chatTag.adapter.RecentChatTagAdapter
 import com.contusfly.chatTag.interfaces.ListItemClickListener
 import com.contusfly.databinding.FragmentRecentChatBinding
-import com.contusfly.helpers.PaginationScrollListener
 import com.contusfly.interfaces.RecentChatEvent
 import com.contusfly.models.ProfileDetailsShareModel
 import com.contusfly.utils.*
@@ -41,7 +40,6 @@ import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.RecentChat
-import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +48,7 @@ import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import com.contusfly.R
 import com.contusfly.helpers.RecentChatPaginationScrollListener
+import com.mirrorflysdk.flydatabase.model.ChatTagModel
 
 /**
  * @author ContusTeam <developers@contus.in>
@@ -148,7 +147,6 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
     fun getRecentChatData() {
 
         viewModel.getInitialChatList()
-       // viewModel.getRecentChatHistoryList(recentChatPageNo)
     }
 
 
@@ -305,7 +303,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
              * because if new message is received it should placed under pinned chat list
              */
             if (chatTagselectedposition != 0) {
-                viewModel.getRecentChatListBasedOnTagData(chatTagList.get(chatTagselectedposition).memberIdlist)
+                viewModel.getRecentChatListBasedOnTagData(chatTagList.get(chatTagselectedposition).memberidlist!!)
                 return@Observer
             }
             if (recentPair.second.isValidIndex()) {
@@ -451,7 +449,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
         if (chatTagselectedposition == 0) {
             viewModel.refreshFetchedRecentChat()
         } else {
-            viewModel.getRecentChatListBasedOnTagData(chatTagList.get(chatTagselectedposition).memberIdlist)
+            viewModel.getRecentChatListBasedOnTagData(chatTagList.get(chatTagselectedposition).memberidlist!!)
         }
     }
 
@@ -923,8 +921,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
                     startActivity(
                         intent.putExtra(LibConstants.JID, jid)
                             .putExtra(Constants.CHAT_TYPE, item.getChatType())
-                            .putExtra(Constants.POSITION, itemPos.toString())
-                    )
+                            .putExtra(Constants.POSITION, itemPos.toString()))
                 }
             } else {
                 GroupManager.createOfflineGroupInOnline(jid, FlyCallback { isSuccess, _, data ->

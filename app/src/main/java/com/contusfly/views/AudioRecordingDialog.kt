@@ -198,6 +198,6 @@ class AudioRecordingDialog(private val context: Activity, private val onClickLis
     }
 
     init {
-        focusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange: Int -> }
+        focusChangeListener = AudioManager.OnAudioFocusChangeListener { _: Int -> }
     }
 }

@@ -29,7 +29,7 @@ class ChatTagAdapter(
 
         holder.setTagData(chatTagnamelist[position],position)
         holder.itemView.setOnClickListener {
-            if (!chatTagnamelist[position].getisRecomendedTag()) {
+            if (!chatTagnamelist[position].isRecomendedTag) {
                 itemtagclick.itemEditClickListener(position)
             }
         }
@@ -46,7 +46,7 @@ class ChatTagAdapter(
             binding.chatTagNameTv.text = ""
             binding.chatTagInformationTv.text = ""
 
-            if (item.getisRecomendedTag()) {
+            if (item.isRecomendedTag) {
                 binding.chatTagNameTv.text = item.tagname
                 binding.chatTagInformationTv.text=item.taginfo
                 binding.chatTagNameTv.setTextColor(ContextCompat.getColor(mContext, R.color.blue))
@@ -54,7 +54,7 @@ class ChatTagAdapter(
                 binding.rightArrowIcon.visibility = View.GONE
             } else {
                 binding.chatTagNameTv.text = item.tagname
-                binding.chatTagInformationTv.text = FlyCore.getChatTagSummary(item.memberIdlist)
+                binding.chatTagInformationTv.text = FlyCore.getChatTagSummary(item.memberidlist!!)
                 binding.chatTagNameTv.setTextColor(
                     ContextCompat.getColor(
                         mContext,

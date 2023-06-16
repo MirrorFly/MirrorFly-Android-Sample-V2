@@ -133,7 +133,6 @@ class MessageSwipeController(private val context: Context, private val swipeCont
 
         imageDrawable.alpha = alpha
         if (startTracking && !isVibrate && mView.translationX >= convertToDp(70)) {
-            //mView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING)
             isVibrate = true
         }
 
