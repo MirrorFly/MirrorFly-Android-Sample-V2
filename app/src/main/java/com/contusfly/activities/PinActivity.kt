@@ -272,7 +272,6 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
         if (myPin!!.isNotEmpty() && myPin.equals(pin, ignoreCase = true)) {
             when {
                 isFromDisableBoth -> {
-//                    SharedPreferenceManager.setString(com.contusfly.utils.Constants.MY_PIN, "")
                     SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.SHOW_PIN, false)
                     SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.BIOMETRIC, false)
                     SafeChatUtils.silentDisableSafeChat(this)
@@ -631,7 +630,6 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
         if (requestCode == 500 && data != null) {
             val disablePin = data.getBooleanExtra("disable_pin", false)
             if (disablePin) {
-//                SharedPreferenceManager.setString(com.contusfly.utils.Constants.MY_PIN, "")
                 SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.SHOW_PIN, false)
                 SafeChatUtils.silentDisableSafeChat(this)
                 CustomToast.show(this, "Pin disabled")

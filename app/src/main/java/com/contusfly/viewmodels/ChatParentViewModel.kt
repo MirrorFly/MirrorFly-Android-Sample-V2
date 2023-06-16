@@ -2,7 +2,6 @@ package com.contusfly.viewmodels
 
 import androidx.lifecycle.*
 import com.contusfly.getData
-import com.contusfly.getParams
 import com.contusfly.isTextMessage
 import com.contusfly.isValidIndex
 import com.contusfly.repository.MessageRepository
@@ -23,6 +22,8 @@ import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage
 import com.google.firebase.ml.naturallanguage.smartreply.FirebaseTextMessage
 import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestion
 import com.mirrorflysdk.flycommons.ChatType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -228,14 +229,26 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         initialMessageList.value?.clear()
     }
 
+    private fun setSwipeLoader(isShowStatus:Boolean){
+        CoroutineScope(Dispatchers.Main).launch {
+            if(isShowStatus) {
+                swipeRefreshLoader.value=true
+            } else {
+                swipeRefreshLoader.value=false
+            }
+        }
+    }
+
     fun loadInitialData(loadFromMessageId: String) {
-        swipeRefreshLoader.value=true
+        setSwipeLoader(true)
         viewModelScope.launch {
             messageListParams = FetchMessageListParams().apply {
                 chatJid = toUserJid
-                limit = 100
+                limit = 30
                 messageId = loadFromMessageId
                 inclusive = true
+                chatType= participantChatType!!
+                direction=Constants.LOAD_PREV_MESSAGE
             }
             messageListQuery = FetchMessageListQuery(messageListParams)
 
@@ -253,7 +266,8 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                     loadSuggestion.postValue(!isLoadNextAvailable())
                 }
 
-                swipeRefreshLoader.value=false
+                setSwipeLoader(false)
+
             }
         }
     }
@@ -307,7 +321,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         if(messageListQuery.isFetchingInProgress()){
             return
         }
-        swipeRefreshLoader.value=true
+        setSwipeLoader(true)
         viewModelScope.launch {
             messageListQuery.loadPreviousMessages{ isSuccess, _, data ->
                 if (isSuccess) {
@@ -324,7 +338,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                         searchDataShare(searchedText,Constants.NO_DATA)
                     }
                 }
-                swipeRefreshLoader.value=false
+                setSwipeLoader(false)
             }
         }
     }

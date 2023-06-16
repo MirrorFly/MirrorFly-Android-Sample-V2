@@ -137,7 +137,7 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
 
     private val downloadPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
+    ) { _ ->
         gotoRestorePage()
     }
 

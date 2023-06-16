@@ -29,12 +29,9 @@ import com.mirrorflysdk.api.models.RecentChat
 import com.mirrorflysdk.flycommons.SharedPreferenceManager.Companion.RECENT_CHAT_FETCHED_PAGE_NUMBER
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import com.mirrorflysdk.models.RecentChatListParams
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -200,7 +197,7 @@ constructor() : ViewModel() {
 
     fun getRecentChatHistoryList(pageNo: Int = 1) {
         LogMessage.d(TAG, "getInitialChatList() called to update the UI")
-        swipeRefreshLoader.value=true
+        setSwipeLoader(true)
         setRecentChatListFetching(true)
         viewModelScope.launch(IO) {
             try {
@@ -225,19 +222,31 @@ constructor() : ViewModel() {
                         getArchivedChatStatus()
                     }
                     setRecentChatListFetching(false)
-                    swipeRefreshLoader.value=false
+                    setSwipeLoader(false)
                 }
             } catch(e:Exception) {
                 LogMessage.e(TAG, "Recent Chat List loading issue in nextSetOfRecentChatList() ==> Exception: ${e.message}")
                 setRecentChatListFetching(false)
-                swipeRefreshLoader.value=false
+                setSwipeLoader(false)
             }
 
         }
     }
 
-    private fun setRecentChatListFetching(isFetching: Boolean) {
-        this.isFetching = isFetching
+    private fun setSwipeLoader(isShowStatus:Boolean){
+        CoroutineScope(Dispatchers.Main).launch {
+            if(isShowStatus) {
+                swipeRefreshLoader.value=true
+            } else {
+                swipeRefreshLoader.value=false
+            }
+        }
+    }
+
+    private fun setRecentChatListFetching(isfetching: Boolean) {
+        CoroutineScope(Dispatchers.Main).launch {
+           isFetching = isfetching
+        }
     }
 
     fun getRecentChatListFetching(): Boolean {
@@ -297,7 +306,7 @@ constructor() : ViewModel() {
     }
 
     fun getChatTagData(){
-        FlyCore.getChatTagdata(object:FlyCallback {
+        ChatManager.getChatTagdata(object:FlyCallback {
             override fun flyResponse(
                 isSuccess: Boolean,
                 throwable: Throwable?,
@@ -321,7 +330,7 @@ constructor() : ViewModel() {
         },true)
     }
 
-    fun getRecentChatListBasedOnTagData(jidList:String) {
+    fun getRecentChatListBasedOnTagData(jidList:ArrayList<String>) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             recentChatList.value = LinkedList(FlyCore.getRecentChatListByChatTag(jidList))
             recentChatList.value!!.add(0, RecentChat()) // Recent Chat Header
@@ -407,10 +416,12 @@ constructor() : ViewModel() {
     }
 
     private fun paginationLoaderShowHide(isShow:Boolean) {
-        if(isShow) {
-            paginationLoader.value=true
-        } else {
-            paginationLoader.value=false
+        viewModelScope.launch(Main) {
+            if(isShow) {
+                paginationLoader.value=true
+            } else {
+                paginationLoader.value=false
+            }
         }
     }
 

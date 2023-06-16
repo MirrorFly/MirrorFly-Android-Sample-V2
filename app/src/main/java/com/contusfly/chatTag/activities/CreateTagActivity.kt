@@ -3,21 +3,19 @@ package com.contusfly.chatTag.activities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mirrorflysdk.flycommons.FlyCallback
-import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
-import com.contusfly.TAG
 import com.contusfly.chatTag.activities.ChatTagActivity.Companion.chatTagMemberIdList
 import com.contusfly.chatTag.activities.ChatTagActivity.Companion.createdChatTagList
 import com.contusfly.chatTag.adapter.PeopleSelectionListAdapter
@@ -28,15 +26,17 @@ import com.contusfly.isDeletedContact
 import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CommonAlertDialog
-import com.mirrorflysdk.api.FlyCore
-import com.mirrorflysdk.api.models.RecentChat
-import com.mirrorflysdk.flydatabase.model.ChatTagModel
-import com.mirrorflysdk.views.CustomToast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.api.models.RecentChat
+import com.mirrorflysdk.flycommons.FlyCallback
 import com.mirrorflysdk.flycommons.FlyUtils
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.flydatabase.model.ChatTagModel
+import com.mirrorflysdk.views.CustomToast
 import java.lang.reflect.Type
-import java.util.HashMap
 
 class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
     CommonAlertDialog.CommonDialogClosedListener {
@@ -54,7 +54,6 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
     private var chatTagId:String=""
     private var clickedTagPosition = 0
     private var finalTagName:String?=null
-    var cursorPosition = 0
 
 
     private var mDialog: CommonAlertDialog? = null
@@ -124,6 +123,7 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.apply {
+            itemAnimator = null
             adapter = mSelectionAdapter
         }
     }
@@ -150,25 +150,29 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
 
     private fun textChangeListener() {
 
+        binding.tagNameEdittext.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
+        if(binding.tagNameEdittext.text?.isEmpty() == true){
+            binding.tagNameEdittext.hint=getString(R.string.tag_name_hint)
+        }else{
+            val remainingChars = 20- binding.tagNameEdittext.text?.length!!
+            binding.tagNameEdittext.hint=remainingChars.toString()
+        }
         binding.tagNameEdittext.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                cursorPosition = binding.tagNameEdittext.selectionEnd
+                //Nothing Do
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                try {
-                    val length = binding.tagNameEdittext.text.toString().length
-                    if (length > 20) {
-                        binding.tagNameEdittext.setText(finalTagName)
-                        binding.tagNameEdittext.setSelection(cursorPosition-1)
-                        CustomToast.showShortToast(this@CreateTagActivity, getString(R.string.max_tag_name_chars))
-                    }
-                }catch (e:Exception){
-                    com.contusfly.utils.LogMessage.e(TAG, "Tag Name issue ==> ${e.message}")
-                }
+                //Nothing Do
             }
 
             override fun afterTextChanged(s: Editable?) {
+                val remainingChars = 20 - s?.length!!
+                if(s.length ==0){
+                    binding.tagNameEdittext.hint=getString(R.string.tag_name_hint)
+                }else{
+                    binding.tagNameEdittext.hint=remainingChars.toString()
+                }
                 finalTagName=binding.tagNameEdittext.text.toString()
                 titlevalueChecking(s.toString())
 
@@ -261,11 +265,11 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
                 model.setTagId(chatTagId)
                 model.tagname = binding.tagNameEdittext.text.toString()
                 model.taginfo = Constants.EMPTY_STRING
-                model.memberIdlist = Gson().toJson(memberIdlist)
+                model.memberidlist = memberIdlist
                 model.order= clickedTagPosition
                 model.setisRecommentedTag(false)
                 model.setCurentUserId(FlyUtils.getIdFromJid(SharedPreferenceManager.getCurrentUserJid()))
-                FlyCore.updateChatTagDataItem(chatTagId, model, object : FlyCallback {
+                ChatManager.createOrUpdateChatTagdata(model, object : FlyCallback {
                     override fun flyResponse(
                         isSuccess: Boolean,
                         throwable: Throwable?,
@@ -299,11 +303,11 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
                 model.setTagId(tagId)
                 model.tagname = binding.tagNameEdittext.text.toString()
                 model.taginfo = Constants.EMPTY_STRING
-                model.memberIdlist = Gson().toJson(memberIdlist)
+                model.memberidlist = memberIdlist
                 model.order=FlyCore.getChatTagDataSize()
                 model.setisRecommentedTag(false)
                 model.setCurentUserId(FlyUtils.getIdFromJid(SharedPreferenceManager.getCurrentUserJid()))
-                FlyCore.createChatTagdata(
+                ChatManager.createOrUpdateChatTagdata(
                     model,
                     object : FlyCallback {
                         override fun flyResponse(
@@ -330,7 +334,7 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
 
     private fun chatTagNameAlreadyExistCheck(): Boolean {
         for (names in createdChatTagList) {
-            if (binding.tagNameEdittext.text.toString().trim() == names.tagname.trim()) {
+            if (binding.tagNameEdittext.text.toString().trim() == names.tagname!!.trim()) {
                 return true
             }
         }
@@ -338,7 +342,7 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
     }
     private fun chatTagNameAlreadyExistCheckForUpdate(): Boolean {
         for (names in createdChatTagList) {
-            if (binding.tagNameEdittext.text.toString().trim() == names.tagname.trim() && preDefinedTag.trim()!=names.tagname.trim()) {
+            if (binding.tagNameEdittext.text.toString().trim() == names.tagname!!.trim() && preDefinedTag.trim()!=names.tagname!!.trim()) {
                 return true
             }
         }
@@ -433,7 +437,7 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
             try {
                 removeSelectedmemberList(chatSelectedList.get(itemSelectedPosition).jid)
                 chatSelectedList.removeAt(itemSelectedPosition)
-                mSelectionAdapter.notifyDataSetChanged()
+                mSelectionAdapter.notifyItemRemoved(itemSelectedPosition)
             } catch (e: Exception) {
                 LogMessage.e(TAG, e.toString())
             }

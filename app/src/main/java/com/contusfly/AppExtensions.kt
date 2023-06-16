@@ -54,7 +54,6 @@ import java.net.SocketAddress
 import java.text.DecimalFormat
 import kotlin.math.abs
 import kotlin.math.ceil
-import com.mirrorflysdk.utils.Utils
 
 
 /**
@@ -635,7 +634,7 @@ suspend fun hasActiveInternet(): Boolean {
     return try {
         val timeoutMs = 1500
         val sock = Socket()
-        val sockaddr: SocketAddress = InetSocketAddress("8.8.8.8", 53)
+        val sockaddr: SocketAddress = InetSocketAddress(BuildConfig.HOST, 53)
         sock.connect(sockaddr, timeoutMs)
         sock.close()
         true

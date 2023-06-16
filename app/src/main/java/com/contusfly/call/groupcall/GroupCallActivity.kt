@@ -138,7 +138,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
 
     private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        ActivityResultContracts.RequestMultiplePermissions()) { _ ->
         if(!ChatUtils.checkMediaPermission(this, Manifest.permission.POST_NOTIFICATIONS)){
             CallManager.sendCallPermissionDenied()
         }

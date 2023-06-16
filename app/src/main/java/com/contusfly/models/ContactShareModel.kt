@@ -2,7 +2,6 @@ package com.contusfly.models
 
 import com.mirrorflysdk.models.Contact
 import android.os.Parcelable
-import com.contusfly.utils.Constants
 import kotlinx.android.parcel.Parcelize
 
 /**

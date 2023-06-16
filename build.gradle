@@ -27,6 +27,7 @@ allprojects {
         maven {
             url "https://repo.mirrorfly.com/release"
         }
+
     }
 }
 
@@ -39,8 +40,8 @@ ext {
     buildToolsVersion = '30.0.2'
     targetSdkVersion = 33
     minSdkVersion = 21
-    versionCode = 3
+    versionCode = 4
     versionName = "2.2"
-    repoVersion = '7.4.3'
+    repoVersion = '7.5.0'
     uatVersion = '_pre_01'
 }

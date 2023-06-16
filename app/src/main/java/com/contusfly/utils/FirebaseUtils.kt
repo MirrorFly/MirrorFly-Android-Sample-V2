@@ -1,18 +1,14 @@
 package com.contusfly.utils
 
-import android.app.NotificationManager
 import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.service.notification.StatusBarNotification
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationManagerCompat
 import com.bumptech.glide.Glide
 import com.contusfly.constants.MobileApplication
 import com.contusfly.notification.AppNotificationManager
 import com.contusfly.notification.NotificationBuilder
-import com.contusfly.notification.NotificationBuilderBelow24
 import com.mirrorflysdk.api.ChatActionListener
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage

@@ -12,8 +12,6 @@ import com.contusfly.diffCallBacks.DeviceContactDiffCallback
 import com.contusfly.models.DeviceContactModel
 import com.contusfly.models.PhoneNumber
 import com.contusfly.utils.Constants
-import com.contusfly.utils.SharedPreferenceManager
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

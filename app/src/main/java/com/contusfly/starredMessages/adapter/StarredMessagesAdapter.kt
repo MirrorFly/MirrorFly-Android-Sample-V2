@@ -1039,11 +1039,11 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position     Position of message
      */
     private fun starredItemClick(receiverItem: View, messageItem: ChatMessage, position: Int) {
-        receiverItem.setOnLongClickListener { v: View? ->
+        receiverItem.setOnLongClickListener { _: View? ->
             if (listener != null) listener!!.onReceiverItemLongClick(messageItem, position)
             false
         }
-        receiverItem.setOnClickListener { v: View? -> if (listener != null) listener!!.onReceiverItemClicked(messageItem, position) }
+        receiverItem.setOnClickListener { _: View? -> if (listener != null) listener!!.onReceiverItemClicked(messageItem, position) }
     }
 
     /**
@@ -1054,8 +1054,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position            list item position
      */
     private fun setListenersForSenderTextMessages(txtSenderViewHolder: TextSentViewHolder, item: ChatMessage, position: Int) {
-        txtSenderViewHolder.replyMessageSentView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        txtSenderViewHolder.replyMessageSentView?.setOnLongClickListener { v ->
+        txtSenderViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        txtSenderViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1069,8 +1069,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position    list item position
      */
     private fun senderItemClick(senderItem: View, messageItem: ChatMessage, position: Int) {
-        senderItem.setOnClickListener { v: View? -> if (listener != null) listener!!.onSenderItemClicked(messageItem, position) }
-        senderItem.setOnLongClickListener { v: View? ->
+        senderItem.setOnClickListener { _: View? -> if (listener != null) listener!!.onSenderItemClicked(messageItem, position) }
+        senderItem.setOnLongClickListener { _: View? ->
             if (listener != null) listener!!.onSenderItemLongClick(messageItem, position)
             false
         }
@@ -1084,8 +1084,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position              list item position
      */
     private fun setListenersForReceiverTextMessages(txtReceiverViewHolder: TextReceivedViewHolder, item: ChatMessage, position: Int) {
-        txtReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        txtReceiverViewHolder.replyMessageReceivedView?.setOnLongClickListener { v ->
+        txtReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        txtReceiverViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1099,8 +1099,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position     list item position
      */
     private fun receiverItemClick(receiverItem: View, messageItem: ChatMessage, position: Int) {
-        receiverItem.setOnClickListener { v: View? -> if (listener != null) listener!!.onReceiverItemClicked(messageItem, position) }
-        receiverItem.setOnLongClickListener { v: View? ->
+        receiverItem.setOnClickListener { _: View? -> if (listener != null) listener!!.onReceiverItemClicked(messageItem, position) }
+        receiverItem.setOnLongClickListener { _: View? ->
             if (listener != null) listener!!.onReceiverItemLongClick(messageItem, position)
             false
         }
@@ -1119,7 +1119,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      */
     private fun starredAudioPlayClick(item: ChatMessage,holder: RecyclerView.ViewHolder, position: Int, playImage: ImageView,
                                       seekBar: SeekBar, durationView: TextView, doesSentMessage: Boolean) {
-        playImage.setOnClickListener { v: View? ->
+        playImage.setOnClickListener { _: View? ->
             val filePath = Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaLocalStoragePath())
             if (mMediaController!!.currentAudioPosition != -1 && position != mMediaController!!.currentAudioPosition) mMediaController!!.resetAudioPlayer(false)
             mMediaController!!.setMediaResource(filePath, item.getMediaChatMessage().getMediaDuration(), playImage, doesSentMessage)
@@ -1253,8 +1253,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     private fun setListenersForSenderImageMessages(imgViewHolder: ImageSentViewHolder, item: ChatMessage, position: Int) {
-        imgViewHolder.replyMessageSentView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        imgViewHolder.replyMessageSentView?.setOnLongClickListener { v ->
+        imgViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        imgViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1268,8 +1268,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position      The position of the item within the adapter's data set.
      */
     private fun setListenersForReceiverImageMessages(imgViewHolder: ImageReceivedViewHolder, item: ChatMessage, position: Int) {
-        imgViewHolder.replyMessageReceivedView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        imgViewHolder.replyMessageReceivedView?.setOnLongClickListener { v ->
+        imgViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        imgViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1285,13 +1285,13 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      */
     private fun receiverDownloadClick(download: View, retry: View, cancelDownload: View,
                                       messageItem: ChatMessage, txtSize: View?) {
-        download.setOnClickListener { v: View? ->
+        download.setOnClickListener { _: View? ->
             if (listener != null) {
                 if (txtSize != null && txtSize.visibility == View.VISIBLE) txtSize.visibility = View.GONE
                 listener!!.onDownloadClicked(messageItem)
             }
         }
-        cancelDownload.setOnClickListener { v: View? ->
+        cancelDownload.setOnClickListener { _: View? ->
             if (listener != null) {
                 if (txtSize != null) {
                     txtSize.visibility = View.VISIBLE
@@ -1301,7 +1301,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 listener!!.onCancelDownloadClicked(messageItem)
             }
         }
-        retry.setOnClickListener { v: View? ->
+        retry.setOnClickListener { _: View? ->
             if (listener != null && txtSize != null && txtSize.visibility == View.VISIBLE) {
                 txtSize.visibility = View.GONE
                 download.visibility = View.GONE
@@ -1318,8 +1318,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position              The position of the item within the adapter's data set.
      */
     private fun setListenersForSenderVideoMessages(videoSenderViewHolder: VideoSentViewHolder, item: ChatMessage, position: Int) {
-        videoSenderViewHolder.replyMessageSentView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        videoSenderViewHolder.replyMessageSentView?.setOnLongClickListener { v ->
+        videoSenderViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        videoSenderViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1335,14 +1335,14 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param carbonDownloadView The carbon download view placed in the ViewHolder.
      */
     private fun senderDownloadClick(retry: View, cancelUpload: View, messageItem: ChatMessage, carbonDownloadView: View) {
-        carbonDownloadView.setOnClickListener { v: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
-        cancelUpload.setOnClickListener { v: View? ->
+        carbonDownloadView.setOnClickListener { _: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
+        cancelUpload.setOnClickListener { _: View? ->
             if (listener != null) {
                 cancelMediaUploadOrDownload(messageItem.getMessageId())
                 listener!!.onCancelUploadClicked(messageItem)
             }
         }
-        retry.setOnClickListener { v: View? -> if (listener != null) listener!!.onRetryClicked(messageItem) }
+        retry.setOnClickListener { _: View? -> if (listener != null) listener!!.onRetryClicked(messageItem) }
     }
 
     /**
@@ -1353,8 +1353,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position                The position of the item within the adapter's data set.
      */
     private fun setListenersForReceiverVideoMessages(videoReceiverViewHolder: VideoReceivedViewHolder, item: ChatMessage, position: Int) {
-        videoReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        videoReceiverViewHolder.replyMessageReceivedView?.setOnLongClickListener { v ->
+        videoReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        videoReceiverViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1368,8 +1368,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position       The position of the item within the adapter's data set.
      */
     private fun setListenersForReceiverLocationMessages(locationHolder: LocationReceivedViewHolder, item: ChatMessage, position: Int) {
-        locationHolder.replyMessageReceivedView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        locationHolder.replyMessageReceivedView?.setOnLongClickListener { v ->
+        locationHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        locationHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1383,8 +1383,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position       The position of the item within the adapter's data set.
      */
     private fun setListenersForSenderLocationMessages(locationHolder: LocationSentViewHolder, item: ChatMessage, position: Int) {
-        locationHolder.replyMessageSentView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        locationHolder.replyMessageSentView?.setOnLongClickListener { v ->
+        locationHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        locationHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1398,8 +1398,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position        The position of the item within the adapter's data set.
      */
     private fun setListenersForAudioMessages(audioViewHolder: AudioSentViewHolder, item: ChatMessage, position: Int) {
-        audioViewHolder.replyMessageSentView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        audioViewHolder.replyMessageSentView?.setOnLongClickListener { v ->
+        audioViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        audioViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1413,9 +1413,9 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param messageItem  The message object which possess the data rendered in the ViewHolder.
      */
     private fun uploadClick(retry: View, carbonRetry: View?, cancelUpload: View, messageItem: ChatMessage) {
-        retry.setOnClickListener { v: View? -> if (listener != null) listener!!.onRetryClicked(messageItem) }
-        carbonRetry?.setOnClickListener { v: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
-        cancelUpload.setOnClickListener { v: View? ->
+        retry.setOnClickListener { _: View? -> if (listener != null) listener!!.onRetryClicked(messageItem) }
+        carbonRetry?.setOnClickListener { _: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
+        cancelUpload.setOnClickListener { _: View? ->
             if (listener != null) {
                 cancelMediaUploadOrDownload(messageItem.getMessageId())
                 listener!!.onCancelUploadClicked(messageItem)
@@ -1431,8 +1431,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position                The position of the item within the adapter's data set.
      */
     private fun setListenersForReceiverAudioMessages(audioReceiverViewHolder: AudioReceivedViewHolder, item: ChatMessage, position: Int) {
-        audioReceiverViewHolder.replyMessageSentView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        audioReceiverViewHolder.replyMessageSentView?.setOnLongClickListener { v ->
+        audioReceiverViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        audioReceiverViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1446,8 +1446,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param messageItem    The message object which possess the data rendered in the ViewHolder.
      */
     private fun downloadClick(download: View, cancelDownload: View, messageItem: ChatMessage) {
-        download.setOnClickListener { v: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
-        cancelDownload.setOnClickListener { v: View? ->
+        download.setOnClickListener { _: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
+        cancelDownload.setOnClickListener { _: View? ->
             if (listener != null) {
                 cancelMediaUploadOrDownload(messageItem.getMessageId())
                 listener!!.onCancelDownloadClicked(messageItem)
@@ -1485,8 +1485,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position       The position of the item within the adapter's data set.
      */
     private fun setListenersForSentFileMessages(fileViewHolder: FileSentViewHolder, item: ChatMessage, position: Int) {
-        fileViewHolder.replyMessageSentView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        fileViewHolder.replyMessageSentView?.setOnLongClickListener { v ->
+        fileViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        fileViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1500,8 +1500,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position       The position of the item within the adapter's data set.
      */
     private fun setListenersForReceivedFileMessages(fileViewHolder: FileReceivedViewHolder, item: ChatMessage, position: Int) {
-        fileViewHolder.replyMessageReceivedView?.setOnClickListener { v -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
-        fileViewHolder.replyMessageReceivedView?.setOnLongClickListener { v ->
+        fileViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        fileViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }

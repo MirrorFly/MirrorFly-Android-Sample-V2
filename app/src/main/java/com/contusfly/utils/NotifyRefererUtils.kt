@@ -15,14 +15,13 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.mirrorflysdk.flycommons.ChatTypeEnum
-import com.contusfly.AppLifecycleListener
 import com.contusfly.R
 import com.contusfly.TAG
 import com.contusfly.getDisplayName
-import com.contusfly.notification.NotificationBuilder
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycommons.ChatTypeEnum
+import java.security.SecureRandom
 import java.util.*
 
 
@@ -224,13 +223,14 @@ object NotifyRefererUtils {
         chatChannelId: String?
     ): String {
         var channelId:String=""
-        val randomNumberGenerator = Random(System.currentTimeMillis())
+        val randomNumberGenerator = SecureRandom()
+        val bound = 1000
         if(isSummaryNotification) {
-            var summaryChannelId=randomNumberGenerator.nextInt().toString()
+            var summaryChannelId=randomNumberGenerator.nextInt(bound).toString()
             SharedPreferenceManager.setString(Constants.KEY_NOTIIFCATION_SUMMARY_CHANNEL_ID, summaryChannelId)
             channelId=summaryChannelId
         } else {
-            channelId= chatChannelId?: randomNumberGenerator.nextInt().toString()
+            channelId= chatChannelId?: randomNumberGenerator.nextInt(bound).toString()
         }
         return channelId
     }
@@ -285,8 +285,9 @@ object NotifyRefererUtils {
     }
 
     fun getNotificationId(): String {
-        val randomNumberGenerator = Random(System.currentTimeMillis())
-        return randomNumberGenerator.nextInt().toString()
+        val randomNumberGenerator = SecureRandom()
+        val bound = 1000
+        return randomNumberGenerator.nextInt(bound).toString()
     }
 
     private val isLastMessageRecalled: Boolean

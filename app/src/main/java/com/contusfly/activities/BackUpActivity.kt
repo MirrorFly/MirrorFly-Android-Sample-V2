@@ -742,7 +742,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                     alertDialogBuilder.setMessage(getString(R.string.connect_wifi_cell_info))
                 }
 
-                alertDialogBuilder.setPositiveButton(getString(R.string.ok_label)) { dialog, which ->
+                alertDialogBuilder.setPositiveButton(getString(R.string.ok_label)) { dialog, _ ->
                     dialog.dismiss()
                 }
 
@@ -751,7 +751,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
 
                 alertDialogBuilder.setMessage(getString(R.string.roaming_info))
 
-                alertDialogBuilder.setPositiveButton(getString(R.string.ok_label)) { dialog, which ->
+                alertDialogBuilder.setPositiveButton(getString(R.string.ok_label)) { dialog, _ ->
                     startUploadingWorkers(true)
                     dialog.dismiss()
                 }
@@ -762,12 +762,12 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
 
                 alertDialogBuilder.setTitle(getString(R.string.over_cell_backup))
 
-                alertDialogBuilder.setPositiveButton(getString(R.string.back_up)) { dialog, which ->
+                alertDialogBuilder.setPositiveButton(getString(R.string.back_up)) { dialog, _ ->
                     startUploadingWorkers()
                     dialog.dismiss()
                 }
 
-                alertDialogBuilder.setNegativeButton(getString(R.string.action_cancel)) { dialog, which ->
+                alertDialogBuilder.setNegativeButton(getString(R.string.action_cancel)) { dialog, _ ->
                     resetBackupUI()
                     dialog.dismiss()
                 }

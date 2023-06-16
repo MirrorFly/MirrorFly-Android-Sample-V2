@@ -53,7 +53,7 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
     @Inject
     lateinit var apiCalls: ApiCalls
 
-    private val exceptionHandler = CoroutineExceptionHandler { context, exception ->
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         println("Coroutine Exception ${TAG}:  ${exception.printStackTrace()}")
     }
 
@@ -163,7 +163,7 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
      * click listener for resend otp
      */
     fun setOnClickListenerForResendOTP() {
-        binding.resendOtp!!.setOnClickListener { v: View? ->
+        binding.resendOtp!!.setOnClickListener { _: View? ->
             setOtpTextViewEmpty(editTexts)
             apiType = PinApi.REQUEST_OTP
             requestAndVerifyOtp()
@@ -285,7 +285,7 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
      * click listener for verify button
      */
     private fun setVerifyBtnOnClickListener() {
-        binding.verifyOtp!!.setOnClickListener { v: View? ->
+        binding.verifyOtp!!.setOnClickListener { _: View? ->
             progressDialog!!.setMessage(getString(R.string.verify_otp))
             progressDialog!!.isIndeterminate = true
             progressDialog!!.setCancelable(false)

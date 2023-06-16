@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.contusfly.R
 import com.contusfly.databinding.RowContactSelectedPreviewBinding
-import com.contusfly.getDisplayName
 import com.contusfly.loadUserProfileImage
 import com.contusfly.models.DeviceContactModel
 

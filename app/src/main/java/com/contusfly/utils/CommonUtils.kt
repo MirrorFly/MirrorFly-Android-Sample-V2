@@ -176,15 +176,15 @@ open class CommonUtils {
             val emptySpace = bottomSheetEditProfileImageBinding.space
             textViewRemovePhoto.visibility = if (hasRemovePhoto) View.VISIBLE else View.GONE
             emptySpace.visibility = if (hasRemovePhoto) View.GONE else View.VISIBLE
-            textViewTakePhoto.setOnClickListener { view: View? ->
+            textViewTakePhoto.setOnClickListener { _: View? ->
                 listener.onClick(dialogInterface, R.id.action_take)
                 bottomSheetDialog!!.dismiss()
             }
-            textViewChooseFromGallery.setOnClickListener { view: View? ->
+            textViewChooseFromGallery.setOnClickListener { _: View? ->
                 listener.onClick(dialogInterface, R.id.action_gallery)
                 bottomSheetDialog!!.dismiss()
             }
-            textViewRemovePhoto.setOnClickListener { view: View? ->
+            textViewRemovePhoto.setOnClickListener { _: View? ->
                 listener.onClick(dialogInterface, R.id.action_remove)
                 bottomSheetDialog!!.dismiss()
             }

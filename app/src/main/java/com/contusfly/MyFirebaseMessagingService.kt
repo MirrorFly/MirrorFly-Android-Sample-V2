@@ -1,9 +1,7 @@
 package com.contusfly
 
-import com.contusfly.utils.Constants
 import com.contusfly.utils.FirebaseUtils
 import com.contusfly.utils.LogMessage
-import com.contusfly.utils.SharedPreferenceManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection

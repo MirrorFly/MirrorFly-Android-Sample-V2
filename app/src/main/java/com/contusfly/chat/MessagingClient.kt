@@ -15,7 +15,13 @@ import com.contusfly.models.ContactShareModel
 import com.contusfly.models.MessageObject
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.*
+import com.mirrorflysdk.api.chat.ContactMessageParams
+import com.mirrorflysdk.api.chat.FileMessage
+import com.mirrorflysdk.api.chat.FileMessageParams
+import com.mirrorflysdk.api.chat.LocationMessageParams
+import com.mirrorflysdk.api.chat.TextMessage
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycommons.models.MessageType
 import kotlinx.coroutines.*
 import java.io.File
 import javax.inject.Inject
@@ -68,11 +74,18 @@ constructor(val application: Application) : CoroutineScope {
 
     private fun sendTextMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
-            FlyMessenger.sendTextMessage(messageObject.toJid, messageObject.textMessage, messageObject.replyMessageId,messageObject.mentionedUsersIds, object : SendMessageListener {
-                override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
+            val sendMessageParams = TextMessage().apply {
+                toId = messageObject.toJid
+                messageText = messageObject.textMessage
+                replyMessageId = messageObject.replyMessageId
+                mentionedUsersIds = messageObject.mentionedUsersIds
+            }
+            FlyMessenger.sendTextMessage(sendMessageParams, object : SendMessageCallback {
+                override fun onResponse(isSuccess: Boolean, error: Throwable?, chatMessage: ChatMessage?) {
                     if (isSuccess && chatMessage != null && messageListener != null)
                         messageListener.onSendMessageSuccess(chatMessage)
-                }})
+                }
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -80,14 +93,26 @@ constructor(val application: Application) : CoroutineScope {
 
     private fun sendLocationMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
+            val sendMessageParams = FileMessage().apply {
+                toId = messageObject.toJid
+                replyMessageId = messageObject.replyMessageId
+                messageType = MessageType.LOCATION
+                locationMessage = LocationMessageParams().apply {
+                    latitude = messageObject.latitude
+                    longitude = messageObject.longitude
+                }
+            }
 
-            FlyMessenger.sendLocationMessage(messageObject.toJid, messageObject.latitude, messageObject.longitude, messageObject.replyMessageId, object : SendMessageListener {
-                override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
+            FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback{
+                override fun onResponse(
+                    isSuccess: Boolean,
+                    error: Throwable?,
+                    chatMessage: ChatMessage?
+                ) {
                     if (isSuccess && chatMessage != null && messageListener != null)
                         messageListener.onSendMessageSuccess(chatMessage)
                 }
             })
-
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -97,15 +122,26 @@ constructor(val application: Application) : CoroutineScope {
 
     private fun sendContactMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
+            val sendMessageParams = FileMessage().apply {
+                toId = messageObject.toJid
+                messageType = MessageType.CONTACT
+                replyMessageId = messageObject.replyMessageId
+                contactMessage = ContactMessageParams().apply {
+                    name = messageObject.contactName
+                    numbers = messageObject.contactNumbers
+                }
+            }
 
-            FlyMessenger.sendContactMessage(messageObject.toJid, messageObject.contactName, messageObject.contactNumbers, messageObject.replyMessageId, object : SendMessageListener {
-                override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
+            FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback{
+                override fun onResponse(
+                    isSuccess: Boolean,
+                    error: Throwable?,
+                    chatMessage: ChatMessage?
+                ) {
                     if (isSuccess && chatMessage != null && messageListener != null)
                         messageListener.onSendMessageSuccess(chatMessage)
                 }
             })
-
-
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -116,15 +152,25 @@ constructor(val application: Application) : CoroutineScope {
     private fun sendDocumentMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
             messageObject.file?.let {
-                FlyMessenger.sendDocumentMessage(messageObject.toJid,
-                    it, messageObject.fileName, messageObject.replyMessageId, object : SendMessageListener {
-                        override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
-                            if (isSuccess && chatMessage != null && messageListener != null)
-                                messageListener.onSendMessageSuccess(chatMessage)
-                        }})
+                val sendMessageParams = FileMessage().apply {
+                    toId = messageObject.toJid
+                    messageType = MessageType.DOCUMENT
+                    replyMessageId = messageObject.replyMessageId
+                    fileMessage = FileMessageParams().apply {
+                        file = it
+                    }
+                }
+                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
+                    override fun onResponse(
+                        isSuccess: Boolean,
+                        error: Throwable?,
+                        chatMessage: ChatMessage?
+                    ) {
+                        if (isSuccess && chatMessage != null && messageListener != null)
+                            messageListener.onSendMessageSuccess(chatMessage)
+                    }
+                })
             }
-
-
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -134,18 +180,29 @@ constructor(val application: Application) : CoroutineScope {
 
     private fun sendImageMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
-
             messageObject.file?.let {
-                FlyMessenger.sendImageMessage(messageObject.toJid,
-                    it, messageObject.base64Thumbnail,
-                    messageObject.caption, messageObject.replyMessageId, messageObject.mentionedUsersIds, object : SendMessageListener {
-                        override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
-                            if (isSuccess && chatMessage != null && messageListener != null)
-                                messageListener.onSendMessageSuccess(chatMessage)
-                        }})
+                val sendMessageParams = FileMessage().apply {
+                    toId = messageObject.toJid
+                    messageType = MessageType.IMAGE
+                    replyMessageId = messageObject.replyMessageId
+                    mentionedUsersIds = messageObject.mentionedUsersIds
+                    fileMessage = FileMessageParams().apply {
+                        file = it
+                        caption = messageObject.caption
+                    }
+                }
+
+                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback{
+                    override fun onResponse(
+                        isSuccess: Boolean,
+                        error: Throwable?,
+                        chatMessage: ChatMessage?
+                    ) {
+                        if (isSuccess && chatMessage != null && messageListener != null)
+                            messageListener.onSendMessageSuccess(chatMessage)
+                    }
+                })
             }
-
-
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -156,15 +213,25 @@ constructor(val application: Application) : CoroutineScope {
     private fun sendAudioMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
             messageObject.file?.let {
-                FlyMessenger.sendAudioMessage(messageObject.toJid,
-                    it, messageObject.audioDuration, messageObject.isAudioRecorded,
-                    messageObject.replyMessageId, object : SendMessageListener {
-                        override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
-                            if (isSuccess && chatMessage != null && messageListener != null)
-                                messageListener.onSendMessageSuccess(chatMessage)
-                        }})
+                val sendMessageParams = FileMessage().apply {
+                    toId = messageObject.toJid
+                    messageType = if (messageObject.isAudioRecorded) MessageType.AUDIO_RECORDED else MessageType.AUDIO
+                    replyMessageId = messageObject.replyMessageId
+                    fileMessage = FileMessageParams().apply {
+                        file = it
+                    }
+                }
+                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
+                    override fun onResponse(
+                        isSuccess: Boolean,
+                        error: Throwable?,
+                        chatMessage: ChatMessage?
+                    ) {
+                        if (isSuccess && chatMessage != null && messageListener != null)
+                            messageListener.onSendMessageSuccess(chatMessage)
+                    }
+                })
             }
-
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -175,14 +242,28 @@ constructor(val application: Application) : CoroutineScope {
     private fun sendVideoMessage(messageObject: MessageObject, messageListener: MessageListener?) {
         try {
             messageObject.file?.let {
-                FlyMessenger.sendVideoMessage(messageObject.toJid, it, messageObject.caption,
-                    messageObject.replyMessageId,messageObject.mentionedUsersIds, object : SendMessageListener {
-                        override fun onResponse(isSuccess: Boolean, chatMessage: ChatMessage?) {
-                            if (isSuccess && chatMessage != null && messageListener != null)
-                                messageListener.onSendMessageSuccess(chatMessage)
-                        }})
-            }
+                val sendMessageParams = FileMessage().apply {
+                    toId = messageObject.toJid
+                    messageType = MessageType.VIDEO
+                    replyMessageId = messageObject.replyMessageId
+                    mentionedUsersIds = messageObject.mentionedUsersIds
+                    fileMessage = FileMessageParams().apply {
+                        file = it
+                        caption = messageObject.caption
+                    }
+                }
+                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback{
+                    override fun onResponse(
+                        isSuccess: Boolean,
+                        error: Throwable?,
+                        chatMessage: ChatMessage?
+                    ) {
+                        if (isSuccess && chatMessage != null && messageListener != null)
+                            messageListener.onSendMessageSuccess(chatMessage)
+                    }
 
+                })
+            }
         } catch (e: NoSuchMethodError) {
             e.printStackTrace()
         } catch (e: Exception) {

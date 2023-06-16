@@ -173,7 +173,7 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
 
     val launchIntent = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
+    ) { _: ActivityResult ->
         callLogListener()
     }
 
@@ -346,7 +346,7 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
     }
 
     private fun clearCallLogObserver(){
-        viewModel.clearAllCallLog.observe(viewLifecycleOwner) { isClearAll ->
+        viewModel.clearAllCallLog.observe(viewLifecycleOwner) { _ ->
             showClearAlertDialog(true)
         }
     }

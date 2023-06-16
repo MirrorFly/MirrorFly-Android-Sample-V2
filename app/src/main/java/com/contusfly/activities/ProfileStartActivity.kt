@@ -24,12 +24,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProviders
 import com.mirrorflysdk.flycommons.FlyCallback
 import com.mirrorflysdk.xmpp.chat.models.Profile
 import com.contusfly.*
 import com.contusfly.databinding.ActivityProfileStartBinding
-import com.contusfly.di.factory.AppViewModelFactory
 import com.contusfly.utils.*
 import com.contusfly.utils.CommonUtils.Companion.showBottomSheetView
 import com.contusfly.views.*
@@ -58,7 +56,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.regex.Pattern
-import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 /**

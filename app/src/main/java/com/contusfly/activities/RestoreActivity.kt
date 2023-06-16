@@ -197,7 +197,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
     }
 
     private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        ActivityResultContracts.RequestMultiplePermissions()) { _ ->
         restoreClickPermission()
     }
 

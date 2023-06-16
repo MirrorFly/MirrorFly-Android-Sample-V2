@@ -16,7 +16,6 @@ import com.contusfly.*
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.interfaces.ChatAttachmentLister
 import com.contusfly.show
-import com.contusfly.showToast
 import com.mirrorflysdk.api.ChatManager
 
 open class ChatAttachmentDialog(

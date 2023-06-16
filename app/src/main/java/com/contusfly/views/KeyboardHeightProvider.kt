@@ -59,7 +59,6 @@ class KeyboardHeightProvider(private val activity: Activity) : PopupWindow(activ
         }
         val rect = Rect()
         resizableView.getWindowVisibleDisplayFrame(rect)
-        val orientation = activity.resources.configuration.orientation
 
         val keyboardHeight = (screenSize.y + topCutoutHeight - rect.bottom).coerceAtLeast(0)
         KeyboardInfo.keyboardState = if (keyboardHeight > 0) KeyboardInfo.STATE_OPENED else KeyboardInfo.STATE_CLOSED

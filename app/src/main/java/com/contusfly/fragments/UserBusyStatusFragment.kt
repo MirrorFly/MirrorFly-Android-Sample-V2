@@ -16,17 +16,13 @@ import com.mirrorflysdk.flycommons.exception.FlyException
 import com.contusfly.R
 import com.contusfly.activities.CommonEditorActivity
 import com.contusfly.activities.SettingsActivity
-import com.contusfly.adapters.RecentChatSearchAdapter
 import com.contusfly.adapters.StatusAdapter
-import com.contusfly.databinding.FragmentChatsBinding
 import com.contusfly.databinding.FragmentUserBusyStatusBinding
-import com.contusfly.databinding.RowSearchContactMessageBinding
 import com.contusfly.utils.StatusDeleteDialog
 import com.contusfly.utils.StatusDeleteDialog.UpdateAdapterListener
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.CommonAlertDialog.CommonDialogClosedListener
 import com.contusfly.views.CommonAlertDialog.DIALOGTYPE
-import com.contusfly.views.CustomTextView
 import com.mirrorflysdk.api.ChatManager.isActivityStartedForResult
 import com.mirrorflysdk.api.FlyCore.deleteBusyStatus
 import com.mirrorflysdk.api.FlyCore.enableDisableBusyStatus
@@ -34,7 +30,6 @@ import com.mirrorflysdk.api.FlyCore.getBusyStatusList
 import com.mirrorflysdk.api.FlyCore.getMyBusyStatus
 import com.mirrorflysdk.api.FlyCore.setMyBusyStatus
 import com.mirrorflysdk.api.models.BusyStatus
-import java.util.*
 import com.contusfly.utils.EmojiUtils
 import kotlin.collections.ArrayList
 
@@ -212,7 +207,7 @@ class UserBusyStatusFragment : Fragment(), View.OnClickListener,
             listStatus.adapter = listAdapter
             listStatus.onItemClickListener = this
             listStatus.onItemLongClickListener =
-                AdapterView.OnItemLongClickListener { adapterView: AdapterView<*>?, view: View?, position: Int, l: Long ->
+                AdapterView.OnItemLongClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
                     statusToDelete = statusList[position]
                     if (busyStatus != statusToDelete) commonAlertDialog!!.showListDialog(
                         Constants.EMPTY_STRING,

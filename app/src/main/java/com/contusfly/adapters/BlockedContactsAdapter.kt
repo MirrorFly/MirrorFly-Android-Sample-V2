@@ -9,16 +9,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mirrorflysdk.flycommons.LogMessage
-import com.contusfly.R
 import com.contusfly.adapters.BlockedContactsAdapter.BlockedContactsViewHolder
 import com.contusfly.databinding.RowContactItemBinding
 import com.contusfly.getDisplayName
 import com.contusfly.loadUserProfileImage
 import com.contusfly.utils.ChatMessageUtils.fixEmojiAfterEllipses
-import com.contusfly.utils.MediaUtils.loadImageWithGlideSecure
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.utils.Utils
 import java.util.*

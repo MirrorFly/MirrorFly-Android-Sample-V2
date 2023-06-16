@@ -48,7 +48,7 @@ class PickContactAdapter(private val context: Context) : RecyclerView.Adapter<Pi
             holder.noDivider.visibility = View.VISIBLE
             holder.checkBox.isChecked = item.selected == 1
         }
-        holder.viewRow.setOnClickListener { v: View? ->
+        holder.viewRow.setOnClickListener { _: View? ->
             if (contacts!!.size > 1) {
                 val selection = if (item.selected == 1) 0 else 1
                 item.selected = selection

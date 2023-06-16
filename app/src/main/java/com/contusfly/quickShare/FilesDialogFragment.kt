@@ -54,13 +54,13 @@ class FilesDialogFragment : DialogFragment() {
             )
         )
         if (mainList!!.size == 1) filesBinding.okBtn.text = getString(R.string.action_remove)
-        filesBinding.okBtn.setOnClickListener(View.OnClickListener { v: View? ->
+        filesBinding.okBtn.setOnClickListener(View.OnClickListener { _: View? ->
             for (fileObject in mainList!!) {
                 mCallback!!.removeFile(fileObject)
             }
             dismiss()
         })
-        filesBinding.cancelBtn.setOnClickListener (View.OnClickListener { v: View? -> mCallback!!.exitShare() })
+        filesBinding.cancelBtn.setOnClickListener (View.OnClickListener { _: View? -> mCallback!!.exitShare() })
         enableSwipeToDelete()
     }
 
