@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_7">
+
+    <androidx.emoji.widget.EmojiAppCompatTextView
+        android:id="@+id/reply_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="jhaiiiiiiiiiiiigsfgfgfgfgdfgdfg"
+        android:textColor="?attr/unread_count_bg_color"
+        android:textSize="@dimen/text_size_13"
+        app:emojiconSize="@dimen/text_size_25"
+        android:paddingTop="@dimen/padding_5"
+        android:paddingBottom="@dimen/padding_5"
+        android:paddingStart="@dimen/padding_10"
+        android:paddingEnd="@dimen/padding_10"
+        android:background="@drawable/suggestion_bg"/>
+
+</LinearLayout>

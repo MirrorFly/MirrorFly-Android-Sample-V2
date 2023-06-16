@@ -1,0 +1,29 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml:9:1-14:12
+INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml:9:1-14:12
+INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml:9:1-14:12
+	package
+		ADDED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml:10:5-51
+		INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+		INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+	android:versionName
+		ADDED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml:12:5-30
+	xmlns:android
+		ADDED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml:9:11-69
+	android:versionCode
+		ADDED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml:11:5-28
+uses-sdk
+INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+		ADDED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+		INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+		ADDED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+		INJECTED from D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml

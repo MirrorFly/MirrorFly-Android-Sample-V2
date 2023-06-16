@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.contusfly.app-mergeDebugResources-5:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "D:\\Android Projects\\gradle\\.gradle\\caches\\transforms-3\\ed139d7586db1ce23f4f7d35e29ca11c\\transformed\\appcompat-1.3.1\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "121",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "289"
+                    }
+                },
+                {
+                    "source": "D:\\Android Projects\\gradle\\.gradle\\caches\\transforms-3\\8d8e405011a60a0cc7ede0c8108f5b18\\transformed\\core-1.6.0\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                }
+            ]
+        }
+    ]
+}

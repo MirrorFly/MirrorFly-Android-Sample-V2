@@ -973,7 +973,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     }
 
     private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        ActivityResultContracts.RequestMultiplePermissions()) { _ ->
         if(ChatUtils.checkNotificationPermission(this, Manifest.permission.POST_NOTIFICATIONS)){
             if(isFromQuickShare){
                 progressDialog!!.showProgress()

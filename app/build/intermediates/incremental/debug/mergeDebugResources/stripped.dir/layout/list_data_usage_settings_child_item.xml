@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.contusfly.views.CustomTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text_child_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:drawableEnd="@drawable/ic_unselected_tick"
+    android:drawablePadding="10dp"
+    android:gravity="start|center_vertical"
+    android:paddingBottom="18dp"
+    android:paddingEnd="25dp"
+    android:paddingStart="25dp"
+    android:paddingTop="18dp"
+    android:textColor="@color/text_black_light"
+    android:textSize="@dimen/text_size_13" />

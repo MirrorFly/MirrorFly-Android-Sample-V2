@@ -41,14 +41,14 @@ class StatusDeleteDialog {
             val mBuilder = AlertDialog.Builder(context!!, R.style.AlertDialogStyle)
             mBuilder.setMessage(context!!.getString(R.string.msg_status_delete))
             mBuilder.setPositiveButton(context!!.getString(R.string.yes_label),
-                    DialogInterface.OnClickListener { dialog: DialogInterface, which: Int ->
+                    DialogInterface.OnClickListener { dialog: DialogInterface, _: Int ->
                         dialog.dismiss()
                         if (updateAdapterListener != null) {
                             updateAdapterListener!!.onNotifyAdapter()
                         }
                     })
             mBuilder.setNegativeButton(context!!.getString(R.string.no_label),
-                    DialogInterface.OnClickListener { dialog: DialogInterface, which: Int -> dialog.dismiss() })
+                    DialogInterface.OnClickListener { dialog: DialogInterface, _: Int -> dialog.dismiss() })
             val dialog = mBuilder.create()
             dialog.setCancelable(false)
             dialog.show()

@@ -1,0 +1,77 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:2:1-31:12
+	package
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:3:5-40
+		INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+		INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:5:5-6:37
+	android:maxSdkVersion
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:6:9-35
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:5:22-78
+uses-permission#android.permission.READ_MEDIA_IMAGES
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:9:5-76
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:9:22-73
+uses-permission#android.permission.READ_MEDIA_AUDIO
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:10:5-75
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:10:22-72
+uses-permission#android.permission.READ_MEDIA_VIDEO
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:11:5-75
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:11:22-72
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:13:5-14:38
+	android:maxSdkVersion
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:14:9-35
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:13:22-77
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:15:5-77
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:15:22-74
+application
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:17:5-23:19
+activity#com.contusfly.mediapicker.ui.MediaPickerActivity
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:18:9-22:57
+	android:screenOrientation
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:21:13-49
+	android:label
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:20:13-64
+	android:theme
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:22:13-55
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:19:13-51
+queries
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:25:5-30:15
+intent#action:name:android.intent.action.PICK+data:mimeType:video/*, image/*
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:26:9-29:18
+action#android.intent.action.PICK
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:27:13-65
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:27:21-62
+data
+ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:28:13-57
+	android:mimeType
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:28:19-54
+uses-sdk
+INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+		INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+		ADDED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+		INJECTED from D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml

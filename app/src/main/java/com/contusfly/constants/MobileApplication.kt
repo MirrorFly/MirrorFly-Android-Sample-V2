@@ -130,7 +130,7 @@ class MobileApplication : Application(), HasAndroidInjector {
         UIKitDatabase.initDatabase(this)
 
         //Set Name based on the Profile data
-        GroupManager.setNameHelper(object  : NameHelper {
+        ChatManager.setNameHelper(object  : NameHelper {
             override fun getDisplayName(jid: String): String {
                 return if (ProfileDetailsUtils.getProfileDetails(jid) != null) ProfileDetailsUtils.getProfileDetails(jid)!!.name else Constants.EMPTY_STRING
             }

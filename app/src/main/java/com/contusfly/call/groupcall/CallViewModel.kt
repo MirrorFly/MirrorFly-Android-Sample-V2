@@ -172,7 +172,7 @@ constructor(private val callLogRepository: CallLogRepository) : ViewModel() {
     fun getInviteUserListForGroup(groupId: String, callConnectedUserList: ArrayList<String>?) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             var profileDetails: List<ProfileDetails>? = null
-            GroupManager.getGroupMembersList(false, groupId) { isSuccess, throwable, data ->
+            GroupManager.getGroupMembersList(false, groupId) { isSuccess, _, data ->
                 if (isSuccess) profileDetails = data["data"] as ArrayList<ProfileDetails>
                 val groupWithOutCallMembers: MutableList<ProfileDetails> =
                     profileDetails!!.toMutableList()

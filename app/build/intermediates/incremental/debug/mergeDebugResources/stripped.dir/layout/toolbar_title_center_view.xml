@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/toolbar_title"
+        android:textColor="?attr/dashboard_toolbar_text_color"
+        android:textSize="@dimen/toolbar_header_size"
+        android:fontFamily="@font/sf_ui_display_bold"/>
+
+</androidx.appcompat.widget.Toolbar>

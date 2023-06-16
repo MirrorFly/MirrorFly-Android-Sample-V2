@@ -308,7 +308,6 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
     }
 
     override fun onBackPressed() {
-        //super.onBackPressed()
         SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.BACK_PRESS, false)
         ActivityCompat.finishAffinity(this)
     }

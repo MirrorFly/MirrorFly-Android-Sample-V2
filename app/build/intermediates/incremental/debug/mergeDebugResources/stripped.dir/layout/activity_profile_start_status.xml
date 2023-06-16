@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="?attr/white_color"
+    tools:context=".activities.ProfileStartStatusActivity">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/common_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:background="@color/color_white"
+        android:layout_marginStart="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_20"
+        android:orientation="vertical"
+        android:requiresFadingEdge="vertical">
+
+        <TextView
+            style="@style/YourCurrentStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_5"
+            android:text="@string/title_current_status"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_edit"
+            style="@style/StatusList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawablePadding="@dimen/padding_10"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/ic_edit"
+            android:gravity="center_vertical"
+
+            android:paddingTop="@dimen/padding_12"
+            android:paddingBottom="@dimen/padding_12"
+            app:emojiconSize="@dimen/text_size_20" />
+
+        <com.contusfly.views.CustomEditText
+            android:id="@+id/text_edit_status"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            style="@style/TextRegularStyle"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:maxLines="1"
+            android:visibility="gone"
+            android:imeOptions="actionDone"
+            android:paddingTop="@dimen/padding_12"
+            android:paddingBottom="@dimen/padding_12"
+            app:emojiconSize="@dimen/text_size_20" />
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_10"
+        android:layout_marginEnd="@dimen/margin_15"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginTop="@dimen/margin_20"
+        android:background="@color/color_white"
+        android:requiresFadingEdge="vertical">
+
+        <TextView
+            android:id="@+id/text_select_status"
+            style="@style/YourCurrentStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_6"
+            android:paddingTop="@dimen/padding_8"
+            android:text="@string/message_select_status" />
+
+        <ListView
+            android:id="@+id/list_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/text_select_status"
+            android:divider="?attr/divider_color"
+            android:dividerHeight="@dimen/margin_0.5"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.5"
+            android:layout_below="@id/list_status"
+            android:layout_margin="@dimen/margin_5"
+            android:background="?attr/light_gray_color" />
+
+    </RelativeLayout>
+
+</LinearLayout>

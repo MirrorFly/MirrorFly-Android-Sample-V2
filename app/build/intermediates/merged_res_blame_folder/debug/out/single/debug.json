@@ -1,0 +1,2814 @@
+[
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_user_profile_popup_ic_video_24dp.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/user_profile_popup_ic_video_24dp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_contact_message.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_contact_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_message_acknowledged.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_message_acknowledged.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_video_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_video_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_progress_bar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_progress_bar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_quick_share.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_quick_share.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_chat_space.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_chat_space.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_pptx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_pptx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_record.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_record.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_pdf_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_pdf_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_archived_chats.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_archived_chats.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_profile_start_status.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_profile_start_status.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_chat_tag_name_close_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/chat_tag_name_close_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_upload_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_upload_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_forward_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_forward_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_swipe_rounded_background_black.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/swipe_rounded_background_black.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_layout_group_call_members_image.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/layout_group_call_members_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_settings.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_swipe_reply_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/swipe_reply_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_notification_blue.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_notification_blue.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_scrollbar_track.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/scrollbar_track.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_back_up.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_back_up.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_settings.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_settings.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_web_login_entry.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_web_login_entry.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_keyboard.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/keyboard.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_info_txt_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_info_txt_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_delete.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_delete.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_overflow_image.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/overflow_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_chat_file_received_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_chat_file_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_chat_background_drawable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/chat_background_drawable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_chat_reply_sent_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_chat_reply_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_info_location_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_info_location_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_group_user_tag_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_group_user_tag_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_icon_compose.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/icon_compose.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_scroll_focused.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/scroll_focused.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_preview_send_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_preview_send_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_action_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/action_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_report_user.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_report_user.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_toolbar_title_center_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/toolbar_title_center_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_line_divider.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/line_divider.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_media_docs_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_media_docs_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_common_alert_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/common_alert_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_email_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_email_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_terms_and_conditions.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_terms_and_conditions.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/font_sf_ui_display_semi_bold.otf.flat",
+        "source": "com.contusfly.app-main-9:/font/sf_ui_display_semi_bold.otf"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_files_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_files_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_selected_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_selected_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_broadcast.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_broadcast.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_chat_tag.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_chat_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ls_ic_music.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ls_ic_music.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_register_number_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_register_number_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_search_prev_ripple_arrow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_search_prev_ripple_arrow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_recent_chat_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_recent_chat_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_suggestion_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/suggestion_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_starred_audio_sent_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_starred_audio_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-mdpi_no_contacts.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-mdpi/no_contacts.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_profile_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_profile_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_location.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_location.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_contact_us.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_contact_us.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_audio_recording_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_audio_recording_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_fab.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_fab.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_profile.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_profile.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_contact_receiver_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_contact_receiver_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_no_messages.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_no_messages.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_csv.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_csv.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_restore_img.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_restore_img.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_about_us.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_about_us.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_no_messages.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_no_messages.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ls_ic_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ls_ic_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_download_progress.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_download_progress.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_cancel.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_cancel.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_dialog_audio_recording.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/dialog_audio_recording.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_search.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_search.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_music.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_music.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_notification_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_notification_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_chat_tag_remove_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/chat_tag_remove_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_smartphone_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/smartphone_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_info_img_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_info_img_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_logo_splash.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_logo_splash.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_chat_tag.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_chat_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chatview_attachment_controls.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chatview_attachment_controls.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_circle_unselect_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/circle_unselect_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_database_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/database_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_attachment_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/attachment_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_address_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/address_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_share_file.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/share_file.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_doc.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_doc.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_redirect_last_message.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_redirect_last_message.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_file_message_sender_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_file_message_sender_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_txt_sender_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_txt_sender_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_rar.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_rar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_close.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_close.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_database.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/database.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_starred_file_sent_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_starred_file_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_corner_curved.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/corner_curved.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-ldpi_no_messages.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-ldpi/no_messages.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_gallery.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_gallery.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_chat_footer_shape_mention.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_chat_footer_shape_mention.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_restore_2.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/restore_2.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_zip.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_zip.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_search_bar_loader_layout.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/search_bar_loader_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_contact_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_contact_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_delete_my_account.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_delete_my_account.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_search_button_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/search_button_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_view_all_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_view_all_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_camera.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_camera.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_chat_shape_receiver.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_chat_shape_receiver.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_up_arrow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_up_arrow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_pdf.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_pdf.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_music_audio_placeholder.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_music_audio_placeholder.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_delete_my_account.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_delete_my_account.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_layout_archived.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_layout_archived.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_popup_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/popup_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_right_arrow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_right_arrow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_context_mode.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_context_mode.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_xlsx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_xlsx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_attach.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_attach.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_recall.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_recall.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_input_keypad.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_input_keypad.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_button_add.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_button_add.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_layout_call_options.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/layout_call_options.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chats.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chats.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_pin_small.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/pin_small.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_share_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_share_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_reason_spinner_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/reason_spinner_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_thumb_selector.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/thumb_selector.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_audio_reply_preview.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_audio_reply_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_chat_background.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_chat_background.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_contact_2.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_contact_2.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_select_contact_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_select_contact_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_txt.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_txt.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_recipient_seek_bar_track.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_recipient_seek_bar_track.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_mozilla.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_mozilla.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_contact_media_alert.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_contact_media_alert.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_mark_unread_black_24dp.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_mark_unread_black_24dp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_page_indicator_one_grey.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/page_indicator_one_grey.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_profile_popup_gradient.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_profile_popup_gradient.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_curve_button.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_curve_button.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-hdpi_no_messages.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-hdpi/no_messages.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_img_sender_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_img_sender_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_media_preview.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_media_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_message_unsent.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_message_unsent.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_invalid_link.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_invalid_link.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_edit_chat_tag_list_item_layout.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/edit_chat_tag_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_chat_shape_sender.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_chat_shape_sender.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_empty_drawable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/empty_drawable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_docx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_docx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_action_ok.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_action_ok.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_feedback.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_feedback.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_on_going_call_preview_screen.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_on_going_call_preview_screen.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/raw_forground_notification.mp3.flat",
+        "source": "com.contusfly.app-main-9:/raw/forground_notification.mp3"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_copy.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_copy.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_safari.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_safari.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_onrecord.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/onrecord.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_shadow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_shadow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_blue_rounded_corners.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/blue_rounded_corners.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_message_child_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/message_child_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_mute_recent.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_mute_recent.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_gradient_top.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/gradient_top.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_user_list.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_user_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_date_rounded_corner.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/date_rounded_corner.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-hdpi_ic_chat_background.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-hdpi/ic_chat_background.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_voice_call.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_voice_call.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_starred_contact_sent_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_starred_contact_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_track_selector.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/track_selector.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_status.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_status.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_layout_pip_mode.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/layout_pip_mode.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_map_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_map_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_no_messages.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/no_messages.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_video_call_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_video_call_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_starred_file_received_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_starred_file_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_play.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_play.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_no_messages.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/no_messages.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_call_history_detail.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_call_history_detail.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_user_busy_status.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_user_busy_status.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_txt_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_txt_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/font_sf_ui_display_regular.otf.flat",
+        "source": "com.contusfly.app-main-9:/font/sf_ui_display_regular.otf"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_audio_duration.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_audio_duration.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_empty_data.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_empty_data.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_audio_mute_inactive.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_audio_mute_inactive.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_otp_selection_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/otp_selection_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ls_ic_record.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ls_ic_record.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_file_transfer.gif.flat",
+        "source": "com.contusfly.app-main-9:/drawable/file_transfer.gif"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_horizontal_receiver_progress_bar.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/horizontal_receiver_progress_bar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_pin.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_pin.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_recall.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_recall.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_right_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_right_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_overflow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_overflow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_icon_grp.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/icon_grp.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_baseline_visibility_black_24.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/baseline_visibility_black_24.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_people_view_list_item_layout.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/people_view_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_xls.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_xls.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_shape_download_shadow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/shape_download_shadow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_txt.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_txt.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_swipe_rounded_background_white.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_swipe_rounded_background_white.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_docx_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_docx_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_share.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_share.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_keypad_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_keypad_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_info.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_audio_record_delete.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_audio_record_delete.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_send_active.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_send_active.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_user_tag.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_user_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_baloon.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_baloon.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/font_sf_ui_display_medium.otf.flat",
+        "source": "com.contusfly.app-main-9:/font/sf_ui_display_medium.otf"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_add_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_add_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_no_contacts.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/no_contacts.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_notification_alerts.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_notification_alerts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_chat_background.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_chat_background.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_emoji_black.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_emoji_black.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_user_profile_popup_ic_chat_img_24dp.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/user_profile_popup_ic_chat_img_24dp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_lp_bg_radius.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/lp_bg_radius.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_download_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_download_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_file_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_file_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_ppt.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_ppt.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_participants_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_participants_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_send_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_send_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_location.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_location.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_map_placeholder.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_map_placeholder.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_lock_outline_black_24dp.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_lock_outline_black_24dp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_chat_footer.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_chat_footer.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_layout_incoming_call.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/layout_incoming_call.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_restore_4.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/restore_4.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_notifications.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_notifications.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_chat_footer_shape.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_chat_footer_shape.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_chats.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_chats.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_image_preview.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_image_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_record_audio.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_record_audio.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_pin_setting.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_pin_setting.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_add_participant.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_add_participant.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_cancel_grey.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_cancel_grey.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_message_seen.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_message_seen.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_play_video_preview.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_play_video_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_scanner_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/scanner_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_opera.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_opera.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_notifications.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_notifications.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_call_logs.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_call_logs.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_icon_file_doc.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/icon_file_doc.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_lp_tg_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/lp_tg_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_record_reply_preview.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_record_reply_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_shape_image_select.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/shape_image_select.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_safe_chat_on.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_safe_chat_on.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_notification_blue.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_notification_blue.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_close1.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_close1.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_button_shape.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_button_shape.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ls_ic_location.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ls_ic_location.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_data_usage_settings_child_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_data_usage_settings_child_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_play_audio_recipient.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_play_audio_recipient.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_unmute_recent.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_unmute_recent.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_country_list.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_country_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_chat_shape_links.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_chat_shape_links.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_info_contact_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_info_contact_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/anim_item_animation_from_bottom.xml.flat",
+        "source": "com.contusfly.app-main-9:/anim/item_animation_from_bottom.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_ppt.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_ppt.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_video_receiver_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_video_receiver_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_link_navigation.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_link_navigation.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_user.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_user.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sng_bg.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sng_bg.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_button_shape_disabled.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_button_shape_disabled.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_layout_group_mention.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/layout_group_mention.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_create_tag.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_create_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_pptx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_pptx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_spinner_drawable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_spinner_drawable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_image_edit.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_image_edit.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_bottom_sheet_edit_profile_image.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/bottom_sheet_edit_profile_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_language_list.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_language_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_music_audio_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_music_audio_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_circle_notification_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/circle_notification_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_email.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_email.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_archive.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_archive.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_keyboard_button_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/keyboard_button_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_group_setting.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_group_setting.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_media_slide.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_media_slide.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_bottom_sheet_chat_tag_remove_layout.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/bottom_sheet_chat_tag_remove_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_starred_message_header_sender.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_starred_message_header_sender.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_notification_permission_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/notification_permission_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_about_help.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_about_help.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_default_link.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_default_link.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_recycleritem_ripple.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/recycleritem_ripple.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_selected_tick.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_selected_tick.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-ldpi_ic_chat_background.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-ldpi/ic_chat_background.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_delete_account_warning.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_delete_account_warning.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_chat_play_video.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_chat_play_video.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_send_inactive.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_send_inactive.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_upload_progress.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_upload_progress.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_contact_selection.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_contact_selection.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_media_preview.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_media_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_join_call_preview_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/join_call_preview_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_files_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_files_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_preview_send_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_preview_send_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_profile_start.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_profile_start.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_qr_code_scanner.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_qr_code_scanner.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_new_group.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_new_group.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_layout_call_retry.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/layout_call_retry.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-mdpi_ic_notification_small.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-mdpi/ic_notification_small.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_docx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_docx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_keyboard_popup.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/keyboard_popup.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_img_receiver_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_img_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_pdf.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_pdf.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_video_placeholder.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_video_placeholder.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_toolbar_search.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_toolbar_search.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_admin_block.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_admin_block.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_search_next_arrow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_search_next_arrow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_on_gng_call_participants_list.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_on_gng_call_participants_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_alert.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_alert.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_zip.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_zip.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_info_file_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_info_file_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_image_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_image_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_pip_default_profile.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_pip_default_profile.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_file_dialog_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_file_dialog_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_broadcast.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_broadcast.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_no_contacts.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_no_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_map_receiver_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_map_receiver_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_camera.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_camera.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_image_placeholder.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_image_placeholder.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_chat.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_chat.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_pause_audio_recipient.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_pause_audio_recipient.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_message_header_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/message_header_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_blocked_contacts.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_blocked_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-mdpi_no_messages.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-mdpi/no_messages.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_attachement_keyboard_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/attachement_keyboard_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bottom_top_curve_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bottom_top_curve_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_back.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_back.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_zip_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_zip_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_button.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_button.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_video.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_video.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_sender_seek_bar_track.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_sender_seek_bar_track.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_no_call_history.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_no_call_history.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_add_participants.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_add_participants.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_rev_image_caption_text.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_rev_image_caption_text.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_emoji.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_emoji.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_record.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_record.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_starred_messages.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_starred_messages.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_xlsx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_xlsx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_page_indicator_one_white.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/page_indicator_one_white.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_chat_tag_close_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/chat_tag_close_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_uc.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_uc.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_all_media_header_list.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_all_media_header_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_chat_contact_sent_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_chat_contact_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_suggestion_recycler_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/suggestion_recycler_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_grey_rounded_corners.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/grey_rounded_corners.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_docs.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/docs.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_chat_audio_sent_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_chat_audio_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_doc_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_doc_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_selected_media_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_selected_media_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_link_placeholder.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_link_placeholder.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ripple.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ripple.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_edit.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_edit.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_tab_indicator.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/tab_indicator.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_pick_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_pick_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_audio_music_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_audio_music_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_users_selection.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_users_selection.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_music_audio.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_music_audio.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_data_usage_settings_group_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_data_usage_settings_group_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_selector_settings_opt.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/selector_settings_opt.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_audio_headset.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_audio_headset.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_delete_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_delete_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_archive_chats.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_archive_chats.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_qr_result.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_qr_result.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_reply_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/reply_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_button_state_list.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_button_state_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-ldpi_ic_broadcast.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-ldpi/ic_broadcast.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_share_audio.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/share_audio.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_rar.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_rar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_edge_browser.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_edge_browser.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_add_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_add_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_xls.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_xls.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_search_prev_arrow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_search_prev_arrow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ls_ic_video.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ls_ic_video.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_language_selected.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_language_selected.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-hdpi_ic_notification_small.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-hdpi/ic_notification_small.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_group_message_info.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_group_message_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_xlsx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_xlsx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-ldpi_ic_notification_blue.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-ldpi/ic_notification_blue.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_chat_tag_unselected_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/chat_tag_unselected_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_otp_square_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/otp_square_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_circle_shape.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/circle_shape.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_documents.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_documents.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/font_sf_ui_display_bold.otf.flat",
+        "source": "com.contusfly.app-main-9:/font/sf_ui_display_bold.otf"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_ic_chat_play_video.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/ic_chat_play_video.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_custom_toast.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/custom_toast.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_archive_lable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_archive_lable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_play_video_blue_fill.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_play_video_blue_fill.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_bio_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_bio_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_map_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_map_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_green_tick.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_green_tick.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_contact_selection_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/contact_selection_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_shape_reording_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/shape_reording_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_audio.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_audio.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bottom_corner_curve.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bottom_corner_curve.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_page_indicator_two_grey.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/page_indicator_two_grey.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_video_receiver_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_video_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_xls_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_xls_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_recent_chat_tag_header_list_item_layout.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/recent_chat_tag_header_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_starred_audio_received_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_starred_audio_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_fingerprint_image.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_fingerprint_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_admin_blocked.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_admin_blocked.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_starred_message_header_receiver.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_starred_message_header_receiver.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_call_history.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_call_history.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_audio_recorded_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_audio_recorded_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_scrollbar_thumb.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/scrollbar_thumb.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_record_audio_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_record_audio_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_shape_chat_reply_sender_header_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/shape_chat_reply_sender_header_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_attachment_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/attachment_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_video_call_alert.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_video_call_alert.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_connectivity_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/connectivity_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_image.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_new_contacts.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_new_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_participants_list_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_participants_list_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_download.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_download.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_call_user_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/call_user_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_video_call.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_video_call.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-ldpi_no_contacts.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-ldpi/no_contacts.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_artboardunpin.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_artboardunpin.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-mdpi_ic_button.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-mdpi/ic_button.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_view_all_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_view_all_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_search.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_search.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_chat_items.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_chat_items.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_contacts.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_add_people_recent_chat_item_layout.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/add_people_recent_chat_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_circular_shape.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/circular_shape.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_common_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/common_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_pin_empty.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_pin_empty.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_rar_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_rar_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout-land_activity_image_preview.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout-land/activity_image_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_pin_entry_change.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_pin_entry_change.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_tag.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_selector_settings.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/selector_settings.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_invite_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_invite_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_backup_progress_drawable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/backup_progress_drawable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-hdpi_ic_notification_blue.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-hdpi/ic_notification_blue.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_docx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_docx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_spinner_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/spinner_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_cursor_color.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/cursor_color.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/font_sf_ui_display_light.otf.flat",
+        "source": "com.contusfly.app-main-9:/font/sf_ui_display_light.otf"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_invite_contacts.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_invite_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_search_contact_message.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_search_contact_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_detail_call_logs.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_detail_call_logs.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-xxxhdpi_ic_notification_small.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-xxxhdpi/ic_notification_small.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_rar.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_rar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_chrome.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_chrome.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_profile_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_profile_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_grid_media_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/grid_media_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_audio_message_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_audio_message_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_back_black.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_back_black.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_about_help.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_about_help.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_info_audio_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_info_audio_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_file_upload_light.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_file_upload_light.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_file.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_file.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_play_audio_sender.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_play_audio_sender.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_backup_unselected.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_backup_unselected.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_lock.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_lock.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_doc.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_doc.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_quick_share.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_quick_share.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_record_audio_placeholder.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_record_audio_placeholder.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout-land_activity_image_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout-land/activity_image_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_search_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_search_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_info_video_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_info_video_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_edit.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_edit.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_input_emoji.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_input_emoji.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_notification_alert.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_notification_alert.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_doc.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_doc.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_reply_view_drawable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/reply_view_drawable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_ic_broadcast.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/ic_broadcast.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_contact_img.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_contact_img.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_select_contact_done.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_select_contact_done.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_grp_bg.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_grp_bg.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_delete_account.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_delete_account.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_doc.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_doc.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_artboardpin.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_artboardpin.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_files_count_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/files_count_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_share.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_share.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_country_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_country_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_txt_receiver_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_txt_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_ic_notification_small.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/ic_notification_small.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_message_info.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_message_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_progress_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/progress_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_chat_play_video.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_chat_play_video.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_unselected_tick.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_unselected_tick.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_sender_name.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_sender_name.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_star_receiver.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_star_receiver.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_menu_chat_toolbar_items.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/menu_chat_toolbar_items.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_chat_shape_links_content.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_chat_shape_links_content.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_menu_overflow_image.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/menu_overflow_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_otp_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/otp_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_shape_badge.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/shape_badge.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_close_startaction_mode.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/close_startaction_mode.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_black_circle.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_black_circle.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ls_ic_headset.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ls_ic_headset.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_blocked_contacts.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_blocked_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_common_editor.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_common_editor.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat_video.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat_video.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_chat_tag_selected_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/chat_tag_selected_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_starred_message.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_starred_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_location_alert.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_location_alert.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_qr_scanner_web_login.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_qr_scanner_web_login.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_right_arrow_white.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_right_arrow_white.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_dashboard.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_dashboard.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_chat_contact_received_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_chat_contact_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_restore_3.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/restore_3.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_voice.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/voice.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_location.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_location.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_button.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_button.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_participants_list.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_participants_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_csv.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_csv.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/anim_dialog_slide_down.xml.flat",
+        "source": "com.contusfly.app-main-9:/anim/dialog_slide_down.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_image_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_image_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_forward.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_forward.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/raw_mirrorfly_logo_animation.mp4.flat",
+        "source": "com.contusfly.app-main-9:/raw/mirrorfly_logo_animation.mp4"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-mdpi_ic_chat_play_video.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-mdpi/ic_chat_play_video.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/anim_layout_animation_from_bottom.xml.flat",
+        "source": "com.contusfly.app-main-9:/anim/layout_animation_from_bottom.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_mute.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_mute.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_group_info.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_group_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_no_contacts.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/no_contacts.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_collapse.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_collapse.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_no_contacts.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/no_contacts.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_media_pptx.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_media_pptx.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ls_ic_camera.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ls_ic_camera.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_pause_audio_sender.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_pause_audio_sender.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_preview_mobile_number.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_preview_mobile_number.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_chat_file_sent_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_chat_file_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_xlsx_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_xlsx_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_no_messages.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/no_messages.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_report_group.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_report_group.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_layout_call_not_connected.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/layout_call_not_connected.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_group_avatar.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_group_avatar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_cursor.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/cursor.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_noun_arrow.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_noun_arrow.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_horizontal_file_receiver_progress_bar.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/horizontal_file_receiver_progress_bar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_chat.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_chat.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_favorite.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_favorite.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_dashboard_main.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/dashboard_main.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_antenna.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_antenna.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_cancel_white.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_cancel_white.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_chat_reply_received_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_chat_reply_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_restore.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_restore.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxxhdpi_ic_profile_overlay.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxxhdpi/ic_profile_overlay.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_archive_black.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_archive_black.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_sent_image_caption_text.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_sent_image_caption_text.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_tab_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/tab_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_send_blue_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_send_blue_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_reply_close_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/reply_close_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_add_people.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_add_people.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_contact_alert.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_contact_alert.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_ppt.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_ppt.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-mdpi_ic_notification_blue.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-mdpi/ic_notification_blue.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_tag_common_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_tag_common_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_progress_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/progress_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_group_call.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_group_call.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_profile_img.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/profile_img.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_button_logout_all.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_button_logout_all.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_attachement_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/attachement_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/font_sf_ui_display_thin.otf.flat",
+        "source": "com.contusfly.app-main-9:/font/sf_ui_display_thin.otf"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_bottom_sheet_otp.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_bottom_sheet_otp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_share_xls.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/share_xls.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_user_profile_image.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_user_profile_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_phone.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_phone.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_txt.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_txt.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_safe_chat_off.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_safe_chat_off.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_contact_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_contact_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_share_pdf.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/share_pdf.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_delete_group.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_delete_group.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_expand.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_expand.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_feedback.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_feedback.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_contact_us.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_contact_us.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_custom_tabs.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/custom_tabs.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_button_red_shape.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_button_red_shape.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_audio_record.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_audio_record.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_down_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_down_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_permission_instruction_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/permission_instruction_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_profile_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/profile_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_close_search.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/close_search.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_camera_alert.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_camera_alert.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_splash.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_splash.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_otp.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_otp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-hdpi_no_contacts.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-hdpi/no_contacts.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_menu_unfavourite.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_menu_unfavourite.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_default_browser.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_default_browser.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_remove_selected_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_remove_selected_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_unread_count.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_unread_count.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_logout.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_logout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_status_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_status_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_backup_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/backup_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_audio_logo.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/audio_logo.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_file.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_file.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/anim_dialog_slide_up.xml.flat",
+        "source": "com.contusfly.app-main-9:/anim/dialog_slide_up.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_translated_language_list.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_translated_language_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_frequency_dialog.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/frequency_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_starred_contact_received_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_starred_contact_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_recent_chat.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_recent_chat.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_status.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_status.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_checkbox_green.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/checkbox_green.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_baseline_visibility_off_black_24.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/baseline_visibility_off_black_24.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_join_call_audio_mute.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/join_call_audio_mute.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_layout_call_connected.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/layout_call_connected.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-ldpi_drawable_splash_gradient.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-ldpi/drawable_splash_gradient.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_contact_selection_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_contact_selection_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_file_download_grey.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_file_download_grey.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_curve_button_enable_disable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/curve_button_enable_disable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_top_corner_curve.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/top_corner_curve.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_add_more_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_add_more_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_people_selection_list_item_layout.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/people_selection_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_video_white.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_video_white.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_pin_filled_drawable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_pin_filled_drawable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_smartphone.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/smartphone.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_leave_group.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_leave_group.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_txt.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_txt.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_select_map_view.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_select_map_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_ic_button.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/ic_button.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_forward_message.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_forward_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_camera_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_camera_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/menu_contact_menu.xml.flat",
+        "source": "com.contusfly.app-main-9:/menu/contact_menu.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_user_info.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_user_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_curve_disable_button.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_curve_disable_button.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_cancel_black.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_cancel_black.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_file_message_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_file_message_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_sender_reply_csv.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_sender_reply_csv.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_icon_selector_password_eye.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/icon_selector_password_eye.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_bullet_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_bullet_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_type_video_receiver.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_type_video_receiver.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_restore_1.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/restore_1.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_microphone.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_microphone.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.contusfly.app-main-9:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_camera_profile_change.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_camera_profile_change.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_custom_profile_drawable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/custom_profile_drawable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_mark_read_black_24dp.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_mark_read_black_24dp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_edit_tag.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_edit_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_audio_message_sender_background.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_audio_message_sender_background.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_horizontal_file_sender_progress_bar.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/horizontal_file_sender_progress_bar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_back_arrow_white.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_back_arrow_white.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_list_chat_audio_received_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/list_chat_audio_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_custom_drawable.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/custom_drawable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_shape_invite_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/shape_invite_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_data_usage_settings.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_data_usage_settings.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_select_status_smiley.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/select_status_smiley.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_csv_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_csv_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_ic_image_placeholder.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/ic_image_placeholder.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_contact_selected_preview.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_contact_selected_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_music.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_music.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_blue_border_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/blue_border_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_star.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_star.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_xls.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_xls.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_audio_record_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_audio_record_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_media_links_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_media_links_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_pdf.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_pdf.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_logo.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_logo.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_user_profile_popup_ic_voice_call_24dp.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/user_profile_popup_ic_voice_call_24dp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_pick_contact.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_pick_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_zip.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_zip.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_ppt_new.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_ppt_new.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-mdpi_ic_chat_background.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-mdpi/ic_chat_background.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_ic_chat_background.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/ic_chat_background.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_call_grid_user_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/call_grid_user_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_location_sender_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_location_sender_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_timer_new.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_timer_new.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_select_status_text_color.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/select_status_text_color.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_camera_receiver_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_camera_receiver_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_drawable_recipient_seek_bar_thumb.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/drawable_recipient_seek_bar_thumb.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_join_call_video_state.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/join_call_video_state.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_checkbox.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/checkbox.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_bg_chat_shape_sender_audio.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/bg_chat_shape_sender_audio.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_pdf.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_pdf.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_user_profile_popup_ic_info_24dp.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/user_profile_popup_ic_info_24dp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_location_receiver_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_location_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_tag_list_item_layout.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_tag_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_file_receiver_reply.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_file_receiver_reply.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_chat_date.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_chat_date.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_mic_alert.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_mic_alert.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_share_contacts_row_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/share_contacts_row_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_view_caption.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/view_caption.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_message_delivered.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_message_delivered.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chat_toolbar.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chat_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_chatview_controls.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/chatview_controls.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_backup_selected.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_backup_selected.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_mobile.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_mobile.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_backup_remove.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_backup_remove.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_row_chat_video_sender_item.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/row_chat_video_sender_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_shape_chat_reply_receiver_header_bg.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/shape_chat_reply_receiver_header_bg.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_receiver_reply_xls.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_receiver_reply_xls.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_delete_media.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_delete_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_ic_user_img.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/ic_user_img.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_ie.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_ie.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_phone_call_icon.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_phone_call_icon.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_fragment_notification_instruction.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/fragment_notification_instruction.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/layout_activity_biometric.xml.flat",
+        "source": "com.contusfly.app-main-9:/layout/activity_biometric.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ls_ic_file.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ls_ic_file.xml"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xhdpi_ic_notification_blue.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xhdpi/ic_notification_blue.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable-xxhdpi_ic_ppt.png.flat",
+        "source": "com.contusfly.app-main-9:/drawable-xxhdpi/ic_ppt.png"
+    },
+    {
+        "merged": "com.contusfly.app-merged_res-7:/drawable_ic_unarchive_black.xml.flat",
+        "source": "com.contusfly.app-main-9:/drawable/ic_unarchive_black.xml"
+    }
+]

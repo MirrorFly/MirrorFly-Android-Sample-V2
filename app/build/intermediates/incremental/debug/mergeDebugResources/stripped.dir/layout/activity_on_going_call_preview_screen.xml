@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".call.groupcall.OnGoingCallPreviewActivity"
+    android:background="@drawable/ic_ongng_call_preview_bg">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/join_call_preview_toolbar"/>
+
+    <LinearLayout
+        android:id="@+id/layout_call_ended_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_join_call_mirrorfly_logo"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_30"
+            android:layout_marginBottom="@dimen/margin_40"/>
+
+        <ImageView
+            android:id="@+id/call_ended_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_join_call_ended"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_20"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/call_ended_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/call_ended_text"
+            android:layout_gravity="center"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_size_15"
+            android:fontFamily="@font/sf_ui_display_medium"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/call_ended_text_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/call_ended_text_message"
+            android:layout_gravity="center"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_size_13"
+            android:layout_marginTop="@dimen/margin_5"
+            android:fontFamily="@font/sf_ui_display_medium"
+            android:visibility="visible"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/return_to_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_button_shape"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_20"
+            android:paddingTop="@dimen/padding_10"
+            android:paddingEnd="@dimen/padding_20"
+            android:paddingBottom="@dimen/padding_10"
+            android:text="@string/return_to_chat"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_14"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_on_gng_call_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <include
+            android:id="@+id/view_users_profile_image"
+            layout="@layout/layout_group_call_members_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/internet_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/check_internet_connection"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_size_14"
+            android:layout_above="@+id/profile_view"
+            android:layout_below="@+id/view_users_profile_image"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:visibility="gone"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/profile_view"
+            android:layout_width="@dimen/margin_180"
+            android:layout_height="@dimen/margin_220"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/layout_call_options"
+            android:layout_marginBottom="@dimen/margin_40"
+            app:cardCornerRadius="@dimen/margin_25"
+            app:cardPreventCornerOverlap="false">
+
+            <LinearLayout
+                android:id="@+id/view_profile_pic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@drawable/ic_join_call_surface_bg"
+                android:visibility="gone">
+
+                <com.contusfly.views.CircularImageView
+                    android:id="@+id/img_profile_image"
+                    android:layout_width="@dimen/margin_80"
+                    android:layout_height="@dimen/margin_80"
+                    android:src="@drawable/ic_profile" />
+
+            </LinearLayout>
+
+            <com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
+                android:id="@+id/view_video_local"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignWithParentIfMissing="true"
+                android:visibility="visible" />
+
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:id="@+id/layout_call_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="@dimen/margin_130"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_20">
+
+                <ImageButton
+                    android:id="@+id/image_mute_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:background="@null"
+                    android:contentDescription="@null"
+                    android:src="@drawable/join_call_audio_mute"
+                    android:layout_centerVertical="true"/>
+
+                <ImageButton
+                    android:id="@+id/image_mute_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@null"
+                    android:contentDescription="@null"
+                    android:src="@drawable/join_call_video_state"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_join"
+                android:layout_width="@dimen/margin_130"
+                android:layout_height="@dimen/margin_45"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/margin_20"
+                android:background="@drawable/bg_button_state_list"
+                android:focusable="false"
+                android:fontFamily="@font/sf_ui_display_semi_bold"
+                android:gravity="center"
+                android:text="@string/join_now_lable"
+                android:textColor="?attr/white_color"
+                android:textSize="@dimen/text_size_14"
+                app:fontFamily="@font/sf_ui_display_semi_bold" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

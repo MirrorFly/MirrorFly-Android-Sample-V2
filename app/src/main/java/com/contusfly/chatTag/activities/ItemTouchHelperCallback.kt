@@ -12,7 +12,7 @@ class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) :
     }
 
     override fun isItemViewSwipeEnabled(): Boolean {
-        return true
+        return false
     }
 
     override fun getMovementFlags(

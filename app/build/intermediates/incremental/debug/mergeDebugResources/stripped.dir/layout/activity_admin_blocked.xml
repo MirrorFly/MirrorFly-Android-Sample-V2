@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".activities.AdminBlockedActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".activities.AdminBlockedActivity">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/mirrorfly_logo"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_50"
+            android:layout_marginStart="@dimen/margin_55"
+            android:layout_marginEnd="@dimen/margin_55"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/title_content_description"
+            android:src="@drawable/ic_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/user_blocked_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mirrorfly_logo"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/title_content_description"
+            android:gravity="center_vertical"
+            android:src="@drawable/ic_admin_block"
+            android:layout_marginTop="@dimen/margin_20"
+            app:layout_constraintTop_toBottomOf="@id/mirrorfly_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/user_blocked_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_55"
+            android:layout_marginEnd="@dimen/margin_55"
+            android:text="@string/admin_block_message"
+            android:textSize="@dimen/text_size_18"
+            android:textColor="@color/text_color_black"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:gravity="center"
+            android:layout_below="@id/user_blocked_icon"
+            android:layout_marginTop="@dimen/margin_15"
+            app:layout_constraintTop_toBottomOf="@id/user_blocked_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/user_blocked_message_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_55"
+            android:layout_marginEnd="@dimen/margin_55"
+            android:text="@string/admin_block_message_label"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="@color/text_black_light"
+            android:fontFamily="@font/sf_ui_display_light"
+            android:gravity="center"
+            android:layout_below="@id/user_blocked_message"
+            android:layout_marginTop="@dimen/margin_10"
+            app:layout_constraintTop_toBottomOf="@id/user_blocked_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/admin_mail_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_55"
+            android:layout_marginEnd="@dimen/margin_55"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="@color/colorAccent"
+            android:textColorLink="@color/colorAccent"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:gravity="center"
+            android:layout_below="@id/user_blocked_message_label"
+            android:layout_marginTop="@dimen/margin_10"
+            app:layout_constraintTop_toBottomOf="@id/user_blocked_message_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/user_ok"
+            android:layout_width="@dimen/margin_120"
+            android:layout_height="@dimen/margin_40"
+            android:layout_marginTop="@dimen/margin_15"
+            android:text="@string/action_ok"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_button_state_list"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:gravity="center"
+            android:textColor="?attr/white_color"
+            android:textSize="@dimen/text_size_14"
+            app:fontFamily="@font/sf_ui_display_semi_bold"
+            app:layout_constraintTop_toBottomOf="@id/admin_mail_address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout >
+
+</LinearLayout >

@@ -109,7 +109,7 @@ class PinEntryChange : AppCompatActivity() {
         toolbar.navigationIcon!!.setColorFilter(
             ContextCompat
             .getColor(this, R.color.color_black), PorterDuff.Mode.MULTIPLY)
-        toolbar.setNavigationOnClickListener { v: View? -> finish() }
+        toolbar.setNavigationOnClickListener { _: View? -> finish() }
     }
 
     /**
@@ -146,7 +146,7 @@ class PinEntryChange : AppCompatActivity() {
      * click listener for save vutton
      */
     private fun setSaveBtnOnClickListener() {
-        binding.saveBtn!!.setOnClickListener { v: View? ->
+        binding.saveBtn!!.setOnClickListener { _: View? ->
             if (validateOldAndNewPin()) {
                 if (validatePin()) {
                     try {

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/media_view_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginEnd="@dimen/margin_15"
+        android:layout_marginBottom="@dimen/margin_10"
+        android:background="@drawable/bg_chat_shape_links"
+        app:layout_constraintBottom_toTopOf="@+id/links_separator"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_chat_shape_links_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_link_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/image_link_preview"
+                    android:layout_width="@dimen/margin_70"
+                    android:layout_height="@dimen/margin_70"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/roundedLinkImageView"
+                    app:srcCompat="@drawable/ic_link_placeholder" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5"
+                    android:layout_marginEnd="@dimen/margin_20"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_link_preview"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_link_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/sf_ui_display_regular"
+                        android:includeFontPadding="false"
+                        android:maxLines="2"
+                        android:textColor="@color/color_black"
+                        android:textSize="@dimen/text_size_14"
+                        tools:text="iPhone 12 extreme water test" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_link_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_2"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/sf_ui_display_regular"
+                        android:includeFontPadding="false"
+                        android:maxLines="2"
+                        android:textColor="@color/text_black_dark"
+                        android:textSize="@dimen/text_size_10"
+                        tools:text="The iPhone is a free way to keep your files backed up and easy to reach from any phone, tablet or computer. Start with 15 GB of tablet or computer. Start with 15 GB of tablet or computer. Start with 15 GB of tablet or computer. Start with 15 GB of" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_link_host"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_2"
+                        android:fontFamily="@font/sf_ui_display_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/color_message_acknowledged"
+                        android:textSize="@dimen/text_size_10"
+                        tools:text="www. YouTube.com" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_link_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintTop_toBottomOf="@+id/layout_link">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_link_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/sf_ui_display_regular"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:paddingStart="@dimen/margin_10"
+                android:paddingTop="@dimen/margin_7"
+                android:paddingEnd="@dimen/margin_10"
+                android:paddingBottom="@dimen/margin_7"
+                android:singleLine="true"
+                android:textColor="@color/text_blue"
+                android:textSize="@dimen/text_size_13"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/image_link_navigation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="iPhone 12 extreme water test" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_link_navigation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_link_navigation" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/links_separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_0.5"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginEnd="@dimen/margin_15"
+        android:background="@color/color_list_divider_color"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

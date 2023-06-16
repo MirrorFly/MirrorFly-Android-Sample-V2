@@ -608,51 +608,58 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                           txtChat: MessageTextView,
                           imgImageVideo: AppCompatImageView,
                           replyChatMessage: ChatMessage) {
-        val replyMessage = replyChatMessage.getReplyParentChatMessage()
-        txtUsername.setTextColor(replyMessage.getSenderName().getColourCode())
-        txtUsername.text = replyMessage.getSenderName()
-        if (replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted()) {
-            txtChat.text = getString(R.string.recalled_message_not_available)
-        } else {
-            when (replyMessage.getMessageType()) {
-                MessageType.TEXT -> {
-                    txtChat.maxWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
-                    replyChatMessage?.let { setReplyViewMessageFormat(it,context!!,txtChat!!,"",false) }
-                    imgImageVideo.gone()
-                    layout.show()
-                }
-                MessageType.LOCATION -> {
-                    txtChat.text = getString(R.string.action_location)
-                    imgIcon.setImageResource(R.drawable.ic_map_reply)
-                    imgIcon.show()
-                    imgImageVideo.show()
-                    val url = getMapImageUri(
+        try {
+            val replyMessage = replyChatMessage.getReplyParentChatMessage()
+            txtUsername.setTextColor(replyMessage.getSenderName().getColourCode())
+            txtUsername.text = replyMessage.getSenderName()
+            if (replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted()) {
+                txtChat.text = getString(R.string.recalled_message_not_available)
+            } else {
+                when (replyMessage.getMessageType()) {
+                    MessageType.TEXT -> {
+                        txtChat.maxWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
+                        replyChatMessage?.let { setReplyViewMessageFormat(it,context!!,txtChat!!,"",false) }
+                        imgImageVideo.gone()
+                        layout.show()
+                    }
+                    MessageType.LOCATION -> {
+                        txtChat.text = getString(R.string.action_location)
+                        imgIcon.setImageResource(R.drawable.ic_map_reply)
+                        imgIcon.show()
+                        imgImageVideo.show()
+                        val url = getMapImageUri(
                             replyMessage.getLocationChatMessage().getLatitude(),
                             replyMessage.getLocationChatMessage().getLongitude()
-                    )
-                    loadImageWithGlide(this,
+                        )
+                        loadImageWithGlide(this,
                             url, imgImageVideo, R.drawable.ic_map_placeholder)
-                    layout.show()
+                        layout.show()
+                    }
+                    MessageType.CONTACT -> {
+                        val contactMessage = (getString(R.string.action_contact) + " : "
+                                + replyMessage.getContactChatMessage().getContactName())
+                        txtChat.text = contactMessage
+                        imgIcon.setImageResource(R.drawable.ic_contact_reply)
+                        imgIcon.show()
+                        layout.show()
+                    }
+                    MessageType.DOCUMENT -> {
+                        val fileMessage = if (replyMessage.getMediaChatMessage().getMediaFileName().isEmpty()) this.getString(R.string.title_file) else replyMessage.getMediaChatMessage().getMediaFileName()
+                        EmojiUtils.setMessageTextWithEllipsis(txtChat, fileMessage)
+                        imgIcon.show()
+                        imgImageVideo.gone()
+                        imgIcon.setImageResource(R.drawable.ic_file_reply)
+                        layout.show()
+                    }
+                    else -> mediaReplyView(layout, imgIcon, txtChat, imgImageVideo, replyChatMessage)
                 }
-                MessageType.CONTACT -> {
-                    val contactMessage = (getString(R.string.action_contact) + " : "
-                            + replyMessage.getContactChatMessage().getContactName())
-                    txtChat.text = contactMessage
-                    imgIcon.setImageResource(R.drawable.ic_contact_reply)
-                    imgIcon.show()
-                    layout.show()
-                }
-                MessageType.DOCUMENT -> {
-                    val fileMessage = if (replyMessage.getMediaChatMessage().getMediaFileName().isEmpty()) this.getString(R.string.title_file) else replyMessage.getMediaChatMessage().getMediaFileName()
-                    EmojiUtils.setMessageTextWithEllipsis(txtChat, fileMessage)
-                    imgIcon.show()
-                    imgImageVideo.gone()
-                    imgIcon.setImageResource(R.drawable.ic_file_reply)
-                    layout.show()
-                }
-                else -> mediaReplyView(layout, imgIcon, txtChat, imgImageVideo, replyChatMessage)
             }
+        } catch(e:NullPointerException) {
+            LogMessage.e("Error",e.toString())
+        } catch(e:Exception) {
+            LogMessage.e("Error",e.toString())
         }
+
     }
 
     private fun mediaReplyView(layout: View,

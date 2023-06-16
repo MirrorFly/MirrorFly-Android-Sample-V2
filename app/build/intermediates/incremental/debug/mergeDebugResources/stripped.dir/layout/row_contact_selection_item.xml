@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/padding_8"
+    android:paddingEnd="@dimen/padding_8">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.contusfly.views.CircularImageView
+            android:id="@+id/image_profile_picture"
+            android:layout_width="@dimen/margin_60"
+            android:layout_height="@dimen/margin_60"
+            android:contentDescription="@string/title_app_name"
+            android:padding="@dimen/padding_10"
+            android:src="@drawable/ic_profile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.contusfly.views.CircularImageView
+            android:id="@+id/select_contact_icon"
+            android:layout_width="@dimen/margin_12"
+            android:layout_height="@dimen/margin_12"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintCircle="@id/image_profile_picture"
+            app:layout_constraintCircleAngle="130"
+            app:layout_constraintCircleRadius="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_selected_contact" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text_contact_name"
+            style="@style/NewTextSemiBoldStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_2"
+            android:layout_marginEnd="@dimen/margin_2"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_13"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_profile_picture"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_0.5"
+        android:layout_marginStart="@dimen/margin_75"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:background="@color/color_list_divider_color" />
+
+</LinearLayout>

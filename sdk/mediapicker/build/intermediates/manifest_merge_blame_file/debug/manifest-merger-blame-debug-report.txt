@@ -1,0 +1,67 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.contusfly.mediapicker" >
+4
+5    <uses-sdk
+6        android:minSdkVersion="21"
+6-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+7        android:targetSdkVersion="33" />
+7-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml
+8
+9    <uses-permission
+9-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:5:5-6:37
+10        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+10-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:5:22-78
+11        android:maxSdkVersion="29" />
+11-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:6:9-35
+12
+13    <!-- android 13 permission -->
+14    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+14-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:9:5-76
+14-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:9:22-73
+15    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+15-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:10:5-75
+15-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:10:22-72
+16    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+16-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:11:5-75
+16-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:11:22-72
+17    <!-- Required to maintain app compatibility. -->
+18    <uses-permission
+18-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:13:5-14:38
+19        android:name="android.permission.READ_EXTERNAL_STORAGE"
+19-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:13:22-77
+20        android:maxSdkVersion="32" />
+20-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:14:9-35
+21    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+21-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:15:5-77
+21-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:15:22-74
+22
+23    <queries>
+23-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:25:5-30:15
+24        <intent>
+24-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:26:9-29:18
+25            <action android:name="android.intent.action.PICK" />
+25-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:27:13-65
+25-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:27:21-62
+26
+27            <data android:mimeType="video/*, image/*" />
+27-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:28:13-57
+27-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:28:19-54
+28        </intent>
+29    </queries>
+30
+31    <application>
+31-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:17:5-23:19
+32        <activity
+32-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:18:9-22:57
+33            android:name="com.contusfly.mediapicker.ui.MediaPickerActivity"
+33-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:19:13-51
+34            android:label="@string/title_activity_media_picker"
+34-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:20:13-64
+35            android:screenOrientation="portrait"
+35-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:21:13-49
+36            android:theme="@style/ef_ImagePickerTheme" />
+36-->D:\Android Projects\gihub\sdk\mediapicker\src\main\AndroidManifest.xml:22:13-55
+37    </application>
+38
+39</manifest>

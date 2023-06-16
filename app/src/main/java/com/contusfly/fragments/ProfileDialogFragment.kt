@@ -42,7 +42,7 @@ import java.io.IOException
  */
 class ProfileDialogFragment : DialogFragment() {
 
-    private val exceptionHandler = CoroutineExceptionHandler { context, exception ->
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         println("Coroutine Exception :  ${exception.printStackTrace()}")
     }
 

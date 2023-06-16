@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 3.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2018 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/padding_1"
+    android:paddingBottom="@dimen/padding_1">
+
+    <com.contusfly.views.CircularImageView
+        android:id="@+id/image_participant_picture"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@string/cd_user_profile_image"
+        android:src="@drawable/profile_img"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_participant_name"
+        style="@style/TitleSemiBold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="Visher Andro"
+        app:layout_constraintBottom_toTopOf="@+id/text_participant_status"
+        app:layout_constraintEnd_toStartOf="@+id/text_admin"
+        app:layout_constraintStart_toEndOf="@id/image_participant_picture"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_admin"
+        style="@style/TitleMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Admin"
+        android:textColor="@color/blue"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/text_participant_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_participant_name"
+        app:layout_constraintTop_toTopOf="@+id/text_participant_name" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_participant_status"
+        style="@style/TextParticipantStatusStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_5"
+        android:layout_marginBottom="@dimen/margin_5"
+        android:minWidth="30dp"
+        android:text="I am on MirrorFly"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_participant_name"
+        app:layout_constraintStart_toStartOf="@+id/text_participant_name"
+        app:layout_constraintTop_toBottomOf="@+id/text_participant_name" />
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/margin_0.5"
+        android:layout_marginTop="@dimen/margin_8"
+        android:background="@color/color_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/text_participant_name"
+        app:layout_constraintStart_toStartOf="@id/text_participant_name"
+        app:layout_constraintTop_toBottomOf="@id/image_participant_picture" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

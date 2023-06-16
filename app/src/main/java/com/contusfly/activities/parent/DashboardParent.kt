@@ -611,7 +611,7 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
     }
 
     private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        ActivityResultContracts.RequestMultiplePermissions()) { _ ->
         if(ChatUtils.checkNotificationPermission(this, Manifest.permission.POST_NOTIFICATIONS) && ismarkRead){
             markasRead()
         }

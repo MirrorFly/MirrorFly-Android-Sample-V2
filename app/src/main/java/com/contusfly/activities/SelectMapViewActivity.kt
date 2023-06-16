@@ -128,7 +128,6 @@ class SelectMapViewActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         val cameraPosition = CameraPosition.Builder().target(location).zoom(18f).bearing(360f).tilt(15f)
                 .build()
 
-        //  googleMap.setMyLocationEnabled(true);
         /**
          * Display the camera position of the map marker to zoom in
          */

@@ -34,7 +34,7 @@ object ProfileDetailsUtils {
      */
     fun getGroupUsersNames(groupJid: String?, getGroupUsersNameCallback: GetGroupUsersNameCallback) {
         groupJid?.let {
-            GroupManager.getGroupMembersList(false, groupJid) { isSuccess, throwable, data ->
+            GroupManager.getGroupMembersList(false, groupJid) { isSuccess, _, data ->
                 if (isSuccess) {
                     val groupUsers = data[Constants.SDK_DATA] as ArrayList<ProfileDetails>
                     val userNames = mutableListOf<String>()

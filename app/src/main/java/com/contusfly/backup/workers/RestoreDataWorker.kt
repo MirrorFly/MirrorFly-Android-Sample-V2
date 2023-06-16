@@ -2,10 +2,7 @@ package com.contusfly.backup.workers
 
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.contusfly.R
 import com.mirrorflysdk.flycommons.LogMessage
@@ -19,8 +16,6 @@ import com.mirrorflysdk.backup.RestoreManager
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
-import java.lang.invoke.MethodHandles.Lookup.PACKAGE
-import kotlin.concurrent.thread
 
 class RestoreDataWorker(private val appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
 

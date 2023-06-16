@@ -11,18 +11,19 @@
         android:orientation="vertical"
         tools:context=".fragments.RecentChatListFragment">
 
+        <com.contusfly.views.CustomChatTagRecyclerView
+            android:id="@+id/chat_tag_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_11"
+            android:layoutAnimation="@anim/layout_animation_from_bottom"
+            android:visibility="gone" />
+
         <include
             android:id="@+id/no_message_view"
             layout="@layout/view_no_messages"
             android:visibility="gone" />
 
-    <com.contusfly.views.CustomChatTagRecyclerView
-        android:id="@+id/chat_tag_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_11"
-        android:visibility="gone"
-        android:layoutAnimation="@anim/layout_animation_from_bottom"/>
 
         <com.contusfly.views.CustomRecyclerView
             android:id="@+id/view_list_contacts"

@@ -821,7 +821,7 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
             this, arrayOf(
                 destinationPath
             ), null
-        ) { path: String, uri: Uri? -> Log.i("TAG", "Finished scanning $path") }
+        ) { path: String, _: Uri? -> Log.i("TAG", "Finished scanning $path") }
     }
 
     private fun saveVideoToCameraRoll(img: String) {
@@ -866,7 +866,7 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
             this, arrayOf(
                 videoDestinationPath
             ), null
-        ) { path: String, uri: Uri? -> Log.i("TAG", "Finished scanning $path") }
+        ) { path: String, _: Uri? -> Log.i("TAG", "Finished scanning $path") }
     }
 
     /**

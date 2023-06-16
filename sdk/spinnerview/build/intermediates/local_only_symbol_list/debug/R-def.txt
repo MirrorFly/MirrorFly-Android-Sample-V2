@@ -1,0 +1,43 @@
+R_DEF: Internal format may change without notice
+local
+attr? ms_arrow_tint
+attr? ms_background_color
+attr? ms_background_selector
+attr? ms_dropdown_height
+attr? ms_dropdown_max_height
+attr? ms_hide_arrow
+attr? ms_hint
+attr? ms_hint_color
+attr? ms_padding_bottom
+attr? ms_padding_left
+attr? ms_padding_right
+attr? ms_padding_top
+attr? ms_popup_padding_bottom
+attr? ms_popup_padding_left
+attr? ms_popup_padding_right
+attr? ms_popup_padding_top
+attr? ms_text_color
+color black
+color purple_200
+color purple_500
+color purple_700
+color teal_200
+color teal_700
+color white
+dimen ms__item_height
+dimen ms__padding_left
+dimen ms__padding_top
+dimen ms__popup_padding_left
+dimen ms__popup_padding_top
+drawable ms__arrow
+drawable ms__drawable
+drawable ms__menu_down
+drawable ms__selector
+id fill_parent
+id match_parent
+id tv_tinted_spinner
+id wrap_content
+layout ms__list_item
+string app_name
+style Theme.UIKit
+styleable MaterialSpinner ms_arrow_tint ms_hide_arrow ms_background_color ms_text_color ms_dropdown_max_height ms_dropdown_height ms_background_selector ms_padding_top ms_padding_left ms_padding_bottom ms_padding_right ms_popup_padding_top ms_popup_padding_left ms_popup_padding_bottom ms_popup_padding_right ms_hint ms_hint_color

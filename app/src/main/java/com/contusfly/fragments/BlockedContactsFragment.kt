@@ -84,9 +84,9 @@ class BlockedContactsFragment : Fragment(), CoroutineScope, CommonAlertDialog.Co
     }
 
     private fun setObservers() {
-        viewModel.blockedProfilesLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.blockedProfilesLiveData.observe(viewLifecycleOwner) {
             refreshAdapter(false)
-        })
+        }
 
         viewModel.availableFeatureLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             featureActionValidation(it)

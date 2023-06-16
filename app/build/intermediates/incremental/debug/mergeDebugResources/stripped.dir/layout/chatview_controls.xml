@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/padding_10"
+    android:paddingLeft="@dimen/padding_8"
+    android:paddingRight="@dimen/padding_8"
+    android:paddingTop="@dimen/padding_5"
+    android:background="@drawable/attachement_background"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/attachmentRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center">
+
+            <ImageView
+                android:id="@+id/view_one"
+                android:layout_width="@dimen/margin_15"
+                android:layout_height="@dimen/margin_5"
+                android:background="@drawable/page_indicator_one_grey"/>
+
+            <ImageView
+                android:id="@+id/view_two"
+                android:layout_width="@dimen/margin_5"
+                android:layout_height="@dimen/margin_5"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:background="@drawable/page_indicator_two_grey">
+
+            </ImageView>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cameraview_default_autofocus_marker">com.otaliastudios.cameraview.markers.DefaultAutoFocusMarker</string>
+    <string name="cameraview_filter_autofix">com.otaliastudios.cameraview.filters.AutoFixFilter</string>
+    <string name="cameraview_filter_black_and_white">com.otaliastudios.cameraview.filters.BlackAndWhiteFilter</string>
+    <string name="cameraview_filter_brightness">com.otaliastudios.cameraview.filters.BrightnessFilter</string>
+    <string name="cameraview_filter_contrast">com.otaliastudios.cameraview.filters.ContrastFilter</string>
+    <string name="cameraview_filter_cross_process">com.otaliastudios.cameraview.filters.CrossProcessFilter</string>
+    <string name="cameraview_filter_documentary">com.otaliastudios.cameraview.filters.DocumentaryFilter</string>
+    <string name="cameraview_filter_duotone">com.otaliastudios.cameraview.filters.DuotoneFilter</string>
+    <string name="cameraview_filter_fill_light">com.otaliastudios.cameraview.filters.FillLightFilter</string>
+    <string name="cameraview_filter_gamma">com.otaliastudios.cameraview.filters.GammaFilter</string>
+    <string name="cameraview_filter_grain">com.otaliastudios.cameraview.filters.GrainFilter</string>
+    <string name="cameraview_filter_grayscale">com.otaliastudios.cameraview.filters.GrayscaleFilter</string>
+    <string name="cameraview_filter_hue">com.otaliastudios.cameraview.filters.HueFilter</string>
+    <string name="cameraview_filter_invert_colors">com.otaliastudios.cameraview.filters.InvertColorsFilter</string>
+    <string name="cameraview_filter_lomoish">com.otaliastudios.cameraview.filters.LomoishFilter</string>
+    <string name="cameraview_filter_none">com.otaliastudios.cameraview.filter.NoFilter</string>
+    <string name="cameraview_filter_posterize">com.otaliastudios.cameraview.filters.PosterizeFilter</string>
+    <string name="cameraview_filter_saturation">com.otaliastudios.cameraview.filters.SaturationFilter</string>
+    <string name="cameraview_filter_sepia">com.otaliastudios.cameraview.filters.SepiaFilter</string>
+    <string name="cameraview_filter_sharpness">com.otaliastudios.cameraview.filters.SharpnessFilter</string>
+    <string name="cameraview_filter_temperature">com.otaliastudios.cameraview.filters.TemperatureFilter</string>
+    <string name="cameraview_filter_tint">com.otaliastudios.cameraview.filters.TintFilter</string>
+    <string name="cameraview_filter_vignette">com.otaliastudios.cameraview.filters.VignetteFilter</string>
+    <declare-styleable name="CameraView">
+
+        <attr format="integer|reference" name="cameraPictureSizeMinWidth"/>
+        <attr format="integer|reference" name="cameraPictureSizeMaxWidth"/>
+        <attr format="integer|reference" name="cameraPictureSizeMinHeight"/>
+        <attr format="integer|reference" name="cameraPictureSizeMaxHeight"/>
+        <attr format="integer|reference" name="cameraPictureSizeMinArea"/>
+        <attr format="integer|reference" name="cameraPictureSizeMaxArea"/>
+        <attr format="boolean" name="cameraPictureSizeSmallest"/>
+        <attr format="boolean" name="cameraPictureSizeBiggest"/>
+        <attr format="string|reference" name="cameraPictureSizeAspectRatio"/>
+
+        <attr format="integer|reference" name="cameraVideoSizeMinWidth"/>
+        <attr format="integer|reference" name="cameraVideoSizeMaxWidth"/>
+        <attr format="integer|reference" name="cameraVideoSizeMinHeight"/>
+        <attr format="integer|reference" name="cameraVideoSizeMaxHeight"/>
+        <attr format="integer|reference" name="cameraVideoSizeMinArea"/>
+        <attr format="integer|reference" name="cameraVideoSizeMaxArea"/>
+        <attr format="boolean" name="cameraVideoSizeSmallest"/>
+        <attr format="boolean" name="cameraVideoSizeBiggest"/>
+        <attr format="string|reference" name="cameraVideoSizeAspectRatio"/>
+
+        <attr format="integer|reference" name="cameraSnapshotMaxWidth"/>
+        <attr format="integer|reference" name="cameraSnapshotMaxHeight"/>
+
+        <attr format="integer|reference" name="cameraFrameProcessingMaxWidth"/>
+        <attr format="integer|reference" name="cameraFrameProcessingMaxHeight"/>
+        <attr format="integer|reference" name="cameraFrameProcessingFormat"/>
+        <attr format="integer|reference" name="cameraFrameProcessingPoolSize"/>
+        <attr format="integer|reference" name="cameraFrameProcessingExecutors"/>
+
+        <attr format="integer|reference" name="cameraVideoBitRate"/>
+        <attr format="integer|reference" name="cameraAudioBitRate"/>
+        <attr format="integer|reference" name="cameraPreviewFrameRate"/>
+        <attr format="boolean" name="cameraPreviewFrameRateExact"/>
+
+        <attr format="enum" name="cameraGestureTap">
+            <enum name="none" value="0"/>
+            <enum name="autoFocus" value="1"/>
+            <enum name="takePicture" value="2"/>
+            <enum name="takePictureSnapshot" value="3"/>
+        </attr>
+
+        <attr format="enum" name="cameraGestureLongTap">
+            <enum name="none" value="0"/>
+            <enum name="autoFocus" value="1"/>
+            <enum name="takePicture" value="2"/>
+            <enum name="takePictureSnapshot" value="3"/>
+        </attr>
+
+        <attr format="enum" name="cameraGesturePinch">
+            <enum name="none" value="0"/>
+            <enum name="zoom" value="4"/>
+            <enum name="exposureCorrection" value="5"/>
+            <enum name="filterControl1" value="6"/>
+            <enum name="filterControl2" value="7"/>
+        </attr>
+
+        <attr format="enum" name="cameraGestureScrollHorizontal">
+            <enum name="none" value="0"/>
+            <enum name="zoom" value="4"/>
+            <enum name="exposureCorrection" value="5"/>
+            <enum name="filterControl1" value="6"/>
+            <enum name="filterControl2" value="7"/>
+        </attr>
+
+        <attr format="enum" name="cameraGestureScrollVertical">
+            <enum name="none" value="0"/>
+            <enum name="zoom" value="4"/>
+            <enum name="exposureCorrection" value="5"/>
+            <enum name="filterControl1" value="6"/>
+            <enum name="filterControl2" value="7"/>
+        </attr>
+
+        <attr format="enum" name="cameraEngine">
+            <enum name="camera1" value="0"/>
+            <enum name="camera2" value="1"/>
+        </attr>
+
+        <attr format="enum" name="cameraPreview">
+            <enum name="surface" value="0"/>
+            <enum name="texture" value="1"/>
+            <enum name="glSurface" value="2"/>
+        </attr>
+
+        <attr format="enum" name="cameraFacing">
+            <enum name="back" value="0"/>
+            <enum name="front" value="1"/>
+        </attr>
+
+        <attr format="enum" name="cameraHdr">
+            <enum name="off" value="0"/>
+            <enum name="on" value="1"/>
+        </attr>
+
+        <attr format="enum" name="cameraFlash">
+            <enum name="off" value="0"/>
+            <enum name="on" value="1"/>
+            <enum name="auto" value="2"/>
+            <enum name="torch" value="3"/>
+        </attr>
+
+        <attr format="enum" name="cameraWhiteBalance">
+            <enum name="auto" value="0"/>
+            <enum name="incandescent" value="1"/>
+            <enum name="fluorescent" value="2"/>
+            <enum name="daylight" value="3"/>
+            <enum name="cloudy" value="4"/>
+        </attr>
+
+        <attr format="enum" name="cameraMode">
+            <enum name="picture" value="0"/>
+            <enum name="video" value="1"/>
+        </attr>
+
+        <attr format="enum" name="cameraAudio">
+            <enum name="off" value="0"/>
+            <enum name="on" value="1"/>
+            <enum name="mono" value="2"/>
+            <enum name="stereo" value="3"/>
+        </attr>
+
+        <attr format="enum" name="cameraGrid">
+            <enum name="off" value="0"/>
+            <enum name="draw3x3" value="1"/>
+            <enum name="draw4x4" value="2"/>
+            <enum name="drawPhi" value="3"/>
+        </attr>
+
+        <attr format="color|reference" name="cameraGridColor"/>
+
+        <attr format="boolean" name="cameraPlaySounds"/>
+
+        <attr format="float" name="cameraVideoMaxSize"/>
+
+        <attr format="integer" name="cameraVideoMaxDuration"/>
+
+        <attr format="enum" name="cameraVideoCodec">
+            <enum name="deviceDefault" value="0"/>
+            <enum name="h263" value="1"/>
+            <enum name="h264" value="2"/>
+        </attr>
+
+        <attr format="enum" name="cameraAudioCodec">
+            <enum name="deviceDefault" value="0"/>
+            <enum name="aac" value="1"/>
+            <enum name="heAac" value="2"/>
+            <enum name="aacEld" value="3"/>
+        </attr>
+
+        <attr format="integer|reference" name="cameraAutoFocusResetDelay"/>
+
+        <attr format="string|reference" name="cameraAutoFocusMarker"/>
+
+        <attr format="string|reference" name="cameraFilter"/>
+
+        <attr format="boolean" name="cameraUseDeviceOrientation"/>
+
+        <attr format="boolean|reference" name="cameraPictureMetering"/>
+        <attr format="boolean|reference" name="cameraPictureSnapshotMetering"/>
+
+        <attr format="enum" name="cameraPictureFormat">
+            <enum name="jpeg" value="0"/>
+            <enum name="dng" value="1"/>
+        </attr>
+
+        <attr format="boolean|reference" name="cameraRequestPermissions"/>
+        <attr format="boolean|reference" name="cameraExperimental"/>
+
+        <attr format="boolean" name="cameraDrawHardwareOverlays"/>
+
+    </declare-styleable>
+    <declare-styleable name="CameraView_Layout">
+        <attr format="boolean" name="layout_drawOnPreview"/>
+        <attr format="boolean" name="layout_drawOnPictureSnapshot"/>
+        <attr format="boolean" name="layout_drawOnVideoSnapshot"/>
+
+    </declare-styleable>
+</resources>

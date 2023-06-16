@@ -23,8 +23,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
-import com.contusfly.getColourCode
-import com.contusfly.views.CustomDrawable
 import com.contusfly.views.DoProgressDialog
 import com.mirrorflysdk.api.ChatManager.fileProviderAuthority
 import com.mirrorflysdk.media.MediaUploadHelper
@@ -416,38 +414,5 @@ object MediaUtils {
         } catch (e: java.lang.Exception) {
             LogMessage.e(e)
         }
-    }
-    fun loadSetDrawable(nameValue: String,icon: CustomDrawable) : CustomDrawable {
-        val initialName = nameValue.split(" ".toRegex()).toTypedArray()
-        if (initialName.size == 1) {
-            val charLength = initialName[0].toCharArray().size
-            when {
-                charLength <= 0 -> {
-                    icon.setDrawableColour(nameValue.getColourCode())
-                    icon.setText("")
-                    icon
-                }
-                charLength <= 1 -> {
-                    val firstLetter = String(Character.toChars(initialName[0].codePointAt(0)))
-                    icon.setDrawableColour(nameValue.getColourCode())
-                    icon.setText(firstLetter.toUpperCase())
-                    icon
-                }
-                else -> {
-                    val firstLetter = String(Character.toChars(initialName[0].codePointAt(0)))
-                    val secondLetter = String(Character.toChars(initialName[0].codePointAt(1)))
-                    icon.setDrawableColour(nameValue.getColourCode())
-                    icon.setText(firstLetter.toUpperCase() + secondLetter.toUpperCase())
-                    icon
-                }
-            }
-        } else {
-            val firstLetter = String(Character.toChars(initialName[0].codePointAt(0)))
-            val secondLetter = String(Character.toChars(initialName[1].codePointAt(0)))
-            icon.setText(firstLetter.toUpperCase() + secondLetter.toUpperCase())
-            icon.setDrawableColour(nameValue.getColourCode())
-            icon
-        }
-        return icon
     }
 }

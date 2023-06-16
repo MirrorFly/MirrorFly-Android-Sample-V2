@@ -20,6 +20,7 @@ import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.ChatManager.getMediaMessages
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycommons.LogMessage
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -166,13 +167,18 @@ class MediaSlideActivity : BaseActivity() {
      */
     private fun isMediaLoaded(message: ChatMessage): Boolean {
         var isLoaded = false
-        if (message.getMediaChatMessage()
-                .getMediaDownloadStatus() == MediaDownloadStatus.MEDIA_DOWNLOADED
-            || message.getMediaChatMessage()
-                .getMediaUploadStatus() == MediaUploadStatus.MEDIA_UPLOADED
-        ) {
-            isLoaded = true
+        try {
+            if (message.getMediaChatMessage()
+                    .getMediaDownloadStatus() == MediaDownloadStatus.MEDIA_DOWNLOADED
+                || message.getMediaChatMessage()
+                    .getMediaUploadStatus() == MediaUploadStatus.MEDIA_UPLOADED
+            ) {
+                isLoaded = true
+            }
+        } catch(e:Exception){
+            LogMessage.e("Exception",e.toString())
         }
+
         return isLoaded
     }
 }

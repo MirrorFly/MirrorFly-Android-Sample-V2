@@ -1,0 +1,59 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:2:1-29:12
+INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:2:1-29:12
+INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:2:1-29:12
+	package
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:4:5-43
+		INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml
+		INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:3:5-51
+	xmlns:android
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.CAMERA
+ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:6:5-65
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:6:22-62
+uses-feature#android.hardware.camera
+ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:12:5-14:35
+	android:required
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:14:9-33
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:13:9-47
+uses-feature#android.hardware.camera.autofocus
+ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:15:5-17:35
+	android:required
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:17:9-33
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:16:9-57
+uses-feature#android.hardware.camera.front
+ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:18:5-20:35
+	android:required
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:20:9-33
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:19:9-53
+uses-feature#android.hardware.microphone
+ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:21:5-23:35
+	android:required
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:23:9-33
+	android:name
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:22:9-51
+uses-sdk
+ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:25:5-66
+INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:25:5-66
+INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:25:5-66
+INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:25:5-66
+INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:25:5-66
+	tools:overrideLibrary
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:25:15-63
+	android:targetSdkVersion
+		INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:25:5-66
+		INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml
+		ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:25:5-66
+		INJECTED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml
+application
+ADDED from D:\Android Projects\gihub\sdk\cameraview\src\main\AndroidManifest.xml:27:5-19

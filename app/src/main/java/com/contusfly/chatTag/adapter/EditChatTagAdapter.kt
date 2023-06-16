@@ -16,7 +16,7 @@ import com.mirrorflysdk.flydatabase.model.ChatTagModel
 class EditChatTagAdapter (
     val mContext: Context,
     val itemclick: ListItemClickListener,
-    var chatTagnamelist: MutableList<ChatTagModel>,var reorderList: ReorderList
+    var chatTagnamelist: MutableList<ChatTagModel>, var reorderList: ReorderList
 ) : RecyclerView.Adapter<EditChatTagAdapter.ViewHolder>(),ItemTouchHelperAdapter {
 
     private lateinit var binding: EditChatTagListItemLayoutBinding
@@ -42,13 +42,13 @@ class EditChatTagAdapter (
             binding.editChatTagNameTv.text = ""
             binding.editChatTagInformationTv.text = ""
 
-            if (item.getisRecomendedTag()) {
+            if (item.isRecomendedTag) {
                 binding.editChatTagNameTv.text = item.tagname
                 binding.editChatTagInformationTv.text=item.taginfo
                 binding.editChatTagNameTv.setTextColor(ContextCompat.getColor(mContext, R.color.blue))
             } else {
                 binding.editChatTagNameTv.text = item.tagname
-                binding.editChatTagInformationTv.text = FlyCore.getChatTagSummary(item.memberIdlist)
+                binding.editChatTagInformationTv.text = FlyCore.getChatTagSummary(item.memberidlist!!)
                 binding.editChatTagNameTv.setTextColor(
                     ContextCompat.getColor(
                         mContext,
@@ -70,7 +70,6 @@ class EditChatTagAdapter (
         try {
             chatTagnamelist.removeAt(selectedPosition)
             notifyItemRemoved(selectedPosition)
-            notifyItemChanged(selectedPosition)
         } catch(e:IndexOutOfBoundsException) {
             LogMessage.e("Error",e.toString())
         } catch(e:Exception) {

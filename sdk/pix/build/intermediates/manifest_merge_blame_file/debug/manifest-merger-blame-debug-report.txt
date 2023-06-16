@@ -1,0 +1,57 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.fxn.pix" >
+4
+5    <uses-sdk
+6        android:minSdkVersion="21"
+6-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml
+7        android:targetSdkVersion="33" />
+7-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml
+8
+9    <uses-permission android:name="android.permission.CAMERA" />
+9-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:5:5-65
+9-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:5:22-62
+10    <uses-permission
+10-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:6:5-7:38
+11        android:name="android.permission.READ_EXTERNAL_STORAGE"
+11-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:6:22-77
+12        android:maxSdkVersion="32" />
+12-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:7:9-35
+13    <uses-permission android:name="android.permission.VIBRATE" />
+13-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:8:5-66
+13-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:8:22-63
+14    <uses-permission
+14-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:9:5-10:37
+15        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+15-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:9:22-78
+16        android:maxSdkVersion="29" />
+16-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:10:9-35
+17    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+17-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:11:5-73
+17-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:11:22-70
+18    <!-- android 13 permission -->
+19    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+19-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:13:5-76
+19-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:13:22-73
+20    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+20-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:14:5-75
+20-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:14:22-72
+21    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+21-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:15:5-75
+21-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:15:22-72
+22
+23    <application
+23-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:16:5-22:19
+24        android:largeHeap="true"
+24-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:17:9-33
+25        android:requestLegacyExternalStorage="true" >
+25-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:18:9-52
+26        <activity
+26-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:19:9-21:61
+27            android:name="com.fxn.pix.Pix"
+27-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:20:13-43
+28            android:screenOrientation="portrait" />
+28-->D:\Android Projects\gihub\sdk\pix\src\main\AndroidManifest.xml:21:13-49
+29    </application>
+30
+31</manifest>

@@ -193,11 +193,11 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
      * Handle the list item click and long click from the recycler view of the chat view.
      */
     private fun handleStarredItemClick() {
-        ItemClickSupport(listStarredMessages).addTo().setOnItemLongClickListener { recyclerView: RecyclerView?, position: Int, v: View? ->
+        ItemClickSupport(listStarredMessages).addTo().setOnItemLongClickListener { _: RecyclerView?, position: Int, _: View? ->
             onItemLongClick(position)
             true
         }
-        ItemClickSupport(listStarredMessages).addTo().setOnItemClickListener { recyclerView: RecyclerView?, position: Int, v: View? ->
+        ItemClickSupport(listStarredMessages).addTo().setOnItemClickListener { _: RecyclerView?, position: Int, _: View? ->
             hideKeyboard()
             if (clickedStarredMessages.isNotEmpty()) onItemClick(position)
         }

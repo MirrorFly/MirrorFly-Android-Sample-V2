@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="ef_black_alpha_50">#80000000</color>
+    <color name="ef_colorAccent" ns1:override="true">#3276e2</color>
+    <color name="ef_colorPrimary" ns1:override="true">#F2F2F2</color>
+    <color name="ef_colorPrimaryDark" ns1:override="true">#E5E5E5</color>
+    <color name="ef_colorTextPrimary" ns1:override="true">#000000</color>
+    <color name="ef_grey">#9E9E9E</color>
+    <color name="ef_teal">#009688</color>
+    <color name="ef_text_color">#6F6F6F</color>
+    <color name="ef_white">#FFFFFF</color>
+    <color name="placeholder_color">#F2F2F2</color>
+    <dimen name="decoration_height">3dp</dimen>
+    <dimen name="decoration_height_for_four">2dp</dimen>
+    <dimen name="ef_dimen_40">40dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <string name="action_select_done">done</string>
+    <string name="action_select_multiple">Select multiple media</string>
+    <string name="error_no_folder_label">No media found</string>
+    <string name="folder_list_title">Send to %s</string>
+    <string name="media_max_limit_restriction">File size is too large. Try uploading file size below %dMB</string>
+    <string name="message_max_limit_restriction">Can\'t share more than %d media items</string>
+    <string name="message_unsupported_file">The file format is not supported.</string>
+    <string name="multi_select_title">Tap Photo to select</string>
+    <string name="multi_selected_title">%d/%d Selected</string>
+    <string name="next">Next</string>
+    <string name="title_activity_media_picker">MediaPickerActivity</string>
+    <style name="ef_AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        
+        <item name="colorPrimary">@color/ef_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/ef_colorPrimaryDark</item>
+        <item name="colorAccent">@color/ef_colorAccent</item>
+    </style>
+    <style name="ef_CustomToolbarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/ef_colorTextPrimary</item>
+        <item name="actionMenuTextColor">@color/ef_colorTextPrimary</item>
+    </style>
+    <style name="ef_ImagePickerTheme" parent="ef_AppTheme">
+        <item name="android:actionModeBackground">@color/ef_colorPrimary</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@color/ef_colorPrimary</item>
+    </style>
+    <declare-styleable name="CustomWidget">
+        <attr format="string" name="font_name"/>
+    </declare-styleable>
+</resources>

@@ -278,7 +278,6 @@ class PinSetting : AppCompatActivity(), BiometricCallback/*, CallLogListener*/, 
             progressDialog!!.show()
             deleteAccount()
         } else {
-//            CfDatabaseManager.getDatabaseManager().deleteAllMessages()
             CustomToast.show(this, resources.getString(R.string.msg_chat_msg_deleted))
         }
     }

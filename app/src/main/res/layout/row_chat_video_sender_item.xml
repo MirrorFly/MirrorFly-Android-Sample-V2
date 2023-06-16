@@ -140,53 +140,53 @@
                         android:id="@+id/ic_balloon"
                         android:layout_width="@dimen/margin_120"
                         android:layout_height="@dimen/margin_75"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
                         android:contentDescription="@null"
                         android:scaleType="fitEnd"
                         app:shapeAppearanceOverlay="@style/roundedImageView"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
                         app:srcCompat="@drawable/ic_baloon" />
 
                     <ImageView
                         android:id="@+id/ic_star"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/image_message_status"
+                        android:layout_alignBottom="@+id/image_message_status"
                         android:layout_marginStart="@dimen/margin_4"
                         android:layout_marginLeft="@dimen/margin_4"
                         android:layout_marginRight="@dimen/margin_4"
-                        android:paddingBottom="@dimen/margin_5"
-                        android:contentDescription="@null"
-                        android:visibility="gone"
                         android:layout_toStartOf="@+id/image_message_status"
-                        android:layout_alignTop="@+id/image_message_status"
-                        android:layout_alignBottom="@+id/image_message_status"
+                        android:contentDescription="@null"
+                        android:paddingBottom="@dimen/margin_5"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/ic_star" />
 
                     <ImageView
                         android:id="@+id/image_message_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_4"
-                        android:layout_marginEnd="@dimen/margin_4"
-                        android:paddingBottom="@dimen/margin_5"
-                        android:contentDescription="@string/acknowledge_content_description"
-                        android:layout_toStartOf="@+id/text_message_sent_time"
                         android:layout_alignTop="@+id/text_message_sent_time"
                         android:layout_alignBottom="@+id/text_message_sent_time"
+                        android:layout_marginStart="@dimen/margin_4"
+                        android:layout_marginEnd="@dimen/margin_4"
+                        android:layout_toStartOf="@+id/text_message_sent_time"
+                        android:contentDescription="@string/acknowledge_content_description"
+                        android:paddingBottom="@dimen/margin_5"
                         android:src="@drawable/ic_message_unsent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/text_message_sent_time"
                         style="@style/ChatTimeTextView"
-                        android:paddingBottom="@dimen/margin_5"
-                        android:paddingEnd="@dimen/margin_7"
-                        android:paddingStart="@dimen/margin_0"
-                        android:gravity="end"
-                        android:includeFontPadding="false"
-                        android:textColor="@color/color_white"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:fontFamily="@font/sf_ui_display_regular"  />
+                        android:fontFamily="@font/sf_ui_display_regular"
+                        android:gravity="end"
+                        android:includeFontPadding="false"
+                        android:paddingStart="@dimen/margin_0"
+                        android:paddingEnd="@dimen/margin_7"
+                        android:paddingBottom="@dimen/margin_5"
+                        android:textColor="@color/color_white" />
 
                 </RelativeLayout>
 

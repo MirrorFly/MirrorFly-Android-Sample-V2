@@ -153,15 +153,24 @@ object MediaPermissions {
     }
 
     //Android 13 Notification permission checking
-    fun runtimeNotificationPermissionEnabledStatus( activity: Activity):Boolean{
-        var isPermissionEnabled:Boolean=true
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!ChatUtils.checkNotificationPermission(activity, Manifest.permission.POST_NOTIFICATIONS)) {
-                isPermissionEnabled=false
-            }
+    fun runtimeNotificationPermissionEnabledStatus(activity: Activity): Boolean {
+        var isPermissionEnabled: Boolean = true
+        if (SDK_INT >= Build.VERSION_CODES.TIRAMISU && !ChatUtils.checkNotificationPermission(
+                activity,
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        ) {
+            isPermissionEnabled = false
         }
 
         return isPermissionEnabled
+    }
+
+    private fun notificationPermissionNotEnabled(activity: Activity):Boolean{
+        return SDK_INT >= Build.VERSION_CODES.TIRAMISU && !ChatUtils.checkNotificationPermission(
+            activity,
+            Manifest.permission.POST_NOTIFICATIONS
+        )
     }
 
     fun requestNotificationPermission(
@@ -169,54 +178,88 @@ object MediaPermissions {
         permissionAlertDialog: PermissionAlertDialog,
         permissionsLauncher: ActivityResultLauncher<Array<String>>,
         isCall: Boolean = false,
-        permissionDialogListener: PermissionDialogListener? = null) {
+        permissionDialogListener: PermissionDialogListener? = null,
+    ) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!ChatUtils.checkNotificationPermission(activity, Manifest.permission.POST_NOTIFICATIONS)) {
-                val permissionsToRequest = mutableListOf<String>()
-                permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
-                if (permissionsToRequest.isNotEmpty()) {
-                    when {
-                        ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS) -> {
-                            if(isCall){
-                                Snackbar.make(
-                                    activity.findViewById(android.R.id.content),
-                                    R.string.notification_permission_label,
-                                    Snackbar.LENGTH_INDEFINITE)
-                                    .setAction(R.string.ok_label) {
-                                        showPermissionPopUpForNotification(permissionsLauncher, permissionsToRequest, permissionAlertDialog, isCall,permissionDialogListener)
-                                    }.show()
-                            } else {
-                                showPermissionPopUpForNotification(permissionsLauncher, permissionsToRequest, permissionAlertDialog, isCall, permissionDialogListener)
-                            }
+        if (notificationPermissionNotEnabled(activity)) {
+            val permissionsToRequest = mutableListOf<String>()
+            permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
+            if (permissionsToRequest.isNotEmpty()) {
+                when {
+                    ActivityCompat.shouldShowRequestPermissionRationale(
+                        activity,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) -> {
+                        if (isCall) {
+                            Snackbar.make(
+                                activity.findViewById(android.R.id.content),
+                                R.string.notification_permission_label,
+                                Snackbar.LENGTH_INDEFINITE
+                            )
+                                .setAction(R.string.ok_label) {
+                                    showPermissionPopUpForNotification(
+                                        permissionsLauncher,
+                                        permissionsToRequest,
+                                        permissionAlertDialog,
+                                        isCall,
+                                        permissionDialogListener
+                                    )
+                                }.show()
+                        } else {
+                            showPermissionPopUpForNotification(
+                                permissionsLauncher,
+                                permissionsToRequest,
+                                permissionAlertDialog,
+                                isCall,
+                                permissionDialogListener
+                            )
                         }
-                        SharedPreferenceManager.getBoolean(Constants.NOTIFICATION_PERMISSION_ASKED) -> {
-                            if(isCall) {
-                                openSettingsForPermission(
-                                    activity,
-                                    activity.getString(R.string.notification_permission_label))
-                            } else {
-                                permissionAlertDialog.showPermissionInstructionDialog(PermissionAlertDialog.NOTIFCATION_PERMISSION_DENIED,
-                                    object : PermissionDialogListener{
-                                        override fun onPositiveButtonClicked() {
-                                            openSettingsForPermissionWithoutSmackBar(activity)
-                                        }
+                    }
 
-                                        override fun onNegativeButtonClicked() {
-                                            permissionDialogListener?.onNegativeButtonClicked()
-                                        }
-                                    })
-                            }
+                    SharedPreferenceManager.getBoolean(Constants.NOTIFICATION_PERMISSION_ASKED) -> {
+                        notificationPermissionAsked(activity, permissionAlertDialog, isCall, permissionDialogListener)
+                    }
 
-                        }
-                        else -> {
-                            showPermissionPopUpForNotification(permissionsLauncher, permissionsToRequest, permissionAlertDialog, isCall, permissionDialogListener)
-                        }
+                    else -> {
+                        showPermissionPopUpForNotification(
+                            permissionsLauncher,
+                            permissionsToRequest,
+                            permissionAlertDialog,
+                            isCall,
+                            permissionDialogListener
+                        )
                     }
                 }
             }
         }
 
+    }
+
+    private fun notificationPermissionAsked(
+        activity: Activity,
+        permissionAlertDialog: PermissionAlertDialog,
+        isCall: Boolean,
+        permissionDialogListener: PermissionDialogListener?,
+    ) {
+        if (isCall) {
+            openSettingsForPermission(
+                activity,
+                activity.getString(R.string.notification_permission_label)
+            )
+        } else {
+            permissionAlertDialog.showPermissionInstructionDialog(
+                PermissionAlertDialog.NOTIFCATION_PERMISSION_DENIED,
+                object : PermissionDialogListener {
+                    override fun onPositiveButtonClicked() {
+                        openSettingsForPermissionWithoutSmackBar(activity)
+                    }
+
+                    override fun onNegativeButtonClicked() {
+                        permissionDialogListener?.onNegativeButtonClicked()
+                    }
+                }
+            )
+        }
     }
 
     /**
@@ -1142,7 +1185,7 @@ object MediaPermissions {
             )
                 .setAction(
                     "OK"
-                ) { view: View? ->
+                ) { _: View? ->
                     ActivityCompat.requestPermissions(
                         activity,
                         arrayOf(Manifest.permission.GET_ACCOUNTS),

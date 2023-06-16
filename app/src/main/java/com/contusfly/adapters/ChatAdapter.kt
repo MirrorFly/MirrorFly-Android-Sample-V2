@@ -54,7 +54,6 @@ import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ContactChatMessage
 import com.mirrorflysdk.utils.Utils
 import com.location.googletranslation.GoogleTranslation
-import io.github.rockerhieu.emojicon.EmojiconTextView
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -1105,7 +1104,6 @@ class ChatAdapter(
                 receiverTextTranslation(mainlist, txtReceiverViewHolder)
                 handleRecallForReceivedTextMessage(item, this)
                 replyViewUtils.markFavoriteItem(this, item)
-                /*textReplyViewUtils.markFavoriteItemForReceiver(txtReceiverViewHolder, item);*/
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
                 setListenersForReceiverTextMessages(txtReceiverViewHolder, item)
             } catch (e: Exception) {
@@ -1314,7 +1312,6 @@ class ChatAdapter(
                     searchKey
                 )
                 replyViewUtils.showSenderReplyWindow(this, messageItem, context)
-                /* chatMessageUtils.senderReplyWindow(this, messageItem, context)*/
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForSenderImageMessages(this, messageItem)
                 senderItemClick(this, imageSenderImg, messageItem)
@@ -1326,6 +1323,7 @@ class ChatAdapter(
                     )
                 }
             }
+
         } catch (e: Exception) {
             LogMessage.e(Constants.TAG, e)
         }
@@ -1421,7 +1419,6 @@ class ChatAdapter(
                     base64Img, searchEnabled, searchKey
                 )
                 replyViewUtils.showSenderReplyWindow(this, messageItem, context)
-                /* chatMessageUtils.senderReplyWindow(this, messageItem, context)*/
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForSenderVideoMessages(this, messageItem)
                 senderItemClick(this, imageSenderImg, messageItem)
@@ -1432,6 +1429,8 @@ class ChatAdapter(
                         position
                     )
                 }
+
+                handleVideoMediaStatusChanged(this, messageItem)
             }
         } catch (e: Exception) {
             LogMessage.e(com.mirrorflysdk.flycommons.Constants.TAG, e)
@@ -1468,7 +1467,6 @@ class ChatAdapter(
                     base64Img, searchEnabled, searchKey
                 )
                 replyViewUtils.showReceiverReplyWindow(this, messageItem, context)
-                //chatMessageUtils.receiverReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForReceiverVideoMessages(this, messageItem)
                 receiverItemClick(this, imgRevImage, messageItem)
@@ -1740,7 +1738,6 @@ class ChatAdapter(
                 LogMessage.v("loadMapWithGlide", url)
                 setChatStatus(item, imgSenderStatus)
                 replyViewUtils.showSenderReplyWindow(this, item, context)
-                /*locationReplyViewUtils.showSenderReplyWindow(locationSenderViewHolder, item, context, messageDetail);*/
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
                 setListenersForSenderLocationMessages(this, item)
                 senderItemClick(this, imageSendLocation, item)
@@ -1789,7 +1786,6 @@ class ChatAdapter(
                 )
                 txtRevTime.text = time
                 replyViewUtils.showReceiverReplyWindow(this, item, context)
-                /*locationReplyViewUtils.showReceiverReplyWindow(locationReceiverViewHolder, item, context);*/
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
                 setListenersForReceiverLocationMessages(this, item)
                 receiverItemClick(this, imageReceiveLocation, item)
@@ -2855,6 +2851,7 @@ class ChatAdapter(
                 mediaStatus.progressBar?.show()
                 mediaStatus.cancelImageview?.show()
                 mediaStatus.viewProgress?.show()
+                mediaStatus.forwardImageview?.hide()
                 hideMediaOption(mediaStatus.txtRetry, mediaStatus.download)
             }
             MediaDownloadStatus.MEDIA_NOT_DOWNLOADED -> {
@@ -2865,10 +2862,13 @@ class ChatAdapter(
                 )
                 mediaStatus.download?.show()
                 mediaStatus.txtRetry?.hide()
+                mediaStatus.forwardImageview?.hide()
+
             }
             MediaUploadStatus.MEDIA_NOT_UPLOADED -> {
                 mediaStatus.txtRetry?.show()
                 mediaStatus.download?.hide()
+                mediaStatus.forwardImageview?.hide()
                 chatAdapterHelper.mediaUploadView(
                     mediaStatus.progressBar,
                     mediaStatus.cancelImageview,

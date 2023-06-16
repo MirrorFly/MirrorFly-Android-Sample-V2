@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ImagePreviewActivity">
+
+
+    <RelativeLayout
+        android:id="@+id/fileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="viewPagerOnClick"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fileImage"
+            android:layout_width="@dimen/margin_250"
+            android:layout_height="@dimen/margin_250"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/fileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/fileImage"
+            android:layout_marginBottom="@dimen/margin_78"
+            android:gravity="center"
+            android:textColor="@color/text_color_black"
+            android:textSize="@dimen/text_size_18"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/play"
+        android:layout_width="@dimen/margin_45"
+        android:layout_height="@dimen/margin_45"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_play_video_blue_fill"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/filesCount"
+        android:layout_width="@dimen/margin_60"
+        android:layout_height="@dimen/margin_32"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-20dp"
+        android:layout_marginEnd="@dimen/padding_8"
+        android:background="@drawable/files_count_bg"
+        android:gravity="center"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone" />
+</RelativeLayout>

@@ -1,6 +1,5 @@
 package com.contusfly.adapters
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -104,11 +103,7 @@ class GroupMembersAdapter(val context: Context, private var profilesList: ArrayL
         holder.viewBinding.textParticipantName.viewTreeObserver.addOnGlobalLayoutListener { ChatMessageUtils.fixEmojiAfterEllipses(holder.viewBinding.textParticipantName) }
         holder.viewBinding.textParticipantStatus.viewTreeObserver.addOnGlobalLayoutListener { ChatMessageUtils.fixEmojiAfterEllipses(holder.viewBinding.textParticipantStatus) }
         setUserInfo(holder, item)
-        //holder.viewBinding.contentView.setBackgroundResource(R.drawable.recycleritem_ripple)
         holder.viewBinding.textAdmin.isVisible = item.isGroupAdmin
-        /*holder.viewBinding.contentView.setOnClickListener {
-            listener(position, item)
-        }*/
         if (position == profilesList.size - 1) {
             holder.viewBinding.viewDivider.setVisibility(View.GONE);
         }else{

@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.contusfly.app-mergeDebugResources-5:/values-v19/values-v19.xml",
+            "map": [
+                {
+                    "source": "D:\\Android Projects\\gihub\\sdk\\pix\\build\\intermediates\\packaged_res\\debug\\values-v19\\values-v19.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,113,169,211",
+                        "endColumns": "57,55,41,46",
+                        "endOffsets": "108,164,206,253"
+                    }
+                }
+            ]
+        }
+    ]
+}

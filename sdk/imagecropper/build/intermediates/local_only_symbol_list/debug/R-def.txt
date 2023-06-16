@@ -1,0 +1,25 @@
+R_DEF: Internal format may change without notice
+local
+drawable btn_crop_operator
+drawable btn_crop_pressed
+drawable camera_crop_height
+drawable camera_crop_width
+drawable ic_rotate_left
+drawable ic_rotate_right
+drawable indicator_autocrop
+drawable selector_crop_button
+id discard
+id image
+id rotateLeft
+id rotateRight
+id save
+id view_controls
+layout cropimage
+layout main
+string cancel
+string no_storage_card
+string not_enough_space
+string preparing_card
+string save
+string saving_image
+style CropButton

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/otp_square_bg"
+        android:gravity="center"
+        android:textColor="?attr/otp_text_color"
+        android:textSize="@dimen/text_size_16"
+        android:maxLength="1"
+        android:lines="1"
+        android:imeOptions="actionNext"
+        android:focusableInTouchMode="true"
+        android:digits="0123456789"
+        android:inputType="number"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/otp_square_bg"
+        android:gravity="center"
+        android:textColor="?attr/otp_text_color"
+        android:textSize="@dimen/text_size_16"
+        android:maxLength="1"
+        android:imeOptions="actionNext"
+        android:lines="1"
+        android:focusableInTouchMode="true"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:layout_marginStart="@dimen/margin_8"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/otp_square_bg"
+        android:gravity="center"
+        android:textColor="?attr/otp_text_color"
+        android:textSize="@dimen/text_size_16"
+        android:maxLength="1"
+        android:lines="1"
+        android:imeOptions="actionNext"
+        android:focusableInTouchMode="true"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:layout_marginStart="@dimen/margin_8"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/otp_square_bg"
+        android:gravity="center"
+        android:textColor="?attr/otp_text_color"
+        android:textSize="@dimen/text_size_16"
+        android:layout_marginStart="@dimen/margin_8"
+        android:maxLength="1"
+        android:focusableInTouchMode="true"
+        android:lines="1"
+        android:imeOptions="actionNext"
+        android:digits="0123456789"
+        android:inputType="number" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/otp_square_bg"
+        android:gravity="center"
+        android:focusableInTouchMode="true"
+        android:textColor="?attr/otp_text_color"
+        android:textSize="@dimen/text_size_16"
+        android:imeOptions="actionNext"
+        android:layout_marginStart="@dimen/margin_8"
+        android:maxLength="1"
+        android:lines="1"
+        android:digits="0123456789"
+        android:inputType="number" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/otp_square_bg"
+        android:gravity="center"
+        android:layout_marginStart="@dimen/margin_8"
+        android:textColor="?attr/otp_text_color"
+        android:textSize="@dimen/text_size_16"
+        android:focusableInTouchMode="true"
+        android:maxLength="1"
+        android:lines="1"
+        android:imeOptions="actionNext"
+        android:digits="0123456789"
+        android:inputType="number" />
+
+</LinearLayout>

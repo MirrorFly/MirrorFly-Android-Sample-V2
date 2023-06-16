@@ -16,7 +16,7 @@ import com.contusfly.chatTag.adapter.ChatTagAdapter
 import com.contusfly.chatTag.interfaces.ListItemClickListener
 import com.contusfly.databinding.ActivityChatTagBinding
 import com.contusfly.getData
-import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import com.mirrorflysdk.views.CustomToast
 import dagger.android.AndroidInjection
@@ -32,8 +32,8 @@ class ChatTagActivity : AppCompatActivity() {
     private lateinit var mContext: Context
     private lateinit var binding: ActivityChatTagBinding
     companion object{
-        var createdChatTagList=ArrayList<ChatTagModel>()
-        var chatTagMemberIdList:String=""
+        var createdChatTagList = ArrayList<ChatTagModel>()
+        var chatTagMemberIdList = ArrayList<String>()
     }
     var chatTagnamelist=ArrayList<ChatTagModel>()
     lateinit var chatTagadapter: ChatTagAdapter
@@ -55,7 +55,7 @@ class ChatTagActivity : AppCompatActivity() {
 
     fun getChatTagData(){
 
-        FlyCore.getChatTagdata(object: FlyCallback {
+        ChatManager.getChatTagdata(object: FlyCallback {
             override fun flyResponse(
                 isSuccess: Boolean,
                 throwable: Throwable?,
@@ -93,6 +93,8 @@ class ChatTagActivity : AppCompatActivity() {
                 binding.editInfoLayout.visibility= View.VISIBLE
                 binding.toolbarView.toolbarActionTitleTv.text=resources.getString(R.string.edit_label)
             }
+            binding.chatTagLayoutLl.visibility=View.VISIBLE
+            binding.chatTagRecyclerview.visibility = View.VISIBLE
         }
     }
 
@@ -106,14 +108,14 @@ class ChatTagActivity : AppCompatActivity() {
             chatTagadapter= ChatTagAdapter(mContext, object: ListItemClickListener {
 
                 override fun itemclicklistener(position: Int) {
-                    tagName=chatTagnamelist.get(position).tagname
+                    tagName=chatTagnamelist.get(position).tagname!!
                     createChatTagPageLaunch()
                 }
 
                 override fun itemEditClickListener(position: Int) {
-                    tagName=chatTagnamelist.get(position).tagname
-                    chatTagId= chatTagnamelist.get(position).geTagId()
-                    chatTagMemberIdList= chatTagnamelist[position].memberIdlist
+                    tagName=chatTagnamelist.get(position).tagname!!
+                    chatTagId= chatTagnamelist.get(position).geTagId()!!
+                    chatTagMemberIdList= chatTagnamelist[position].memberidlist!!
                     editChatTagItemsPageLaunch(position)
                 }
 

@@ -44,7 +44,7 @@ import javax.inject.Inject
  */
 open class BaseActivity : FlyBaseActivity() {
 
-    private val exceptionHandler = CoroutineExceptionHandler { context, exception ->
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         LogMessage.e(exception)
     }
     /**

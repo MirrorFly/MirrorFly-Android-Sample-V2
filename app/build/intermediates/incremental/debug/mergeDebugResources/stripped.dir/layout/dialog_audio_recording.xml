@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_15"
+    android:background="@drawable/shape_reording_bg"
+    android:minHeight="@dimen/margin_150"
+    android:minWidth="@dimen/margin_300"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/image_recording"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_20"
+        android:contentDescription="@string/title_content_description"
+        android:src="@drawable/voice" />
+
+    <com.contusfly.views.CustomTextView
+        android:id="@+id/text_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_20"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_18"
+        android:text="00:00"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_1"
+        android:layout_marginLeft="@dimen/margin_1"
+        android:layout_marginRight="@dimen/margin_1"
+        android:layout_marginTop="@dimen/margin_20"
+        android:background="@color/color_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_45"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_settings_opt"
+            android:gravity="center"
+            android:text="@string/action_cancel"
+            android:layout_marginStart="@dimen/margin_1"
+            android:layout_marginBottom="@dimen/margin_1"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_16"/>
+
+        <View
+            android:layout_width="@dimen/margin_1"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/margin_1"
+            android:background="@color/color_light_gray" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_ok"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_settings_opt"
+            android:gravity="center"
+            android:text="@string/action_start"
+            android:layout_marginEnd="@dimen/margin_1"
+            android:layout_marginBottom="@dimen/margin_1"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_16"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,20 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<!--
+3  ~ @category ContusMessanger
+4  ~ @version 2.0
+5  ~ @author ContusTeam <developers@contus.in>
+6  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+7  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+8-->
+9<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+10    package="eu.janmuller.android.simplecropimage"
+11    android:versionCode="1"
+12    android:versionName="1.0" >
+13
+14    <uses-sdk
+15        android:minSdkVersion="21"
+15-->D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+16        android:targetSdkVersion="33" />
+16-->D:\Android Projects\gihub\sdk\imagecropper\AndroidManifest.xml
+17
+18</manifest>
