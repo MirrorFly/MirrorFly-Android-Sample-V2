@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 3.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2018 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_share_cancel"
+        android:icon="@drawable/ic_cancel_black"
+        android:orderInCategory="100"
+        android:title="@string/action_cancel"
+        android:visible="true"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_share_delete"
+        android:icon="@drawable/ic_menu_delete"
+        android:orderInCategory="101"
+        android:title="@string/action_delete"
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_share_share"
+        android:icon="@drawable/ic_send_active"
+        android:orderInCategory="102"
+        android:title="@string/action_share"
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_add_item"
+        android:icon="@drawable/ic_add_media"
+        android:orderInCategory="103"
+        android:title="@string/action_add_item"
+        android:visible="false"
+        app:showAsAction="always" />
+</menu>

@@ -1,0 +1,967 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name_">UI-Kit</string>
+    <string name="toolbar_header_label">Chats</string>
+    <string name="error_no_new_messages_label">No new messages</string>
+    <string name="error_any_new_message_label">Any new messages will appear here</string>
+    <string name="title_image">Photo</string>
+    <string name="msg_typing">typing&#8230;</string>
+    <string name="contacts_label">Contact</string>
+    <string name="profile_label">Profile</string>
+    <string name="logout_label">Logout</string>
+    <string name="report_log_label">Report Log</string>
+    <string name="yes_label">Yes</string>
+    <string name="no_label">No</string>
+    <string name="ok_label">OK</string>
+    <string name="not_now_label">Not Now</string>
+    <string name="logout_message_label">Are you sure you want to logout from the app?</string>
+    <string name="error_no_contacts_label">No contacts found</string>
+    <string name="error_any_contacts_label">Any new contacts will appear here</string>
+    <string name="register_number_label">Please choose your country code and enter your mobile number to get the verification code.</string>
+    <string name="enter_mobile_number_label">Enter Mobile Number</string>
+    <string name="get_otp_label">Get OTP</string>
+    <string name="continue_label">Continue</string>
+    <string name="verify_otp_label">Verify OTP</string>
+    <string name="resend_otp_label">Resend OTP</string>
+    <string name="change_number_label">Change Number</string>
+    <string name="register_label">Register</string>
+    <string name="register_your_number_label">Register Your Number</string>
+    <string name="verify_label">Verify</string>
+    <string name="please_wait_label">Please wait&#8230;</string>
+    <string name="enter_otp_label">Enter the OTP</string>
+    <string name="enter_valid_otp_label">OTP mismatched, please enter the valid OTP</string>
+    <string name="error_enter_mobile_number">Please enter your mobile number</string>
+    <string name="otp_info_label">We have sent you the SMS. To complete the registration enter the 6 digit verification code below</string>
+    <string name="error_mobile_number_short">Your mobile number is too short</string>
+    <string name="error_mobile_number_length">Your mobile number contains more than 16 digits</string>
+    <string name="valid_mobile_number">Please enter a valid mobile number</string>
+    <string name="error_check_internet">Please check your internet connection</string>
+    <string name="file_format_not_supported">The file format is not supported</string>
+    <string name="error_invalid_otp">Invalid OTP</string>
+    <string name="error_otp_many_attempts">Too many attempts, Please try again later</string>
+    <string name="error_otp_authorization">Authorization failure! Please try again.</string>
+    <string name="firebase_auth_timeout_duration">30</string>
+    <string name="otp_instant_verification_success_message">Authentication success</string>
+    <string name="profile_update_label">Profile updated successfully</string>
+    <string name="resend_otp_message">Resending OTP please wait&#8230;</string>
+    <string name="already_logged">You have logged-in another device. Do you want to continue here?</string>
+    <string name="getting_data_label">Getting Data&#8230;</string>
+    <string name="account_blocked_label">Your account has been blocked</string>
+    <string name="verification_code_label">Verification code can\'t be read automatically</string>
+    <string name="options_label">Options</string>
+    <string name="take_photo_label">Take Photo</string>
+    <string name="choose_gallery_label">Choose from Gallery</string>
+    <string name="remove_photo_label">Remove Photo</string>
+    <string name="select_country_label">Select Country</string>
+    <string name="logging_out_label">Logging out&#8230;</string>
+    <string name="no_countries_label">No countries found</string>
+    <string name="toolbar_search_label">Search&#8230;</string>
+    <string name="chats_label">Chats</string>
+    <string name="calls_label">Calls</string>
+
+    <string name="terms_and_condition_description_label">By clicking continue you agree to MirrorFly</string>
+    <string name="terms_and_condition_label">Terms and Conditions</string>
+    <string name="privacy_policy_label">Privacy Policy.</string>
+    <string name="terms_and_privacy_policy_label">%s, %s</string>
+    <string name="terms_and_conditions_link">https://www.mirrorfly.com/terms-and-conditions.php</string>
+    <string name="privacy_policy_link">https://www.mirrorfly.com/privacy-policy.php</string>
+
+    <!-- Permissions Strings -->
+    <string name="storage_permission_label">Storage permissions are needed for this action</string>
+    <string name="calling_permission_label">Calling permissions are needed for this action</string>
+    <string name="location_permission_label">Location permissions are needed for sharing your location</string>
+    <string name="read_contact_permission_label">Read Contacts permissions is needed for syncing contacts</string>
+    <string name="camera_permission_label">Camera permissions is needed for this action</string>
+    <string name="audio_record_permission_label">Storage and audio record permissions are needed for recording features</string>
+    <string name="storage_camera_permission_label">Storage and camera permissions are needed for this action</string>
+    <string name="record_permission_label">Record audio and PhoneState record permissions are needed for Audio Calling features</string>
+    <string name="notification_permission_label">Notification permissions are needed for Calling features</string>
+    <string name="video_record_permission_label">Camera, Record audio and PhoneState permissions are needed for Video Calling features</string>
+    <string name="permission_camera_rationale">Camera permission is needed for this action</string>
+    <string name="scan_code">Scan code</string>
+    <string name="title_web_settings">Web Settings</string>
+    <string name="text_visit_chat_web">Visit</string>
+    <string name="action_logout_all_computers">Logout from all computers</string>
+    <string name="text_logged_in_computers">Logged In Computers</string>
+    <string name="scanner_result">Scanner Result</string>
+    <string name="alert_dialouge_logout">Are you want to logout?</string>
+
+    <!-- Action Menu Strings -->
+    <string name="new_group_label">New Group</string>
+    <string name="clear_all_call_log">Clear call log</string>
+    <string name="settings_label">Settings</string>
+    <string name="search_label">Search</string>
+    <string name="invite_contact_label">Invite Contacts</string>
+    <string name="invite">Invite</string>
+    <string name="title_invite_friend">Invite Friend</string>
+    <string name="action_web_settings">Web</string>
+
+    <!-- Message Status -->
+    <string name="acknowledge_content_description">Acknowledged</string>
+    <string name="delivered_content_description">Delivered</string>
+    <string name="seen_content_description">Seen</string>
+    <string name="NotAcknowledge_content_description">Not Acknowledged</string>
+
+    <!-- Profile Strings -->
+    <string name="image_content_description">Image</string>
+    <string name="email_label">Email</string>
+    <string name="email_content_description">Email</string>
+    <string name="title_user_name">Username</string>
+    <string name="title_user_mail">User Mail</string>
+    <string name="mobile_number_label">Mobile Number</string>
+    <string name="mobile_number_description">Mobile Number</string>
+    <string name="status_label">Status</string>
+    <string name="status_description">Status</string>
+    <string name="save_button">Save</string>
+    <string name="enter_name_label">Enter your username</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="error_enter_user_name">Please enter your username</string>
+    <string name="error_username_empty">Username cannot be empty</string>
+    <string name="error_username_too_short">Username is too short</string>
+    <string name="error_busy_status_empty">Busy status cannot be empty</string>
+    <string name="error_status_empty">Status cannot be empty</string>
+    <string name="profile_photo_label">Profile Photo</string>
+    <string name="profile_photos_label">Profile Photos</string>
+    <string name="update_continue_label">Update &amp; Continue</string>
+    <string name="sent_media_label">Sent Media</string>
+    <string name="edit_label">Edit</string>
+    <string name="share_label">Share</string>
+    <string name="default_busy_status">I am busy</string>
+    <string name="error_occurred_label">Error Occurred. Please try again.</string>
+    <string name="msg_profile_updated">Profile updated successfully</string>
+    <string name="msg_profile_image_removed">Profile picture removed successfully</string>
+    <string name="default_status">I am in Mirror Fly</string>
+    <string name="msg_status_delete">Do you want to delete the status?</string>
+    <string name="title_current_status">Your current status</string>
+    <string name="message_select_status">Select your new status</string>
+    <string name="delete_status">Delete</string>
+    <string name="msg_add_new_status">Add New Status</string>
+    <string name="msg_enter_mail">Email should not be empty</string>
+    <string name="msg_enter_valid_mail">Please enter a valid Mail</string>
+    <string name="msg_no_update">It seems there is no change in your profile</string>
+    <string name="archived_label">Archived</string>
+    <string name="single_chat_receiver_recall">This message was deleted&#160;&#160;&#160;&#160;</string>
+    <string name="msg_no_chats">No Chats Found</string>
+    <string name="msg_no_results">No results found</string>
+    <string name="msg_no_contacts">No Contacts found</string>
+    <string name="msg_timed_out_sms">Timed out waiting for SMS</string>
+    <string name="msg_otp_validated">OTP validated successfully</string>
+    <string name="max_profile_name_chars">Maximum of 30 Characters</string>
+    <string name="max_tag_name_chars">Tag name should be less than 20 characters</string>
+    <string name="max_tags_created">You have already created a maximum number of chat tags</string>
+    <string name="msg_status_updated">Status updated successfully</string>
+    <string name="msg_profile_pic_update_failure">Profile image upload failed</string>
+    <string name="msg_are_you_sure_you_want_to_remove_photo">Are you sure you want to remove the photo?</string>
+    <string name="msg_are_you_sure_exit">Are you sure you want to leave from group?\u0020</string>
+    <string name="action_exit">Exit</string>
+    <string name="msg_are_you_sure_delete">Are you sure you want to delete this group?\u0020</string>
+    <string name="msg_are_you_sure_delete_broadcast">Are you sure you want to delete this broadcast?\u0020</string>
+    <string name="action_remove">Remove</string>
+
+    <string-array name="default_status_values">
+        <item>Available</item>
+        <item>Sleeping&#8230;</item>
+        <item>Urgent calls only</item>
+        <item>At the movies</item>
+        <item>I am in Mirror Fly</item>
+    </string-array>
+    <string-array name="default_busy_status_values">
+        <item>Driving car. Text you later</item>
+        <item>Please call me if anything important</item>
+        <item>Sleeping</item>
+        <item>In meeting</item>
+    </string-array>
+
+
+    <string name="label_camera">Camera</string>
+    <string name="label_video">Video</string>
+    <string name="label_gallery">Gallery</string>
+    <string name="label_document">Document</string>
+    <string name="label_audio">Audio</string>
+    <string name="label_location">Location</string>
+    <string name="label_contact">Contact</string>
+    <string name="msg_media_does_not_exists">Sorry. Media file isn\'t available in your internal storage</string>
+    <string name="file_viewing_message">You may not have a proper app viewing this content</string>
+    <string name="error_google_map_not_installed">Google map not available</string>
+    <string name="msg_no_internet">Please check your internet connection</string>
+    <string name="recalled_message_not_available">Original message not available</string>
+    <string name="title_audio">Audio</string>
+    <string name="action_location">Location</string>
+    <string name="action_contact">Contact</string>
+    <string name="title_video">Video</string>
+    <string name="content_not_found">Content not found</string>
+
+    <string name="file_size_convention_b">bytes</string>
+    <string name="file_size_convention_gb">GB</string>
+    <string name="file_size_convention_kb">KB</string>
+    <string name="file_size_convention_mb">MB</string>
+    <string name="title_file">File</string>
+    <string name="title_document">Document</string>
+    <string name="media_downloaded">Media Downloaded</string>
+    <string name="title_content_description">Image</string>
+    <string name="title_hint_msg">Start typing…</string>
+    <string name="msg_not_participant">You can\'t send messages to this group because you\'re no longer a participant.</string>
+    <string name="msg_unblock">Unblock to send a message</string>
+    <string name="unblock_message_label">Unblock %s?</string>
+    <string name="unblocked_message_label">%s has been unblocked</string>
+    <string name="action_unblock">Unblock</string>
+    <string name="action_block">Block</string>
+    <string name="msg_disable_busy_status">Disable busy status. Do you want to continue?</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+    <string name="msg_unblockAttachment">Unblock to add an attachment</string>
+    <string name="msg_unblockAudioMessage">Unblock to send an audio message</string>
+    <string name="something_went_wrong">Something went wrong. Please try again</string>
+    <string name="action_reply">Reply</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_share">Share</string>
+    <string name="action_forward">Forward</string>
+    <string name="action_information">Information</string>
+    <string name="title_favourite">Favourite Message</string>
+    <string name="title_unfavourite">UnFavourite Message</string>
+    <string name="clear_conversation">Clear All Conversation</string>
+    <string name="delete_conversation">Delete All Conversation</string>
+    <string name="action_send">Send</string>
+    <string name="action_start">Start</string>
+    <string name="content_sent_image">Sent_image</string>
+    <string name="content_not_uploaded">Not_Uploaded</string>
+    <string name="content_uploading">Uploading</string>
+    <string name="content_upload_failed">Upload_Failed</string>
+    <string name="content_sent_audio">Sent_Audio</string>
+    <string name="content_uploaded">Uploaded</string>
+    <string name="content_not_downloaded">Not_Downloaded</string>
+    <string name="content_downloading">Downloading</string>
+    <string name="content_sent_video">Sent_video</string>
+    <string name="content_received_audio">Received_audio</string>
+    <string name="content_received_image">Received_image</string>
+    <string name="content_download_failed">Download_Failed</string>
+    <string name="content_received_location">Received_location</string>
+    <string name="content_sent_location">Sent_location</string>
+    <string name="content_downloaded">Downloaded</string>
+    <string name="content_received_item">Received_item</string>
+    <string name="content_received_video">Received_video</string>
+
+    <string name="message">Message</string>
+    <string name="save_contact">Save Contact</string>
+    <string name="error_retry">Retry</string>
+
+    <string name="title_clear_conversation">Clear Chat</string>
+    <string name="title_email_conversation">Email Chat</string>
+    <string name="action_view_info">View Info</string>
+    <string name="action_start_chat">Start Chat</string>
+    <string name="title_edit">Edit</string>
+    <string name="action_custom_tone">Custom Tone</string>
+    <string name="action_add_user">Add to Contacts</string>
+    <string name="action_search">Search</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_hint_caption">Add a caption…</string>
+    <string name="text_audio_wrong_extension">You can upload only .aac, .mp3, .wav files</string>
+    <string name="action_Ok">OK</string>
+    <string name="video_upload">Sorry. Video duration cannot be more than %s sec.</string>
+    <string name="audio_upload">Sorry. Audio duration is more than %s sec.</string>
+    <string name="text_upload">Sorry. Files bigger than %s cannot be uploaded</string>
+    <string name="text_wrong_extension">You can upload only .pdf, .xls, .xlsx,  .doc, .docx, .txt,
+        .ppt, .zip, .rar, .pptx, .csv  files</string>
+    <string name="poor_network_connection">Poor network connection</string>
+    <string name="title_select_folder">Select Folder</string>
+    <string name="msg_tap_select">Tap to select</string>
+    <string name="empty_conversation">There is no conversation.</string>
+    <string name="delete_media_from_gallery">Delete media from my phone</string>
+    <string name="msg_are_you_sure_you_want_to_clear">Are you sure you want to clear the chat?</string>
+    <string name="msg_clear_all">Clear all</string>
+    <string name="msg_except_starred">Clear except starred</string>
+    <string name="msg_clear">Clear</string>
+    <string name="action_delete_for_me">Delete for me</string>
+    <string name="action_delete_for_all">Delete for everyone</string>
+    <string name="action_delete">Delete</string>
+
+    <string name="msg_user_blocked">%1$s has been blocked</string>
+    <string name="msg_user_unblocked">%1$s has been unblocked</string>
+    <string name="connection_lost">Connection Lost</string>
+    <string name="audio_too_short">Recorded audio time is too short.</string>
+    <string name="error_chat_connection">Error in connection. Please try later.</string>
+    <string name="chat_text"><pre> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</pre></string>
+
+    <string name="title_kb">KB</string>
+    <string name="title_mb">MB</string>
+    <string name="selected_media">Selected Media</string>
+    <string name="msg_no_internet_try_again">Please check your internet connectivity and try again later</string>
+    <string name="action_add_item">Add more</string>
+    <string name="text_media_not_available">Media is not available right now</string>
+    <string name="title_sent_media">Sent Media</string>
+    <string name="title_received_media">Received Media</string>
+    <string name="channel_name">App Notifications</string>
+    <string name="channel_description">Notification behaviours for the group chat messages</string>
+    <string name="image_emoji" translatable="false">📷</string>
+    <string name="video_emoji" translatable="false">📽️</string>
+    <string name="contact_emoji" translatable="false">👤</string>
+    <string name="audio_emoji" translatable="false">🎵</string>
+    <string name="file_emoji" translatable="false">📄</string>
+    <string name="location_emoji" translatable="false">📌</string>
+    <string name="unseen_message">%1$d unread messages</string>
+    <string name="call_ended_text">Call Ended!</string>
+    <string name="call_ended_text_message">No one else is here</string>
+    <string name="invalid_call_link">Invalid call link</string>
+    <string name="return_to_chat">Return to chat</string>
+
+
+    //Title
+    <string name="title_new_group">New Group</string>
+
+
+    <string name="label_email">Email</string>
+    <string name="label_mute_notification">Mute Notification</string>
+    <string name="label_status">Status</string>
+    <string name="label_mobile_number">Mobile Number</string>
+    <string name="label_view_all_media">View All Media</string>
+    <string name="label_next">Next</string>
+    <string name="label_create">Create</string>
+    <string name="label_update">Update</string>
+    <string name="label_leave_group">Leave Group</string>
+    <string name="action_leave">Leave</string>
+    <string name="label_delete_group">Delete Group</string>
+    <string name="label_participants">Participants</string>
+    <string name="label_add_participants">Add Participants</string>
+    <string name="single_chat_sender_recall">You deleted this message&#160;&#160;&#160;&#160;&#160;</string>
+
+
+    <string name="cd_user_profile_image">User Profile Image</string>
+    <string name="hint_type_group_name">Type group name here…</string>
+    <string name="label_provide_group_name_icon">Provide a Group Name and Icon</string>
+    <string name="cd_group_profile_image">Group Profile Image</string>
+    <string name="lenght_25">25</string>
+    <string name="cd_edit_group_name_image">Edit group name image</string>
+    <string name="error_fetching_group_members">Error fetching group members</string>
+    <string name="no_user_selected">No user selected</string>
+    <string name="text_next">Next</string>
+
+    <string name="contacts">Contacts</string>
+    <string name="groups">Groups</string>
+    <string name="recent_chat">Recent Chat</string>
+
+    <string name="share_title">Forward to&#8230;</string>
+    <string name="cannot_forward_recalled_messages">%1$d messages can\'t be forward because the original message is deleted</string>
+    <string name="cannot_forward_recalled_message">Can\'t forward because the original message is deleted</string>
+    <string name="members">members</string>
+    <string name="member">member</string>
+    <string name="text_new_group_name">Enter new name</string>
+    <string name="msg_are_you_sure_remove_group_photo">Are you sure you want to remove the group photo?</string>
+
+    <string name="maximum_user_forward_validation">You can only forward with up to 5 users or groups</string>
+
+    <string name="offline_group_status">Couldn\'t create. Tap to retry.</string>
+    <string name="info_no_call_history">No call log history found</string>
+    <string name="info_call_history">Any new calls will appear here</string>
+    <string name="action_call_now">Call Now (%s) </string>
+    <string name="title_contacts">Contacts</string>
+    <string name="audio_file_not_supported">You can upload only .aac, .mp3, .wav files</string>
+    <string name="document_file_not_supported">You can upload only .pdf, .xls, .xlsx,  .doc, .docx, .txt, .ppt, .zip, .rar, .pptx, .csv  files</string>
+    <string name="file_not_supported">Unsupported file format</string>
+    <string name="text_media_duration_with_hour">%1$02d:%2$02d:%3$02d</string>
+    <string name="text_media_duration">%1$02d:%2$02d</string>
+    <string name="message_permission_location_rationale">Location permissions are needed for sharing your location</string>
+    <string name="error_no_mobile_nos">The selection does not have any contact phone number</string>
+
+    <string name="action_done">Done</string>
+    <string name="title_unknown">Unknown</string>
+    <string name="error_location_selection">Please share valid location.</string>
+    <string name="msg_delete_chat_single_conversation">Delete chat with \"%s\"?</string>
+    <string name="msg_delete_chat_multiple_conversation">Delete %d selected chats?</string>
+    <string name="api_call_error">Something Went Wrong!. Try again later</string>
+    <string name="msg_chat_archived">%s chat has been archived</string>
+    <string name="msg_multiple_chats_archived">%s chats has been archived</string>
+    <string name="shortcut_added">Chat shortcut added to your home screen</string>
+    <string name="biometric_error_sdk_not_supported">Sdk version not supported</string>
+    <string name="enable_label_text">Connection Label</string>
+    <string name="about_help">About and Help</string>
+    <string name="delete_my_account">Delete My Account</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="no_media">No Media</string>
+    <string name="app_lock">App Lock</string>
+    <string name="archived_chats">Archived Chats</string>
+    <string name="no_archived_chats">No archived chats</string>
+    <string name="chats">Chats</string>
+    <string name="starred_messages">Starred Messages</string>
+    <string name="notifications">Notifications</string>
+    <string name="blocked_contacts"> Blocked Contacts</string>
+    <string name="txt_mute">Mute</string>
+    <string name="msg_chat_unarchived">%s chat has been unarchived</string>
+    <string name="msg_multiple_chats_unarchived">%s chats has been unarchived</string>
+    <string name="title_add">Add</string>
+    <string name="title_block">Block</string>
+
+    <!--   START call warning messages -->
+    <string name="warning_camera_restriction_message">Camera cannot be accessed while in call</string>
+    <string name="warning_video_restriction_message">Video cannot be recorded while in call</string>
+    <string name="warning_audio_restriction_message">Audio cannot be recorded while in call </string>
+    <!--   END call warning messages -->
+
+    <string name="msg_maximum_audio_record">You can record maximum %s seconds for the audio recording</string>
+    <string name="msg_map_disabled">Google map must be enabled to share location. Do you want to enable?</string>
+    <string name="action_enable">Enable</string>
+    <string name="title_send_this_location">Send this location</string>
+    <string name="title_address_line_1">Address line 1</string>
+    <string name="title_address_line_2">Address line 2</string>
+    <string name="title_user_location">User Location</string>
+    <string name="message_location_not_found">Sorry address not found</string>
+    <string name="message_can_send_location">You can still send your location</string>
+    <string name="selected_image">Selected Image</string>
+    <string name="action_remove_from_broadcast">Remove from Broadcast</string>
+    <string name="action_remove_from_group">Remove from Group</string>
+    <string name="contact_permission">Please grant permission to write the contact</string>
+    <string name="action_make_group_admin">Make admin</string>
+    <string name="action_add_existing_contact">Add to existing contact</string>
+    <string name="label_delete_broadcast">Delete Broadcast</string>
+    <string name="msg_are_you_sure_remove">Are you sure you want to remove</string>
+    <string name="msg_are_you_sure_make_admin">Are you sure you want to make</string>
+    <string name="msg_are_you_sure_remove_admin">Are you sure you want to remove admin</string>
+
+    <string name="menu_add_shortcut">Add Chat Shortcut</string>
+    <string name="title_read"><b>Read</b></string>
+    <string name="title_delivered_to">Delivered to</string>
+    <string name="title_delivered"><b>Delivered</b></string>
+
+    <string name="action_copylink">Copy Link</string>
+    <string name="action_send_email">Send Email</string>
+    <string name="action_send_sms">Send SMS</string>
+    <string name="msg_info">Message Info</string>
+    <string name="no_message_read">Your message is not read</string>
+    <string name="no_message">Message sent, not delivered yet</string>
+    <string name="description_previous_item">Previous Item</string>
+    <string name="description_next_item">Next Item</string>
+    <string name="blocked_contacts_label">Blocked Contact list</string>
+    <string name="message_no_block_contact">No Blocked Contacts found</string>
+    <string name="msg_are_you_sure_delete_message">Are you sure you want to delete selected </string>
+    <string name="delete_message">Message?</string>
+    <string name="delete_messages">Messages?</string>
+
+    <string name="font_roboto_bold">fonts/roboto_bold.ttf</string>
+    <string name="font_roboto_light">fonts/roboto_light.ttf</string>
+    <string name="font_roboto_medium">fonts/roboto_medium.ttf</string>
+    <string name="font_roboto_regular">fonts/roboto_regular.ttf</string>
+    <string name="no_message_found">No messages found</string>
+    <string name="message_no_result_found">No result found</string>
+
+    <string name="archive_settings">Archive Settings</string>
+    <string name="archive_settings_label">Archived chats will remain archived when you receive a new message</string>
+    <string name="last_seen">Last Seen</string>
+    <string name="last_seen_label">Hiding the last seen activity to other users</string>
+    <string name="user_busy_status">User Busy Status</string>
+    <string name="user_busy_status_label">Set busy status as the Auto response to the message received from the individuals</string>
+    <string name="edit_busy_status_message">Edit Busy Status Message</string>
+    <string name="edit_busy_status_label">Set your busy status message here</string>
+    <string name="auto_download">Auto Download</string>
+    <string name="auto_download_label">Enable “Auto download” to turn all types of files received readily viewable</string>
+    <string name="data_usage_settings">Data Usage Settings</string>
+    <string name="data_usage_settings_label">Setup your mobile and wifi data usage based on media type</string>
+    <string name="google_translation_label">Translate Message</string>
+    <string name="google_translation_message">Enable Translate Message to choose Translation Language</string>
+    <string name="google_translation_language_label">Choose Translation Language</string>
+    <string name="google_translation_language_double_tap">Double Tap the received messages to translate</string>
+    <string name="save_media_to_gallery">Save Media To Gallery</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="set_up_media_to_gallery">SetUp if you want to save media files to gallery</string>
+    <string name="media_auto_download">Media Auto download</string>
+    <string name="title_busy_status_msg">Your busy status </string>
+    <string name="msg_busy_status_notification">Your busy status will be set as auto-response to the messages received from individuals.</string>
+    <string name="msg_select_status">Select your new status</string>
+    <string name="clear_conversation_alert">Are you sure want to clear your conversation history?</string>
+    <string name="clear_conversation_message">All your conversation are cleared</string>
+    <string name="msg_add_busy_status">Add Busy Status</string>
+    <string name="title_set_busy_status">Set Busy Status</string>
+    <string name="msg_group_name_empty">"Please provide group name"</string>
+    <string name="mgs_not_a_group_member">"You're no longer a participant in this group"</string>
+    <string name="msg_group_name_cannot_be_empty">"Group name cannot be empty"</string>
+
+    <!-- Notifications Screen -->
+    <string name="notification_alert">Notification Alert</string>
+    <string name="label_notification_alert">Choose alert type for incoming messages</string>
+    <string name="notification_tone">Notification Tone</string>
+    <string name="label_notification_tone">Select a sound to play for a new message notification</string>
+    <string name="notification_not_working"> Notifications Not Working ?</string>
+    <string name="label_notification_not_working"> Learn more in our Help Center </string>
+    <string name="notification_not_working_URL"> https://app.mirrorfly.com/notifications/ </string>
+    <string name="notification_sound">Notification Sound</string>
+    <string name="label_notification_sound">Play sounds for incoming messages</string>
+    <string name="title_notification">Notification</string>
+
+
+    <!--Notification Alerts Screen-->
+    <string name="notification_popup">Notification Popup</string>
+    <string name="label_notification_popup">Showing popup for incoming messages</string>
+    <string name="vibration">Vibration</string>
+    <string name="label_vibration">Vibrate when a new message arrives while application is running</string>
+    <string name="mute_notification">Mute Notification</string>
+    <string name="msg_mute_notification">This will mute all notification alerts for incoming messages</string>
+    <string name="feedback_hint">Please describe your problem</string>
+
+    <!-- Notification Instruction Screen -->
+    <string name="msg_loading">Loading…</string>
+
+    <!--About and Help Screen-->
+    <string name="about_us">About us</string>
+    <string name="terms_and_privacy_policy">Terms and Privacy Policy</string>
+    <string name="feedback_warning">Information about your device, account and this app version will be automatically included in this feedback.</string>
+
+    <!--Contact Us Screen-->
+    <string name="title_contact_msg">Mirror Fly is a ready-to-go messaging solution for building
+        enterprise-grade real-time chat IM applications that meet various degrees of requirements like team
+        discussion, data sharing, task delegation and information handling on the go.</string>
+    <string name="title_contact_us">Contact Us</string>
+    <string name="title_contact_msg_time">To have a detailed interaction with our experts</string>
+    <string name="title_call">Call</string>
+    <string name="title_call_no_one"><u>+91 9840705435</u></string>
+    <string name="title_call_no_two"><u>+91 44 64560796</u></string>
+    <string name="title_support">Support</string>
+    <string name="title_support_msg">For any queries or issues related to Mirror Fly</string>
+    <string name="title_drop_mail_to">Write us at : </string>
+    <string name="title_mail_id"><u>bd@contus.in</u></string>
+    <string name="title_faq">FAQ</string>
+    <string name="title_faq_msg">Kindly checkout FAQ section for doubts regarding Mirror fly. We might have
+        already answered your question.</string>
+    <string name="title_contus_fly"><u>Mirror Fly</u></string>
+    <string name="quick_share_toast">You need to login to Mirror Fly app to continue</string>
+    <string name="message_call_cofirm">Are you sure you want to make a call?</string>
+    <string name="app_email">bdm@contus.in</string>
+    <string name="website_mirrorfly">https://www.mirrorfly.com/</string>
+    <string name="error_no_sim">Sim Card is not available</string>
+
+    <!--Terms & Conditions Screen-->
+    <string name="terms_of_service">Overview</string>
+    <string name="terms_of_service_content">The website www.mirrorfly.com and all of its contents
+        and services are powered by Mirrorfly. In the whole of the below text, the term \'You\', \'Client\' or
+        \'User\' all denotes the user or client who access the website (in any way) or uses the services of it in any level.
+        \n\nThe following Terms and Conditions apply to and govern the usage of the
+        whole of www.mirrorfly.com website and all of its content, services and products available through
+        the website, including, but not limited to, the client area (collectively referred to as the Website).
+        The \'Terms and Conditions\' section is written by us with the motive of providing maximum possible
+        clarity for points of understanding between the website\'\s firm and the user of the website. However,
+        we in no way provide assurance that this section would consist of answers and explanations for all
+        questions in regards to Terms and Conditions. In case you don\'\t find an answer to a question or demand
+        to have more clarity on a particular point, you shall email to us.
+        \n\nBy accepting to access or use any part of this website, you are assumed to have agreed to be bound by
+        the Terms and Conditions of this Agreement. In case you do not agree to all the Terms and Conditions of
+        this agreement, then you shall not access the Website or use any of its services.
+        \n\nThe Website is suitable only to individuals who are at least 13 years old.</string>
+    <string name="terms_prohibited_use">Client Area Account</string>
+    <string name="terms_prohibited_use_content">You are solely responsible for maintaining the security of
+        your client area account and for any kind of activity that occurs within the account. You are expected
+        to notify Mirrorfly immediately in case of any unauthorized uses of your account or any other breaches
+        of security. Mirrorfly will not be liable for any acts or omissions by You, including any damages of
+        any kind incurred as a result of such acts or omissions</string>
+    <string name="terms_post_sales_support">Post Sales Support</string>
+    <string name="terms_post_sales_support_content">On an occasion, if the client has opened and meddled with
+        the codes, we will take no responsibility to give technical help in any magnitude, in case any trouble
+        shoots up. There is no guarantee that all product updates will be available for free of cost.
+        Mirrorfly reserves the right to charge or not to charge for the product updates it releases according
+        to the nature of the update.
+        \n\nThe product is sold in "as is basis" with functions/features as specified in the website and any claim
+        stating that features/function missing or not "as expected" by the buyer or not like how it is found in
+        other similar products/competitors will not be taken into consideration, and Mirrorfly in no way will be
+        liable for such claims.
+        \n\n All customization services of any magnitude will be charged accordingly and the client in no way
+        possess the right to claim for free customization services citing to the payment he has done initially
+        for the actual product or for a previously agreed customization task/project/functionality. In case of
+        any rude or harsh behavior of a client towards any Support, Executive will lead to termination of
+        post-sales services for the particular customer. Customers are expected to communicate with the Support
+        Executive in a best-dignified manner and not use any form of inappropriate communication (includes profanity).
+        \n\nFrom the day of installation, the client will receive 30 days of free post-sales support. From the
+        31st day, the client will be charged for his support necessities. The support hours are between
+        10 AM to 6 PM IST (MON - FRI).</string>
+    <string name="terms_website_visitors">Responsibility of Website Visitors</string>
+    <string name="terms_website_visitors_content">
+        By operating the Website, Mirrorfly does not represent or imply that it endorses any or all of the
+        contributed content, or that it believes such material to be accurate, useful or non-harmful. You are
+        responsible for taking precautions as necessary to protect yourself and your computer systems from viruses,
+        worms, Trojan horses, and other harmful or destructive content. In spite of its ethical measures, the
+        Website might contain content that is offensive, indecent, or otherwise objectionable, as well as content
+        containing technical inaccuracies, typographical mistakes, and other errors. Mirrorfly disclaims any
+        responsibility for any harm resulting from the use by visitors of the Website.
+        \n\nIntellectual Property Mirrorfly, Mirrorfly.com, Mirrorfly logo and all other trademarks,
+        service marks, graphics and logos used in connection with the products in Mirrorfly.com are trademarks
+        or registered trademarks of Mirrorfly Pvt Ltd or Mirrorfly licensors. Other trademarks, service marks,
+        graphics and logos used in connection with the Website may be the trademarks of other third parties.
+        Your use of the Website grants you no right or license to reproduce or otherwise use any of Mirrorfly
+        or third-party trademarks. As Mirrorfly asks others to respect its intellectual property rights, it
+        respects the intellectual property rights of others. If you believe that material located on or linked
+        to by Mirrorfly.com violates your copyright, you are encouraged to notify Mirrorfly Pvt Ltd., in
+        accordance with common DMCA policies. Mirrorfly will respond to all such notices, including as required
+        or appropriate by removing the infringing material or disabling all links to the infringing material.
+        In the case of a visitor who may infringe or repeatedly infringes the copyrights or other intellectual
+        property rights of Mirrorfly or others, Mirrorfly may, in its discretion, terminate or deny access to
+        and use of the Website. In the case of such termination, Mirrorfly will have no obligation to provide
+        a refund of any amounts previously paid to Mirrorfly.
+        </string>
+    <string name="terms_changes">Changes</string>
+    <string name="terms_changes_content"> Mirrorfly reserves the right, at its sole discretion,
+        to modify or replace any part of this Agreement. It is your responsibility to check this Agreement
+        periodically for changes. Your continued use of or access to the Website following the posting of
+        any changes to this Agreement constitutes acceptance of those changes. Mirrorfly may also, in the
+        future, offer new services and/or features through the Website (including, the release of new tools
+        and resources). Such new features and/or services shall be subject to the terms and conditions of
+        this Agreement.</string>
+    <string name="terms_termination">Termination</string>
+    <string name="terms_termination_content"> Mirrorfly may terminate your access to all or any part of the
+        Website at any time, with or without cause, with or without notice, effective immediately.</string>
+    <string name="terms_disclaimer_warranties">Disclaimer of Warranties</string>
+    <string name="terms_disclaimer_warranties_content">
+        The Website is provided "as is". Mirrorfly and its suppliers and licensors hereby disclaim all warranties
+        of any kind, express or implied, including, without limitation, the warranties of merchantability,
+        fitness for a particular purpose and non-infringement. Neither Mirrorfly nor its suppliers and licensors
+        make any warranty that the Website will be error free or that access thereto will be continuous or
+        uninterrupted. You understand that you download from, or otherwise obtain content or services through,
+        the Website at your own discretion and risk.
+    </string>
+    <string name="terms_limitation_liability">Limitation of Liability</string>
+    <string name="terms_limitation_liability_content">
+        In no event will Mirrorfly, or its suppliers or licensors, be liable with respect to any subject
+        matter of this agreement under any contract, negligence, strict liability or other legal or equitable
+        theory for (i) any special, incidental or consequential damages; (ii) the cost of procurement or
+        substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv)
+        for any amounts that exceed the fees paid by you to Mirrorfly under this agreement during the twelve (12)
+        month period prior to the cause of action. Mirrorfly shall have no liability for any failure or delay
+        due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited
+        by applicable law.
+    </string>
+    <string name="terms_general_representation_warranty">General Representation and Warranty</string>
+    <string name="terms_general_representation_warranty_content">
+        You represent and warrant that (i) your use of the Website will be in strict accordance with the
+        Mirrorfly Privacy Policy, with this Agreement and with all applicable laws and regulations
+        (including without limitation any local laws or regulations in your country, state, city, or
+        other governmental area, regarding online conduct and acceptable content, and including all applicable
+        laws regarding the transmission of technical data exported from the United States or the country in
+        which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual
+        property rights of any third party.
+    </string>
+    <string name="terms_indemnification">Indemnification</string>
+    <string name="terms_indemnification_content">You agree to indemnify and hold harmless Mirrorfly, its contractors, and its licensors, and their
+        respective directors, officers, employees and agents from and against any and all claims and expenses, including attorney\'s
+        fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
+    </string>
+    <string name="terms_license_agreement">Mirrorfly End User License Agreement</string>
+    <string name="terms_license_agreement_content">
+        Hereafter, "Product" or "software" refers to the extension or other scripts that you buy, "Licensor"
+        refers to Mirrorfly, "License" refers to this document, and "Licensee" refers to the party that
+        received this license after having downloaded the respective product and paying the required fee
+        as determined by the Licensor. This License governs the use of the accompanying product, and your
+        purchase and use of the product constitutes your acceptance of this License and all of its contents
+        and stipulations.
+        \n\n THIS PRODUCT IS NEITHER A FREEWARE NOR SHAREWARE. IT IS A COMMERCIALLY LICENSED PRODUCT.
+        IT MUST BE PURCHASED FROM THE LICENSOR FOR USE BY ANY INDIVIDUAL OR PARTY, AND IS SUBJECT TO THE
+        FOLLOWING TERMS.
+    </string>
+    <string name="terms_service_business_relation">Refusal Of Service And Business Relations</string>
+    <string name="terms_service_business_relation_content">
+        Mirrorfly reserves the right to cease support and/or terminate business relations in instances of
+        libel, defamation, abuse, or harassment. Mirrorfly will terminate all support and business relations
+        in instances of software piracy. This includes, but is not limited to "cracked", "nulled", or
+        otherwise unlicensed versions of Mirrorfly scripts or plugins.
+    </string>
+    <string name="terms_illegal_distribution">Illegal Distribution</string>
+    <string name="terms_illegal_distribution_content">
+        If our product is found to be stolen, distributed without permission, illegally obtained, or if the
+        users of this software are found to be breaching any of the terms herein, the Licensor has the
+        unconditional right to prosecute them to the fullest extent of the law.
+    </string>
+    <string name="terms_liabilities">Liabilities</string>
+    <string name="terms_liabilities_content">
+        The Licensor, its management, or any of its employees, associates, or partners cannot be held liable
+        for any damages that this Software may cause. As the Licensee and user of the Software, you agree
+        to accept full liability for any damages, risk, and losses involved with or incurred by the use of
+        the Software.
+        \n\nTHE SERVICES OR SOFTWARE AND ALL ASSOCIATED MATERIALS AND SERVICES ARE PROVIDED SOLELY ON AN "AS-IS"
+        BASIS WITH ABSOLUTELY NO WARRANTY OF FITNESS OR MERCHANTABILITY, EXPLICIT OR IMPLIED
+        \n\nLicensor shall not be responsible for, and shall not pay, any amount of incidental, consequential or
+        other indirect damages, whether based on lost revenue or otherwise, regardless of whether Licensor
+        was advised of the possibility of such losses in advance. In no event shall Licensor\'s liability
+        hereunder exceed the number of license fees paid by Licensee, regardless of whether Licensee\'s
+        claim is based on contract, tort, strict liability, product liability or otherwise. If any term
+        of this Agreement is held by a court of competent jurisdiction to be invalid or unenforceable,
+        then this Agreement, including all of the remaining terms, will remain in full force and effect as
+        if such invalid or unenforceable term had never been included. This license must be left completely
+        intact when this software is used, or copied for approved multi-user use. The Licensor reserves all
+        rights not expressly granted to you in this license.
+    </string>
+
+    <!-- AppLock Screen -->
+    <string name="enter_pin">Enter Your PIN</string>
+    <string name="number_zero">0</string>
+    <string name="number_one">1</string>
+    <string name="number_two">2</string>
+    <string name="number_three">3</string>
+    <string name="number_four">4</string>
+    <string name="number_five">5</string>
+    <string name="number_six">6</string>
+    <string name="number_seven">7</string>
+    <string name="number_eight">8</string>
+    <string name="number_nine">9</string>
+    <string name="btn_clear">Clear</string>
+    <string name="btn_backspace">Back</string>
+    <string name="forgot_pin">Forgot PIN ?</string>
+    <string name="content_forget_pin">We have sent you OTP to the registered mobile number \n enter the 6 digit verification code below</string>
+    <string name="verify">Verify OTP</string>
+    <string name="sending_otp">Sending OTP to your Mobile Number</string>
+    <string name="error_otp_verification">Incorrect OTP, Please type correct OTP.</string>
+    <string name="verify_otp">Verifying OTP</string>
+    <string name="set_pin">Set PIN</string>
+    <string name="set_pin_content">Set 4 digit PIN</string>
+    <string name="enter_pin_old">Enter old PIN</string>
+    <string name="enter_new_pin">Enter new PIN</string>
+    <string name="confirm_newpin">Confirm new PIN</string>
+    <string name="otp_generate">Generate OTP to your registered mobile number</string>
+    <string name="generate_otp">Generate OTP</string>
+    <string name="cancel_otp">Cancel</string>
+    <string name="message_toomany_attempts">Invalid PIN, Generate OTP to your registered mobile number</string>
+    <string name="alert_message">Your PIN will be expired in %d day(s)</string>
+    <string name="ok">OK</string>
+    <string name="pin_lock">PIN Lock</string>
+    <string name="pin_lock_content">Add more security with 4 digit secret PIN</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="change_pin_content">Change 4 digit PIN</string>
+    <string name="finger_id">Fingerprint ID</string>
+    <string name="finger_id_content">Enable Fingerprint to unlock the app</string>
+    <string name="delete_account">Delete My Account</string>
+
+    <!-- biometric auth -->
+    <string name="biometric_failed">Fingerprint not recognized</string>
+    <string name="biometric_error_hardware_not_supported">Device does not support Fingerprint authentication</string>
+    <string name="biometric_error_fingerprint_not_available">Fingerprint is not registered in device</string>
+    <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
+    <string name="biometric_failure">Login not successful!</string>
+    <string name="biometric_cancelled">Authentication cancelled by user</string>
+    <string name="biometric_success">Login Successful</string>
+    <string name="title_activity_biometric">BiometricActivity</string>
+    <string name="msg_are_you_sure_you_want_to_delete_ac">Are you sure you want to delete your account?</string>
+    <string name="pin_message_1">If App Lock enabled, the app will be locked automatically after %02d sec when it is not in use.</string>
+    <string name="notes">Note: Once a PIN is set, it will be expired in %d days and has to be renewed.</string>
+    <string name="msg_set_pin_alert">You need to set pin first in order to enable bio metric authentication</string>
+    <string name="msg_chat_msg_deleted">Your chat conversation are deleted</string>
+    <string name="place_thumb">"Confirm your fingerprint so we can \n verify it's you."</string>
+    <string name="verify_device_password">Enable Fingerprint</string>
+    <string name="enable_finger_print">Please Enter your device pattern or password,To enable finger print</string>
+
+    <string name="biometric_title">Security</string>
+    <string name="biometric_subtitle"></string>
+    <string name="biometric_description">"Confirm your fingerprint so we can verify it's you."</string>
+    <string name="biometric_negative_button_text">CANCEL</string>
+    <string name="use_pin">USE PIN</string>
+    <string name="msg_you_changed_icon">You changed this Group\'s Icon</string>
+    <string name="version_name">Version %s</string>
+    <string name="version_date">Released on %s</string>
+    <string name="messages_label">messages</string>
+    <string name="last_login">Last Login</string>
+    <string name="browser_name">Browser Name</string>
+    <string name="os_name">OS Name</string>
+    <string name="file_size_error_message">File size is too large. Try uploading file size below</string>
+    <string name="user_no_longer_error_message">You\'\re no longer a participant in this group</string>
+
+    <!-- Share -->
+    <string name="need_to_login">You need to login to MirrorFly app to continue</string>
+    <string name="quick_share_title">Send to&#8230;</string>
+    <string name="remove_all">Remove all</string>
+    <string name="unsuppoted_files">Warning</string>
+    <string name="msg_max_file_share">"Can't Share more than 10 media files"</string>
+    <string name="msg_you_can_share_up_to_five_people">You can only share with up to 5 users or groups</string>
+
+    <string name="safe_chat_enabled" translatable="false">Safe Chat enabled!</string>
+    <string name="safe_chat_disabled" translatable="false">Safe Chat turned off</string>
+    <string name="safe_chat_set_pin" translatable="false">Please set pin to enable safe chat</string>
+    <string name="safe_chat" translatable="false">Safe Chat</string>
+    <string name="safe_chat_enable" translatable="false">Turn OFF Safe Chat</string>
+    <string name="safe_chat_disable" translatable="false">Turn ON Safe Chat</string>
+    <string name="safe_chat_prompt_positive" translatable="false" tools:ignore="ButtonCase">Ok</string>
+    <string name="safe_chat_prompt_negative" translatable="false">Cancel</string>
+    <string name="safe_chat_prompt_no_app_lock" translatable="false">To complete Safe Chat, set up App lock</string>
+    <string name="invite_app_link">https://app.mirrorfly.com</string>
+    <string name="invite_app_message">Hey, MirrorFly is a real time chat, Audio &amp; Video call solution for B2B &amp; B2C.\n Download the app from this URL: https://app.mirrorfly.com</string>
+    <string name="contactMessage">Contacts</string>
+    <string name="view_contacts">View contacts</string>
+    <string name="force_update_action">Update</string>
+    <string name="token_refresh_error">Token refresh error</string>
+    <string name="is_from_chat_shortcut">checkNotificationIntent:  in IS_FROM_CHAT_SHORTCUT</string>
+    <string name="info_group_call_not_allowed">Group call is not allowed</string>
+    <string name="slide_to_cancel">Slide to cancel</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- View All Media Screen -->
+    <string name="title_media">Media</string>
+    <string name="title_docs">Docs</string>
+    <string name="title_links">Links</string>
+    <string name="label_no_media">No Media Found…!!!</string>
+    <string name="label_no_docs">No Docs Found…!!!</string>
+    <string name="label_no_links">No Links Found…!!!</string>
+
+    <!-- Contact Selection Screen -->
+    <string name="label_contact_to_send">Contact to send</string>
+    <string name="label_contact_selected">%d Selected</string>
+    <string name="label_max_contact_restriction">Can\'t share more than %d contacts</string>
+    <string name="error_select_atleast_one_number">Select at least one number</string>
+    <string name="label_no_contacts_found">No Contacts found</string>
+    <string name="label_send_contacts">Send contacts</string>
+    <string name="label_mobile">Mobile</string>
+
+    <!-- Permission Popup Description -->
+    <string name="contact_and_media_permission_alert_label">MirrorFly needs the contacts and media permission to help you connect with friends and send messages. Your contacts are uploaded using MirrorFly private contact discovery, which means they are end-to-end encrypted and never visible to the MirrorFly service.</string>
+    <string name="contact_permission_alert_label">To help you connect with friends and family, allow MirrorFly access to your contacts.</string>
+    <string name="contact_permission_denied_alert_label">MirrorFly need the Contacts Permission in order to help you connect with friends and family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Contacts\".</string>
+    <string name="location_permission_alert_label">MirrorFly needs access to your location in order to share your current location.</string>
+    <string name="location_permission_denied_alert_label">MirrorFly need the Location Permission in order to attach a location, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Location\".</string>
+    <string name="camera_permission_alert_label">To capture photos and video, allow MirrorFly access to the camera and storage.</string>
+    <string name="camera_permission_denied_alert_label">MirrorFly need the Camera and Storage Permission in order to capture photos and video, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\" and \"Storage\".</string>
+    <string name="media_permission_alert_label">To send media, allow MirrorFly access to your device\'s photos, media, and files.</string>
+    <string name="media_permission_denied_alert_label">MirrorFly need the Storage Permission in order to attach photos, media, and files, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".</string>
+    <string name="mic_permission_alert_label">To send audio messages, allow MirrorFly access to your Microphone.</string>
+    <string name="mic_permission_denied_alert_label">MirrorFly need the Microphone Permission in order to send audio messages, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".</string>
+    <string name="audio_call_permission_alert_label">MirrorFly need the Microphone Permissions in order to call Family</string>
+    <string name="audio_call_permission_denied_alert_label">MirrorFly need the Microphone Permission in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".</string>
+    <string name="video_call_permission_alert_label">MirrorFly need the Microphone and Camera Permissions in order to call Family</string>
+    <string name="video_call_permission_denied_alert_label">MirrorFly need the Microphone and Camera Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\" and \"Camera\".</string>
+    <string name="notification_permission_denied_alert_label">Allow MirrorFly to send you notifications to stay \nconnected with friends and family.\n\n Please continue to app Settings > select Permission > enable Notification.\n</string>
+    <string name="notification_permission_locked_state_denied_alert_label">Allow MirrorFly to send you notifications while the app in background.\n\n Please continue to app Settings > select OthersPermission > enable the all permissions.\n</string>
+
+    <string name="turn_on_notification_label">Turn On</string>
+    <string name="notification_title">Turn on notification for MirrorFly</string>
+    <!-- Contact Us Screen -->
+    <string name="label_title">Title</string>
+    <string name="feedback_description">Description</string>
+    <string name="error_empty_title">Title is required</string>
+    <string name="error_empty_description">Description is required</string>
+    <string name="feedback_sent">Thank you for contacting us!</string>
+
+    <!-- Moderation Admin Blocked/UnBlocked and Report Messages -->
+    <string name="admin_block_message">This application is no longer available for you.</string>
+    <string name="admin_block_message_label">Please contact admin if you have any query.</string>
+    <string name="group_block_message_label">This group is no longer available</string>
+    <string name="user_block_message_label">This user is no longer available</string>
+    <string name="action_report">Report</string>
+    <string name="label_report_sent">Report sent</string>
+    <string name="label_report">Report</string>
+    <string name="label_report_group">Report Group</string>
+    <string name="label_report_message">This message will be forwarded to admin. This contact will not be notified.</string>
+    <string name="label_user_report_5_message">The last 5 messages from this contact will be forwarded to admin. This contact will not be notified.</string>
+    <string name="label_group_report_5_message">The last 5 messages from this group will be forwarded to admin. No one in this group will be notified.</string>
+    <string name="label_deleted_user_report_message">Cannot report deleted user</string>
+    <string name="label_deleted_user_messages_report_message">Cannot report deleted user\'s message</string>
+
+    <!-- Delete my account screen -->
+    <string name="delete_account_desc_title">Deleting your account will:</string>
+    <string name="delete_account_desc_label_1">Delete your account from MirrorFly</string>
+    <string name="delete_account_desc_label_2">Erase your message history</string>
+    <string name="delete_account_desc_label_3">Delete you from all of your MirrorFly groups</string>
+    <string name="delete_account_country_desc">To delete your account, confirm your country and enter your phone number.</string>
+    <string name="country_label">Country</string>
+    <string name="choose_country_label">Choose a country</string>
+    <string name="mobile_number_hint_label">Mobile number</string>
+    <string name="plus_label">+</string>
+    <string name="error_mobile_number_not_matched">The mobile number you entered doesn\'t match your account</string>
+
+    <!-- Delete my account feedback screen -->
+    <string name="feedback_description_label">We hate to see you leave! Tell us why you are deleting your account:</string>
+    <string name="select_reason_label">Select a reason</string>
+    <string name="reason_description_label">Tell us how we can improve</string>
+    <string name="info_about_description_label">We will store your feedback for future purpose.</string>
+    <string name="delete_account_label">Delete My Account</string>
+    <string name="delete_account_popup_title">Proceed to delete your account?</string>
+    <string name="delete_account_popup_description">Deleting your account is permanent. Your data cannot be recovered if you reactivate your MirrorFly account in future.</string>
+    <string name="delete_account_success">Your MirrorFly account has been deleted.</string>
+
+
+    <string name="chat_backup">Chat Backup</string>
+    <string name="last_backup">Last Backup</string>
+    <string name="backup_info_text">Back up your chat history and media to Google Drive so if you loose your device or switch to new one, your chat history is safe.You can restore your chat history when you reinstall Mirrorfly.</string>
+    <string name="auto_backup">Auto Backup</string>
+    <string name="select_gmail_account">Select your Google Drive account</string>
+    <string name="scheduled_your_backup">Scheduled your backup</string>
+    <string name="google_drive_settings">Google Drive Settings</string>
+    <string name="restore_backup">Restore Backup</string>
+    <string name="restore_info">Restore your messages and media from Google Drive. If you don’t restore now, you wont be able to restore later.</string>
+    <string name="select_google_account">Please select Google account</string>
+    <string name="in_progres">In Progress</string>
+    <string name="uploading_data">Uploading Data</string>
+    <string name="backingup_data">Backing up data</string>
+    <string name="downloading_data">Downloading backup data</string>
+    <string name="drive_access_revoked">Drive access is revoked. Please select Google account again.</string>
+    <string name="setup_auto_backup">Setup Auto Backup</string>
+    <string name="date_util_just_now">Just now</string>
+    <string name="date_util_unit_second">second</string>
+    <string name="date_util_unit_seconds">seconds</string>
+    <string name="date_util_unit_minute">minute</string>
+    <string name="date_util_unit_minutes">minutes</string>
+    <string name="date_util_unit_hour">hour</string>
+    <string name="date_util_unit_hours">hours</string>
+    <string name="date_util_unit_day">day</string>
+    <string name="date_util_unit_days">days</string>
+    <string name="date_util_unit_month">month</string>
+    <string name="date_util_unit_months">months</string>
+    <string name="date_util_unit_year">year</string>
+    <string name="date_util_unit_years">years</string>
+    <string name="date_util_suffix">ago</string>
+    <string name="no_msg_backup">No messages to backup</string>
+    <string name="google_logout_info">You are logged out of Google Drive please login again to take backup</string>
+    <string name="backup_success_msg">Backup taken Successfully</string>
+    <string name="drive_space_issue_msg">Google Drive storage does not have sufficient space</string>
+    <string name="connect_wifi_info">Connect your phone to Wi-fi to back up to Google Drive.</string>
+    <string name="connect_wifi_cell_info">Connect your phone to Wi-fi or Cellular to back up to Google Drive.</string>
+    <string name="roaming_info">You\'re currently roaming. Wait until you\'re no longer roaming or connect your phone to Wi-fi to backup to Google Drive.</string>
+    <string name="wifi_alert">Backing up over cellular may use a lot of data.To reduce data usage, connect your phone to Wi-Fi.</string>
+    <string name="over_cell_backup">Back up over cellular?</string>
+    <string name="back_up">Back up</string>
+    <string name="authenticating">Authenticating...</string>
+    <string name="authenticating_drive">Authenticating with Google Drive</string>
+    <string name="backing_up_msg">Backing up messages</string>
+    <string name="please_wait_msg">Please wait a moment</string>
+    <string name="wifi_only">Wifi Only</string>
+    <string name="wifi_cellular">Wifi or Cellular</string>
+    <string name="need_permission_backup">Need Storage permission to create backup file</string>
+    <string name="drive_backup_folder_name">Mirror Fly</string>
+    <string name="no_backup_msg_available">No backup file available</string>
+    <string name="backup_not_found">Backup Not Found</string>
+    <string name="backup_found">Backup Found</string>
+    <string name="__dash">--</string>
+    <string name="size_">Size: --</string>
+    <string name="no_backup_msg">No backup available</string>
+    <string name="downloading">Downloading...</string>
+    <string name="clean_up_data">Cleaning up data...</string>
+    <string name="restoring_msg">Restoring Messages</string>
+    <string name="google_not_initialized">Google Account Not initialized</string>
+    <string name="file_not_available">file not available</string>
+    <string name="permission_not_given">permission not given to delete</string>
+    <string name="download_backup_file">Download Backup File</string>
+    <string name="downloaded_backup_info">Backup File Downloaded Successfully</string>
+    <string name="restore_data">Restore Data</string>
+    <string name="text_backup_upload">Sorry. You can select only .txt file for restore Data</string>
+    <string name="restore_success_info">Data Restored Successfully</string>
+    <string name="restore_failed_info">Data Restore Failed. Please try later</string>
+    <string name="local_backup_amp_restore"><![CDATA[Local Backup & Restore]]></string>
+    <string name="download">Download</string>
+    <string name="restore">Restore</string>
+    <string name="download_info">Download the cloud file to save it to local storage, if you tap on restore button the restore process will start from the file saved in your local storage.</string>
+    <string name="add_account">Add account!</string>
+    <string name="new_user_info">As your a new user you will need to add account. Please add account to sync your data to cloud.</string>
+    <string name="add_google_account">Add Google Account</string>
+    <string name="skip">Skip</string>
+    <string name="looking_backup">Looking for Backup</string>
+    <string name="backup">Backup</string>
+
+    <!--Chat Tags Page-->
+    <string name="chat_tag_title">Chat Tags</string>
+    <string name="chat_tag_info">Create chat tags for different groups of chats and quickly switch between them.</string>
+    <string name="recommended_chat_tag">Recommended Chat Tags</string>
+    <string name="create_chat_tag">Create Chat Tag</string>
+    <string name="create_tag">Create Tag</string>
+    <string name="edit_tag">Edit Tag</string>
+
+    <string name="tag_name">Tag Name</string>
+    <string name="tag_name_hint">Type Chat Tag name here...</string>
+    <string name="tag_people_add_title">Include People or Group</string>
+    <string name="add_people_or_group">Add people or group</string>
+    <string name="add_people_title">Add People</string>
+    <string name="choose_people_info">Choose People or Group that will appear in this tag.</string>
+    <string name="empty_list">Please select people or group</string>
+    <string name="tag_name_already_exist">Tag name already exist</string>
+    <string name="remove_tag_title">Remove Group/People ?</string>
+    <string name="remove_tag_message">This will delete your group from the tag you have created.</string>
+    <string name="delete_lable">DELETE</string>
+    <string name="edit_tag_info">Tap \'Edit\' to change the order or delete tags.</string>
+    <string name="remove_chat_tag_title">This will remove chat tag, your chats will not be deleted.</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@android:drawable/dialog_frame"
+        android:right="5dp" android:left="5dp" android:bottom="20dp" android:top="7dp" >
+        <shape android:shape="rectangle">
+            <corners android:bottomLeftRadius="27dp"
+                android:bottomRightRadius="27dp"
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape
+            android:shape="rectangle">
+            <solid android:color="@android:color/white"/>
+            <corners android:bottomLeftRadius="27dp"
+                android:bottomRightRadius="27dp"
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape
+            android:shape="rectangle">
+            <solid android:color="@android:color/white"/>
+            <corners android:bottomLeftRadius="27dp"
+                android:bottomRightRadius="27dp"
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp"/>
+        </shape>
+    </item>
+</layer-list>
+

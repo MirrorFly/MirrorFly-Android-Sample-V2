@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#F2F2F2</color>
+    <color name="colorPrimaryDark">#E5E5E5</color>
+
+    <color name="colorAccent">#3276e2</color>
+    <color name="colorSecondary">#4879f9</color>
+
+    <color name="dashboard_toolbar_text_color">#181818</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_white_drop_shadow">#0000001F</color>
+    <color name="color_white_transparent_light">#00FFFFFF</color>
+    <color name="color_blue">#3276e2</color>
+    <color name="color_black">#000000</color>
+    <color name="color_grey_light">#D1D1D1</color>
+    <color name="color_grey">#747373</color>
+    <color name="color_error_message_black">#181818</color>
+    <color name="color_error_message_gray">#767676</color>
+    <color name="color_transparent">#00000000</color>
+    <color name="color_divider">#F8F8F8</color>
+    <color name="color_translate_bar">#97A5C7</color>
+    <color name="color_chat_list_time">#959595</color>
+    <color name="color_unread_count">#4879F9</color>
+    <color name="color_circular_img_bg">#9D9D9D</color>
+    <color name="color_chat_list_name">#181818</color>
+    <color name="color_chat_list_message">#767676</color>
+    <color name="color_contact_status">#767676</color>
+    <color name="color_black_transparent">#80000000</color>
+    <color name="color_black_transparent2">#99000000</color>
+    <color name="color_contact_name">#282828</color>
+    <color name="color_white_transparent">#33FFFFFF</color>
+    <color name="color_menu_text">#181818</color>
+    <color name="color_menu_divider">#E2E2E2</color>
+    <color name="color_country_name">#181818</color>
+    <color name="color_light_gray">#bdbdbd</color>
+    <color name="color_red">#FF0000</color>
+    <color name="color_medium_grey">#7A7979</color>
+    <color name="color_otp_gray">#EEEEEE</color>
+    <color name="color_otp_text">#181818</color>
+    <color name="color_profile_text">#181818</color>
+    <color name="color_profile_values">#767676</color>
+    <color name="color_light_blue">#4879F9</color>
+    <color name="color_list_bg">#F9F9F9</color>
+    <color name="color_your_status">#181818</color>
+    <color name="color_status_list">#767676</color>
+    <color name="color_selected_status">#313131</color>
+    <color name="search_highlight">#FFA700</color>
+    <color name="color_button_disabled">#B2B2B2</color>
+    <color name="color_tab_text_indicator">#4879F9</color>
+    <color name="color_white_hint">#77FFFFFF</color>
+    <color name="color_tab_text">#333333</color>
+    <color name="color_text_no_list">#4D4D4D</color>
+    <color name="color_text_black_bg">#7F7F7F</color>
+    <color name="color_text_hint">#999999</color>
+    <color name="color_black_opacity_55">#8C000000</color>
+    <color name="color_starred_message_date">#AFAFAF</color>
+
+    <color name="color_attachment">#242A3F</color>
+    <color name="color_attachment_white">#F3F3F3</color>
+    <color name="light_blue">#4879F9</color>
+    <color name="bs_divider_color">#1f000000</color>
+
+    <!--Message Status-->
+    <color name="color_message_acknowledged">#707070</color>
+    <color name="color_message_delivered">#FFA500</color>
+    <color name="color_message_seen">#56D018</color>
+
+
+    //Text Colors
+    <color name="text_black_light">#767676</color>
+    <color name="text_black_dark">#181818</color>
+    <color name="text_grey_light">#757575</color>
+    <color name="text_black">#353535</color>
+    <color name="text_red">#F43753</color>
+    <color name="text_blue">#7889B3</color>
+
+    <color name="color_text">#181818</color>
+    <color name="color_text_inactive">#767676</color>
+    <color name="color_list_divider_color">#E2E2E2</color>
+
+    <!--Chat Screen-->
+    <color name="color_message_time">#B6CAFF</color>
+    <color name="color_selected_item">#40455E93</color>
+    <color name="chat_footer_divider_color">#9e9e9e</color>
+    <color name="color_chat_contact_separator">#E3E7F1</color>
+    <color name="chat_send_text_border">#C1C1C1</color>
+    <color name="last_seen_text">#959595</color>
+    <color name="call_icon_disabled_color">#80181818</color>
+    <color name="black_transparent">#64000000</color>
+    <color name="text_reply_msg_color">#9F9F9F</color>
+    <color name="text_reply_sent_msg_color">#7285B5</color>
+    <color name="color_text_grey">#4D4D4D</color>
+    <color name="color_translate_message">#666565</color>
+    <color name="color_contact_green">#30C076</color>
+
+    <!--Chat Screen new design-->
+    <color name="color_sent_message_background">#E2E8F7</color>
+    <color name="color_received_message_border">#DDE3E5</color>
+    <color name="color_sent_message_time">#455E93</color>
+    <color name="color_sent_contact_separator">#CFD6E7</color>
+    <color name="color_recipient_media_inner_background">#EFEFEF</color>
+    <color name="color_date_background">#DADADA</color>
+    <color name="color_notification_text">#565656</color>
+    <color name="color_reply_sent_message">#D0D8EB</color>
+    <color name="color_reply_file_message">#C6C6C6</color>
+    <color name="color_join_link_sender_bg">#D0D8EB</color>
+    <color name="color_join_link_receiver_bg">#EFEFEF</color>
+
+    <!--Media Send Recieve-->
+    <color name="file_send_message_background">#D0D8EB</color>
+    <color name="file_send_progress_border_color">#AFB8D0</color>
+    <color name="file_download_progress_border_color">#AFB8D0</color>
+    <color name="file_download_progress_tint_color">#FF000000</color>
+    <color name="audio_duration_background_color">#97A5C7</color>
+    <color name="preview_thumbnail_border">#00FFF8</color>
+
+    <!--SeekBar-->
+    <color name="color_sender_seek_progress">#F3F4F8</color>
+    <color name="color_sender_seek_secondary_progress">#AFB8D0</color>
+    <color name="color_sender_seek_thumb">#7285B5</color>
+    <color name="color_recipient_seek_progress">#8AAAFF</color>
+    <color name="color_recipient_seek_secondary_progress">#B9C1D6</color>
+    <color name="color_recipient_seek_thumb">#8C97B3</color>
+
+    <color name="color_chat_msg_received_time">#4D4D4D</color>
+    <color name="download_shape_shadow">#6B000000</color>
+
+    <color name="text_color_black">#333333</color>
+    <color name="connection_status">#F1A000</color>
+    <color name="color_chat_msg_sent_time">#B6CAFF</color>
+    <color name="color_smiley">#363636</color>
+
+    <color name="color_dark_red">#D04B3A</color>
+    <color name="colorG">#eeeeee</color>
+
+    <!--Quick Share-->
+    <color name="valid_green">#2EAA05</color>
+    <color name="invalid_red">#990404</color>
+    <color name="md_light_blue_400">#29B6FC</color>
+    <color name="md_light_blue_500">#03A9F4</color>
+    <color name="grey_900">#212121</color>
+    <color name="blue_grey_300">#616f76</color>
+    <color name="md_blue_900">#0D47A1</color>
+    <color name="md_white_1000">#ffffff</color>
+    <color name="color_dark_gray">#7C7C7C</color>
+    <color name="color_transparent_bg">#23000000</color>
+
+    <color name="color_red_light">#FF3939</color>
+    <color name="color_text_label_sdk">#959595</color>
+
+    <color name="search_box_color">#EBEBEB</color>
+    <color name="button_disable_color">#767676</color>
+    <color name="color_chat_tag_header">#C1C1C1</color>
+    <color name="user_tag_text_color">#181818</color>
+    <color name="mention_tag_bg_color">#D2E3FC</color>
+    <color name="mention_tag_text_color">#174EA5</color>
+    <color name="blue_color_notification_button">#EFF4FD</color>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/single_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_4"
+    app:cardCornerRadius="@dimen/margin_3"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_10">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_17" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.5"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/color_light_gray" />
+
+        <com.contusfly.views.CustomRecyclerView
+            android:id="@+id/view_list_numbers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

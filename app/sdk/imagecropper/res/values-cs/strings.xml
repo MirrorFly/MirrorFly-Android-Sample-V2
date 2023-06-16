@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<resources>
+    <string name="cancel">Zrušit</string>
+    <string name="save">Uložit</string>
+    <string name="saving_image">Ukládám obrázek</string>
+    <string name="preparing_card">Připravuji kartu</string>
+    <string name="no_storage_card">Žádná SD karta</string>
+    <string name="not_enough_space">Na SD kartě není dostatek místa</string>
+
+</resources>

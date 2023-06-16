@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<com.contusfly.views.CustomTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text_empty_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_200"
+    android:gravity="center"
+    android:padding="@dimen/padding_10"
+    android:textColor="@android:color/darker_gray"
+    android:textSize="@dimen/text_size_18"
+    android:visibility="gone">
+
+
+</com.contusfly.views.CustomTextView>

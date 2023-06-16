@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chatTag.activities.AddPeopleActivity"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_view"
+        layout="@layout/chat_tag_common_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar_view"
+        android:layout_above="@+id/add_people_button_view">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/selected_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.contusfly.views.CustomEditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/margin_45"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@drawable/search_button_bg"
+            android:drawableLeft="@drawable/ic_search"
+            android:paddingLeft="@dimen/margin_10"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:textColorHint="@color/chat_send_text_border"
+            android:textSize="@dimen/text_size_12"
+            android:textColor="@color/text_black_dark"
+            android:hint="@string/search_label"
+            android:gravity="center_vertical"
+            android:drawablePadding="@dimen/margin_12"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_20"/>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_people_button_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_45"
+        android:background="@drawable/curve_button_enable_disable"
+        android:layout_margin="@dimen/margin_15"
+        android:textSize="@dimen/text_size_13"
+        android:fontFamily="@font/sf_ui_display_medium"
+        android:textColor="@color/color_sent_message_background"
+        android:text="@string/title_add"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:enabled="false"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/empty_list"
+        layout="@layout/view_empty_data"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="decoration_height">3dp</dimen>
+    <dimen name="decoration_height_for_four">2dp</dimen>
+    <dimen name="ef_dimen_40">40dp</dimen>
+</resources>

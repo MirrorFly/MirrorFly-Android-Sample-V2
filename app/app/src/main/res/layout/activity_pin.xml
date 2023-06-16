@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/ic_bio_background"
+    android:focusable="false"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/pin_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-32dp"
+        android:background="@color/color_white"
+        android:cursorVisible="false"
+        android:digits="0123456789"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        android:inputType="numberPassword"
+        android:maxLength="4"
+        android:maxLines="1"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/logo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="41dp"
+        android:layout_marginLeft="41dp"
+        android:layout_marginTop="@dimen/margin_70"
+        android:layout_marginEnd="41dp"
+        android:layout_marginRight="41dp"
+        android:contentDescription="@string/title_content_description"
+        android:src="@drawable/ic_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/enter_pin_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:gravity="center_vertical"
+        android:text="@string/enter_pin"
+        android:fontFamily="@font/sf_ui_display_light"
+        android:textColor="@color/color_text"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/pin_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_marginTop="@dimen/margin_15"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/enter_pin_textview">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/pin_1"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_margin="6dp"
+                app:srcCompat="@drawable/ic_pin_empty" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/filled_pin1"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                tools:srcCompat="@drawable/ic_pin_filled_drawable" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/pin_2"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_margin="6dp"
+                app:srcCompat="@drawable/ic_pin_empty" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/filled_pin2"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                tools:srcCompat="@drawable/ic_pin_filled_drawable" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/pin_3"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_margin="6dp"
+                app:srcCompat="@drawable/ic_pin_empty" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/filled_pin3"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                tools:srcCompat="@drawable/ic_pin_filled_drawable" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/pin_4"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_margin="6dp"
+                app:srcCompat="@drawable/ic_pin_empty" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/filled_pin4"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                tools:srcCompat="@drawable/ic_pin_filled_drawable" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/pin_layout"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.contusfly.views.CustomNumericKeyboard
+            android:id="@+id/keyboard_numeric"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/numeric_bottom_keypad" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/forgot_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/forgot_pin"
+            android:textColor="@color/color_red"
+            android:textSize="14sp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/sf_ui_display_regular"
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

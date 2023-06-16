@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:id="@+id/chat_tag_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_5"
+        android:layout_marginRight="@dimen/margin_5"
+        android:background="@drawable/chat_tag_unselected_bg">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/chat_tag_view"
+            style="@style/ChatTag_medium_add_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_20"
+            android:paddingLeft="@dimen/padding_20"
+            android:paddingTop="@dimen/padding_8"
+            android:paddingEnd="@dimen/padding_20"
+            android:paddingRight="@dimen/padding_20"
+            android:paddingBottom="@dimen/padding_8"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black_dark"
+            android:visibility="visible"
+            tools:text="Collegues" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

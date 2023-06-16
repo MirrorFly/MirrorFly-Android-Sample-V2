@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:paddingStart="@dimen/padding_10"
+        android:paddingTop="@dimen/padding_15"
+        android:paddingEnd="@dimen/padding_10"
+        android:paddingBottom="@dimen/padding_15">
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_archive_chat"
+            android:layout_width="@dimen/margin_18"
+            android:layout_height="@dimen/margin_18"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_21"
+            android:layout_marginEnd="@dimen/margin_16"
+            app:srcCompat="@drawable/ic_archive_black" />
+
+        <androidx.emoji.widget.EmojiAppCompatTextView
+            style="@style/EmojiTextSemiBoldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_15"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:layout_toStartOf="@+id/text_unread_chat_count"
+            android:layout_toEndOf="@+id/image_archive_chat"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/archived_label"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_unread_chat_count"
+            style="@style/TextSemiBoldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorSecondary"
+            android:textSize="@dimen/text_size_13" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_space"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_50"
+        android:layout_below="@+id/root_layout" />
+</RelativeLayout>

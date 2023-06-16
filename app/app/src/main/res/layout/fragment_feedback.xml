@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/color_white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_18">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextRegularStyleLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/feedback_description_label"
+            android:textColor="@color/text_black_dark" />
+
+        <com.contusfly.spinnerview.MaterialSpinner
+            android:id="@+id/reason_spinner"
+            style="@style/TextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_13"
+            android:hint="@string/select_reason_label"
+            android:paddingTop="@dimen/padding_10"
+            android:paddingBottom="@dimen/padding_10"
+            android:textColor="@color/text_black_dark"
+            android:textColorHint="@color/text_black_light"
+            app:ms_hide_arrow="false"
+            app:ms_padding_left="0dp"
+            app:ms_padding_right="0dp"
+            app:ms_popup_padding_left="@dimen/padding_5"
+            app:ms_popup_padding_right="@dimen/padding_5"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1"
+            android:background="?attr/divider_color" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/description_edit_text"
+            style="@style/TextRegularStyleBold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_15"
+            android:background="?attr/white_color"
+            android:hint="@string/reason_description_label"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="250"
+            android:paddingTop="@dimen/margin_13"
+            android:paddingBottom="@dimen/margin_8"
+            android:textColor="@color/text_black_dark"
+            android:textColorHint="@color/text_black_light"
+            android:textSize="@dimen/text_size_13" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1"
+            android:layout_marginTop="@dimen/margin_5"
+            android:background="?attr/divider_color" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextLightStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_14"
+            android:text="@string/info_about_description_label"
+            android:textColor="@color/text_black_light"
+            android:textSize="@dimen/text_size_12" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_delete_account"
+            style="@style/CallLinkView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/margin_38"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_48"
+            android:background="@drawable/bg_button_red_shape"
+            android:focusable="false"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_40"
+            android:paddingEnd="@dimen/padding_40"
+            android:text="@string/delete_account_label"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_14"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView>

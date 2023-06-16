@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion rootProject.ext.compileSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+        }
+
+        qa {
+
+        }
+
+        uat {
+
+        }
+
+        release {
+        }
+
+        releaseDebug {
+
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //Android - versions.gradle
+    implementation deps.android.appcompat
+    //Okhttp3 - versions.gradle
+    implementation deps.okhttp3.interceptor
+    //Retrofit - versions.gradle
+    implementation deps.squareup.gson
+    //Retrofit - versions.gradle
+    implementation deps.squareup.retrofit
+    implementation deps.squareup.gsonconv
+    //Junit - versions.gradle
+    testImplementation deps.junit.junit
+    androidTestImplementation deps.junit.extjunit
+    //Expresso
+    androidTestImplementation deps.espresso.core
+}

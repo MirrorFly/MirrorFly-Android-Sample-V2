@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_white"
+            android:orientation="vertical">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:background="@drawable/date_rounded_corner"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/padding_10"
+                android:paddingTop="@dimen/padding_5"
+                android:visibility="gone"
+                android:paddingRight="@dimen/padding_10"
+                android:paddingBottom="@dimen/padding_5"
+                android:textSize="@dimen/text_size_12"
+                tools:text="05-Nov-2018" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_15"
+                android:background="@color/color_white">
+
+                <ViewStub
+                    android:id="@+id/text_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_info_txt_item" />
+
+                <ViewStub
+                    android:id="@+id/image_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_info_img_item" />
+
+                <ViewStub
+                    android:id="@+id/video_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_info_video_item" />
+
+                <ViewStub
+                    android:id="@+id/audio_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_info_audio_item" />
+
+                <ViewStub
+                    android:id="@+id/location_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_info_location_item" />
+
+                <ViewStub
+                    android:id="@+id/contact_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_info_contact_item" />
+
+                <ViewStub
+                    android:id="@+id/file_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_info_file_item" />
+            </FrameLayout>
+
+            <View
+                style="@style/MsgInfoView"
+                android:layout_marginTop="@dimen/margin_15"
+                android:background="@color/bs_divider_color"
+                android:foregroundTint="@color/bs_divider_color"
+                tools:targetApi="LOLLIPOP" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_15"
+                android:layout_marginBottom="@dimen/margin_15"
+                android:background="@color/color_white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_white"
+                    android:orientation="vertical">
+
+                    <com.contusfly.views.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_5"
+                        android:fontFamily="@font/sf_ui_display_bold"
+                        android:paddingStart="@dimen/padding_15"
+                        android:paddingTop="@dimen/padding_10"
+                        android:paddingEnd="@dimen/padding_10"
+                        android:paddingBottom="@dimen/padding_5"
+                        android:text="@string/title_delivered"
+                        android:textColor="@color/color_contact_name"
+                        android:textSize="@dimen/text_size_18"
+                        android:textStyle="bold" />
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/text_delivered_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_6"
+                        android:paddingStart="@dimen/margin_15"
+                        android:paddingEnd="@dimen/padding_10"
+                        android:paddingBottom="@dimen/padding_10"
+                        android:textColor="@color/color_chat_list_time"
+                        android:textSize="@dimen/text_size_14"
+                        tools:text="haiiiiiiiiiiiii" />
+                </LinearLayout>
+
+                <View
+                    style="@style/MsgInfoView"
+                    android:layout_marginStart="@dimen/margin_16dp"
+                    android:layout_marginEnd="@dimen/margin_16dp"
+                    android:background="@color/color_grey_light"
+                    android:foregroundTint="@color/color_grey_light"
+                    tools:targetApi="LOLLIPOP" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_white"
+                    android:orientation="vertical">
+
+                    <com.contusfly.views.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_5"
+                        android:fontFamily="@font/sf_ui_display_bold"
+                        android:paddingStart="@dimen/padding_15"
+                        android:paddingTop="@dimen/padding_10"
+                        android:paddingEnd="@dimen/padding_10"
+                        android:paddingBottom="@dimen/padding_5"
+                        android:text="@string/title_read"
+                        android:textColor="@color/color_contact_name"
+                        android:textSize="@dimen/text_size_18"
+                        android:textStyle="bold" />
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/text_read_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_6"
+                        android:paddingStart="@dimen/padding_15"
+                        android:paddingEnd="@dimen/padding_10"
+                        android:paddingBottom="@dimen/padding_10"
+                        android:textColor="@color/color_chat_list_time"
+                        android:textSize="@dimen/text_size_14"
+                        tools:text="haiiiiiiiiiiiii" />
+
+                </LinearLayout>
+
+                <View
+                    style="@style/MsgInfoView"
+                    android:layout_marginStart="@dimen/margin_16dp"
+                    android:layout_marginEnd="@dimen/margin_16dp"
+                    android:background="@color/color_grey_light"
+                    android:foregroundTint="@color/color_grey_light"
+                    tools:targetApi="LOLLIPOP" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

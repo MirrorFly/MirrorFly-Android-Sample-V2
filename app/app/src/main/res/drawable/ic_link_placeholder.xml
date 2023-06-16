@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/audio_duration_background_color" />
+    <item
+        android:bottom="@dimen/margin_30"
+        android:drawable="@drawable/ic_default_link"
+        android:left="@dimen/margin_30"
+        android:right="@dimen/margin_30"
+        android:top="@dimen/margin_30" />
+</layer-list>

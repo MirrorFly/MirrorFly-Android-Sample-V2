@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusFly
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2019 ContusFly LTD. All rights reserved.
+  ~ @licence http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/view_number"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/padding_8"
+    android:paddingBottom="@dimen/padding_8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icon_compose"
+            app:tint="?attr/color_black" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:textColor="@color/color_dark_gray"
+            android:textSize="@dimen/text_size_16" />
+
+        <CheckBox
+            android:id="@+id/checkbox_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:checked="true"
+            android:clickable="false"
+            android:theme="@style/CustomCheckBox" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/no_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_0.5"
+        android:layout_marginTop="@dimen/margin_10"
+        android:background="@color/color_light_gray" />
+</LinearLayout>

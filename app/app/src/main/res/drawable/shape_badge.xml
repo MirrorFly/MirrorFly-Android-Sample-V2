@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusMessanger
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2016 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval"
+    android:thickness="10dp"
+    android:useLevel="false">
+    <solid android:color="@android:color/white" />
+
+    <size
+        android:width="@dimen/margin_18"
+        android:height="@dimen/margin_18" />
+
+</shape>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:drawable="@drawable/overflow_image"
+        android:left="@dimen/margin_18"
+        android:right="@dimen/margin_18" />
+</layer-list>

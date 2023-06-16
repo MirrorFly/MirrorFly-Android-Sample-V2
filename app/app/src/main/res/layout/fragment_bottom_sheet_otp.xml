@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:windowSoftInputMode="adjustNothing"
+    android:layout_weight="1">
+
+    <LinearLayout
+        android:id="@+id/otp_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/sf_ui_display_bold"
+            android:text="@string/forgot_pin"
+            android:textColor="#181818"
+            android:textSize="20sp"
+            app:fontFamily="@font/sf_ui_display_bold" />
+
+        <com.contusfly.views.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:text="@string/content_forget_pin"
+            android:textColor="#737373" />
+
+        <include
+            android:id="@+id/otpview"
+            layout="@layout/otp_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/resend_otp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:padding="4dp"
+            android:fontFamily="@font/sf_ui_display_regular"
+            app:fontFamily="@font/sf_ui_display_regular"
+            app:font_name="@string/font_roboto_regular"
+            android:text="Resend OTP"
+            android:textAlignment="center"
+            android:textColor="#FF0000" />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="15dp">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF0000"
+            android:textSize="16sp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            app:fontFamily="@font/sf_ui_display_semi_bold"
+            app:font_name="@string/font_roboto_bold"
+            android:layout_marginStart="25dp"
+            android:text="@string/cancel"/>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/verify_otp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:layout_alignParentEnd="true"
+            android:gravity="end"
+            android:textSize="16sp"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            app:fontFamily="@font/sf_ui_display_semi_bold"
+            app:font_name="@string/font_roboto_bold"
+            android:layout_marginEnd="25dp"
+            android:text="@string/verify"/>
+    </RelativeLayout>
+</LinearLayout>

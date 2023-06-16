@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_2"
+    android:layout_marginBottom="@dimen/margin_2"
+    android:paddingStart="@dimen/padding_8"
+    android:paddingEnd="@dimen/padding_18"
+    android:elevation="0dp"
+    android:orientation="vertical"
+    tools:targetApi="LOLLIPOP">
+
+    <ViewStub
+        android:id="@+id/view_message_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/view_chat_date" />
+
+    <include layout="@layout/view_chat_space" />
+
+
+    <LinearLayout
+        android:layout_marginEnd="@dimen/margin_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:background="@drawable/bg_chat_shape_sender"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/view_chat_sender_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:contentDescription="Sent_Text"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/view_text_sent_reply"
+                    layout="@layout/list_chat_reply_sent_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_3" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        style="@style/chatTextMessageLayoutStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image_sent_recall"
+                            android:layout_width="@dimen/margin_14"
+                            android:layout_height="@dimen/margin_14"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="@dimen/margin_5"
+                            android:contentDescription="@null"
+                            android:paddingTop="1dp"
+                            android:src="@drawable/ic_recall"
+                            android:visibility="gone" />
+
+                        <com.contusfly.views.MessageTextView
+                            android:id="@+id/txt_send_chat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:autoLink="all"
+                            android:breakStrategy="simple"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:lineSpacingExtra="3dp"
+                            android:linksClickable="true"
+                            android:textColor="@color/color_black"
+                            android:textColorLink="@color/color_black"
+                            android:textSize="@dimen/text_size_14"
+                            app:emojiconSize="@dimen/text_size_19"
+                            app:fontFamily="@font/sf_ui_display_regular"
+                            tools:targetApi="M"
+                            tools:text="haiiiiiiiiiiiiiiiiiiiiiiiiiiiiii" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/view_text_sender"
+                style="@style/ChatTimeLayoutStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_marginBottom="@dimen/margin_5">
+
+                <ImageView
+                    android:id="@+id/ic_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_4"
+                    android:layout_marginBottom="@dimen/margin_4"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_star"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/img_txt_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_4"
+                    android:layout_marginBottom="@dimen/margin_4"
+                    android:contentDescription="@string/NotAcknowledge_content_description"
+                    android:src="@drawable/ic_message_unsent" />
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/txt_send_txt_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_4"
+                    android:textColor="@color/color_sent_message_time"
+                    android:textSize="@dimen/text_size_11"
+                    app:fontFamily="@font/sf_ui_display_regular"
+                    tools:text="hghghg" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
