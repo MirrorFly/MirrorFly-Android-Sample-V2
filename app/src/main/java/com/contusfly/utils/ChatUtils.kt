@@ -267,6 +267,16 @@ object ChatUtils {
             jid == SharedPreferenceManager.getCurrentUserJid()
         } else false
     }
+
+    fun isContusUser(email: String): Boolean {
+        val domainName = "contus.in"
+        val getDomain = email.split("@").toTypedArray()
+        return if (getDomain.size > 1) {
+            val domain = getDomain[1]
+            domain == domainName
+        } else false
+    }
+
     /**
      * Returns mentionformatted message
      *
@@ -323,33 +333,13 @@ object ChatUtils {
      * @param context Context
      */
     private fun setReplyParentMessage(replyMessage: ChatMessage, textView: MessageTextView, context: Context){
-        if(replyMessage.getReplyParentChatMessage() != null) {
-            if(replyMessage.getReplyParentChatMessage().mentionedUsersIds != null && replyMessage.getReplyParentChatMessage().mentionedUsersIds.size > 0) {
-                val formattedSpanText = MentionUtils.formatMentionTextForReplyParent(
-                    context,
-                    replyMessage.getReplyParentChatMessage(),
-                    false
-                )
-                textView.text = formattedSpanText
-            } else {
-                EmojiUtils.setMessageTextWithEllipsis(
-                    textView,
-                    getSpannedText(
-                        context,
-                        replyMessage.getReplyParentChatMessage().getMessageTextContent()
-                    ).toString()
-                )
-            }
-        }
-        else {
-            EmojiUtils.setMessageTextWithEllipsis(
-                textView,
-                getSpannedText(
-                    context,
-                    replyMessage.getMessageTextContent()
-                ).toString()
-            )
-        }
+        EmojiUtils.setMessageTextWithEllipsis(
+            textView,
+            getSpannedText(
+                context,
+                replyMessage.messageTextContent
+            ).toString()
+        )
     }
     /**
      * Convert mentionuser model object into list

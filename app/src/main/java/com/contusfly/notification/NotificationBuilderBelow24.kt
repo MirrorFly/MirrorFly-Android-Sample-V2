@@ -15,6 +15,7 @@ import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.BuildConfig
 import com.contusfly.R
 import com.contusfly.getAppName
+import com.contusfly.getDisplayName
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
@@ -41,7 +42,7 @@ object NotificationBuilderBelow24 {
                 setOnlyAlertOnce(true)
                 setAutoCancel(true)
                 setDefaults(Notification.DEFAULT_SOUND)
-                setContentTitle(profileDetails?.name)
+                setContentTitle(profileDetails?.getDisplayName())
             }
 
             if (!chatNotifications.containsKey(notificationId))
@@ -105,7 +106,7 @@ object NotificationBuilderBelow24 {
         var appendedContent = messageContent
         if (ChatTypeEnum.groupchat == message.getMessageChatType()) {
             val groupUser = ProfileDetailsUtils.getProfileDetails(message.getChatUserJid())
-            appendedContent = groupUser?.name + ":" + messageContent
+            appendedContent = groupUser?.getDisplayName() + ":" + messageContent
         }
         return appendedContent
     }

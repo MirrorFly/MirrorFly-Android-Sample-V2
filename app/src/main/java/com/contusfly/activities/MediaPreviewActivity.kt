@@ -463,7 +463,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             val participantsNameList: MutableList<String> = ArrayList()
             selectedUsers!!.forEach {
                 if(!it.equals(SharedPreferenceManager.getCurrentUserJid())) {
-                    participantsNameList.add(ProfileDetailsUtils.getProfileDetails(it)!!.name)
+                    participantsNameList.add(ProfileDetailsUtils.getProfileDetails(it)!!.getDisplayName())
                 }
             }
             setUserName(participantsNameList.sorted().joinToString(", "))
@@ -478,7 +478,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                     return@let
                 }
                 mediaPreviewBinding.imageChatPicture.loadUserProfileImage(this, it)
-                setUserName(it.name)
+                setUserName(it.getDisplayName())
                 chat = Chat(it.getChatType(), it.jid)
                 with(Dispatchers.Main) {
                     initGroupMentionTag()
@@ -532,7 +532,8 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         val textMessage = unsentMessage + texts + texts
         var mentions: String? =null
         if (!addMoreMediaClicked) {
-            mentions = FlyMessenger.getUnsentMentionedUserId(toUser!!)
+             if(toUser!=null)
+              mentions = FlyMessenger.getUnsentMentionedUserId(toUser!!)
         } else {
             if (selectedImageList[0].mentionedUsersIds.isNotEmpty())
                 mentions = selectedImageList[0].mentionedUsersIds[0]
@@ -1273,7 +1274,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             groupTagAdapter.submitList(it)
         }
         mentionViewModel.getSelectedRecipient().observe(this) { profile ->
-            val name = Utils.returnEmptyStringIfNull(profile.name)
+            val name = Utils.returnEmptyStringIfNull(profile.getDisplayName())
             val userId = getUserFromJid(profile.jid)
             val mentionUser  = MentionUser(userId)
             mediaPreviewBinding.imageCaption.replaceText(name,mentionUser)

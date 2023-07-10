@@ -21,6 +21,7 @@ import com.contusfly.call.groupcall.GroupCallActivity
 import com.contusfly.call.groupcall.OnGoingCallPreviewActivity
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.notification.AppNotificationManager
+import com.mirrorflysdk.api.FlyCore
 
 
 class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
@@ -50,7 +51,10 @@ class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
             if (SharedPreferenceManager.getBoolean(Constants.IS_PROFILE_LOGGED)) {
                 if (callLink.isNotEmpty())
                     validateCallLinkAndNavigateToRespectivePage(callLink)
-                else checkNotificationIntent(intent)
+                else if (!BuildConfig.CONTACT_SYNC_ENABLED || SharedPreferenceManager.getBoolean(Constants.CONTACT_SYNC_DONE) || FlyCore.getNonChatUsers().size > 0)
+                    checkNotificationIntent(intent)
+                else
+                    startActivity(Intent(this, SynchronizeContactActivity::class.java))
             } else {
                 startActivity(Intent(this, ProfileStartActivity::class.java).putExtra(Constants.IS_FIRST_LOGIN, true)
                         .putExtra(Constants.FROM_SPLASH, true))

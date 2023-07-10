@@ -32,7 +32,6 @@ import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
 import kotlinx.coroutines.*
 import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -318,10 +317,9 @@ class GoogleDriveWorker(private val appContext: Context, workerParams: WorkerPar
      * Create a empty backup file in the application's backup  folder
      *
      * @param fileName String
-     * @param count Int append to the filename if file with same name already exists
      * @return File
      */
-    private fun generateBackUpFileAndReturnFile(fileName: String, count: Int = 1): File {
+    private fun generateBackUpFileAndReturnFile(fileName: String): File {
         val backupFolderPath = getBackUpFolderPath()
         val backupFolder = File(backupFolderPath)
 
@@ -330,10 +328,7 @@ class GoogleDriveWorker(private val appContext: Context, workerParams: WorkerPar
         }
 
         val backupFile = File(backupFolder, fileName)
-        if (backupFile.exists()) {
-            var newCount = count
-            return generateBackUpFileAndReturnFile(getNameForBackUp(++newCount), newCount)
-        } else {
+        if (!backupFile.exists()) {
             backupFile.createNewFile()
         }
         return backupFile
@@ -357,17 +352,5 @@ class GoogleDriveWorker(private val appContext: Context, workerParams: WorkerPar
             LogMessage.i(TAG, "getBackUpFolderPath: $it")
         }
     }
-
-    private fun getNameForBackUp(count: Int = 1): String {
-        val todayDate = Date()
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return getAppNameWithUserName() + "-" + sdf.format(todayDate) + ".${count}.txt"
-    }
-
-    private fun getAppNameWithUserName() =
-        ChatManager.applicationContext.getString(R.string.title_app_name)
-            .replace(" ", "") + "-" + SharedPreferenceManager.getString(
-            Constants.USERNAME
-        )
 
 }

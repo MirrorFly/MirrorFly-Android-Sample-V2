@@ -1,8 +1,12 @@
 package com.contusfly.utils
 
+import com.contusfly.BuildConfig
+import com.contusfly.TAG
+import com.contusfly.getDisplayName
 import com.contusfly.interfaces.GetGroupUsersNameCallback
 import com.contusfly.isUnknownContact
 import com.contusfly.isValidIndex
+import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
@@ -21,7 +25,7 @@ object ProfileDetailsUtils {
     </ProfileDetails> */
     fun sortProfileList(profilesList: List<ProfileDetails>?): List<ProfileDetails> {
         profilesList?.let {
-            return it.sortedBy { profileDetails -> profileDetails.name?.toLowerCase() }
+            return it.sortedBy { profileDetails -> profileDetails.getDisplayName()?.toLowerCase() }
         }
         return listOf()
     }
@@ -42,7 +46,7 @@ object ProfileDetailsUtils {
                         if (user.jid.equals(SharedPreferenceManager.instance.currentUserJid, ignoreCase = true))
                             userNames.add("You")
                         else
-                            userNames.add(user.name)
+                            userNames.add(user.getDisplayName())
                     }
                     Collections.sort(userNames, String.CASE_INSENSITIVE_ORDER)
                     getGroupUsersNameCallback.onGroupUsersNamePrepared(userNames.joinToString(","))
@@ -71,7 +75,7 @@ object ProfileDetailsUtils {
             it.remove(user)
             if(it.contains(getProfileDetails(SharedPreferenceManager.instance.currentUserJid)))
                 it.remove(getProfileDetails(SharedPreferenceManager.instance.currentUserJid))
-            val sortedList = it.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name })).toMutableList()
+            val sortedList = it.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.getDisplayName() })).toMutableList()
             if(index>=0) {
                 user?.nickName = AppConstants.YOU
                 user?.name  = AppConstants.YOU
@@ -90,21 +94,54 @@ object ProfileDetailsUtils {
             profileDetails.filter { !it.isAdminBlocked }
     }
 
-    fun getProfileDetails(jid: String) : ProfileDetails? {
+    fun getProfileDetails(jid: String, isUnknownContact: Boolean = false) : ProfileDetails? {
         if (XmppStringUtils.parseDomain(jid).isNullOrBlank())
             return null
-        val profileDetails = ContactManager.getProfileDetails(jid)
-        return when {
-            profileDetails == null -> UIKitContactUtils.getProfileDetails(jid) // if it is null then return UIKit contact
-            profileDetails.isUnknownContact() -> UIKitContactUtils.getProfileDetails(jid) ?: profileDetails // if it is isUnknownContact then return UIKit contact
-            else -> profileDetails
+        if (BuildConfig.CONTACT_SYNC_ENABLED) {
+            return getContactSyncProfileDetails(jid, isUnknownContact)
+        } else {
+            val profileDetails = ContactManager.getProfileDetails(jid)
+            return when {
+                profileDetails == null -> UIKitContactUtils.getProfileDetails(jid) // if it is null then return UIKit contact
+                profileDetails.isUnknownContact() -> UIKitContactUtils.getProfileDetails(jid) ?: profileDetails // if it is isUnknownContact then return UIKit contact
+                else -> profileDetails
+            }
+        }
+    }
+
+    private fun getContactSyncProfileDetails(
+        jid: String,
+        isUnknownContact: Boolean
+    ): ProfileDetails? {
+        return if (isUnknownContact) // if it is isUnknownContact then first check contus contact
+            ContusContactUtils.getProfileDetails(jid) ?: FlyCore.getUserProfile(jid)
+        else {
+            var profileDetails: ProfileDetails? = null
+            try{
+                if(!jid.isNullOrEmpty())
+                    profileDetails = ContactManager.getProfileDetails(jid)
+                when {
+                    profileDetails == null -> ContusContactUtils.getProfileDetails(jid) // if it is isUnknownContact then first check contus contact
+                    profileDetails.isUnknownContact() -> ContusContactUtils.getProfileDetails(jid) ?: profileDetails // if it is isUnknownContact then first check contus contact
+                    else -> profileDetails
+                }
+            }catch(e:NullPointerException){
+
+                LogMessage.e(TAG,e.toString())
+
+            }catch(e:Exception){
+
+                LogMessage.e(TAG,e.toString())
+            }
+
+            profileDetails
         }
     }
 
     fun getDisplayName(jid: String?): String {
         if (jid == null)
             return Constants.EMPTY_STRING
-        return getProfileDetails(jid)?.name ?: jid
+        return getProfileDetails(jid)?.getDisplayName() ?: jid
     }
 
     fun addContact(profileDetail: ProfileDetails) {

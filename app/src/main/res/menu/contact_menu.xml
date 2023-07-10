@@ -23,4 +23,10 @@
         android:title="@string/settings_label"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:title="@string/refresh_label"
+        app:showAsAction="never" />
+
 </menu>

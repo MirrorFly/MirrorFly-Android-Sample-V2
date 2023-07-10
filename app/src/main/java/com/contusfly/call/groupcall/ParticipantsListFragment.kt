@@ -28,6 +28,7 @@ import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import com.contusfly.call.groupcall.utils.CallUtils
 
 
 class ParticipantsListFragment : Fragment(), CoroutineScope {
@@ -95,7 +96,10 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
         UserInterfaceUtils.setUpToolBar(requireActivity(), toolbar, (activity as AppCompatActivity?)!!.supportActionBar, Constants.EMPTY_STRING)
         toolbar.navigationIcon?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
             ContextCompat.getColor(requireContext(), R.color.color_blue), BlendModeCompat.SRC_ATOP)
-        toolbar.setNavigationOnClickListener { requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE) }
+        toolbar.setNavigationOnClickListener {
+            CallUtils.setIsAddUsersToTheCall(false)
+            requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
         mAdapter = ViewPagerAdapter(requireActivity(), addFragmentsToViewPagerAdapter(),
             arrayOf(getString(R.string.label_participants), getString(R.string.label_add_participants)))
         tabLayout = participantsListBinding.tabs
@@ -270,5 +274,11 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
     fun handleMuteEvents(userJid: String) {
         onGngCallParticipantsListFragment.handleMuteEvents(userJid)
     }
+
+    override fun onPause() {
+        super.onPause()
+        CallUtils.setIsAddUsersToTheCall(false)
+    }
+
 
 }

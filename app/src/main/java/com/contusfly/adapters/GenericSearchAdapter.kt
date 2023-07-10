@@ -86,7 +86,7 @@ abstract class GenericSearchAdapter<T, ViewBindingVH : BaseViewHolder>(itemList:
             override fun publishResults(constraint: CharSequence,
                                         results: FilterResults) {
                 try {
-                    itemList = ArrayList(results.values as ArrayList<T>)
+                    if (results.values != null) itemList = ArrayList(results.values as ArrayList<T>)
                     notifyDataSetChanged()
                 }catch (e:Exception){
                     LogMessage.e(TAG,e.toString())

@@ -22,12 +22,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.emoji.widget.EmojiAppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mirrorflysdk.flycommons.*
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.*
-import com.contusfly.BuildConfig
-import com.contusfly.R
 import com.contusfly.adapters.holders.*
 import com.contusfly.adapters.viewhelpers.AudioItemView
 import com.contusfly.adapters.viewhelpers.FileItemView
@@ -37,25 +32,38 @@ import com.contusfly.chat.MapUtils
 import com.contusfly.chat.MediaController
 import com.contusfly.chat.MessageUtils
 import com.contusfly.chat.reply.ReplyViewUtils
-import com.contusfly.checkInternetAndExecute
 import com.contusfly.groupmention.MentionUtils
 import com.contusfly.interfaces.MessageItemListener
 import com.contusfly.interfaces.OnChatItemClickListener
+import com.contusfly.models.ChatItemRowModel
+import com.contusfly.models.MediaCaption
 import com.contusfly.models.MediaStatus
 import com.contusfly.utils.*
 import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CustomTextView
 import com.contusfly.views.MirrorFlySeekBar
+import com.location.googletranslation.GoogleTranslation
+import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.MessageStatus
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ContactChatMessage
+import com.mirrorflysdk.flycommons.*
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.flycommons.models.MessageType
 import com.mirrorflysdk.utils.Utils
-import com.location.googletranslation.GoogleTranslation
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.MutableList
+import kotlin.collections.hashMapOf
+import kotlin.collections.indexOfFirst
+import kotlin.collections.indices
+import kotlin.collections.isNotEmpty
+import kotlin.collections.reversed
+import kotlin.collections.set
 
 
 /**
@@ -145,6 +153,8 @@ class ChatAdapter(
      * This is a kotlin ReplyView utils class
      */
     private val replyViewUtils: ReplyViewUtils
+
+    private var setDrawable: SetDrawable? = SetDrawable(activity)
 
     /**
      * Sets the on download click listener.
@@ -908,7 +918,7 @@ class ChatAdapter(
                     joinLinkView.gone()
                     setStatus(item, imgChatStatus)
                     replyViewUtils.showSenderReplyWindow(this, item, context)
-                    setSenderText(item, txtChatSender,txtSenderViewHolder,position)
+                    setSenderText(item, txtChatSender,txtSenderViewHolder)
                 }
                 replyViewUtils.markFavoriteItem(this, item)
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
@@ -919,7 +929,7 @@ class ChatAdapter(
         }
     }
 
-    private fun setSenderText(item: ChatMessage,txtChatSender:TextView,holder: TextSentViewHolder,position: Int){
+    private fun setSenderText(item: ChatMessage,txtChatSender:TextView,holder: TextSentViewHolder){
         val msg = item.messageTextContent
         with(txtChatSender) {
             setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
@@ -948,7 +958,6 @@ class ChatAdapter(
                 txtChatSender,
                 longClickListener,
                 item,
-                position,
                 linkClickListener,
                 linkbuttonclickstatusListener
             )
@@ -1177,7 +1186,6 @@ class ChatAdapter(
                         txtChatReceiver,
                         longClickListener,
                         item,
-                        absoluteAdapterPosition,
                         linkClickListener,
                         linkbuttonclickstatusListener
                     )
@@ -1302,15 +1310,10 @@ class ChatAdapter(
                 val filePath = Utils.returnEmptyStringIfNull(
                     messageItem.getMediaChatMessage().getMediaLocalStoragePath()
                 )
+                val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
                 imageItemViewHelper.senderImageItemView(
-                    messageItem,
                     this,
-                    filePath,
-                    time,
-                    base64Img,
-                    searchEnabled,
-                    searchKey
-                )
+                    rowmodel)
                 replyViewUtils.showSenderReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForSenderImageMessages(this, messageItem)
@@ -1364,10 +1367,9 @@ class ChatAdapter(
                 val filePath = Utils.returnEmptyStringIfNull(
                     messageItem.getMediaChatMessage().getMediaLocalStoragePath()
                 )
+                val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
                 imageItemViewHelper.receiverImageViewItem(
-                    messageItem, this, filePath, time,
-                    base64Img, searchEnabled, searchKey
-                )
+                     this, rowmodel)
                 replyViewUtils.showReceiverReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForReceiverImageMessages(this, messageItem)
@@ -1414,10 +1416,9 @@ class ChatAdapter(
                 val filePath = Utils.returnEmptyStringIfNull(
                     messageItem.getMediaChatMessage().getMediaLocalStoragePath()
                 )
+                val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
                 videoItemViewHelper.senderVideoItemView(
-                    messageItem, this, filePath, time,
-                    base64Img, searchEnabled, searchKey
-                )
+                   this, rowmodel)
                 replyViewUtils.showSenderReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForSenderVideoMessages(this, messageItem)
@@ -1462,10 +1463,9 @@ class ChatAdapter(
                 val filePath = Utils.returnEmptyStringIfNull(
                     messageItem.getMediaChatMessage().getMediaLocalStoragePath()
                 )
+                val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
                 videoItemViewHelper.receiverVideoViewItem(
-                    messageItem, this, filePath, time,
-                    base64Img, searchEnabled, searchKey
-                )
+                   this, rowmodel)
                 replyViewUtils.showReceiverReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForReceiverVideoMessages(this, messageItem)
@@ -1503,24 +1503,6 @@ class ChatAdapter(
                 translatedlinearlayout?.gone()
             }
             layoutTranslatedText.setOnClickListener {
-                checkAndTranslateMessage(
-                    this,
-                    txtRevChatCaption,
-                    txtTranslatedText,
-                    translatedlinearlayout
-                )
-            }
-
-            txtRevChatCaption.setOnClickListener {
-                checkAndTranslateMessage(
-                    this,
-                    txtRevChatCaption,
-                    txtTranslatedText,
-                    translatedlinearlayout
-                )
-            }
-
-            txtRevChatCaption.setOnClickListener {
                 checkAndTranslateMessage(
                     this,
                     txtRevChatCaption,
@@ -2014,7 +1996,7 @@ class ChatAdapter(
                 adjustPadding(space, position, mainlist)
                 txtSendTime.text = time
                 txtSendName.text = contactName
-                checkUserFromReceiver(holder)
+                checkUserFromReceiver(holder, item)
                 starredSentImage.visibility =
                     if (item.isMessageStarred()) View.VISIBLE else View.GONE
                 replyViewUtils.showReceiverReplyWindow(this, item, context)
@@ -2045,7 +2027,7 @@ class ChatAdapter(
             adjustPadding(space, position, mainlist)
             txtSendName.text = contactName
             txtSendTime.text = time
-            checkUserFromSender(holder)
+            checkUserFromSender(holder,item)
             setStatus(item, imgSenderStatus)
             if (registeredJid == item.chatUserJid) {
                 contactActionText.gone()
@@ -2071,11 +2053,86 @@ class ChatAdapter(
      * Checking user to send contact from receiver side
      *
      * @param holder Holder of the recycler view
+     * @param item
      */
-    private fun checkUserFromReceiver(holder: RecyclerView.ViewHolder) {
+    private fun checkUserFromReceiver(holder: RecyclerView.ViewHolder, item: ChatMessage) {
         val contactReceiverViewHolder = holder as ContactReceivedViewHolder
         with(contactReceiverViewHolder) {
-            contactActionText.gone()
+            if (BuildConfig.CONTACT_SYNC_ENABLED) {
+                val chatUserNumber = Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(SharedPreferenceManager.getCurrentUserJid())).replace(" ".toRegex(), "")
+                val number = chatUserNumber.replace(" ".toRegex(), "")
+                val contactMessage = item.getContactChatMessage()
+                val registeredJid = getJidFromSharedContact(contactMessage)
+                if (registeredJid != null)
+                    handleContactView(this, registeredJid)
+                else {
+                    contactActionText.text = context.resources.getString(R.string.invite)
+                    contactActionText.show()
+                    txtSendImg.setImageResource(R.drawable.ic_contact_img)
+                }
+                for (num in contactMessage.getContactPhoneNumbers()) {
+                    val receivedNumber = num.replace(" ".toRegex(), "")
+                    if (number.contains(receivedNumber)) {
+                        contactActionText.gone()
+                        viewSeperator.hide()
+                    } else {
+                        viewContactSaveMessageItem(item.senderUserJid, receivedNumber, viewSeperator, contactActionText)
+                    }
+                }
+            } else {
+                contactActionText.gone()
+                viewSeperator.hide()
+            }
+        }
+    }
+
+    private fun handleContactView(contactReceiverViewHolder: ContactReceivedViewHolder, jID: String) {
+        with(contactReceiverViewHolder) {
+            if (jID == SharedPreferenceManager.getCurrentUserJid()) {
+                contactActionText.gone()
+                viewSeperator.hide()
+                contactActionText.text = Constants.EMPTY_STRING
+                setLoginUserContactProfilePicture(txtSendImg,false)
+            } else {
+                contactActionText.text = context.getString(R.string.message)
+                contactActionText.show()
+                ProfileDetailsUtils.getProfileDetails(jID)?.let {
+                    txtSendImg.loadUserProfileImage(context, it)
+                }
+            }
+        }
+    }
+
+    private fun viewContactSaveMessageItem(senderUserJid: String?, receivedNumber: String, viewSeparator: View, contactActionText: CustomTextView) {
+        viewSeparator.show()
+        val countryCode = SharedPreferenceManager.getString(Constants.COUNTRY_CODE)
+        val userJid = Utils.getJidFromPhoneNumber(context, receivedNumber, if (countryCode.isEmpty()) "IN" else countryCode) ?: Constants.EMPTY_STRING
+        val contactJid = if (senderUserJid!!.contains(userJid)) senderUserJid else userJid
+        val profileDetail = ProfileDetailsUtils.getProfileDetails(contactJid)
+        if (profileDetail == null || !profileDetail.isItSavedContact() || profileDetail.isEmailContact()) {
+            if (contactActionText.text.toString() == context.getString(R.string.message))
+                contactActionText.text = context.getString(R.string.message_or_save_contact)
+            else if (contactActionText.text.toString() == context.getString(R.string.invite))
+                contactActionText.text = context.getString(R.string.invite_or_save_contact)
+        }
+    }
+
+    private fun setLoginUserContactProfilePicture(txtSendImg: ImageView,isSender: Boolean){
+
+        if(SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE).isNotEmpty()) {
+            if(isSender) {
+                MediaUtils.loadImageWithGlideSecure(
+                    context, SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE),
+                    txtSendImg, ContextCompat.getDrawable(context, R.drawable.ic_profile)
+                )
+            } else {
+                MediaUtils.loadImageWithGlideSecure(
+                    context, SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE),
+                    txtSendImg, ContextCompat.getDrawable(context, R.drawable.ic_contact_img)
+                )
+            }
+        } else {
+            txtSendImg.setImageDrawable(setDrawable?.setDrawableForProfile(SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME)))
         }
     }
 
@@ -2084,11 +2141,36 @@ class ChatAdapter(
      *
      * @param holder        Holder of the recycler view
      */
-    private fun checkUserFromSender(holder: RecyclerView.ViewHolder) {
+    private fun checkUserFromSender(holder: RecyclerView.ViewHolder, item: ChatMessage) {
         val contactHolder = holder as ContactSentViewHolder
         with(contactHolder) {
-            contactActionText.gone()
-            contactSeparator?.hide()
+            if (BuildConfig.CONTACT_SYNC_ENABLED) {
+                val contactMessage = item.contactChatMessage
+                val registeredJid = getJidFromSharedContact(contactMessage)
+                contactActionText.show()
+                contactSeparator?.show()
+                if (registeredJid != null) {
+                    val user = SharedPreferenceManager.getCurrentUserJid()
+                    if (registeredJid == user) {
+                        contactActionText.gone()
+                        contactSeparator?.gone()
+                        MediaUtils.loadImageWithGlideSecure(
+                            context, SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE),
+                            txtSendImg, ContextCompat.getDrawable(context, R.drawable.ic_profile))
+                    } else {
+                        contactActionText.text = context.getString(R.string.message)
+                        ProfileDetailsUtils.getProfileDetails(registeredJid)?.let {
+                            txtSendImg.loadUserProfileImage(context, it)
+                        }
+                    }
+                } else {
+                    contactActionText.text = context.getString(R.string.invite)
+                    txtSendImg.setImageResource(R.drawable.ic_profile)
+                }
+            } else {
+                contactActionText.gone()
+                contactSeparator?.hide()
+            }
         }
     }
 
@@ -2102,10 +2184,11 @@ class ChatAdapter(
         var registeredJid: String? = null
         for (i in contactMessage.getIsChatAppUser().indices)
             if (contactMessage.getIsChatAppUser()[i].isTrue()) {
+                val countryCode = SharedPreferenceManager.getString(Constants.COUNTRY_CODE)
                 registeredJid = Utils.getJidFromPhoneNumber(
                     context,
                     contactMessage.getContactPhoneNumbers()[i],
-                    SharedPreferenceManager.getString(Constants.COUNTRY_CODE)
+                    if (countryCode.isEmpty()) "IN" else countryCode
                 )
                 break
             }
@@ -2331,6 +2414,7 @@ class ChatAdapter(
                 listener?.onSenderItemLongClick(messageItem, layoutPosition)
                 true
             }
+
         }
     }
 
@@ -2680,7 +2764,7 @@ class ChatAdapter(
             }
             contactActionText.setOnClickListener {
                 if (!item.isMessageRecalled())
-                    listener?.onContactClick(item, layoutPosition, registeredJid)
+                    listener?.onContactClick(item, layoutPosition, registeredJid,true)
             }
         }
     }
@@ -2708,7 +2792,7 @@ class ChatAdapter(
                 listener!!.onContactClick(
                     item,
                     layoutPosition,
-                    registeredJid
+                    registeredJid,!contactActionText.text.toString().contains("Save Contact")
                 )
             }
         }
@@ -2896,6 +2980,40 @@ class ChatAdapter(
         }
     }
 
+    override fun setMediaCaption(mediStatus: MediaCaption) {
+        try {
+            if (mediStatus.searchEnabled && mediStatus.searchKey.isNotEmpty()) {
+                val startIndex = mediStatus.htmlText.toString().checkIndexes(mediStatus.searchKey)
+                val stopIndex = startIndex + mediStatus.searchKey.length
+                EmojiUtils.setMediaTextHighLightSearchedForMention(context, mediStatus.captionView,
+                    mediStatus.htmlText.toString(), startIndex, stopIndex, mediStatus.mentionedUserName)
+            } else {
+                mediStatus.captionView.setBackgroundColor(context.color(android.R.color.transparent))
+                mediStatus.captionView.setTextKeepState(mediStatus.htmlText)
+            }
+            var movelink = ModifiedlinkMovementMethod(
+                context,
+                mediStatus.messageItem.chatUserJid,
+                selectedMessages,
+                isLinkLongclick
+            )
+            movelink.setOnclicklistener(
+                mediStatus.captionView,
+                longClickListener,
+                mediStatus.messageItem,
+                linkClickListener,
+                linkbuttonclickstatusListener
+            )
+            mediStatus.captionView.movementMethod = movelink
+            mediStatus.captionView.isClickable = false
+            mediStatus.captionView.isLongClickable = false
+
+        } catch(e:Exception){
+            com.contusfly.utils.LogMessage.e("Error",e.toString())
+        }
+    }
+
+
     /**
      * Set the media duration for downloaded/uploaded video/audio file
      *
@@ -3042,11 +3160,11 @@ class ChatAdapter(
                 textView: TextView?,
                 url: String?,
                 view: ChatMessage,
-                position: Int,
                 onclickLinkStatus: Boolean
             ): Boolean {
+                var clickedposition=mainlist.indexOf(view)
                 isLinkLongclick = onclickLinkStatus
-                listener?.onSenderItemLongClick(view, position)
+                listener?.onSenderItemLongClick(view, clickedposition)
                 return true
             }
         }
@@ -3057,10 +3175,10 @@ class ChatAdapter(
             override fun onClick(
                 textView: TextView?,
                 url: String?,
-                view: ChatMessage,
-                position: Int
+                view: ChatMessage
             ): Boolean {
-                listener?.onSenderItemClicked(view, position)
+                var clickedposition=mainlist.indexOf(view)
+                listener?.onSenderItemClicked(view, clickedposition)
                 return true
             }
         }

@@ -53,6 +53,7 @@ import com.mirrorflysdk.api.models.ContactChatMessage
 import com.mirrorflysdk.utils.*
 import com.mirrorflysdk.views.CustomToast
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.mirrorflysdk.flycommons.ChatType
 import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -114,12 +115,6 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
      * The View chat.
      */
     private val viewStarredMessages by bindView<LinearLayout>(R.id.view_chat)
-
-
-    /**
-     * contact msg for invite
-     */
-    private var selectedContactMessage: ContactChatMessage? = null
 
     @Inject
     open lateinit var dashboardViewModelFactory: AppViewModelFactory
@@ -413,7 +408,7 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
         }
 
         viewModelStarredMessage.starredMessageUpdated.observe(this){
-            starredMessageAdapter!!.notifyItemChanged(it)
+            starredMessageAdapter!!.notifyItemChanged(it,viewModelStarredMessage.starredMessagesList[it])
         }
     }
 
@@ -486,6 +481,21 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
 
     override fun onSenderItemClicked(item: ChatMessage?, position: Int) {
         handleStarredMediaMessageClick(position)
+    }
+
+    override fun onHandleStarredItemMediaClickToAction(item: ChatMessage?, position: Int) {
+        try {
+            if (clickedStarredMessages.isNotEmpty())
+                onItemClick(position)
+            else if (position != -1) {
+                if (SystemClock.elapsedRealtime() - lastClickTime > 1000) {
+                    chatClickUtils.handleOnListClick(item, activity)
+                }
+                lastClickTime = SystemClock.elapsedRealtime()
+            }
+        } catch (e: Exception) {
+            LogMessage.e(TAG, e.toString())
+        }
     }
 
     override fun onReceiverItemClicked(item: ChatMessage?, position: Int) {
@@ -641,8 +651,33 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
         //Do nthg
     }
 
-    override fun onContactClick(item: ChatMessage, position: Int, registeredJid: String?) {
-        //Do nthg
+    override fun onContactClick(item: ChatMessage, position: Int, registeredJid: String?, isSavedContact: Boolean) {
+        if (!BuildConfig.CONTACT_SYNC_ENABLED)
+            return
+        if (isSavedContact && item.contactChatMessage.getContactPhoneNumbers().size <= 1) {
+            if (registeredJid != null) {
+                startActivity(Intent(this, ChatActivity::class.java).putExtra(LibConstants.JID, registeredJid).putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT))
+            } else {
+                inviteUserDialog(item.getContactChatMessage())
+            }
+        } else {
+            val messageId = item.messageId ?: item.contactChatMessage.messageId
+            navigateToContactViewPage(messageId)
+        }
+    }
+
+    private fun inviteUserDialog(contactMessage: ContactChatMessage) {
+        selectedContactMessage = contactMessage
+        commonAlertDialog!!.dialogAction = CommonAlertDialog.DialogAction.INVITE
+        commonAlertDialog!!.showListDialog(getString(R.string.title_invite_friend), resources.getStringArray(R.array.array_invite_contact))
+    }
+
+    private fun navigateToContactViewPage(messageId: String?) {
+        if (!messageId.isNullOrEmpty()) {
+            this.launchActivity<SelectContactMessageActivity> {
+                putExtra(Constants.MESSAGE_ID, messageId)
+            }
+        } else com.mirrorflysdk.flycommons.LogMessage.e(TAG, "Message ID not available")
     }
 
     override fun onDialogClosed(dialogType: CommonAlertDialog.DIALOGTYPE?, isSuccess: Boolean) {

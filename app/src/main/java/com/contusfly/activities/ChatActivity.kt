@@ -41,6 +41,7 @@ import com.contusfly.adapters.ReplySuggestionsAdapter
 import com.contusfly.call.CallPermissionUtils
 import com.contusfly.call.groupcall.UsersSelectionActivity
 import com.contusfly.call.groupcall.utils.CallUtils
+import com.contusfly.chat.InviteContactUtils
 import com.contusfly.chat.RealPathUtil
 import com.contusfly.chat.ReplyHashMap
 import com.contusfly.chat.reply.MessageSwipeController
@@ -119,6 +120,16 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private var mentionedUsersIds: MutableList<String> = mutableListOf()
     private var sendTextMessageWithMentionFormat: CharSequence? = emptyString()
     private var mentionFilterKey: String = emptyString()
+
+    private val contactSavePermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        val contactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_CONTACTS)
+
+        if(contactPermissionGranted) {
+            saveContact()
+        }
+    }
+
     private val downloadPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         val writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: ChatUtils.checkWritePermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -425,6 +436,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         imgSend.setOnClickListener(this)
         attachment.setOnClickListener(this)
         back.setOnClickListener(this)
+        btnAdd.setOnClickListener(this)
+        btnBlock.setOnClickListener(this)
         closeReplyMessage.setOnClickListener(this)
         chatMessageEditText.setOnClickListener(this)
         emojiHandler.attachKeyboardListeners(chatMessageEditText)
@@ -493,20 +506,20 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             mainList.clear() //since these are intial messages, the list must be cleared
             mainList.addAll(messagesList)
             chatAdapter.notifyDataSetChanged()
-            if (mainList.isNotEmpty()) {
-                if (messageId.isNotEmpty() && messageId != unreadMessageTypeMessageId)
-                    highlightGivenMessageId(messageId)
-                else
-                    listChats.scrollToPosition(mainList.size - 1)
-            }
+            highlightGivenMessage()
             initSuggestion(mainList)
         }
 
         parentViewModel.removeTempDateHeader.observe(this) { removeDate ->
-            if (removeDate) {
-                mainList.removeAt(0)
-                chatAdapter.notifyItemRemoved(0)
+            try {
+                if (removeDate && mainList.size > 0) {
+                    mainList.removeAt(0)
+                    chatAdapter.notifyItemRemoved(0)
+                }
+            } catch (e:IndexOutOfBoundsException) {
+                LogMessage.e(e)
             }
+
         }
 
         parentViewModel.previousMessageList.observe(this) { messagesList ->
@@ -537,9 +550,25 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             rosterObservable.onNext(userRoster)
         })
 
+        //Contact Observer
+        viewModel.isContactSyncSuccess.observe(this, Observer {
+            Log.d(TAG, "startObservingViewModel isContactSyncSuccess called")
+            viewModel.getProfileDetails()
+            refreshVisibleContactMessage()
+        })
+
         parentViewModel.groupParticipantsName.observe(this, {
             setUserPresenceStatus(it)
         })
+    }
+
+    private fun highlightGivenMessage() {
+        if (mainList.isNotEmpty()) {
+            if (messageId.isNotEmpty() && messageId != unreadMessageTypeMessageId)
+                highlightGivenMessageId(messageId)
+            else
+                listChats.scrollToPosition(mainList.size - 1)
+        }
     }
 
     private fun startObserving() {
@@ -547,6 +576,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             this.profileDetails = profileDetails
             setUserProfileAndStatus()
             setUserProfileImage()
+            addOrBlockLayoutVisibility()
             invalidateOptionsMenu()
             setUpBlockedUserView()
             updateChatEditText()
@@ -820,7 +850,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         loaderObserver()
         parentViewModel.setParticpantDetails(chatType)
         FirebaseUtils.setAnalytics(FirebaseAnalytics.Event.VIEW_ITEM, "Chat View", "")
-        startStickyService()
         initViews()
         setUpListeners()
         setRecyclerViewScrollListener()
@@ -889,6 +918,13 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         }
     }
 
+    private fun addOrBlockLayoutVisibility() {
+        if (BuildConfig.CONTACT_SYNC_ENABLED && profileDetails.isUnknownContact() && !profileDetails.isBlocked)
+            llPermitToAddorBlock.show()
+        else
+            llPermitToAddorBlock.gone()
+    }
+
     override fun onClick(v: View) {
         when (v.id) {
             R.id.image_chat_send -> {
@@ -904,6 +940,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 isBackPressed = true
                 onBackPressed()
             }
+            R.id.btn_block -> {
+                isBlockUnblockCalled = true
+                blockContact()
+            }
             R.id.image_chat_smiley -> {
                 if (attachmentDialog.isShowing)
                     closeControls()
@@ -911,6 +951,11 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 emojiHandler.setKeypad(chatMessageEditText)
             }
             R.id.close_reply -> if(mainList.last().isMessageSentByMe) resetReplyMessageView(false) else resetReplyMessageView()
+            R.id.btn_add -> {
+                if (chatViewUtils.isContactPermissionAvailable(this))
+                    saveContact()
+                else MediaPermissions.requestContactsReadAndWritePermission(this, permissionAlertDialog, contactSavePermissionLauncher)
+            }
         }
     }
 
@@ -1067,7 +1112,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         compositeDisposable.clear()
         coroutineContext.cancel(CancellationException("$TAG Destroyed"))
         dismissProgress()
-        stopService(stickyService)
     }
 
     /**
@@ -1281,6 +1325,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             when (position) {
                 0 -> selectImagesFromGallery()
                 1 -> PickFileUtils.chooseVideoFromGallery(this)
+            }
+        } else if (commonAlertDialog.dialogAction == CommonAlertDialog.DialogAction.INVITE) {
+            selectedContactMessage?.let {
+                InviteContactUtils.handleSelectedOptions(position, activity!!, null, selectedContactMessage!!.getContactPhoneNumbers().first())
             }
         }
     }
@@ -1599,8 +1647,44 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         }
     }
 
-    override fun onContactClick(item: ChatMessage, position: Int, registeredJid: String?) {
-        //Do nthg
+    override fun onContactClick(item: ChatMessage, position: Int, registeredJid: String?, isSavedContact: Boolean) {
+        if (!BuildConfig.CONTACT_SYNC_ENABLED)
+            return
+        if (clickedMessages.isEmpty()) {
+            if (isSavedContact && item.contactChatMessage.getContactPhoneNumbers().size <= 1) {
+                if (registeredJid != null) {
+                    finish()
+                    startActivity(Intent(this, ChatActivity::class.java).putExtra(LibConstants.JID, registeredJid).putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT))
+                } else {
+                    selectedContactMessage = item.contactChatMessage
+                    commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.INVITE
+                    commonAlertDialog.showListDialog(context!!.getString(R.string.title_invite_friend),
+                        context!!.resources.getStringArray(R.array.array_invite_contact))
+                }
+            } else {
+                val messageId = item.messageId ?: item.contactChatMessage.messageId
+                navigateToContactViewPage(messageId)
+            }
+        } else checkSelectedMessagesActionModeValidation(position)
+    }
+
+    private fun checkSelectedMessagesActionModeValidation(position: Int) {
+        if (position != -1) {
+            val clickedMessage: ChatMessage = mainList[position]
+            if (clickedMessages.contains(clickedMessage.messageId)) {
+                clickedMessages.remove(clickedMessage.messageId)
+                chatAdapter.notifyItemChanged(position)
+                invalidateActionMode()
+            }
+        }
+    }
+
+    private fun navigateToContactViewPage(messageId: String?) {
+        if (!messageId.isNullOrEmpty()) {
+            this.launchActivity<SelectContactMessageActivity> {
+                putExtra(Constants.MESSAGE_ID, messageId)
+            }
+        } else LogMessage.e(TAG, "Message ID not available")
     }
 
     override fun onCancelDownloadClicked(messageItem: ChatMessage) {
@@ -1706,6 +1790,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     override fun onSenderItemClicked(item: ChatMessage?, position: Int) {
         handleMediaMessageClick(position, item!!.messageId ?: "")
+    }
+
+    override fun onHandleStarredItemMediaClickToAction(item: ChatMessage?, position: Int) {
+        TODO("Not yet implemented")
     }
 
     override fun onRetryClicked(item: ChatMessage?) {
@@ -2517,7 +2605,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             FlyMessenger.saveUnsentMentionedUserId(chat.toUser,
                 ChatUtils.toUserList(unSentMentionedUserIdList)!!
             )
-            val name = Utils.returnEmptyStringIfNull(profile.name)
+            val name = Utils.returnEmptyStringIfNull(profile.getDisplayName())
             val userId = getUserFromJid(profile.jid)
             val mentionUser  = MentionUser(userId)
             chatMessageEditText.replaceText(name,mentionUser)

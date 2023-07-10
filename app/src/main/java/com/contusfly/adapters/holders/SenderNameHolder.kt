@@ -127,7 +127,7 @@ open class SenderNameHolder(itemView: View) : DateViewHolder(itemView) {
     private fun showSenderName(text: String, profileDetails: ProfileDetails?) {
         if (sendNameView == null) renderSendNameView()
         if(profileDetails!=null) {
-            sendNameView!!.setTextColor(profileDetails!!.name.getColourCode())
+            sendNameView!!.setTextColor(profileDetails!!.getDisplayName().getColourCode())
             sendNameView!!.visibility = View.VISIBLE
             sendNameView!!.text = text
         } else {

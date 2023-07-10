@@ -14,7 +14,6 @@ import android.text.TextWatcher
 import android.util.Base64
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.emoji.widget.EmojiAppCompatEditText
@@ -47,7 +46,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-class NewGroupActivity : AppCompatActivity(), OnEmojiconBackspaceClickedListener, OnEmojiconClickedListener,
+class NewGroupActivity : BaseActivity(), OnEmojiconBackspaceClickedListener, OnEmojiconClickedListener,
     CommonAlertDialog.CommonDialogClosedListener {
 
     private lateinit var binding: ActivityNewGroupBinding
@@ -96,6 +95,17 @@ class NewGroupActivity : AppCompatActivity(), OnEmojiconBackspaceClickedListener
         }
     }
 
+
+    private val contactPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        val contactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_CONTACTS)
+
+        if(contactPermissionGranted) {
+            checkContactChange()
+            addParticipant()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNewGroupBinding.inflate(layoutInflater)
@@ -127,11 +137,7 @@ class NewGroupActivity : AppCompatActivity(), OnEmojiconBackspaceClickedListener
 
             if (emojiAppEditText!!.text.toString().trim().isNotEmpty()) {
                 if (emojiHandler.isEmojiShowing) emojiHandler.hideEmoji()
-                val intent = Intent(this, UserListActivity::class.java).apply {
-                    putExtra(Constants.ADD_PARTICIAPANTS, true)
-                    putExtra(Constants.TITLE, getString(R.string.add_participants))
-                }
-                startActivityForResult(intent, RequestCode.ADD_PARTICIPANTS)
+                checkAndAddParticipant()
 
             } else {
                 showToast(getString(R.string.msg_group_name_empty))
@@ -174,6 +180,35 @@ class NewGroupActivity : AppCompatActivity(), OnEmojiconBackspaceClickedListener
             emojiHandler.setKeypad(emojiAppEditText!!)
         }
     }
+
+    private fun checkAndAddParticipant() {
+        if(BuildConfig.CONTACT_SYNC_ENABLED) {
+            if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
+                addParticipant()
+            } else MediaPermissions.requestContactsReadPermission(
+                this,
+                permissionAlertDialog,
+                contactPermissionLauncher,
+                null
+            )
+        } else {
+            val intent = Intent(this, UserListActivity::class.java).apply {
+                putExtra(Constants.ADD_PARTICIAPANTS, true)
+                putExtra(Constants.TITLE, getString(R.string.add_participants))
+            }
+            startActivityForResult(intent, RequestCode.ADD_PARTICIPANTS)
+        }
+    }
+
+
+    private fun addParticipant() {
+        val intent = Intent(this, NewContactsActivity::class.java).apply {
+            putExtra(Constants.ADD_PARTICIAPANTS, true)
+            putExtra(Constants.TITLE, getString(R.string.add_participants))
+        }
+        startActivityForResult(intent, RequestCode.ADD_PARTICIPANTS)
+    }
+
 
     /**
      * Show bottom menu select image for the group

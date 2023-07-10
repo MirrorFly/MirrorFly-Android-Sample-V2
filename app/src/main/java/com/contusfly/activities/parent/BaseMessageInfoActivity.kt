@@ -28,7 +28,6 @@ import com.contusfly.*
 import com.contusfly.activities.BaseActivity
 import com.contusfly.activities.ChatActivity
 import com.contusfly.activities.ImageViewActivity
-import com.contusfly.activities.ImageViewActivity.Companion.startActivity
 import com.contusfly.chat.ImageFileUtils
 import com.contusfly.chat.MapUtils.getMapImageUri
 import com.contusfly.chat.MediaController
@@ -41,12 +40,12 @@ import com.contusfly.utils.MediaUtils.loadImageWithGlide
 import com.contusfly.views.*
 import com.contusfly.views.CommonAlertDialog.CommonDialogClosedListener
 import com.contusfly.views.CommonAlertDialog.DIALOGTYPE
+import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger.getMessageOfId
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ContactChatMessage
 import com.mirrorflysdk.utils.InviteContactUtils
 import com.mirrorflysdk.utils.Utils
-import io.github.rockerhieu.emojicon.EmojiconTextView
 import java.util.*
 
 /**
@@ -79,7 +78,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
     /**
      * Instance of the Message which info is displayed in this activity
      */
-    public var message: ChatMessage? = null
+    var message: ChatMessage? = null
 
     /**
      * Instance of the chat utils class that contains the common chat methods
@@ -103,6 +102,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
     private var selectedContactMessage: ContactChatMessage? = null
 
     var groupJid: String? = null
+    var userJid:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,6 +117,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         super.onPostCreate(savedInstanceState)
         msgId = intent?.getStringExtra(com.contusfly.utils.Constants.MESSAGE_ID)
         groupJid = intent?.getStringExtra(com.contusfly.utils.Constants.GROUP_JID)
+        userJid = intent?.getStringExtra(com.contusfly.utils.Constants.USER_JID)
         message = getMessageOfId(msgId!!)
         loadMessageView(message)
     }
@@ -219,6 +220,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         val txtTime = view.findViewById<TextView>(R.id.txt_contact_send_time)
         imgChatStatus = view.findViewById(R.id.img_contact_status)
         val txtSendName = view.findViewById<TextView>(R.id.text_contact_send_name)
+        val imgContact = view.findViewById<CircularImageView>(R.id.image_contact_picture)
         val contactView = view.findViewById<View>(R.id.view_send_contact)
         imgFav = view.findViewById(R.id.ic_star)
         val txtContactAction: CustomTextView = view.findViewById(R.id.text_contact_action)
@@ -230,17 +232,26 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         val imgImageVideo: AppCompatImageView = replyLayout.findViewById(R.id.msg_image_video)
         ChatMessageUtils.setFavouriteStatus(imgFav, message!!.isMessageStarred())
         checkAndEnableReplyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
-        val registeredJid = getJidFromSharedContact(message.getContactChatMessage())
-        if (registeredJid != null && registeredJid.isNotBlank()) {
-            txtContactAction.text = resources.getString(R.string.message)
-            txtContactAction.show()
-            seperatorLine.show()
-            txtContactAction.setOnClickListener { handleContactClick(message, registeredJid) }
+        if (BuildConfig.CONTACT_SYNC_ENABLED) {
+            val registeredJid = getJidFromSharedContact(message.getContactChatMessage())
+            if (!registeredJid.isNullOrBlank()) {
+                txtContactAction.text = resources.getString(R.string.message)
+                txtContactAction.show()
+                seperatorLine.show()
+                txtContactAction.setOnClickListener { handleContactClick(message, registeredJid) }
+                FlyCore.getUserProfile(registeredJid)?.let {
+                    imgContact.loadUserProfileImage(this, it)
+                }
+            } else {
+                txtContactAction.text = resources.getString(R.string.invite)
+                txtContactAction.show()
+                seperatorLine.show()
+                setInviteClickListener(txtContactAction, message.getContactChatMessage())
+                imgContact.setImageResource(R.drawable.ic_profile)
+            }
         } else {
-            txtContactAction.text = resources.getString(R.string.invite)
-            txtContactAction.show()
-            seperatorLine.show()
-            setInviteClickListener(txtContactAction, message.getContactChatMessage())
+            txtContactAction.gone()
+            seperatorLine.gone()
         }
         loadMessageTime(message, txtTime)
         ChatMessageUtils.setChatStatus(imgChatStatus, message.getMessageStatus())
@@ -294,7 +305,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         registeredJid = Constants.EMPTY_STRING
         for (i in contactMessage.getIsChatAppUser().indices) {
             if (java.lang.Boolean.TRUE == contactMessage.getIsChatAppUser()[i]) {
-                val countryCode = com.contusfly.utils.SharedPreferenceManager.getString(com.contusfly.utils.Constants.COUNTRY_CODE)
+                val countryCode = SharedPreferenceManager.getString(com.contusfly.utils.Constants.COUNTRY_CODE)
                 registeredJid = Utils.getJidFromPhoneNumber(this, contactMessage.getContactPhoneNumbers()[i], if (countryCode.isEmpty()) "IN" else countryCode)
                 break
             }
@@ -409,7 +420,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                 decodeImageUtils.loadImageInView(imageSenderImg, filePath, base64Img,
                         this, R.drawable.ic_image_placeholder)
             }
-            doOnImageClick(imageView, message, imageSenderImg)
+            doOnImageClick(imageView, message)
         } catch (e: Exception) {
             LogMessage.e(TAG, e)
         }
@@ -566,17 +577,15 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
      *
      * @param view          the view which receives the click event.
      * @param message       the message object to be processed for the click event.
-     * @param imgView       the child image view.
      */
-    private fun doOnImageClick(view: View, message: ChatMessage?, imgView: ImageView) {
+    private fun doOnImageClick(view: View, message: ChatMessage?) {
         view.setOnClickListener {
             // Checks if any media content available in message
             message?.let {
                 if (MediaChecker.isMediaAvailable(message)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        startActivity(this, message.getMediaChatMessage().getMediaLocalStoragePath(), imgView)
-                    } else startActivity(Intent(this, ImageViewActivity::class.java).putExtra(Constants.GROUP_ID, groupJid)
-                            .putExtra(Constants.MEDIA_URL, message.getMediaChatMessage().getMediaLocalStoragePath()))
+                    startActivity(Intent(this, ImageViewActivity::class.java).putExtra(Constants.GROUP_ID, groupJid).putExtra(Constants.USER_JID, userJid)
+                        .putExtra(Constants.MEDIA_URL, message.getMediaChatMessage().getMediaLocalStoragePath()))
+
                 }
             }
         }

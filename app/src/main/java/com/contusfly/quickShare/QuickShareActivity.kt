@@ -757,18 +757,30 @@ class QuickShareActivity : BaseActivity(),
     }
 
     private fun convertFileSchemeToUri(mainURI: Uri, fileObject: FileObject, i: Int) {
-        val file = File(RealPathUtil.getRealPath(this, mainURI)!!)
-        val fileAbsolutePath = file.absolutePath
-        val fileExtension = fileAbsolutePath.substring(fileAbsolutePath.lastIndexOf('.') + 1)
-
-        fileObject.filePath = fileAbsolutePath
-        fileObject.fileExtension = fileExtension
-
-        MediaScannerConnection.scanFile(this, arrayOf(fileAbsolutePath), null) { _: String, uri: Uri? ->
-            // Use the FileProvider to get a content URI
-            isMediaScanSuccess = uri != null
-            fileObject.uri = uri!!
-            getFileNameSizeType(file.absolutePath, uri, fileObject, i)
+        try {
+            val file = File(RealPathUtil.getRealPath(this, mainURI)!!)
+            val fileAbsolutePath = file.absolutePath
+            val fileExtension = fileAbsolutePath.substring(fileAbsolutePath.lastIndexOf('.') + 1)
+            fileObject.filePath = fileAbsolutePath
+            fileObject.fileExtension = fileExtension
+            MediaScannerConnection.scanFile(
+                this,
+                arrayOf(fileAbsolutePath),
+                null
+            ) { _: String, uri: Uri? ->
+                // Use the FileProvider to get a content URI
+                isMediaScanSuccess = true
+                if (uri != null) {
+                    isMediaScanSuccess = uri != null
+                    fileObject.uri = uri!!
+                    getFileNameSizeType(file.absolutePath, uri, fileObject, i)
+                } else {
+                    fileObject.uri = mainURI
+                    getFileNameSizeType(file.absolutePath, mainURI, fileObject, i)
+                }
+            }
+        } catch (e:Exception) {
+            com.mirrorflysdk.flycommons.LogMessage.e(e)
         }
     }
 
@@ -891,11 +903,16 @@ class QuickShareActivity : BaseActivity(),
     }
 
     private fun getMediaDurationFromFilePath(absolutePath: String, fileObject: FileObject) {
-        val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(absolutePath)
-        val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        retriever.release()
-        fileObject.duration = duration!!.toLong()
+        try {
+            val retriever = MediaMetadataRetriever()
+            retriever.setDataSource(absolutePath)
+            val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            retriever.release()
+            fileObject.duration = duration!!.toLong()
+        }
+        catch (e:RuntimeException){
+            Log.e(TAG, "getMediaDurationFromFilePath: $e")
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

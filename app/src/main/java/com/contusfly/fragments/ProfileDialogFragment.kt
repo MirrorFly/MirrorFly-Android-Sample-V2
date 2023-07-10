@@ -50,7 +50,7 @@ class ProfileDialogFragment : DialogFragment() {
 
     // Data
     lateinit var callPermissionUtils: CallPermissionUtils
-    lateinit var profileDetails: ProfileDetails
+    var profileDetails: ProfileDetails = ProfileDetails()
     lateinit var rosterImage: String
 
     private var lastCallAction = ""
@@ -102,7 +102,7 @@ class ProfileDialogFragment : DialogFragment() {
 
     private fun setData() {
         profileDialogBinding.userProfileImageViewer.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_light_gray))
-        profileDialogBinding.userName.text = ProfileDetailsUtils.getProfileDetails(profileDetails.jid)!!.name
+        profileDialogBinding.userName.text = ProfileDetailsUtils.getProfileDetails(profileDetails.jid)!!.getDisplayName()
         ProfileDetailsUtils.getProfileDetails(profileDetails.jid)?.let {
             profileDialogBinding.userProfileImageViewer.setImageDrawable(null)
             if(it.isGroupProfile){
@@ -203,7 +203,7 @@ class ProfileDialogFragment : DialogFragment() {
 
     private fun navigateToProfileImageScreen() {
         val profile = ProfileDetailsUtils.getProfileDetails(profileDetails.jid)
-        var title: String? = profile!!.name
+        var title: String? = profile!!.getDisplayName()
         if (title == null || title.isEmpty())
             title = resources.getString(R.string.action_delete)
 

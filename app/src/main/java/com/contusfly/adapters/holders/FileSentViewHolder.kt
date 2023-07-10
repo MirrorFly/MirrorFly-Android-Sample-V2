@@ -27,6 +27,11 @@ class FileSentViewHolder(val mainView: View) : SenderNameHolder(mainView) {
     var fileSentViewLayout: View = mainView.findViewById(R.id.layout_file_sent_view)
 
     /**
+     * view to open the file sent layout
+     */
+    var openFileSentViewLayout: View = mainView.findViewById(R.id.file_sent_view)
+
+    /**
      * view to display the upload layout
      */
     var fileUploadViewLayout: RelativeLayout = mainView.findViewById(R.id.layout_file_upload)

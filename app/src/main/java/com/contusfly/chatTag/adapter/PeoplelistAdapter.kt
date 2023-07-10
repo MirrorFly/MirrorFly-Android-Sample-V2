@@ -107,7 +107,7 @@ class PeoplelistAdapter(
             if (data.isBlocked)
                 holder.containerLayout.alpha = 0.5f
         }
-        holder.chatTagTextChatName.text = data.profileName
+        holder.chatTagTextChatName.text = data.getDisplayName()
     }
 
     private fun setChatTagMessageView(recent: RecentChat, holder: AddPeopleRecentChatItemLayoutBinding) {
@@ -202,7 +202,7 @@ class PeoplelistAdapter(
 
                         val recentModel=recentChatList[i]
 
-                        var name=recentModel.profileName.lowercase()
+                        var name=recentModel.getDisplayName().lowercase()
 
                         if(name.contains(queryString)){
 

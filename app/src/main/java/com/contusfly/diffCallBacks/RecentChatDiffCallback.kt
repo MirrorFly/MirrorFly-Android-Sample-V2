@@ -13,8 +13,12 @@ import com.mirrorflysdk.api.models.RecentChat
  */
 class RecentChatDiffCallback(private val oldList: List<RecentChat>, private val newList: List<RecentChat>) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList.size > oldItemPosition && newList.size > newItemPosition && isJidEqual(oldList[oldItemPosition], newList[newItemPosition])
-                && !SharedPreferenceManager.getBoolean(Constants.IS_TIME_FORMAT_CHANGED) //Update recent chat row if device time format changes
+        return try {
+            (oldList.size > oldItemPosition && newList.size > newItemPosition && isJidEqual(oldList[oldItemPosition], newList[newItemPosition])
+                    && !SharedPreferenceManager.getBoolean(Constants.IS_TIME_FORMAT_CHANGED)) //Update recent chat row if device time format changes
+        }catch (e:NullPointerException){
+            false
+        }
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

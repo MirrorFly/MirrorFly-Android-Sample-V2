@@ -1,6 +1,7 @@
 package com.contusfly.views
 
 import android.app.Activity
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.contusfly.R
 import android.view.LayoutInflater
@@ -23,55 +24,57 @@ class PermissionAlertDialog(private var activity: Activity) {
         permissionType: String,
         permissionDialogListener: PermissionDialogListener
     ) {
-        var dialogBinding : ViewBinding?=null
-        var dialogBuilder:AlertDialog.Builder
-        if(permissionType == NOTIFCATION_PERMISSION_DENIED){
-            dialogBuilder = AlertDialog.Builder(activity,R.style.TrasparentAlertDialog)
-            val inflater: LayoutInflater = activity.layoutInflater
-            dialogBinding = NotificationPermissionDialogBinding.inflate(inflater)
-            dialogBuilder.apply {
-                setCancelable(false)
-                setView((dialogBinding)!!.root)
-
-            }
-            val alertDialog = dialogBuilder.create()
-            alertDialog.show()
-            adjustAlertDialogWidth(activity, alertDialog)
-            dialogBinding.turnOnTv.setOnClickListener{
-                alertDialog.dismiss()
-                permissionDialogListener.onPositiveButtonClicked()
-            }
-            dialogBinding.closeIcon.setOnClickListener{
-                permissionDialogListener.onNegativeButtonClicked()
-                alertDialog.dismiss()
-            }
-            dialogBinding.notNowTv.setOnClickListener{
-                permissionDialogListener.onNegativeButtonClicked()
-                alertDialog.dismiss()
-            }
-        } else {
-            dialogBuilder = AlertDialog.Builder(activity, R.style.CustomAlertDialog)
-            val inflater: LayoutInflater = activity.layoutInflater
-            dialogBinding = PermissionInstructionDialogBinding.inflate(inflater)
-            dialogBinding.dialogIcon.setImageResource(getDialogIcon(permissionType))
-            dialogBinding.dialogDescription.text = getDialogDescription(permissionType)
-            dialogBuilder.apply {
-                setCancelable(false)
-                setView(dialogBinding.root)
-                setPositiveButton(activity.getString(R.string.continue_label)) { dialog, _ ->
-                    dialog.dismiss()
-                    permissionDialogListener.onPositiveButtonClicked()
-                }
-                setNegativeButton(activity.getString(R.string.not_now_label)) { dialog, _ ->
-                    dialog.dismiss()
-                    permissionDialogListener.onNegativeButtonClicked()
-                }
-            }
-            val alertDialog = dialogBuilder.create()
-            alertDialog.show()
-            adjustAlertDialogWidth(activity, alertDialog)
-        }
-
+                try {
+                    var dialogBinding: ViewBinding? = null
+                    var dialogBuilder: AlertDialog.Builder
+                    if (permissionType == NOTIFCATION_PERMISSION_DENIED) {
+                        dialogBuilder = AlertDialog.Builder(activity, R.style.TrasparentAlertDialog)
+                        val inflater: LayoutInflater = activity.layoutInflater
+                        dialogBinding = NotificationPermissionDialogBinding.inflate(inflater)
+                        dialogBuilder.apply {
+                            setCancelable(false)
+                            setView((dialogBinding)!!.root)
+                            }
+                            val alertDialog = dialogBuilder.create()
+                            alertDialog.show()
+                            adjustAlertDialogWidth(activity, alertDialog)
+                            dialogBinding.turnOnTv.setOnClickListener {
+                                alertDialog.dismiss()
+                                permissionDialogListener.onPositiveButtonClicked()
+                            }
+                                dialogBinding.closeIcon.setOnClickListener {
+                                    permissionDialogListener.onNegativeButtonClicked()
+                                    alertDialog.dismiss()
+                                }
+                                dialogBinding.notNowTv.setOnClickListener {
+                                    permissionDialogListener.onNegativeButtonClicked()
+                                    alertDialog.dismiss()
+                                }
+                            } else {
+                            dialogBuilder = AlertDialog.Builder(activity, R.style.CustomAlertDialog)
+                            val inflater: LayoutInflater = activity.layoutInflater
+                            dialogBinding = PermissionInstructionDialogBinding.inflate(inflater)
+                            dialogBinding.dialogIcon.setImageResource(getDialogIcon(permissionType))
+                            dialogBinding.dialogDescription.text = getDialogDescription(permissionType)
+                            dialogBuilder.apply {
+                                setCancelable(false)
+                                setView(dialogBinding.root)
+                                setPositiveButton(activity.getString(R.string.continue_label)) { dialog, _ ->
+                                    dialog.dismiss()
+                                    permissionDialogListener.onPositiveButtonClicked()
+                                }
+                                setNegativeButton(activity.getString(R.string.not_now_label)) { dialog, _ ->
+                                    dialog.dismiss()
+                                    permissionDialogListener.onNegativeButtonClicked()
+                                }
+                            }
+                            val alertDialog = dialogBuilder.create()
+                            alertDialog.show()
+                            adjustAlertDialogWidth(activity, alertDialog)
+                        }
+                        } catch (e:Exception) {
+                             Log.e("TAG", "showPermissionInstructionDialog: $e")
+                        }
     }
 
     private fun getDialogDescription(permissionType: String): CharSequence {

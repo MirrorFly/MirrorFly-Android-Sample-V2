@@ -71,7 +71,7 @@ class BlockedContactsAdapter(private val context: Context, val listener: (profil
      */
     private fun setUserInfo(holder: BlockedContactsViewHolder, item: ProfileDetails) {
         holder.viewBinding.textChatName.viewTreeObserver.addOnGlobalLayoutListener { fixEmojiAfterEllipses(holder.viewBinding.textChatName) }
-        if (item.name != null && item.name.isNotEmpty()) {
+        if (item.getDisplayName().isNotEmpty()) {
             holder.viewBinding.textChatName.text = item.getDisplayName()
         }
         holder.viewBinding.imageChatPicture.loadUserProfileImage(context, item)

@@ -46,6 +46,7 @@ import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.mirrorflysdk.api.models.ReplyParentChatMessage
+import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -156,6 +157,14 @@ fun View.showSoftKeyboard() {
     }
 }
 
+fun View.hideSoftKeyboard() {
+    this.requestFocus()?.let { _ ->
+        val imm = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(this.windowToken, 0)
+    }
+}
+
+
 fun ChatMessage.getDeleteChatType(): DeleteChatType {
     return when (messageChatType) {
         ChatTypeEnum.groupchat -> DeleteChatType.groupchat
@@ -188,6 +197,21 @@ fun Boolean.ifElse(functionOne: () -> Unit, functionTwo: () -> Unit) {
 
 fun RecentChat.isDeletedContact() = contactType == ContactType.DELETED_CONTACT
 fun RecentChat.isSingleChat() = !isGroup && !isBroadCast
+
+fun RecentChat.isUnknownContact() = !isDeletedContact() && !isItSavedContact() && !isGroup
+
+fun RecentChat.isEmailContact() : Boolean{
+    return if (isUnknownContact()) {
+        ContusContactUtils.isContusContact(jid)
+    } else false
+}
+
+fun RecentChat.getDisplayName(): String = (if (isSingleChat() && BuildConfig.CONTACT_SYNC_ENABLED) nickName else profileName) ?: jid
+
+fun ChatMessage.isContactMessage() = messageType == com.mirrorflysdk.flycommons.models.MessageType.CONTACT
+
+fun ProfileDetails.isEmailContact() = !isGroupProfile && isGroupInOfflineMode // for email contact isGroupInOfflineMode will be true
+
 
 fun String?.returnEmptyIfNull() = this ?: Constants.EMPTY_STRING
 
@@ -316,7 +340,7 @@ fun CustomDrawable.getDefaultDrawable(profileDetails: ProfileDetails): Drawable 
     return when {
         profileDetails.isGroupProfile -> this.context.getDefaultDrawable(ChatType.TYPE_GROUP_CHAT)
         else -> {
-            if (!profileDetails.isBlockedMe && !profileDetails.isAdminBlocked && !profileDetails.isDeletedContact())
+            if(!profileDetails.isBlockedMe && !profileDetails.isAdminBlocked && !profileDetails.isDeletedContact() && profileDetails.nickName != null)
                 SetDrawable(context, profileDetails).setDrawable(profileDetails.getDisplayName())!!
             else
                 this.context.getDefaultDrawable(profileDetails.getChatType())
@@ -491,22 +515,30 @@ fun ReplyParentChatMessage.getSenderName(): String {
 
 fun Chat.getUsername(): String {
     val profileDetails = ProfileDetailsUtils.getProfileDetails(toUser)
-    return if (profileDetails == null) {
-        toUser
-    } else {
-        profileDetails.getDisplayName()
-    }
+    return profileDetails?.getDisplayName() ?: toUser
 }
 
 fun ProfileDetails.getDisplayName() : String {
-    return if ((name?: jid).isNotBlank())
-        name ?: ChatUtils.getUserFromJid(jid)
-    else
-        ChatUtils.getUserFromJid(jid)
+    return if (BuildConfig.CONTACT_SYNC_ENABLED) {
+        when {
+            jid.equals(getCurrentUserJid()) -> Constants.YOU
+            isDeletedContact() -> Constants.DELETED_USER
+            isUnknownContact() || nickName.isNullOrBlank() -> Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(jid))
+            else -> nickName
+        }
+    } else {
+        if ((name ?: jid).isNotBlank())
+            name ?: ChatUtils.getUserFromJid(jid)
+        else
+            ChatUtils.getUserFromJid(jid)
+    }
 }
 
 fun ProfileDetails.isUnknownContact() =
-    !isGroupProfile && !isLiveContact() && !isDeletedContact() && mobileNumber.isNotNumber()
+    if (BuildConfig.CONTACT_SYNC_ENABLED)
+        !isDeletedContact() && !isItSavedContact() && !isGroupProfile
+    else
+        !isGroupProfile && !isLiveContact() && !isDeletedContact() && mobileNumber.isNotNumber()
 
 fun ProfileDetails.isDeletedContact() = contactType == ContactType.DELETED_CONTACT
 fun ProfileDetails.isLiveContact() = contactType == ContactType.LIVE_CONTACT

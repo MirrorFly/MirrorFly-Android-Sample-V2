@@ -9,6 +9,7 @@ import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
 import com.contusfly.activities.PickContactActivity
+import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.models.Contact
 import com.mirrorflysdk.views.CustomToast
 import java.util.*
@@ -121,6 +122,36 @@ object ContactUtils {
             }
         } catch (e: Exception) {
             LogMessage.e(Constants.TAG, e)
+        }
+    }
+
+    fun checkEmailContactForBlockAndUnblockUser(jid: String, status: Boolean) {
+        if (ContusContactUtils.isContusContact(jid)) {
+            val profileDetails = ProfileDetailsUtils.getProfileDetails(jid)
+            if (profileDetails != null) {
+                profileDetails.isBlocked = status
+                ContusContactUtils.insertContusContact(profileDetails)
+            }
+        }
+    }
+
+    fun checkEmailContactForProfileUpdate(jid: String, profileDetails: ProfileDetails) {
+        if (ContusContactUtils.isContusContact(jid)) {
+            val profileDetail = ProfileDetailsUtils.getProfileDetails(jid)
+            if (profileDetail != null) {
+                if (profileDetails.name.isNotEmpty()) profileDetail.name = profileDetails.name
+                profileDetail.nickName = profileDetails.nickName
+                profileDetail.image = profileDetails.image
+                profileDetail.email = profileDetails.email
+                profileDetail.status = profileDetails.status
+                profileDetail.mobileNUmberPrivacyFlag = profileDetails.mobileNUmberPrivacyFlag
+                profileDetail.mobileNumber = profileDetails.mobileNumber
+                profileDetail.lastSeenPrivacyFlag = profileDetails.lastSeenPrivacyFlag
+                profileDetail.isBlocked = profileDetails.isBlocked
+                profileDetail.isBlockedMe = profileDetails.isBlockedMe
+                profileDetail.isAdminBlocked = profileDetails.isAdminBlocked
+                ContusContactUtils.insertContusContact(profileDetail)
+            }
         }
     }
 

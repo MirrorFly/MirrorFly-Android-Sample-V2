@@ -196,16 +196,8 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
             0 -> "header".hashCode().toLong()
             mainlist.size - 2 -> "footer".hashCode().toLong()
             mainlist.size - 1 -> "loader".hashCode().toLong()
-            else -> getitemId(position)
+            else -> mainlist[position].jid.hashCode().toLong()
         }
-    }
-
-    private fun getitemId(position: Int) : Long {
-        var item:Long=-1
-        if(mainlist[position].jid != null){
-            item= mainlist[position].jid.hashCode().toLong()
-        }
-        return item
     }
 
     override fun getItemCount(): Int {
@@ -248,7 +240,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     private fun updateName(recent: RecentChat?, holder: RecentChatViewHolder) {
         recent?.let {
-            holder.viewBinding.textChatName.text = it.profileName
+            holder.viewBinding.textChatName.text = it.getDisplayName()
         }
     }
 
@@ -320,7 +312,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
                 messageContent = setRecalledMessageText(holder, isFromSender)
             } else {
                 messageContent = recent.lastMessageContent
-                if (chatMessage!!.messageChatType.name == Constants.GROUP_CHAT && !isFromSender && recent.profileName != chatMessage.senderUserName &&
+                if (chatMessage!!.messageChatType.name == Constants.GROUP_CHAT && !isFromSender && recent.getDisplayName() != chatMessage.senderUserName &&
                         !recent.lastMessageType.equals(Constants.MSG_TYPE_NOTIFICATION, ignoreCase = true)) {
                     setGroupMessageSenderName(holder, chatMessage)
                 } else holder.textChatPerson.visibility = View.GONE
@@ -453,7 +445,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
         holder.imageChatPicture.loadUserProfileImage(context, recent)
         var profile=ContactManager.getProfileDetails(recent.jid)
         LogMessage.e("Error","${profile!!.contactType}")
-        holder.textChatName.text = recent.profileName
+        holder.textChatName.text = recent.getDisplayName()
     }
 
     /**

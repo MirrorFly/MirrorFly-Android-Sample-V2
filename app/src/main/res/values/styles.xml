@@ -491,7 +491,7 @@
         <item name="android:includeFontPadding">false</item>
         <item name="android:fontFamily">@font/sf_ui_display_regular</item>
         <item name="font_name">@font/sf_ui_display_regular</item>
-        <item name="android:textColor">@color/color_status_list</item><!-- Need to be changed in production app -->
+        <item name="android:textColor">?attr/status_list_color</item><!-- Need to be changed in production app -->
         <item name="android:textSize">@dimen/text_size_14</item>
     </style>
 
@@ -1058,4 +1058,11 @@
         <item name="cornerSize">50%</item>
     </style>
 
+
+    <style name="NewTextMediumChatStyle" parent="TextAppearance.AppCompat">
+        <item name="android:includeFontPadding">false</item>
+        <item name="font_name">@font/sf_ui_display_medium</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
 </resources>

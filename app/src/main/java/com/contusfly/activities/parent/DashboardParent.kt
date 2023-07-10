@@ -60,7 +60,7 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
 
     lateinit var dashboardBinding: ActivityDashboardBinding
     open var actionMode: ActionMode? = null
-    open lateinit var mSearchView: SearchView
+    open var mSearchView: SearchView? = null
     open lateinit var tabLayout: TabLayout
     open lateinit var mViewPager: ViewPager2
     open lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -79,6 +79,16 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
     lateinit var callHistoryFragment: CallHistoryFragment
 
     private var ismarkRead:Boolean=false
+
+    val contactPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        val contactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_CONTACTS)
+
+        if(contactPermissionGranted) {
+            checkContactChange()
+            startActivity(Intent(this, NewContactsActivity::class.java))
+        }
+    }
 
     @Inject
     open lateinit var dashboardViewModelFactory: AppViewModelFactory
@@ -324,21 +334,25 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
      * @param selectedJids the recent chat jid list.
      */
     open fun deleteSelectedRecent(selectedJids: List<String>) {
-        var feature=ChatManager.getAvailableFeatures()
-        if(!feature.isDeleteChatEnabled){
-            context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
-            return
-        }
-        ChatManager.deleteRecentChats(selectedJids, object : ChatActionListener {
-            override fun onResponse(isSuccess: Boolean, message: String) {
-                /*
+        try {
+            var feature = ChatManager.getAvailableFeatures()
+            if (!feature.isDeleteChatEnabled) {
+                context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+                return
+            }
+            ChatManager.deleteRecentChats(selectedJids, object : ChatActionListener {
+                override fun onResponse(isSuccess: Boolean, message: String) {
+                    /*
                 * No Implementation needed
                 */
-            }
-        })
-        recentChatFragment.updateAdapter()
-        viewModel.updateUnReadChatCount()
-        actionMode?.finish()
+                }
+            })
+            recentChatFragment.updateAdapter()
+            viewModel.updateUnReadChatCount()
+            actionMode?.finish()
+        } catch (e:Exception) {
+            LogMessage.e(TAG,e)
+        }
     }
 
     /**

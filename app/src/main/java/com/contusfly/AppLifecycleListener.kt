@@ -21,7 +21,7 @@ class AppLifecycleListener : LifecycleObserver {
     fun onMoveToBackground() {
         isForeground = false
         // app moved to background
-        Log.d(TAG, "App moved to background")
+        Log.d(LOG_TAG, "App moved to background")
         SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
         SharedPreferenceManager.setString(Constants.KEY_NOTIIFCATION_SUMMARY_CHANNEL_ID, SharedPreferenceManager.getString(Constants.KEY_NOTIIFCATION_SUMMARY_CHANNEL_ID)+Constants.KEY_BACKGROUND)
     }
@@ -32,13 +32,13 @@ class AppLifecycleListener : LifecycleObserver {
         SharedPreferenceManager.setBoolean(Constants.BACK_PRESS, false)
         SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
         fromOnCreate = true
-        Log.d(TAG, "OnCreate")
+        Log.d(LOG_TAG, "OnCreate")
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onMoveToForeground() {
         isForeground = true
-        Log.d(TAG, "App moved to forground")
+        Log.d(LOG_TAG, "App moved to forground")
         // app moved to foreground
         deviceContactCount = 0
         SharedPreferenceManager.setString(Constants.KEY_NOTIIFCATION_SUMMARY_CHANNEL_ID, SharedPreferenceManager.getString(Constants.KEY_NOTIIFCATION_SUMMARY_CHANNEL_ID)+Constants.KEY_FORGROUND)
@@ -57,16 +57,16 @@ class AppLifecycleListener : LifecycleObserver {
 
         if (isPinEnabled && !CallManager.isOnGoingCall()) {
             fromOnCreate = false
-            Log.d(TAG, " show pin $isOnCall$backPressedSP")
+            Log.d(LOG_TAG, " show pin $isOnCall$backPressedSP")
             showPinActivity("onMoveToForeground")
             SharedPreferenceManager.setBoolean(Constants.BACK_PRESS, false)
-        } else Log.d(TAG, "Else dont show pin")
-        Log.d(TAG, "App moved to Foreground " + isPinEnabled + " " + sessionTimeDifference + shouldShowPinActivity())
+        } else Log.d(LOG_TAG, "Else dont show pin")
+        Log.d(LOG_TAG, "App moved to Foreground " + isPinEnabled + " " + sessionTimeDifference + shouldShowPinActivity())
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResumeCallback() {
-        Log.d(TAG, "App OnResume $deviceLock $isForeground")
+        Log.d(LOG_TAG, "App OnResume $deviceLock $isForeground")
         if (deviceLock && isForeground) {
             presentPinActivity("onResumeCallback")
             deviceLock = false
@@ -84,9 +84,9 @@ class AppLifecycleListener : LifecycleObserver {
                 val strAction = intent.action
                 val myKM = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
                 if (strAction == Intent.ACTION_USER_PRESENT || strAction == Intent.ACTION_SCREEN_OFF || strAction == Intent.ACTION_SCREEN_ON) if (myKM.inKeyguardRestrictedInputMode()) {
-                    Log.d(TAG, "Screen_off LOCKED")
+                    Log.d(LOG_TAG, "Screen_off LOCKED")
                 } else {
-                    Log.d(TAG, "Screen_off UNLOCKED")
+                    Log.d(LOG_TAG, "Screen_off UNLOCKED")
                     deviceLock = true
                     if (isForeground) {
                         presentPinActivity("receiver ")
@@ -100,11 +100,11 @@ class AppLifecycleListener : LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onAppDestroyed() {
-        Log.d(TAG, "app destroyed")
+        Log.d(LOG_TAG, "app destroyed")
     }
 
     companion object {
-        private val TAG = AppLifecycleListener::class.java.simpleName
+        private val LOG_TAG = AppLifecycleListener::class.java.simpleName
         private val SESSION_TIME = (32 * 1000).toLong()
         var isOnCall = false
 

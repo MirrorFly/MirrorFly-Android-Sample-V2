@@ -3,13 +3,16 @@ package com.contusfly.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.contusfly.BuildConfig
 import com.mirrorflysdk.flycommons.ChatType
 import com.contusfly.getChatType
 import com.contusfly.getDisplayName
 import com.contusfly.isDeletedContact
+import com.contusfly.isUnknownContact
 import com.contusfly.isValidIndex
 import com.contusfly.models.ProfileDetailsShareModel
 import com.contusfly.utils.Constants
+import com.contusfly.utils.ContusContactUtils
 import com.contusfly.utils.ProfileDetailsUtils
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.GroupManager
@@ -24,6 +27,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
 
     private var groupList: MutableList<ProfileDetails>? = null
     private var recentList: MutableList<ProfileDetails>? = null
+    private var friendsList: MutableList<ProfileDetails>? = null
     val shareModelListLiveData = MutableLiveData<List<ProfileDetailsShareModel>>()
     private var shareModelList = mutableListOf<ProfileDetailsShareModel>()
     val updatedProfile = MutableLiveData<Pair<Int, ProfileDetailsShareModel>>()
@@ -51,7 +55,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getUserListFetching(): Boolean {
-        return isFetching
+        return BuildConfig.CONTACT_SYNC_ENABLED || isFetching
     }
 
     private fun setSearchUserListFetching(isSearchFetching: Boolean) {
@@ -59,34 +63,57 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getSearchUserListFetching(): Boolean {
-        return isSearchFetching
+        return BuildConfig.CONTACT_SYNC_ENABLED || isSearchFetching
     }
 
     fun loadForwardChatList(jid: String?) {
-
-        GroupManager.getAllGroups(false) { isSuccess, _, data ->
-            groupList = mutableListOf()
-            if (isSuccess) {
-                groupList!!.addAll(ProfileDetailsUtils.sortProfileList(data[Constants.SDK_DATA] as ArrayList<ProfileDetails>))
+        viewModelScope.launch(Dispatchers.IO) {
+            GroupManager.getAllGroups(false) { isSuccess, _, data ->
+                groupList = mutableListOf()
+                if (isSuccess) {
+                    groupList!!.addAll(ProfileDetailsUtils.sortProfileList(data[Constants.SDK_DATA] as ArrayList<ProfileDetails>))
+                }
+                isForwardChatListLoaded(jid)
             }
-            isForwardChatListLoaded(jid)
-        }
 
-        FlyCore.getRecentChatList { isSuccess, _, data ->
-            recentList = mutableListOf()
-            if (isSuccess) {
-                val recentChatList = data[Constants.SDK_DATA] as MutableList<RecentChat>
-                recentChatList.filter { !it.isDeletedContact() }.take(3).forEach {
-                    val profileDetails = ProfileDetailsUtils.getProfileDetails(it.jid)
-                    profileDetails?.let {
-                        recentList!!.add(it)
+            FlyCore.getRecentChatList { isSuccess, _, data ->
+                recentList = mutableListOf()
+                if (isSuccess) {
+                    val recentChatList = data[Constants.SDK_DATA] as MutableList<RecentChat>
+                    recentChatList.filter { !it.isDeletedContact() }.take(3).forEach {
+                        val profileDetails = ProfileDetailsUtils.getProfileDetails(it.jid)
+                        profileDetails?.let {
+                            recentList!!.add(it)
+                        }
                     }
                 }
+                isForwardChatListLoaded(jid)
             }
-            isForwardChatListLoaded(jid)
+            checkAndLoadUserList(jid)
         }
-        if (!jid.isNullOrBlank())
-            loadUserList()
+    }
+
+    private suspend fun checkAndLoadUserList(jid: String?) {
+        if (BuildConfig.CONTACT_SYNC_ENABLED) {
+            val contusContacts = ContusContactUtils.getContusContacts()
+            FlyCore.getRegisteredUsers(false) { isSuccess, _, data ->
+                friendsList = mutableListOf()
+                if (isSuccess) {
+                    val profileDetails = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
+                    profileDetails.forEach { contact ->
+                        val index = contusContacts.indexOfFirst { it.jid == contact.jid }
+                        if (index.isValidIndex())
+                            contusContacts.removeAt(index)
+                    }
+                    profileDetails.addAll(contusContacts)
+                    friendsList!!.addAll(ProfileDetailsUtils.sortProfileList(profileDetails))
+                }
+                isForwardChatListLoaded(jid)
+            }
+        } else {
+            if (!jid.isNullOrBlank())
+                loadUserList()
+        }
     }
 
     fun loadUserList() {
@@ -130,9 +157,10 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     fun lastPageFetched() = currentPage >= totalPage
 
     private fun isForwardChatListLoaded(jid: String?) {
-        if (groupList != null && recentList != null) {
+        if (groupList != null && recentList != null && (!BuildConfig.CONTACT_SYNC_ENABLED || friendsList != null)) {
             loadProfileDetailsShareModel(jid)
-            loadUserList()
+            if (!BuildConfig.CONTACT_SYNC_ENABLED)
+                loadUserList()
         }
     }
 
@@ -141,22 +169,39 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
         recentList!!.forEach { profileDetail ->
             val profileDetailsShareModel = ProfileDetailsShareModel("recentChat", profileDetail)
             if (!profileDetail.isAdminBlocked) shareModelList.add(profileDetailsShareModel)
+            friendsList?.let {
+                val index = friendsList!!.indexOfFirst { it.jid == profileDetail.jid }
+                if (index.isValidIndex())
+                    friendsList!!.removeAt(index)
+            }
             val groupIndex = groupList!!.indexOfFirst { it.jid == profileDetail.jid }
             if (groupIndex.isValidIndex())
                 groupList!!.removeAt(groupIndex)
         }
 
+        friendsList?.forEach { profileDetail ->
+            val profileDetailsShareModel = ProfileDetailsShareModel(profileDetail.getChatType(), profileDetail)
+            if (!profileDetail.isAdminBlocked) shareModelList.add(profileDetailsShareModel)
+        }
         groupList!!.forEach { profileDetail ->
             val profileDetailsShareModel = ProfileDetailsShareModel(profileDetail.getChatType(), profileDetail)
             if (!profileDetail.isAdminBlocked) shareModelList.add(profileDetailsShareModel)
         }
 
+        notifyResults(jid, shareModelList)
+    }
+
+    private fun notifyResults(jid: String?, shareModelList: MutableList<ProfileDetailsShareModel>) {
         if (jid == null) {
-            val shareModelListTemp = mutableListOf<ProfileDetailsShareModel>()
-            shareModelListTemp.addAll(shareModelList)
-            addLoader.postValue(true)
-            shareModelListTemp.add(ProfileDetailsShareModel(ChatType.TYPE_CHAT, ProfileDetails()))
-            shareModelListLiveData.postValue(shareModelListTemp)
+            if (BuildConfig.CONTACT_SYNC_ENABLED){
+                shareModelListLiveData.postValue(shareModelList)
+            } else {
+                val shareModelListTemp = mutableListOf<ProfileDetailsShareModel>()
+                shareModelListTemp.addAll(shareModelList)
+                addLoader.postValue(true)
+                shareModelListTemp.add(ProfileDetailsShareModel(ChatType.TYPE_CHAT, ProfileDetails()))
+                shareModelListLiveData.postValue(shareModelListTemp)
+            }
         } else {
             val index = shareModelList.indexOfFirst { it.profileDetails.jid == jid }
             if (index.isValidIndex())
@@ -218,15 +263,29 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     }
 
     fun searchProfileList(searchString: String) {
-        resetSearch()
-        searchList.clear()
-        searchList.addAll(shareModelList.filter { it.type != ChatType.TYPE_CHAT && it.profileDetails.getDisplayName().contains(searchString, ignoreCase = true) })
+        if (BuildConfig.CONTACT_SYNC_ENABLED){
+            searchList.clear()
+            searchList.addAll(shareModelList.filter {
+                !it.profileDetails.isUnknownContact() &&!it.profileDetails.isDeletedContact() && it.profileDetails.getDisplayName().contains(searchString, true)
+            })
 
-        val searchListTemp = mutableListOf<ProfileDetailsShareModel>()
-        searchListTemp.addAll(searchList)
+            val searchListTemp = mutableListOf<ProfileDetailsShareModel>()
+            searchListTemp.addAll(searchList)
 
-        searchListLiveData.postValue(searchListTemp)
-        searchUserList(searchString)
+            searchListLiveData.postValue(searchListTemp)
+        } else {
+            resetSearch()
+            searchList.clear()
+            searchList.addAll(shareModelList.filter {
+                it.type != ChatType.TYPE_CHAT && it.profileDetails.getDisplayName().contains(searchString, ignoreCase = true)
+            })
+
+            val searchListTemp = mutableListOf<ProfileDetailsShareModel>()
+            searchListTemp.addAll(searchList)
+
+            searchListLiveData.postValue(searchListTemp)
+            searchUserList(searchString)
+        }
     }
 
     fun searchUserList(searchString: String) {

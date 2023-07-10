@@ -82,16 +82,20 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
      * the jid
      */
     fun audioCall() {
-        if (!AppUtils.isNetConnected(activity)) {
-            activity.showToast(getString(R.string.msg_no_internet))
-        } else if (isBlocked) {
-            showBlockedAlertAudioCall()
-        } else if (isOnTelephonyCall(activity)) {
-            showTelephonyCallAlert(activity)
-        } else if (CallManager.isOnGoingCall()) {
-            showOngoingCallAlert(activity)
-        } else if (!isAdminBlocked) {
-            makeVoiceCall()
+        try {
+            if (!AppUtils.isNetConnected(activity)) {
+                activity.showToast(getString(R.string.msg_no_internet))
+            } else if (isBlocked) {
+                showBlockedAlertAudioCall()
+            } else if (isOnTelephonyCall(activity)) {
+                showTelephonyCallAlert(activity)
+            } else if (CallManager.isOnGoingCall()) {
+                showOngoingCallAlert(activity)
+            } else if (!isAdminBlocked) {
+                makeVoiceCall()
+            }
+        } catch (e:Exception) {
+            LogMessage.e(e)
         }
     }
 
@@ -115,16 +119,20 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
      * the jid
      */
     fun videoCall() {
-        if (!AppUtils.isNetConnected(activity)) {
-            activity.showToast(getString(R.string.msg_no_internet))
-        } else if (isBlocked) {
-            showBlockedAlertVideoCall()
-        } else if (isOnTelephonyCall(activity)) {
-            showTelephonyCallAlert(activity)
-        } else if (CallManager.isOnGoingCall()) {
-            showOngoingCallAlert(activity)
-        } else if (!isAdminBlocked) {
-            makeVideoCall()
+        try {
+            if (!AppUtils.isNetConnected(activity)) {
+                activity.showToast(getString(R.string.msg_no_internet))
+            } else if (isBlocked) {
+                showBlockedAlertVideoCall()
+            } else if (isOnTelephonyCall(activity)) {
+                showTelephonyCallAlert(activity)
+            } else if (CallManager.isOnGoingCall()) {
+                showOngoingCallAlert(activity)
+            } else if (!isAdminBlocked) {
+                makeVideoCall()
+            }
+        } catch (e:Exception) {
+            LogMessage.e(e)
         }
     }
 
@@ -174,26 +182,31 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
      */
     @SuppressLint("MissingPermission")
     private fun makeVoiceCall() {
-        if (!jidList.contains(com.contusfly.utils.SharedPreferenceManager.getCurrentUserJid())) {
-            if (CallManager.isAudioCallPermissionsGranted(skipBlueToothPermission = false)) {
-                checkAndMakeVoiceCall()
-            } else MediaPermissions.requestAudioCallPermissions(
-                (activity as Activity),
-                (activity as ComponentActivity).registerForActivityResult(
-                    ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                    if (!permissions.containsValue(false)) {
-                        makeVoiceCall()
+        try {
+            if (!jidList.contains(SharedPreferenceManager.getCurrentUserJid())) {
+                if (CallManager.isAudioCallPermissionsGranted(skipBlueToothPermission = false)) {
+                    checkAndMakeVoiceCall()
+                } else MediaPermissions.requestAudioCallPermissions(
+                    (activity as Activity),
+                    (activity as ComponentActivity).registerForActivityResult(
+                        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                        if (!permissions.containsValue(false)) {
+                            makeVoiceCall()
+                        }
                     }
-                }
             )
         }
+    } catch (e :Exception) {
+        LogMessage.e(e)
+    }
     }
 
+    @SuppressLint("MissingPermission")
     private fun checkAndMakeVoiceCall() {
         if (groupId != null && groupId.isNotEmpty()) {
             makeGroupVoiceCall(groupId)
         } else if (jidList.size > 1) {
-            makeGroupVoiceCall("")
+            makeGroupVoiceCall(Constants.EMPTY_STRING)
         } else {
             if (!ChatManager.getAvailableFeatures().isOneToOneCallEnabled) {
                 CustomAlertDialog().showFeatureRestrictionAlert(activity)
@@ -206,6 +219,8 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
             }
         }
     }
+
+
 
     private fun makeGroupVoiceCall(groupId: String) {
         if (!ChatManager.getAvailableFeatures().isGroupCallEnabled) {
@@ -225,7 +240,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
      */
     @SuppressLint("MissingPermission")
     private fun makeVideoCall() {
-        if (!jidList.contains(com.contusfly.utils.SharedPreferenceManager.getCurrentUserJid())) {
+        if (!jidList.contains(SharedPreferenceManager.getCurrentUserJid())) {
             if (CallManager.isVideoCallPermissionsGranted(skipBlueToothPermission = false)) {
                 checkAndMakeVideoCall()
             } else MediaPermissions.requestVideoCallPermissions(
@@ -240,11 +255,12 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun checkAndMakeVideoCall() {
         if (groupId != null && groupId.isNotEmpty()) {
             makeGroupVideoCall(groupId)
         } else if (jidList.size > 1) {
-            makeGroupVideoCall("")
+            makeGroupVideoCall(Constants.EMPTY_STRING)
         } else {
             if (!ChatManager.getAvailableFeatures().isOneToOneCallEnabled) {
                 CustomAlertDialog().showFeatureRestrictionAlert(activity)

@@ -17,6 +17,7 @@ object AppConstants {
     const val PROFILE_DATA = "profile_data"
     const val YOU = "You"
     const val DB_NAME = "UIKit"
+    const val DB_NAME_MIRROR_FLY = "MirrorFly"
     const val LOADING = 0
     const val ITEM = 1
 

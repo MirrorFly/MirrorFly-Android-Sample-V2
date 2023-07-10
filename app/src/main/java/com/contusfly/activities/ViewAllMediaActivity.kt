@@ -11,9 +11,9 @@ import com.mirrorflysdk.flycommons.ChatType
 import com.contusfly.R
 import com.contusfly.adapters.SectionsPagerAdapter
 import com.contusfly.databinding.ActivityViewAllMediaBinding
+import com.contusfly.getDisplayName
 import com.contusfly.showToast
 import com.contusfly.utils.Constants
-import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.UserInterfaceUtils
 import com.contusfly.viewmodels.ViewAllMediaViewModel
 import com.contusfly.views.CustomToast
@@ -29,6 +29,8 @@ class ViewAllMediaActivity : BaseActivity() {
      * Roster id of the chat user which displaying the media
      */
     private var profileId: String? = null
+
+    private lateinit var mToolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,16 +48,13 @@ class ViewAllMediaActivity : BaseActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        val mToolbar: Toolbar = binding.toolbar
+        mToolbar = binding.toolbar
         setSupportActionBar(mToolbar)
         mToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.color_black))
         UserInterfaceUtils.setUpToolBar(this, mToolbar, supportActionBar, Constants.EMPTY_STRING)
 
         profileId = intent.getStringExtra(Constants.ROSTER_JID)
-        val profileInfo = profileId?.let { ProfileDetailsUtils.getProfileDetails(it) }
-        if (profileInfo != null) {
-            mToolbar.title = profileInfo.name
-        }
+        profileId?.let { viewModel.getProfileDetails(it) }
         if(ChatManager.getAvailableFeatures().isViewAllMediaEnabled){
             profileId?.let {
                 viewModel.getMediaList(it)
@@ -66,6 +65,16 @@ class ViewAllMediaActivity : BaseActivity() {
             CustomToast.show(this,resources.getString(R.string.fly_error_forbidden_exception))
         }
 
+        setObservers()
+
+    }
+
+    private fun setObservers() {
+        viewModel.profileDetail.observe(this) {
+            it?.let {
+                mToolbar.title = it.getDisplayName()
+            }
+        }
     }
 
     override fun onAdminBlockedOtherUser(jid: String, type: String, status: Boolean) {
@@ -81,5 +90,14 @@ class ViewAllMediaActivity : BaseActivity() {
         dashboardIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(dashboardIntent)
         finish()
+    }
+
+    override fun onContactSyncComplete(isSuccess: Boolean) {
+        super.onContactSyncComplete(isSuccess)
+        if (isSuccess) {
+            profileId?.let {
+                viewModel.getProfileDetails(it)
+            }
+        }
     }
 }

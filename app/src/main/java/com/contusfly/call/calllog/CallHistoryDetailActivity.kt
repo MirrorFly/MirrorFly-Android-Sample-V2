@@ -23,6 +23,7 @@ import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.*
 import com.contusfly.activities.BaseActivity
 import com.contusfly.call.CallPermissionUtils
+import com.contusfly.call.groupcall.isNull
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.ActivityCallHistoryDetailBinding
 import com.contusfly.di.factory.AppViewModelFactory
@@ -401,6 +402,12 @@ class CallHistoryDetailActivity : BaseActivity(), CoroutineScope, CommonAlertDia
         }
     }
 
+    override fun onContactSyncComplete(isSuccess: Boolean) {
+        super.onContactSyncComplete(isSuccess)
+        if (isSuccess)
+            viewModel.getCallLog(roomId)
+    }
+
     private fun callLogListener(){
         CallLogManager.setCallLogsListener(object : CallLogManager.CallLogsListener {
             override fun onCallLogsDeleted(isClearAll: Boolean,callidList:ArrayList<String>) {
@@ -428,4 +435,28 @@ class CallHistoryDetailActivity : BaseActivity(), CoroutineScope, CommonAlertDia
     override fun updateFeatureActions(features: Features) {
         callHistoryDetailBinding.imgCallType.setVisible(features.isGroupCallEnabled)
     }
+
+    override fun userUpdatedHisProfile(jid: String) {
+        super.userUpdatedHisProfile(jid)
+        if (isCallLogProfileUpdated(jid))
+            viewModel.getCallLog(roomId)
+        if(viewModel.callLog.isNull()) return
+        updateCallLogData(viewModel.callLog.value!!)
+    }
+
+    private fun isCallLogProfileUpdated(jid: String) : Boolean {
+        return if (viewModel.callLog.value == null)
+            false
+        else {
+            val callLog = viewModel.callLog.value!!
+            val endUserJid =
+                if (callLog.callMode == CallMode.ONE_TO_ONE) if (callLog.callState == CallState.INCOMING_CALL
+                    || callLog.callState == CallState.MISSED_CALL
+                )
+                    callLog.fromUser else callLog.toUser else callLog.toUser
+            endUserJid?.trim() == jid || endUserJid?.trim()?.contains(jid) ?: false
+        }
+    }
+
+
 }

@@ -128,6 +128,8 @@ class Constants {
         const val FILE_LOCAL_PATH = "File"
         const val MSG_SENT_PATH = "Sent"
         const val TEMP_PHOTO_FILE_NAME = "temp_photo"
+        const val TEMP_FILE_NAME = "temp_file"
+        const val AUDIO_FILE = "audio/*"
 
         const val CONVERSATION_SOUND = "conv_sound"
         const val NOTIFICATION_URI = "notification_uri"
@@ -368,6 +370,15 @@ class Constants {
          */
         const val CONNECTION_TYPE_WIFI = PACKAGE_NAME + "connection_type_wifi"
 
+        const val INITIAL_CONTACT_SYNC_DONE = "is_initial_contact_sync_done"
+        const val CONTACT_SYNC_DONE = "is_contact_sync_done"
+        const val EMAIL_CONTACT_SYNC_COMPLETE = "com.contus.contact.email.sync.complete"
+        const val INTENT_ACTION_FORCIBLE_UPDATE: String = BuildConfig.APPLICATION_ID + ".forcible_app_update"
+        const val MAIL_CONTACT_END_POINT = "/api/v1/contacts/mail"
+        const val TIMESTAMP = "timestamp"
+        const val IS_DIALOG_SHOWING = "is_dialog_showing"
+        const val DELETED_USER   = "Deleted User"
+        const val IS_PROFILE_UPDATED = "is_profile_updated"
 
         const val WEB_IMAGE_MAX_WIDTH = 330
         const val WEB_IMAGE_MIN_WIDTH = 240

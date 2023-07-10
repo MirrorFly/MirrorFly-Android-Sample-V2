@@ -215,8 +215,12 @@ class CallHistoryAdapter(val context: Context, private val callLogsList: ArrayLi
      * @param position holder position
      * @return list position
      */
-    fun getCallLogAtPosition(position: Int): CallLog {
-        return callLogsList[position]
+    fun getCallLogAtPosition(position: Int): CallLog? {
+        return if(callLogsList.size > position) {
+            callLogsList[position]
+        } else{
+            null
+        }
     }
 
     /**

@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.contusfly.AppLifecycleListener
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
 import com.contusfly.TAG
@@ -34,7 +35,6 @@ import com.contusfly.activities.OtpActivity
 import com.contusfly.chatTag.interfaces.DialogPositiveButtonClick
 import com.contusfly.databinding.BottomSheetChatTagRemoveLayoutBinding
 import com.contusfly.databinding.BottomSheetEditProfileImageBinding
-import com.mirrorflysdk.api.models.ContactChatMessage
 import com.mirrorflysdk.utils.RequestCode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
@@ -135,21 +135,15 @@ open class CommonUtils {
          * and to store the contact
          *
          * @param context        Activity context
-         * @param contactMessage Instance of ContactMessage
          */
-        fun addContactInMobile(context: Activity, contactMessage: ContactChatMessage) {
+        fun addContactInMobile(context: Activity, contactNumber:String, contactName:String) {
             try {
                 val intent = Intent(Intent.ACTION_INSERT)
                 intent.type = ContactsContract.Contacts.CONTENT_TYPE
-                intent.putExtra(ContactsContract.Intents.Insert.PHONE, contactMessage.getContactPhoneNumbers()[0])
-                // Check if the contact details contains more than one contact to store
-                // second contact
-                if (contactMessage.getContactPhoneNumbers().size > 1) intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE, contactMessage.getContactPhoneNumbers()[1])
-                // Check if the contact details contains more than two contact to store
-                // third contact
-                if (contactMessage.getContactPhoneNumbers().size > 2) intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE, contactMessage.getContactPhoneNumbers()[2])
-                intent.putExtra(ContactsContract.Intents.Insert.NAME, contactMessage.getContactName())
+                intent.putExtra(ContactsContract.Intents.Insert.PHONE, contactNumber)
+                intent.putExtra(ContactsContract.Intents.Insert.NAME, contactName)
                 context.startActivityForResult(intent, Constants.CONTACT_REQ_CODE)
+                AppLifecycleListener.deviceContactCount = 0
             } catch (e: Exception) {
                 LogMessage.e(TAG, e)
             }

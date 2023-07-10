@@ -90,6 +90,9 @@ class BaseCallViewHelper(
      */
     private var actualScreenWidth = 0
 
+    private var isAnimateClicked = false
+
+
     /**
      * The arguments to be used for Picture-in-Picture mode.
      */
@@ -374,6 +377,7 @@ class BaseCallViewHelper(
 
     private val hideOptionsRunnable = Runnable {
         LogMessage.d(TAG, "$CALL_UI hideOptionsRunnable")
+        isAnimateClicked = false
         animateCallOptionsView()
     }
 
@@ -386,7 +390,10 @@ class BaseCallViewHelper(
                 )
                 showGridTitle()
             }
-            CallManager.isOneToOneAudioCall() -> durationHandler.removeCallbacks(hideOptionsRunnable)
+            CallManager.isOneToOneAudioCall() -> {
+                isAnimateClicked = false
+                durationHandler.removeCallbacks(hideOptionsRunnable)
+            }
             else -> durationHandler.postDelayed(
                 hideOptionsRunnable,
                 3000
@@ -395,6 +402,7 @@ class BaseCallViewHelper(
     }
 
     private fun disableCallOptionAnimation() {
+        isAnimateClicked = false
         durationHandler.removeCallbacks(hideOptionsRunnable)
     }
 
@@ -533,21 +541,25 @@ class BaseCallViewHelper(
      * animates the call options layout with respect to it's visibility
      */
     override fun animateCallOptionsView() {
-        LogMessage.d(TAG, "$CALL_UI animateCallOptionsView()")
-        if (!CallManager.isCallConnected() || CallUtils.isAddUsersToTheCall()
-            || !CallUtils.getIsGridViewEnabled() && (CallManager.isOneToOneAudioCall()
-                    || CallManager.isOneToOneRemoteVideoMuted()
-                    || CallManager.isReconnecting())
-        )
-            return
+        if (!isAnimateClicked) {
+            isAnimateClicked = true
+            LogMessage.d(TAG, "$CALL_UI animateCallOptionsView()")
+            if (!CallManager.isCallConnected() || CallUtils.isAddUsersToTheCall()
+                || !CallUtils.getIsGridViewEnabled() && (CallManager.isOneToOneAudioCall()
+                        || CallManager.isOneToOneRemoteVideoMuted()
+                        || CallManager.isReconnecting())
+            )
+                return
 
-        if (CallUtils.getIsGridViewEnabled())
-            animateGridView()
-        else
-            animateListView()
+            if (CallUtils.getIsGridViewEnabled())
+                animateGridView()
+            else
+                animateListView()
+        }
     }
 
     private fun animateGridView() {
+        isAnimateClicked = false
         durationHandler.removeCallbacks(hideOptionsRunnable)
         if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE && binding.layoutCallConnected.layoutTitle.visibility == View.VISIBLE) {
             animateCallOptions(R.anim.slide_down, View.GONE, View.GONE)
@@ -649,6 +661,7 @@ class BaseCallViewHelper(
         if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE) {
             animateCallOptions(R.anim.slide_down, View.GONE, View.VISIBLE)
             animateCallDetails(R.anim.slide_out_up, View.GONE)
+            isAnimateClicked = false
             durationHandler.removeCallbacks(hideOptionsRunnable)
         } else {
             animateCallOptions(R.anim.slide_up, View.VISIBLE, View.GONE)
@@ -665,6 +678,7 @@ class BaseCallViewHelper(
         LogMessage.d(TAG, "$CALL_UI animateGroupListView()")
         if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE) {
             animateCallOptions(R.anim.slide_down, View.GONE, View.GONE)
+            isAnimateClicked = false
             durationHandler.removeCallbacks(hideOptionsRunnable)
         } else {
             animateCallOptions(R.anim.slide_up, View.VISIBLE, View.GONE)
@@ -699,6 +713,7 @@ class BaseCallViewHelper(
     }
 
     fun disconnectCall() {
+        isAnimateClicked = false
         durationHandler.removeCallbacks(hideOptionsRunnable)
         durationHandler.removeCallbacks(updateTimerThread)
         releaseSurfaceViews()
@@ -755,7 +770,7 @@ class BaseCallViewHelper(
     }
 
     private fun isCallUIVisible(): Boolean {
-        return !(activity.isInPIPMode()) && AppLifecycleListener.isForeground && !CallUtils.isAddUsersToTheCall()
+        return !(activity.isInPIPMode()) && AppLifecycleListener.isForeground && !CallUtils.isAddUsersToTheCall() && callDuration.isNotBlank()
     }
 
     fun updateRemoteAudioMuteStatus(userJid: String) {

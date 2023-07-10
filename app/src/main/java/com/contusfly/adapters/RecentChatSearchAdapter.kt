@@ -396,7 +396,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
     }
 
     private fun setAdapterIcon(profileDetail: ProfileDetails, viewBinding: RowSearchContactMessageBinding) {
-        if (profileDetail.name != null)
+        if (profileDetail.getDisplayName().isNotEmpty())
             viewBinding.searchImageContact.loadUserProfileImage(context, profileDetail)
         else profileDetail.isGroupProfile.ifElse({
             viewBinding.searchImageContact.setImageResource(R.drawable.icon_grp)
@@ -438,7 +438,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
                         && this@RecentChatSearchAdapter.recentSearchList[position].search!!) {
                     val startIndex = profileDetail.getDisplayName().toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(Locale.getDefault()))
                     val stopIndex = startIndex + searchKey.length
-                    EmojiUtils.setEmojiTextAndHighLightSearchText(searchTextChatPerson, profileDetail.name, startIndex, stopIndex)
+                    EmojiUtils.setEmojiTextAndHighLightSearchText(searchTextChatPerson, profileDetail.getDisplayName(), startIndex, stopIndex)
                 } else EmojiUtils.setEmojiText(searchTextChatPerson, profileDetail.getDisplayName().toString())
                 makeViewsGone(searchTextRecentChatmsg, searchTextArchive, searchImageRecentChatStatus, searchTextUnseenCount, searchPin)
                 setAdapterIcon(profileDetail, this)
