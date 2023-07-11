@@ -20,6 +20,7 @@ import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
 import android.net.Uri
 import android.os.*
+import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.*
@@ -71,7 +72,6 @@ import com.contusfly.interfaces.MessageListener
 import com.contusfly.mediapicker.model.Image
 import com.contusfly.mediapicker.ui.MediaPickerActivity
 import com.contusfly.models.*
-import com.contusfly.services.NonStickyService
 import com.contusfly.utils.*
 import com.contusfly.utils.ChatUtils
 import com.contusfly.utils.MediaUtils
@@ -95,6 +95,7 @@ import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.api.models.ContactChatMessage
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.Features
@@ -137,6 +138,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     open val viewModel by lazy {
         ViewModelProviders.of(this, chatViewModelFactory).get(ChatViewModel::class.java)
     }
+
+    private var isRefreshing = false
 
     protected val mentionViewModel by lazy {
         ViewModelProvider(this).get(MentionsViewModel::class.java)
@@ -200,12 +203,6 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     protected var suggestionCount = 0
 
     protected val PROFILE_UPDATE_TIME_OUT: Long = 10000
-
-    /**
-     * The Intent object which contains the complete class name of a service implementation to get
-     * started to identify when the application is removed via the recent apps screen.
-     */
-    protected val stickyService: Intent by lazy { Intent(this, NonStickyService::class.java) }
 
     /**
      * Utils to handle the chat view operations
@@ -330,6 +327,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private val filteredPosition = ArrayList<Int>()
 
+    protected var selectedContactMessage: ContactChatMessage? = null
+
     protected var typingList:MutableList<String> = ArrayList()
 
     val userMentionConfig: UserMentionConfig = UserMentionConfig.Builder().build()
@@ -355,11 +354,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
 
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            //To change body of created functions use File | Settings | File Templates.
+            LogMessage.v(TAG,"beforeTextChanged")
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            //To change body of created functions use File | Settings | File Templates.
+            LogMessage.v(TAG,"onTextChanged")
         }
     }
 
@@ -403,6 +402,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
+        profileDetails = ProfileDetails()
         searchKeyObserver()
     }
     private val audioRecordingPermissionLauncher = registerForActivityResult(
@@ -505,6 +505,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
      * Recycler view object which used to display the chat view
      */
     protected val listChats by bindView<RecyclerView>(R.id.view_chat_list)
+    protected val llPermitToAddorBlock by bindView<LinearLayout>(R.id.ll_block)
+    protected val btnAdd by bindView<Button>(R.id.btn_add)
+    protected val btnBlock by bindView<Button>(R.id.btn_block)
 
     /**
      * Edit text which used to add the message in the chat view to send the user
@@ -771,6 +774,25 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
     }
 
+    fun refreshVisibleContactMessage() {
+        // To avoid the IndexOutOfBoundsException
+        try {
+            if (mainList.isNotEmpty()) {
+                for (messagePosition in firstCompletelyVisibleItemPosition until lastCompletelyVisibleItemPosition + 1) {
+                    if (mainList.size > messagePosition) {
+                        val message = mainList[messagePosition]
+                        if (message.isContactMessage())
+                            runOnUiThread {
+                                chatAdapter.refreshMessageAtPosition(messagePosition, message)
+                            }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            LogMessage.e(TAG, e)
+        }
+    }
+
     private fun setBlockedSpannableText(): Spannable {
         val userNickName = Utils.returnEmptyStringIfNull(profileDetails.getDisplayName())
         val wordToSpan: Spannable = SpannableString("You have blocked $userNickName. Unblock")
@@ -874,12 +896,15 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     private fun setEditTextListener() {
-        binding.viewChatFooter.editChatMsg.addTextChangedListener(editTextWatcher)
-        binding.viewChatFooter.editChatMsg.setOnTouchListener { _, _ ->
-            showChatKeyboard = true
-            if (attachmentDialog.isShowing)
-                closeControls()
-            false
+        try {
+            binding.viewChatFooter.editChatMsg.addTextChangedListener(editTextWatcher)
+            binding.viewChatFooter.editChatMsg.setOnTouchListener { _, _ ->
+                if (attachmentDialog.isShowing)
+                    closeControls()
+                false
+            }
+        } catch(e:Exception) {
+            LogMessage.e(e)
         }
     }
 
@@ -887,9 +912,6 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         ChatManager.sendTypingGoneStatus(chat.toUser, chat.getChatType(), true )
     }
 
-    protected fun startStickyService() {
-        startService(stickyService)
-    }
 
     fun onAttachMenuClick() {
         // Checks the chat type and validates if user presents in group or users exists in
@@ -1073,15 +1095,21 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     override fun userCameOnline(jid: String) {
         super.userCameOnline(jid)
-        if (chat.toUser == jid || (chat.isSingleChat() && jid.isNullOrBlank()))
-            getUserLastActivity()
+        getUserLastSeen(jid)
     }
-
+    private fun getUserLastSeen(jid : String) {
+        try {
+            if (chat.toUser == jid || (chat.isSingleChat() && jid.isNullOrBlank()))
+                getUserLastActivity()
+        } catch (e:Exception) {
+            LogMessage.e(TAG,e)
+        }
+    }
     override fun userWentOffline(jid: String) {
         super.userWentOffline(jid)
-        if (chat.toUser == jid || (chat.isSingleChat() && jid.isNullOrBlank()))
-            getUserLastActivity()
+        getUserLastSeen(jid)
     }
+
 
     /**
      * Displays the presence status of the chat user in the [android.app.ActionBar]
@@ -1091,14 +1119,18 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
      * @param status   The status of the chat user to be displayed.
      */
     open fun setUserPresenceStatus(status: String) {
-        when {
-            status.isNotEmpty() -> {
-                statusTextView.text = status
-                statusTextView.show()
-            }
-            else -> statusTextView.gone()
-        }
-        statusTextView.isSelected = true
+                try {
+                    when {
+                        status.isNotEmpty() -> {
+                            statusTextView.text = status
+                            statusTextView.show()
+                        }
+                        else -> statusTextView.gone()
+                    }
+                    statusTextView.isSelected = true
+                } catch (e:Exception) {
+                    LogMessage.e(TAG,e)
+                }
     }
 
     fun fromUserList(value: String?): ArrayList<ProfileDetails?>? {
@@ -1117,29 +1149,33 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
      * @param unsentMessage Unsent message
      */
     protected fun showUnsentMessage(unsentMessage: String) {
-        if (unsentMessage.isNotEmpty() && unsentMessage != null) {
-            unsentMentionListShowingPriority(unsentMessage)
-            enableEdt = false
-            imgSend.setImageResource(R.drawable.ic_send_active)
-            imgSend.show()
-        } else {
-            try {
-                binding.viewChatFooter.editChatMsg.setText(Constants.EMPTY_STRING)
-                imgSend.gone()
-                imgSend.setImageResource(R.drawable.ic_send_inactive)
-            } catch(e : Exception) {
-                LogMessage.e("Exception",e.message)
+        try {
+            if (unsentMessage.isNotEmpty() && unsentMessage != null) {
+                unsentMentionListShowingPriority(unsentMessage)
+                enableEdt = false
+                imgSend.setImageResource(R.drawable.ic_send_active)
+                imgSend.show()
+            } else {
+                try {
+                    binding.viewChatFooter.editChatMsg.setText(Constants.EMPTY_STRING)
+                    imgSend.gone()
+                    imgSend.setImageResource(R.drawable.ic_send_inactive)
+                } catch (e: Exception) {
+                    LogMessage.e("Exception", e.message)
+                }
             }
+            if (selectedMessageIdForReply.isNotEmpty()) {
+                showViews(replyMessageSentView, closeReplyMessage)
+                replyViewHandler.showReplyMessageToSend(
+                    selectedMessageIdForReply, parentViewModel,
+                    suggestionLayout, chat.toUser
+                )
+            } else
+                resetReplyMessageView()
+            setEditTextListener()
+        } catch (e:Exception) {
+            LogMessage.e(e)
         }
-        if (selectedMessageIdForReply.isNotEmpty()) {
-            showViews(replyMessageSentView, closeReplyMessage)
-            replyViewHandler.showReplyMessageToSend(
-                selectedMessageIdForReply, parentViewModel,
-                suggestionLayout, chat.toUser
-            )
-        } else
-            resetReplyMessageView()
-        setEditTextListener()
     }
 
     private fun showUnsentmentionUsersMessage(unsentMessage: String) {
@@ -1157,40 +1193,27 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     private fun getUserLastActivity() {
-        netConditionalCall({
-            getUserLastActivityWithDelay()
-        }, {
-            chatViewUtils.setUserPresenceStatus(this, Constants.EMPTY_STRING)
-        })
+        try {
+            netConditionalCall({
+                getUserLastActivityWithDelay()
+            }, {
+                chatViewUtils.setUserPresenceStatus(this, Constants.EMPTY_STRING)
+            })
+        } catch(e:Exception) {
+            LogMessage.e(TAG,e)
+        }
     }
 
     /**
      * Last seen time returns as seconds.So try to get getLastActivity as one sec delay if status view not empty
      */
     private fun getUserLastActivityWithDelay() {
-        if (statusTextView.text.isEmpty()) {
-            if (isProfileObjectInitialized() && profileDetails.isDeletedContact()) {
-                chatViewUtils.setUserPresenceStatus(this, Constants.EMPTY_STRING)
-                return
-            }
-            launch(exceptionHandler) {
-                ContactManager.getRegisteredUserLastSeenTime(
-                    chat.toUser,
-                    object : ContactManager.LastSeenListener {
-                        override fun onFailure(message: String) {
-                            chatViewUtils.setUserPresenceStatus(
-                                activity!! as AppCompatActivity,
-                                Constants.EMPTY_STRING
-                            )
-                        }
-
-                        override fun onSuccess(lastSeenTime: String) {
-                            setUserPresenceStatus(ChatUtils.getLastSeenTime(this@ChatParent,lastSeenTime))
-                        }
-                    })
-            }
-        } else {
-            Handler(Looper.getMainLooper()).postDelayed({
+        try {
+            if (statusTextView.text.isEmpty()) {
+                if (isProfileObjectInitialized() && profileDetails.isDeletedContact()) {
+                    chatViewUtils.setUserPresenceStatus(this, Constants.EMPTY_STRING)
+                    return
+                }
                 launch(exceptionHandler) {
                     ContactManager.getRegisteredUserLastSeenTime(
                         chat.toUser,
@@ -1203,11 +1226,42 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                             }
 
                             override fun onSuccess(lastSeenTime: String) {
-                                setUserPresenceStatus(ChatUtils.getLastSeenTime(this@ChatParent,lastSeenTime))
+                                setUserPresenceStatus(
+                                    ChatUtils.getLastSeenTime(
+                                        this@ChatParent,
+                                        lastSeenTime
+                                    )
+                                )
                             }
                         })
                 }
-            }, 1000)
+            } else {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    launch(exceptionHandler) {
+                        ContactManager.getRegisteredUserLastSeenTime(
+                            chat.toUser,
+                            object : ContactManager.LastSeenListener {
+                                override fun onFailure(message: String) {
+                                    chatViewUtils.setUserPresenceStatus(
+                                        activity!! as AppCompatActivity,
+                                        Constants.EMPTY_STRING
+                                    )
+                                }
+
+                                override fun onSuccess(lastSeenTime: String) {
+                                    setUserPresenceStatus(
+                                        ChatUtils.getLastSeenTime(
+                                            this@ChatParent,
+                                            lastSeenTime
+                                        )
+                                    )
+                                }
+                            })
+                    }
+                }, 1000)
+            }
+        } catch (e:Exception) {
+            LogMessage.e(TAG,e)
         }
     }
 
@@ -1279,7 +1333,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                         menu.get(R.id.action_favourite),
                         menu.get(R.id.action_unfavourite),
                         menu.get(R.id.action_pin),
-                        menu.get(R.id.action_un_pin)
+                        menu.get(R.id.action_un_pin),
+                        menu.get(R.id.action_add_chat_shortcuts)
                     )
                     updateMenuIcons(menu,true,features,isSingleMessage,menuHashMap)
 
@@ -1293,7 +1348,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                     menu.get(R.id.action_forward).isVisible = menuHashMap[Constants.FORWARD]!!
                     menu.get(R.id.action_add_chat_shortcuts).isVisible = false
                     if (isSingleMessage) {
-                        menu.get(R.id.action_copy).isVisible = true
+                        updateCopyMessageMenu(menu)
                         menu.get(R.id.action_report).isVisible = menuHashMap[Constants.REPORT]!!
                         if (menuHashMap[Constants.INFO]!!)  menu.get(R.id.action_info).isVisible = true
                     } else {
@@ -1307,6 +1362,14 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
             }
 
+        }
+    }
+
+
+    private fun updateCopyMessageMenu(menu: Menu) {
+        if (clickedMessages.size > 0) {
+            val chat = getMessagebyID(clickedMessages[0])
+            menu.get(R.id.action_copy).isVisible = chat != null && chat.messageType == MessageType.TEXT || (null != chat && chat.mediaChatMessage.mediaCaptionText != null && !chat.mediaChatMessage.mediaCaptionText.equals(""))
         }
     }
 
@@ -1410,6 +1473,18 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             getString(R.string.msg_disable_busy_status), getString(R.string.action_yes),
             getString(R.string.action_no), CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false
         )
+    }
+
+    /**
+     * Save the new contact number into the contacts app.
+     */
+    protected fun saveContact() {
+        val contactNumber = com.mirrorflysdk.utils.Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(chat.toUser))
+        val cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
+        cursor?.let {
+            chatViewUtils.addContact(this, contactNumber)
+            cursor.close()
+        }
     }
 
     protected fun showForwardBusyAlert() {
@@ -1810,25 +1885,57 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     private fun selectAudioFileFromStorage() {
+        val manufacturer = Build.MANUFACTURER.toUpperCase(Locale.getDefault())
+
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
         val audioListIntent = Intent(Intent.ACTION_GET_CONTENT)
-        audioListIntent.type = "audio/*"
+        audioListIntent.type = Constants.AUDIO_FILE
         val audioPickerApps: List<ResolveInfo> = packageManager.queryIntentActivities(audioListIntent, 0)
         when {
+            manufacturer.contains("HMD GLOBAL") ->{
+                openCustomOSAudioSelection()
+            }
+            manufacturer.contains("VIVO") -> {
+                openCustomOSAudioSelection()
+            }
+            manufacturer.contains("REALME") -> {
+                openCustomOSAudioSelection()
+            }
+            manufacturer.contains("SAMSUNG") -> {
+                val intent = Intent("com.sec.android.app.myfiles.PICK_DATA")
+                intent.putExtra("CONTENT_TYPE", audioListIntent.type)
+                intent.addCategory(Intent.CATEGORY_DEFAULT)
+                startActivityForResult(intent, RequestCode.FROM_GALLERY)
+            }
             intent.resolveActivity(this.applicationContext.packageManager) != null -> {
                 startActivityForResult(intent, RequestCode.FROM_GALLERY)
                 /* setting isActivityStartedForResult to true to avoid xmpp disconnection*/
                 ChatManager.isActivityStartedForResult = true
             }
             audioPickerApps.isNotEmpty() -> {
-                val audioIntent = Intent(Intent.ACTION_GET_CONTENT)
-                audioIntent.setDataAndType(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    "audio/*"
-                )
-                startActivityForResult(audioIntent, RequestCode.FROM_GALLERY)
+                try {
+                    val audioIntent = Intent(Intent.ACTION_GET_CONTENT)
+                    audioIntent.setDataAndType(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        Constants.AUDIO_FILE
+                    )
+                    startActivityForResult(audioIntent, RequestCode.FROM_GALLERY)
+                } catch(e:Exception) {
+                    LogMessage.e(TAG,e.stackTraceToString())
+                } catch(e:SecurityException) {
+                    LogMessage.e(TAG,e.stackTraceToString())
+                }
+
             }
             else -> showToast("No suitable app found!")
+        }
+    }
+
+    private fun openCustomOSAudioSelection() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = Constants.AUDIO_FILE
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(intent, RequestCode.FROM_GALLERY)
         }
     }
 
@@ -2048,7 +2155,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
      * Here updating the message seen acknowledgment
      */
     private fun sendMessageSeenStatus() {
-        ChatManager.markAsRead(chat.toUser)
+        if(!ChatManager.chatHistoryEnabled() || !ChatManager.getAvailableFeatures().isChatHistoryEnabled){
+            ChatManager.markAsRead(chat.toUser)
+        } else {
+            if(ChatManager.isChatHistoryFetchedFromServer(toUser)){
+                ChatManager.markAsRead(chat.toUser)
+            }
+        }
     }
 
     protected fun onClearConversationMenuClicked() {
@@ -2094,6 +2207,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             if (chat.isSingleChat())
                 launchActivity<MessageInfoActivity> {
                     putExtra(Constants.MESSAGE_ID, clickedMessages.first())
+                    putExtra(Constants.USER_JID,chat.toUser)
                     addOtherExtraForMessageInfo(this)
                 }
             else if (chat.isGroupChat())
@@ -2191,12 +2305,16 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     fun handleOnResume() {
-        ChatManager.setOnGoingChatUser(chat.toUser)
-        selectedMessageIdForReply = ReplyHashMap.getReplyId(chat.toUser)
-        sendMessageSeenStatus()
-        NotificationManagerCompat.from(context!!).cancel(Constants.NOTIFICATION_ID)
-        dismissProgress()
-        updateDeliveryAndSeenStatus()
+        try {
+            ChatManager.setOnGoingChatUser(chat.toUser)
+            selectedMessageIdForReply = ReplyHashMap.getReplyId(chat.toUser)
+            sendMessageSeenStatus()
+            NotificationManagerCompat.from(context!!).cancel(Constants.NOTIFICATION_ID)
+            dismissProgress()
+            updateDeliveryAndSeenStatus()
+        } catch (e:Exception) {
+            LogMessage.e(e)
+        }
     }
 
     /**
@@ -2540,11 +2658,14 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     private fun updateDeliveryAndSeenStatus() {
+                firstCompletelyVisibleItemPosition = mManager.findFirstVisibleItemPosition()
+        lastCompletelyVisibleItemPosition = mManager.findLastVisibleItemPosition()
         if (firstCompletelyVisibleItemPosition in 0 until lastCompletelyVisibleItemPosition) {
-            for (index in firstCompletelyVisibleItemPosition until lastCompletelyVisibleItemPosition)
+            for (index in firstCompletelyVisibleItemPosition until mainList.size)
                 if (mainList.size > index)
                     refreshMessageAndUpdateAdapter(mainList[index].messageId, Constants.NOTIFY_MESSAGE_STATUS_CHANGED)
         }
+
     }
 
     protected fun handleSearchToolbar(showSearch: Boolean, hideKeyboard: Boolean) {
@@ -2872,5 +2993,10 @@ override fun onAttachDocument() {
         }
     }
 
-
+    override fun onContactSyncComplete(isSuccess: Boolean) {
+        super.onContactSyncComplete(isSuccess)
+        isRefreshing = false
+        viewModel.onContactSyncFinished(isSuccess)
+        viewModel.isContactSyncSuccess.value = true
+    }
 }

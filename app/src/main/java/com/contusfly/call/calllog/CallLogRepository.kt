@@ -1,6 +1,7 @@
 package com.contusfly.call.calllog
 
 import com.contus.call.CallConstants.CALL_UI
+import com.contusfly.getDisplayName
 import com.mirrorflysdk.flycommons.CallState
 import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
@@ -74,7 +75,7 @@ class CallLogRepository @Inject constructor() {
         }
         if (rosterInfo != null) {
             with(rosterInfo) {
-                name = getName() ?: Constants.EMPTY_STRING
+                name = getDisplayName() ?: Constants.EMPTY_STRING
                 profileImage = image ?: Constants.EMPTY_STRING
                 mobile = mobileNumber ?: Constants.EMPTY_STRING
             }
@@ -100,7 +101,7 @@ class CallLogRepository @Inject constructor() {
         val rosterInfo = ProfileDetailsUtils.getProfileDetails(toUser)
         if (rosterInfo != null) {
             with(rosterInfo) {
-                name = getName() ?: Constants.EMPTY_STRING
+                name = getDisplayName() ?: Constants.EMPTY_STRING
                 profileImage = image ?: Constants.EMPTY_STRING
                 mobile = mobileNumber ?: Constants.EMPTY_STRING
             }

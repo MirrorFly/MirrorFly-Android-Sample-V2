@@ -5,7 +5,9 @@ import com.contusfly.*
 import com.contusfly.chat.MessageUtils
 import com.contusfly.models.GroupedMedia
 import com.contusfly.utils.Constants
+import com.contusfly.utils.ProfileDetailsUtils
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +24,8 @@ class ViewAllMediaViewModel : ViewModel() {
     val docsListLoaded = MutableLiveData<Boolean>()
     val linkListLoaded = MutableLiveData<Boolean>()
     var jid = ""
+
+    val profileDetail = MutableLiveData<ProfileDetails>()
 
     fun getMediaList(jid: String) {
         this.jid = jid
@@ -174,5 +178,11 @@ class ViewAllMediaViewModel : ViewModel() {
             }
         }
         return urls
+    }
+
+    fun getProfileDetails(jid: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            profileDetail.postValue(ProfileDetailsUtils.getProfileDetails(jid))
+        }
     }
 }

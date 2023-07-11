@@ -247,10 +247,10 @@ object RealPathUtil {
 
 
             val documentFile = DocumentFile.fromSingleUri(context, fileUri)
-            val fileName =  documentFile!!.name
+            var fileName =  documentFile!!.name
             ImagePickerUtils.createFolderIfNotExist(directoryName)
             val mimeType = getMimeTypeFromFilePath(context, fileUri)
-
+            if(fileName == null) fileName = Constants.TEMP_FILE_NAME
             val filePath = getFilePath(fileName, mimeType, directoryName)
             return checkFilePath(filePath,context,fileUri)
         } else {

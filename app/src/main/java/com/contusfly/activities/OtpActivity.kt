@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.telephony.TelephonyManager
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -40,7 +41,6 @@ import com.contusfly.views.PermissionAlertDialog
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.*
 import com.mirrorflysdk.api.notification.PushNotificationManager
-import com.mirrorflysdk.flycommons.models.MetaData
 import com.mirrorflysdk.utils.ChatUtilsOperations
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
@@ -691,7 +691,6 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
             mobile = getDialNumber().replace("+", "") + getMobileNumber()
 
             manageAccount = ManageAccount.ON_REGISTER
-
             FlyCore.registerUser(mobile!!, regId, isForceRegister) { isSuccess, _, data ->
                 if (isSuccess) {
                     val isNewUser = data["is_new_user"] as Boolean
@@ -724,6 +723,7 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
         }
         else {
             otpBinding.viewVerify.visibility = View.VISIBLE
+            Log.d(TAG, "showErrorResponse: ${data.getMessage()}")
             showToast(data.getMessage())
         }
     }

@@ -34,7 +34,7 @@ object AppChatShortCuts {
         try {
             val profileDetails = ProfileDetailsUtils.getProfileDetails(toUser)
             var contactName: String
-            profileDetails.let { userVcard -> contactName = userVcard!!.name }
+            profileDetails.let { userVcard -> contactName = userVcard!!.getDisplayName() }
 
             val contactImageUrl = profileDetails?.image
 

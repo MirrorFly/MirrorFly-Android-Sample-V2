@@ -58,7 +58,7 @@ constructor(private val repository: CallLogRepository, private val apiCalls: Api
         }
     }
 
-    private fun resetPagination() {
+    public fun resetPagination() {
         callLogAdapterList.clear()
         isFetching = false
         currentPage = 0

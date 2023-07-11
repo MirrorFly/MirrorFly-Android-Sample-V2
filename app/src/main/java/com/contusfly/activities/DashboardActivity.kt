@@ -1,5 +1,6 @@
 package com.contusfly.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -35,6 +36,9 @@ import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mirrorflysdk.AppUtils
+import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.flycommons.Result
 import dagger.android.AndroidInjection
 
 /**
@@ -77,9 +81,9 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         swipeRefreshLayout = dashboardBinding.swipeToRefreshLayout
         dashboardBinding.newChatFab.setOnClickListener(this)
         setListeners()
-        setObservers()
         setUpViewPager()
         setUpTabLayout()
+        setObservers()
         setUpTabColors(0)
         setupTabPosition()
         checkEnableSafeChat()
@@ -209,13 +213,13 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
     @SuppressLint("InflateParams")
     private fun setUpTabLayout() {
         tabLayout.show()
+        val viewChats = layoutInflater.inflate(R.layout.custom_tabs, null)
+        val viewCalls = layoutInflater.inflate(R.layout.custom_tabs, null)
+        chatTitleTextView = viewChats.findViewById(R.id.text)
+        unReadChatCountTextView = viewChats.findViewById(R.id.text_unseen_count)
+        callTitleTextView = viewCalls.findViewById(R.id.text)
+        missedCallCountTextView = viewCalls.findViewById(R.id.text_unseen_count)
         TabLayoutMediator(tabLayout, mViewPager) { tab, position ->
-            val viewChats = layoutInflater.inflate(R.layout.custom_tabs, null)
-            val viewCalls = layoutInflater.inflate(R.layout.custom_tabs, null)
-            chatTitleTextView = viewChats.findViewById(R.id.text)
-            unReadChatCountTextView = viewChats.findViewById(R.id.text_unseen_count)
-            callTitleTextView = viewCalls.findViewById(R.id.text)
-            missedCallCountTextView = viewCalls.findViewById(R.id.text_unseen_count)
             if (position == 0) {
                 tab.customView = viewChats
                 chatTitleTextView.text = getString(R.string.chats_label)
@@ -240,11 +244,20 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         updateMenuIcons(ChatManager.getAvailableFeatures())
         callLogMenuShowHide()
         mSearchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
+        if (mViewPager.currentItem == 0) {
+            menuReference?.let {
+                hideMenu(it.get(R.id.clear_call_log))
+            }
+        } else {
+            menuReference?.let {
+                showMenu(it.get(R.id.clear_call_log))
+            }
+        }
         /* Check if user searched in recent or contact. */
-        if (!mSearchView.isIconified)
+        if (!mSearchView!!.isIconified)
             dashboardBinding.toolbar.collapseActionView()
 
-        mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        mSearchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
                 return false
             }
@@ -262,7 +275,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                 params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
 
                 tabLayout.gone()
-                mSearchView.maxWidth = Integer.MAX_VALUE
+                mSearchView!!.maxWidth = Integer.MAX_VALUE
                 closeOption(menu)
                 return true
             }
@@ -343,7 +356,14 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
     override fun onClick(v: View?) {
         when (v) {
             dashboardBinding.newChatFab -> {
-                startActivity(Intent(this, UserListActivity::class.java))
+                if (BuildConfig.CONTACT_SYNC_ENABLED) {
+                    if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
+                        startActivity(Intent(this, NewContactsActivity::class.java))
+                    } else
+                        MediaPermissions.requestContactsReadPermission(this, permissionAlertDialog, contactPermissionLauncher, null)
+                } else {
+                    startActivity(Intent(this, UserListActivity::class.java))
+                }
             }
         }
     }
@@ -368,6 +388,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         super.onResume()
         viewModel.getArchivedChatStatus()
         viewModel.updateUnReadChatCount()
+        callLogviewModel.resetPagination()
         if (callLogviewModel.isCallLogScreenInitiated()) {
             callLogviewModel.addLoaderToTheList()
             callLogviewModel.getCallLogsList(isLoadCallLogsOnMainThread)
@@ -377,6 +398,9 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         if (SharedPreferenceManager.getBoolean(Constants.SHOW_LABEL))
             netConditionalCall({ dashboardBinding.dashboardXmppConnectionStatusLayout.gone() }, { dashboardBinding.dashboardXmppConnectionStatusLayout.show() })
         else dashboardBinding.dashboardXmppConnectionStatusLayout.gone()
+        if (BuildConfig.CONTACT_SYNC_ENABLED) {
+            checkContactPermission()
+        }
         if(SafeChatUtils.updateAlert){
             SafeChatUtils.updateAlert = false
             SafeChatUtils.safeChatEnabledPrompt(this) {
@@ -388,6 +412,42 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         ChatManager.setOnGoingChatUser("")
         callLogMenuShowHide()
     }
+
+    private fun checkContactPermission() {
+        if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)
+            && viewModel.mContactCount == 0) {
+            checkInternetAndExecute(false) {
+                viewModel.checkAndUpdateContacts()
+            }
+            syncContacts()
+        }
+    }
+
+    private fun syncContacts() {
+        viewModel.contactSyncNeeded.observe(this) { syncNeeded ->
+            LogMessage.i(TAG, "[Contact Sync] contactSyncNeeded: $syncNeeded ")
+            if (syncNeeded && BuildConfig.CONTACT_SYNC_ENABLED) refreshContacts()
+        }
+        viewModel.isContactSyncSuccess.observe(this) {
+            viewModel.getRecentChats()
+        }
+        viewModel.checkContactsUpdate()
+    }
+
+    private fun refreshContacts() {
+        LogMessage.d(TAG, "[Contact Sync] refreshContacts()")
+        if (AppUtils.isNetConnected(this)) {
+            if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
+                if (FlyCore.contactSyncState.value != Result.InProgress) {
+                    FlyCore.syncContacts(!SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE)) { success, _, _ ->
+                        viewModel.onContactSyncFinished(success)
+                        viewModel.isContactSyncSuccess.value = true
+                    }
+                } else LogMessage.d(TAG, "[Contact Sync] Contact syncing is already in progress")
+            }
+        } else viewModel.onContactSyncFinished(false)
+    }
+
 
     fun recentClick(recentList: List<RecentChat>, startActionMode: Boolean) {
         if (recentList.isEmpty()) {
@@ -576,10 +636,14 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
     }
 
     override fun onDialogClosed(dialogType: CommonAlertDialog.DIALOGTYPE?, isSuccess: Boolean) {
-        if (!isSuccess)
-            return
-        if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL && mRecentChatListType == RecentChatListType.RECENT)
-            deleteSelectedRecent(getJidFromList(viewModel.selectedRecentChats))
+        try{
+            if (!isSuccess)
+                return
+            if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL && mRecentChatListType == RecentChatListType.RECENT)
+                deleteSelectedRecent(getJidFromList(viewModel.selectedRecentChats))
+        } catch (e:Exception) {
+            LogMessage.e(TAG,e)
+        }
     }
 
     override fun listOptionSelected(position: Int) {
@@ -651,6 +715,25 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         callLogviewModel.updateFeatureActions(features)
     }
 
+    override fun onUserBlockedOrUnblockedBySomeone(userJid: String, blockType: Boolean) {
+        viewModel.setBlockUnBlockJID(userJid, blockType)
+    }
+
+    override fun onContactSyncComplete(isSuccess: Boolean) {
+        super.onContactSyncComplete(isSuccess)
+        callLogviewModel.getCallLogsList(false)
+        viewModel.onContactSyncFinished(isSuccess)
+        viewModel.isContactSyncSuccess.value = true
+    }
+
+    /**
+     * Update the recent chat when user left the group
+     */
+    override fun onLeftFromGroup(groupJid: String, leftUserJid: String) {
+        super.onLeftFromGroup(groupJid, leftUserJid)
+        recentChatFragment.refreshRecentChatList()
+    }
+
     private fun updateAdapterItems(features: Features) {
         if (mAdapter.fragmentsArray.size == 2) {
             if (!features.isOneToOneCallEnabled && !features.isGroupCallEnabled) {
@@ -703,5 +786,10 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         } catch(e:Exception) {
             LogMessage.e(TAG,e.toString())
         }
+    }
+
+    override fun updateRecentChat() {
+        super.updateRecentChat()
+        viewModel.getInitialChatList()
     }
 }

@@ -110,7 +110,7 @@ class BlockedContactsFragment : Fragment(), CoroutineScope, CommonAlertDialog.Co
                 return@BlockedContactsAdapter
             }
             selectedUserJid = profile.jid
-            selectedUserName = profile.name
+            selectedUserName = profile.getDisplayName()
             isBlockClicked=true
             mDialog.showAlertDialog(String.format(getString(R.string.unblock_message_label), selectedUserName), getString(R.string.yes_label),
                     getString(R.string.no_label), CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, true)

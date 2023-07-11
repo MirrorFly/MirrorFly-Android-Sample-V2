@@ -12,10 +12,9 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.widget.TextView
-import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.BuildConfig
 import com.mirrorflysdk.api.models.ChatMessage
-import io.github.rockerhieu.emojicon.EmojiconTextView
+import com.mirrorflysdk.flycommons.LogMessage
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -28,14 +27,13 @@ class ModifiedlinkMovementMethod(
     var userJid: String,
     var selectedMessages: ArrayList<String>,
     var isLinkLongclick: Boolean
-) : LinkMovementMethod() {
+) :LinkMovementMethod() {
 
     private var onLongClickListener: OnLinkLongClickListener? = null
     private var onClickListener: OnLinkClickListener? = null
     private var onButtonClickListener: OnLinkClickStatusListener? = null
 
     private var chatmodel: ChatMessage? = null
-    private var pos: Int = 0
     private var textview: TextView? = null
 
     override fun onTouchEvent(widget: TextView, buffer: Spannable, event: MotionEvent): Boolean {
@@ -55,13 +53,9 @@ class ModifiedlinkMovementMethod(
             val off = layout.getOffsetForHorizontal(line, x.toFloat())
             val link = buffer.getSpans(off, off + 1, ClickableSpan::class.java)
             if (link.isNotEmpty()) {
-
                 if ((link[0] as URLSpan).url.contains("http") || (link[0] as URLSpan).url.contains("https")) {
-
                     longClickChecking(link,widget,event,action)
-
                 }
-
                 return true
             } else {
                 Selection.removeSelection(buffer)
@@ -79,8 +73,7 @@ class ModifiedlinkMovementMethod(
         link: Array<ClickableSpan>,
         widget: TextView,
         event: MotionEvent,
-        action: Int
-    ){
+        action: Int){
 
         try{
 
@@ -123,8 +116,7 @@ class ModifiedlinkMovementMethod(
 
                     onClickListener!!.onClick(
                         textview, chatmodel!!.messageTextContent,
-                        chatmodel!!, pos
-                    )
+                        chatmodel!!)
                 }
 
             } else {
@@ -174,7 +166,7 @@ class ModifiedlinkMovementMethod(
         isLinkLongclick = true
         onLongClickListener!!.onLongClick(
             textview, chatmodel!!.messageTextContent,
-            chatmodel!!, pos, isLinkLongclick
+            chatmodel!!,isLinkLongclick
         )
     }
 
@@ -182,14 +174,11 @@ class ModifiedlinkMovementMethod(
         view: TextView,
         listener: OnLinkLongClickListener,
         model: ChatMessage,
-        position: Int,
         linkClickListener: OnLinkClickListener,
         linkbuttonclickstatusListener: OnLinkClickStatusListener
     ) {
-
         onLongClickListener = listener
         chatmodel = model
-        pos = position
         textview = view
         onClickListener = linkClickListener
         onButtonClickListener = linkbuttonclickstatusListener
@@ -201,20 +190,18 @@ class ModifiedlinkMovementMethod(
             textView: TextView?,
             url: String?,
             view: ChatMessage,
-            position: Int,
             onclickLinkStatus: Boolean
         ): Boolean
     }
 
     interface OnLinkClickListener {
 
-        fun onClick(textView: TextView?, url: String?, view: ChatMessage, position: Int): Boolean
+        fun onClick(textView: TextView?, url: String?, view: ChatMessage): Boolean
     }
 
     interface OnLinkClickStatusListener {
 
         fun onLinkClickStatus(clickStatus: Boolean): Boolean
     }
-
 
 }

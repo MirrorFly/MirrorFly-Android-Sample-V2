@@ -3,6 +3,7 @@ package com.contusfly.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.contusfly.getDisplayName
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
@@ -38,7 +39,7 @@ constructor() : ViewModel() {
                 participantsNameList.clear()
                 participantsNameList.addAll(newParticipantList)
                 participantsNameList.let {
-                    val list =   it.sortedBy { profileDetails -> profileDetails.name.lowercase()}
+                    val list =   it.sortedBy { profileDetails -> profileDetails.getDisplayName().lowercase()}
                     groupUsers.value = list
                 }
             }

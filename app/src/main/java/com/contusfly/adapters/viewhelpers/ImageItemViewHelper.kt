@@ -16,6 +16,8 @@ import com.contusfly.chat.AndroidUtils
 import com.contusfly.chat.MessageUtils
 import com.contusfly.groupmention.MentionUtils
 import com.contusfly.interfaces.MessageItemListener
+import com.contusfly.models.ChatItemRowModel
+import com.contusfly.models.MediaCaption
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.models.ChatMessage
 import kotlin.math.ceil
@@ -52,17 +54,16 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
      * @param time          Time of message sent
      * @param base64Img     Thumb image
      */
-    fun senderImageItemView(messageItem: ChatMessage, imgViewHolder: ImageSentViewHolder, filePath: String?, time: String?,
-                            base64Img: String?, searchEnabled: Boolean = false, searchKey: String = emptyString()) {
+    fun senderImageItemView(imgViewHolder: ImageSentViewHolder, model: ChatItemRowModel) {
         with(imgViewHolder) {
-            handleImageLoading(imgViewHolder, filePath, base64Img)
+            handleImageLoading(imgViewHolder, model.filePath, model.base64Img)
 
             /*
               Check if the image item contain caption to show
              */
-            handleImageWithCaption(messageItem, imgViewHolder, time, searchEnabled, searchKey)
-            setImageSenderMediaStatus(this, messageItem)
-            handleSenderImageItemProgressUpdate(messageItem, this)
+            handleImageWithCaption(model.messageItem, imgViewHolder, model.time, model.searchEnabled, model.searchKey)
+            setImageSenderMediaStatus(this, model.messageItem)
+            handleSenderImageItemProgressUpdate(model.messageItem, this)
         }
     }
 
@@ -106,9 +107,11 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
                 if (messageItem.mentionedUsersIds != null && messageItem.mentionedUsersIds.size > 0 ) {
                     val mentionText = MentionUtils.formatMentionText(context, messageItem,false)
                     val mentionUserNames=MentionUtils.getMentionedUserId(context,messageItem,false)
-                    handleSenderImageCaptionSearchExceptMention(mentionText, imgViewHolder, searchEnabled, searchKey,mentionUserNames)
+                    val caption=MediaCaption(mentionText,imgViewHolder.txtChatSentCaption,searchEnabled,searchKey,mentionUserNames,messageItem)
+                    messageItemListener.setMediaCaption(caption)
                 } else {
-                    handleSenderImageCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()), imgViewHolder, searchEnabled, searchKey)
+                    val caption=MediaCaption(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()),imgViewHolder.txtChatSentCaption,searchEnabled,searchKey,SpannableStringBuilder(),messageItem)
+                    messageItemListener.setMediaCaption(caption)
                 }
             } else {
                 showViews(txtSendTime, imgSenderStatus)
@@ -123,31 +126,6 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
                             || messageItem.isMessageSeen()) && MessageUtils.isMediaExists(messageItem.getMediaChatMessage().getMediaLocalStoragePath()))
                     it.show() else it.gone()
             }
-        }
-    }
-
-    private fun handleSenderImageCaptionSearch(htmlText: CharSequence, holder: ImageSentViewHolder,
-                                               searchEnabled: Boolean, searchKey: String) {
-        if (searchEnabled && searchKey.isNotEmpty() && htmlText.toString().startsWithTextInWords(searchKey)) {
-            val startIndex = htmlText.toString().checkIndexes(searchKey)
-            val stopIndex = startIndex + searchKey.length
-            EmojiUtils.setMediaTextHighLightSearched(context, holder.txtChatSentCaption, htmlText.toString(), startIndex, stopIndex)
-        } else {
-            holder.txtChatSentCaption.setBackgroundColor(context.color(android.R.color.transparent))
-            holder.txtChatSentCaption.setTextKeepState(htmlText)
-        }
-    }
-    private fun handleSenderImageCaptionSearchExceptMention(htmlText: CharSequence, holder: ImageSentViewHolder,
-                                               searchEnabled: Boolean, searchKey: String,mentionedUserName: SpannableStringBuilder
-    ) {
-        if (searchEnabled && searchKey.isNotEmpty()) {
-            val startIndex = htmlText.toString().checkIndexes(searchKey)
-            val stopIndex = startIndex + searchKey.length
-            EmojiUtils.setMediaTextHighLightSearchedForMention(context, holder.txtChatSentCaption,
-                htmlText.toString(), startIndex, stopIndex, mentionedUserName)
-        } else {
-            holder.txtChatSentCaption.setBackgroundColor(context.color(android.R.color.transparent))
-            holder.txtChatSentCaption.setTextKeepState(htmlText)
         }
     }
 
@@ -241,39 +219,41 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
      * @param time          Time of message sent
      * @param base64Img     Thumb image
      */
-    fun receiverImageViewItem(messageItem: ChatMessage, imgViewHolder: ImageReceivedViewHolder, filePath: String?, time: String?,
-                              base64Img: String?, searchEnabled: Boolean = false, searchKey: String = emptyString()) {
+    fun receiverImageViewItem(imgViewHolder: ImageReceivedViewHolder, model:ChatItemRowModel) {
         with(imgViewHolder) {
-            setImageReceiverMediaStatus(this, messageItem)
+            setImageReceiverMediaStatus(this, model.messageItem)
             /*
              Check if the image item contain caption to show
             */
-            if (Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaCaptionText()).isNotEmpty()) {
+            if (Utils.returnEmptyStringIfNull(model.messageItem.getMediaChatMessage().getMediaCaptionText()).isNotEmpty()) {
                 viewRevImageCaption.show()
                 txtRevChatCaption.maxWidth = ceil((AndroidUtils.getDensity(context) * 250).toDouble()).toInt()
                 txtRevTime.gone()
                 imgStarred.gone()
-                txtRevCaptionTime.text = time
+                txtRevCaptionTime.text = model.time
                 imgStarred.gone()
                 viewRevImageBalloon.gone()
-                messageItemListener.setStarredCaptionStatus(messageItem.isMessageStarred(), txtRevCaptionStar)
-                if (messageItem.mentionedUsersIds != null && messageItem.mentionedUsersIds.size > 0 ) {
-                    val mentionText = MentionUtils.formatMentionText(context, messageItem,false)
-                    val mentionUserNames=MentionUtils.getMentionedUserId(context,messageItem,false)
-                    handleReceiverImageCaptionSearchExceptMention(mentionText, imgViewHolder, searchEnabled,searchKey,mentionUserNames)
+                messageItemListener.setStarredCaptionStatus(model.messageItem.isMessageStarred(), txtRevCaptionStar)
+                if (model.messageItem.mentionedUsersIds != null && model.messageItem.mentionedUsersIds.size > 0 ) {
+                    val mentionText = MentionUtils.formatMentionText(context, model.messageItem,false)
+                    val mentionUserNames=MentionUtils.getMentionedUserId(context,model.messageItem,false)
+                    val caption=MediaCaption(mentionText,imgViewHolder.txtRevChatCaption,model.searchEnabled,model.searchKey,mentionUserNames,model.messageItem)
+                    messageItemListener.setMediaCaption(caption)
                 } else {
-                    handleReceiverImageCaptionSearch(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()), imgViewHolder, searchEnabled, searchKey)
+                    val caption=MediaCaption(getSpannedText(model.messageItem.getMediaChatMessage().getMediaCaptionText()),imgViewHolder.txtRevChatCaption,model.searchEnabled,model.searchKey,SpannableStringBuilder(),model.messageItem)
+                    messageItemListener.setMediaCaption(caption)
                 }
+
             } else {
                 viewRevImageCaption.gone()
                 txtRevTime.show()
-                txtRevTime.text = time
+                txtRevTime.text = model.time
                 txtRevCaptionStar.gone()
                 viewRevImageBalloon.show()
-                messageItemListener.setStaredStatus(messageItem.isMessageStarred(), imgStarred)
+                messageItemListener.setStaredStatus(model.messageItem.isMessageStarred(), imgStarred)
             }
-            handleReceiverImageLoading(this, filePath, base64Img)
-            handleReceiverImageItemProgressUpdate(messageItem, this)
+            handleReceiverImageLoading(this, model.filePath, model.base64Img)
+            handleReceiverImageItemProgressUpdate(model.messageItem, this)
         }
     }
 
@@ -325,37 +305,6 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
                 downloadProgressBuffer.show()
                 progressRev.gone()
             }
-        }
-    }
-
-    private fun handleReceiverImageCaptionSearch(
-        htmlText: CharSequence, holder: ImageReceivedViewHolder,
-        searchEnabled: Boolean, searchKey: String
-    ) {
-        if (searchEnabled && searchKey.isNotEmpty() && htmlText.toString()
-                .startsWithTextInWords(searchKey)
-        ) {
-            val startIndex = htmlText.toString().checkIndexes(searchKey)
-            val stopIndex = startIndex + searchKey.length
-            EmojiUtils.setMediaTextHighLightSearched(context, holder.txtRevChatCaption, htmlText.toString(), startIndex, stopIndex)
-        } else {
-            holder.txtRevChatCaption.setBackgroundColor(context.color(android.R.color.transparent))
-            holder.txtRevChatCaption.setTextKeepState(htmlText)
-        }
-    }
-
-    private fun handleReceiverImageCaptionSearchExceptMention(
-        htmlText: CharSequence, holder: ImageReceivedViewHolder,
-        searchEnabled: Boolean, searchKey: String,mentionedUserName: SpannableStringBuilder
-    ) {
-        if (searchEnabled && searchKey.isNotEmpty()) {
-            val startIndex = htmlText.toString().checkIndexes(searchKey)
-            val stopIndex = startIndex + searchKey.length
-            EmojiUtils.setMediaTextHighLightSearchedForMention(context, holder.txtRevChatCaption,
-                htmlText.toString(), startIndex, stopIndex,mentionedUserName)
-        } else {
-            holder.txtRevChatCaption.setBackgroundColor(context.color(android.R.color.transparent))
-            holder.txtRevChatCaption.setTextKeepState(htmlText)
         }
     }
 

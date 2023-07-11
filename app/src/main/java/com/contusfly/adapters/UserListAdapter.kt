@@ -178,7 +178,7 @@ class UserListAdapter(val context: Context, private val commonAlertDialog: Commo
     }
 
     private fun showUserUnBlockPopup(item: ProfileDetails) {
-        commonAlertDialog.showAlertDialog(String.format(context.getString(R.string.unblock_message_label), item.name),
+        commonAlertDialog.showAlertDialog(String.format(context.getString(R.string.unblock_message_label), item.getDisplayName()),
             context.getString(R.string.yes_label), context.getString(R.string.no_label),
             CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, true, dialogListener = object : CommonAlertDialog.CommonDialogClosedListener{
                 override fun onDialogClosed(

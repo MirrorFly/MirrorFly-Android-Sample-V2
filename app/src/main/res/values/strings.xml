@@ -89,9 +89,12 @@
     <string name="new_group_label">New Group</string>
     <string name="clear_all_call_log">Clear call log</string>
     <string name="settings_label">Settings</string>
+    <string name="refresh_label">Refresh</string>
     <string name="search_label">Search</string>
     <string name="invite_contact_label">Invite Contacts</string>
     <string name="invite">Invite</string>
+    <string name="message_or_save_contact">Message / Save Contact</string>
+    <string name="invite_or_save_contact">Invite / Save Contact</string>
     <string name="title_invite_friend">Invite Friend</string>
     <string name="action_web_settings">Web</string>
 
@@ -762,6 +765,9 @@
     <string name="unsuppoted_files">Warning</string>
     <string name="msg_max_file_share">"Can't Share more than 10 media files"</string>
     <string name="msg_you_can_share_up_to_five_people">You can only share with up to 5 users or groups</string>
+
+    <string name="title_contact_sync_welcome_message">"Hello..!! \n%s"</string>
+    <string name="title_contact_sync">Contact sync is in process</string>
 
     <string name="safe_chat_enabled" translatable="false">Safe Chat enabled!</string>
     <string name="safe_chat_disabled" translatable="false">Safe Chat turned off</string>

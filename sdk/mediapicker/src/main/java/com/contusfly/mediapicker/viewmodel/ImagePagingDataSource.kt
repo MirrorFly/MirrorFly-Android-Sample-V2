@@ -67,5 +67,8 @@ class ImagePagingDataSource(private val imageItems: MutableList<Image>) :
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
         }
+        catch (e:Exception) {
+            return LoadResult.Error(e)
+        }
     }
 }

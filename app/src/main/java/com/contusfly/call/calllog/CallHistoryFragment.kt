@@ -1,5 +1,6 @@
 package com.contusfly.call.calllog
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -19,6 +20,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mirrorflysdk.flycall.call.database.model.CallLog
@@ -59,6 +61,9 @@ import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import com.contusfly.R
+import com.contusfly.activities.BaseActivity
+import com.contusfly.activities.NewContactsActivity
+import com.contusfly.utils.ChatUtils
 import com.contusfly.utils.ItemClickSupport
 
 class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.CommonDialogClosedListener, CallLogManager.CallLogActionListener {
@@ -103,10 +108,24 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
     @Inject
     lateinit var callLogsViewModelFactory: AppViewModelFactory
 
-    private val viewModel: CallLogViewModel by viewModels({ requireActivity() }, { callLogsViewModelFactory })
+    private val viewModel by lazy {
+        ViewModelProvider(
+            requireActivity(), callLogsViewModelFactory
+        ).get(CallLogViewModel::class.java)
+    }
 
     private val permissionAlertDialog: PermissionAlertDialog by lazy {
         PermissionAlertDialog(requireActivity())
+    }
+
+    private val contactPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        val contactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: ChatUtils.checkMediaPermission(requireContext(), Manifest.permission.READ_CONTACTS)
+
+        if(contactPermissionGranted) {
+            (requireActivity() as BaseActivity).checkContactChange()
+            selectParticipants()
+        }
     }
 
     private val dashBoardViewModel: DashboardViewModel by viewModels(
@@ -171,7 +190,7 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
     // General activity result contract
     private lateinit var openContactsActivity: ActivityResultLauncher<Intent>
 
-    val launchIntent = registerForActivityResult(
+    private val launchIntent = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { _: ActivityResult ->
         callLogListener()
@@ -236,31 +255,62 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
         }
 
         callHistoryBinding.fabMakeVoiceCall.setOnClickListener(1000) {
-            val intent = Intent(context, UserListActivity::class.java).apply {
-                putExtra(com.contusfly.utils.Constants.TITLE, getString(R.string.title_contacts))
-                putExtra(com.contusfly.utils.Constants.MULTI_SELECTION, true)
-                putExtra(com.contusfly.utils.Constants.IS_MAKE_CALL, true)
-                putExtra(com.contusfly.utils.Constants.CALL_TYPE, CallType.AUDIO_CALL)
+            if (BuildConfig.CONTACT_SYNC_ENABLED) {
+                lastCallAction = CallType.AUDIO_CALL
+                checkPermissionAndSelectParticipant()
+            } else {
+                val intent = Intent(context, UserListActivity::class.java).apply {
+                    putExtra(com.contusfly.utils.Constants.TITLE, getString(R.string.title_contacts))
+                    putExtra(com.contusfly.utils.Constants.MULTI_SELECTION, true)
+                    putExtra(com.contusfly.utils.Constants.IS_MAKE_CALL, true)
+                    putExtra(com.contusfly.utils.Constants.CALL_TYPE, CallType.AUDIO_CALL)
+                }
+                openContactsActivity.launch(intent)
+                lastCallAction = CallType.AUDIO_CALL
+                callHistoryBinding.fabMakeVoiceCall.hide()
+                callHistoryBinding.fabMakeVideoCall.hide()
             }
-            openContactsActivity.launch(intent)
-            lastCallAction = CallType.AUDIO_CALL
-            callHistoryBinding.fabMakeVoiceCall.hide()
-            callHistoryBinding.fabMakeVideoCall.hide()
         }
 
         callHistoryBinding.fabMakeVideoCall.setOnClickListener(1000) {
-            val intent = Intent(context, UserListActivity::class.java).apply {
-                putExtra(com.contusfly.utils.Constants.TITLE, getString(R.string.title_contacts))
-                putExtra(com.contusfly.utils.Constants.MULTI_SELECTION, true)
-                putExtra(com.contusfly.utils.Constants.IS_MAKE_CALL, true)
-                putExtra(com.contusfly.utils.Constants.CALL_TYPE, CallType.VIDEO_CALL)
+            if (BuildConfig.CONTACT_SYNC_ENABLED) {
+                lastCallAction = CallType.VIDEO_CALL
+                checkPermissionAndSelectParticipant()
+            } else {
+                val intent = Intent(context, UserListActivity::class.java).apply {
+                    putExtra(com.contusfly.utils.Constants.TITLE, getString(R.string.title_contacts))
+                    putExtra(com.contusfly.utils.Constants.MULTI_SELECTION, true)
+                    putExtra(com.contusfly.utils.Constants.IS_MAKE_CALL, true)
+                    putExtra(com.contusfly.utils.Constants.CALL_TYPE, CallType.VIDEO_CALL)
+                }
+                openContactsActivity.launch(intent)
+                lastCallAction = CallType.VIDEO_CALL
+                callHistoryBinding.fabMakeVoiceCall.hide()
+                callHistoryBinding.fabMakeVideoCall.hide()
             }
-            openContactsActivity.launch(intent)
-            lastCallAction = CallType.VIDEO_CALL
-            callHistoryBinding.fabMakeVoiceCall.hide()
-            callHistoryBinding.fabMakeVideoCall.hide()
         }
     }
+
+    private fun checkPermissionAndSelectParticipant() {
+        if (MediaPermissions.isPermissionAllowed(requireContext(), Manifest.permission.READ_CONTACTS)) {
+            selectParticipants()
+        } else MediaPermissions.requestContactsReadPermission(requireActivity(), permissionAlertDialog, contactPermissionLauncher, null)
+    }
+
+
+
+    private fun selectParticipants() {
+        val intent = Intent(context, NewContactsActivity::class.java).apply {
+            putExtra(com.contusfly.utils.Constants.TITLE, getString(R.string.title_contacts))
+            putExtra(com.contusfly.utils.Constants.MULTI_SELECTION, true)
+            putExtra(com.contusfly.utils.Constants.IS_MAKE_CALL, true)
+            putExtra(com.contusfly.utils.Constants.CALL_TYPE, lastCallAction)
+        }
+        openContactsActivity.launch(intent)
+        callHistoryBinding.fabMakeVoiceCall.hide()
+        callHistoryBinding.fabMakeVideoCall.hide()
+    }
+
     private fun callLogListener() {
         CallLogManager.setCallLogsListener(object : CallLogManager.CallLogsListener {
             override fun onCallLogsDeleted(isClearAll: Boolean,callidList:ArrayList<String>) {
@@ -515,18 +565,21 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
     }
 
     private fun openChatView(view: View?, position: Int) {
-        val callLog: CallLog = if ((callHistoryBinding.listCallHistory.adapter is CallHistorySearchAdapter))
+        val callLog: CallLog? = if ((callHistoryBinding.listCallHistory.adapter is CallHistorySearchAdapter))
             mSearchAdapter.getCallLogAtPosition(position)
         else
             mAdapter.getCallLogAtPosition(position)
-        val toUser = if (callLog.callState == CallState.INCOMING_CALL
-                || callLog.callState == CallState.MISSED_CALL)
-            callLog.fromUser else callLog.toUser
+        if ( callLog !=null) {
+            val toUser = if (callLog!!.callState == CallState.INCOMING_CALL
+                || callLog.callState == CallState.MISSED_CALL
+            )
+                callLog.fromUser else callLog.toUser
 
-        if (!callLog.groupId.isNullOrEmpty() || (!callLog.userList.isNullOrEmpty() && callLog.userList!!.filter { it != CallManager.getCurrentUserId() }.size > 1)) {
-            openGroupChatView(callLog, view)
-        } else {
-            openDirectChatView(callLog, view, toUser)
+            if (!callLog.groupId.isNullOrEmpty() || (!callLog.userList.isNullOrEmpty() && callLog.userList!!.filter { it != CallManager.getCurrentUserId() }.size > 1)) {
+                openGroupChatView(callLog, view)
+            } else {
+                openDirectChatView(callLog, view, toUser)
+            }
         }
     }
 

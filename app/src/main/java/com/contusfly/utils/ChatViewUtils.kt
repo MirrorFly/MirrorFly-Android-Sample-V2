@@ -1,13 +1,18 @@
 package com.contusfly.utils
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.provider.ContactsContract
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.contusfly.AppLifecycleListener
 import com.contusfly.R
 import com.contusfly.bindView
 import com.contusfly.gone
 import com.contusfly.show
+import com.mirrorflysdk.api.ChatManager
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -60,5 +65,42 @@ class ChatViewUtils {
      */
     fun showSelectedImages(toUser: String?, context: Context, intent: Intent?) {
         /* No Implementation Needed */
+    }
+
+    /**
+     * Starts an intent to add the contact number in the contacts app.
+     *
+     * @param activity      The calling activity.
+     * @param contactNumber The contact number to be added.
+     */
+    fun addContact(activity: Activity, contactNumber: String?) {
+        val intent = Intent(Intent.ACTION_INSERT)
+        with(intent) {
+            type = ContactsContract.Contacts.CONTENT_TYPE
+            putExtra(ContactsContract.Intents.Insert.PHONE, contactNumber)
+            activity.startActivityForResult(this, INSERT_CONTACT)
+        }
+        /* setting isActivityStartedForResult to true to avoid xmpp disconnection */
+        ChatManager.isActivityStartedForResult = true
+        AppLifecycleListener.deviceContactCount = 0
+    }
+
+    /**
+     * Determine whether user have granted the permission to read and write the contacts.
+     *
+     * @param context The parent startupActivityContext.
+     * @return True if app has the permission or false if not.
+     */
+    fun isContactPermissionAvailable(context: Context?): Boolean {
+        return (MediaPermissions.isPermissionAllowed(context, Manifest.permission.READ_CONTACTS)
+                && MediaPermissions.isWriteContactPermissionAllowed(context))
+    }
+
+    companion object {
+
+        /**
+         * The request code for adding the unknown participant into the contacts app.
+         */
+        const val INSERT_CONTACT = 1001
     }
 }

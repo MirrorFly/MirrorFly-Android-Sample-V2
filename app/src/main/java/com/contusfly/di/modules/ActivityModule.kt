@@ -84,4 +84,10 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributeBaseActivity(): BaseActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun contributeMessageInfoActivity(): MessageInfoActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun contributeSynchronizeContactActivity(): SynchronizeContactActivity
 }

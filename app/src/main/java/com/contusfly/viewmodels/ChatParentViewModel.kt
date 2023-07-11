@@ -2,6 +2,8 @@ package com.contusfly.viewmodels
 
 import androidx.lifecycle.*
 import com.contusfly.getData
+import com.contusfly.getDisplayName
+import com.contusfly.getMessage
 import com.contusfly.isTextMessage
 import com.contusfly.isValidIndex
 import com.contusfly.repository.MessageRepository
@@ -9,6 +11,7 @@ import com.contusfly.utils.Constants
 import com.contusfly.utils.LogMessage
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
+import com.contusfly.views.CustomToast
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.GroupManager
@@ -218,7 +221,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                 groupsMembersProfileList = ProfileDetailsUtils.sortGroupProfileList(groupsMembersProfileList)
                 groupsMembersProfileList.forEach {
                     if(!it.jid.equals(SharedPreferenceManager.getCurrentUserJid()))
-                        participantsNameList.add(it.name)
+                        participantsNameList.add(it.getDisplayName())
                 }
                 groupParticipantsName.value = participantsNameList.sorted().joinToString(",")
             }
@@ -264,10 +267,20 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                         loadPreviousData()
                     }
                     loadSuggestion.postValue(!isLoadNextAvailable())
+                } else {
+                    messageGettingFailure(data)
                 }
 
                 setSwipeLoader(false)
 
+            }
+        }
+    }
+
+    private fun messageGettingFailure(data: HashMap<String, Any>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            if(data.getMessage() != null && ChatManager.getAvailableFeatures().isChatHistoryEnabled) {
+                CustomToast.show(ChatManager.applicationContext, data.getMessage())
             }
         }
     }

@@ -28,6 +28,7 @@ import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycommons.ChatType
 import java.io.File
 import java.util.*
 
@@ -37,6 +38,7 @@ object NotificationBuilder {
     val chatNotifications = hashMapOf<Int, NotificationModel>()
     private var securedNotificationChannelId = 0
     var file: File?=null
+    var groupFile: File?=null
     /**
      * Create notification when new chat message received
      * @param context Context of the application
@@ -103,7 +105,8 @@ object NotificationBuilder {
             profileDetails,
             messagingStyle,
             lastMessageContent.toString(),
-            lastMessageTime
+            lastMessageTime,
+            message
         )
        displaySummaryNotification(context, lastMessageContent)
     }
@@ -123,7 +126,7 @@ object NotificationBuilder {
     ) {
         val userProfile: ProfileDetails? =
             ProfileDetailsUtils.getProfileDetails(message.getSenderUserJid())
-        val name = userProfile?.name ?: Constants.EMPTY_STRING
+        val name = userProfile?.getDisplayName() ?: Constants.EMPTY_STRING
         val contentBuilder = StringBuilder()
         contentBuilder.append(GetMsgNotificationUtils.getMessageSummary(context, message))
         messageContent.append(contentBuilder)
@@ -157,7 +160,7 @@ object NotificationBuilder {
         messagesCount: Int,
         messagingStyle: NotificationCompat.MessagingStyle
     ) {
-        val title = profileDetails?.name
+        val title = profileDetails?.getDisplayName()
         if (messagesCount > 1) {
             val appendMessagesLabel = " " + context.getString(R.string.messages_label) + ")"
             val modifiedTitle: String
@@ -187,9 +190,10 @@ object NotificationBuilder {
         profileDetails: ProfileDetails?,
         messagingStyle: NotificationCompat.MessagingStyle,
         lastMessageContent: String,
-        lastMessageTime: Long
+        lastMessageTime: Long,
+        message: ChatMessage
     ) {
-        val title = profileDetails?.name
+        val title = profileDetails?.getDisplayName()
         val chatJid = profileDetails?.jid
 
         val notificationIntent = Intent(context, ChatManager.startActivity).apply {
@@ -223,7 +227,7 @@ object NotificationBuilder {
             setCategory(NotificationCompat.CATEGORY_MESSAGE)
             priority = NotificationCompat.PRIORITY_HIGH
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            setLargeIcon(getUserProfileImage(context, profileDetails))
+            setLargeIcon(getLargeUserOrGroupImage(context, profileDetails, message))
 
 
             if (lastMessageTime > 0)
@@ -250,34 +254,38 @@ object NotificationBuilder {
      * @param lastMessageContent Last message of the conversation
      */
     private fun displaySummaryNotification(context: Context, lastMessageContent: StringBuilder) {
-        val summaryText = StringBuilder()
-        val appTitle = context.resources.getString(R.string.title_app_name)
-        summaryText.append(getMessagesCount()).append(" messages from ")
-            .append(chatNotifications.size).append(" chats")
+        try {
+            val summaryText = StringBuilder()
+            val appTitle = context.resources.getString(R.string.title_app_name)
+            summaryText.append(getMessagesCount()).append(" messages from ")
+                .append(chatNotifications.size).append(" chats")
 
-        val inboxStyle = NotificationCompat.InboxStyle().setBigContentTitle(appTitle)
-        inboxStyle.setSummaryText(summaryText)
-        for (notificationInlineMessage in 0 until chatNotifications.size) inboxStyle.addLine("notificationInlineMessage")
-        val summaryBuilder =
-            NotificationCompat.Builder(context, buildNotificationChannelAndGetChannelId(context, Constants.EMPTY_STRING,SUMMARY_CHANNEL_NAME,true)).apply {
-                setContentTitle(appTitle)
-                setContentText(lastMessageContent)
-                setSmallIcon(R.drawable.ic_notification_blue)
-                color = ContextCompat.getColor(context, R.color.colorAccent)
-                setContentIntent(getSummaryPendingIntent(context))
-                setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.ic_notification_blue))
-                setAutoCancel(true)
-                setNumber(chatNotifications.size)
-                setStyle(inboxStyle)
-                setGroup(GROUP_KEY_MESSAGE)
-                setGroupSummary(true)
-                build()
+            val inboxStyle = NotificationCompat.InboxStyle().setBigContentTitle(appTitle)
+            inboxStyle.setSummaryText(summaryText)
+            for (notificationInlineMessage in 0 until chatNotifications.size) inboxStyle.addLine("notificationInlineMessage")
+            val summaryBuilder =
+                NotificationCompat.Builder(context, buildNotificationChannelAndGetChannelId(context, Constants.EMPTY_STRING,SUMMARY_CHANNEL_NAME,true)).apply {
+                    setContentTitle(appTitle)
+                    setContentText(lastMessageContent)
+                    setSmallIcon(R.drawable.ic_notification_blue)
+                    color = ContextCompat.getColor(context, R.color.colorAccent)
+                    setContentIntent(getSummaryPendingIntent(context))
+                    setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.ic_notification_blue))
+                    setAutoCancel(true)
+                    setNumber(chatNotifications.size)
+                    setStyle(inboxStyle)
+                    setGroup(GROUP_KEY_MESSAGE)
+                    setGroupSummary(true)
+                    build()
+                }
+
+            if (chatNotifications.size > 0) {
+                val mNotificationManagerCompat: NotificationManagerCompat =
+                    NotificationManagerCompat.from(context)
+                mNotificationManagerCompat.notify(SUMMARY_ID, summaryBuilder.build())
             }
-
-        if (chatNotifications.size > 0) {
-            val mNotificationManagerCompat: NotificationManagerCompat =
-                NotificationManagerCompat.from(context)
-            mNotificationManagerCompat.notify(SUMMARY_ID, summaryBuilder.build())
+        } catch (e:Exception) {
+            LogMessage.e(e)
         }
     }
 
@@ -326,10 +334,12 @@ object NotificationBuilder {
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun getUserProfileImage(context: Context, profileDetails: ProfileDetails?): Bitmap? {
         var bitmapUserProfile: Bitmap? = null
-        var imgUrl = profileDetails?.image ?: ""
+        var image = if (!profileDetails?.thumbImage.isNullOrEmpty()) {
+            profileDetails?.thumbImage
+        } else profileDetails?.image ?: Constants.EMPTY_STRING
         try {
-            if (imgUrl.isNotEmpty()) {
-                bitmapUserProfile = getCircularBitmap(BitmapFactory.decodeFile(file?.absolutePath))
+            if (null != image && image.isNotEmpty()) {
+                bitmapUserProfile = getCircularBitmap(BitmapFactory.decodeFile(file?.canonicalPath))
             } else {
                 // Load Default icon based on name
                 bitmapUserProfile = if (profileDetails != null && profileDetails.isGroupProfile) {
@@ -339,10 +349,38 @@ object NotificationBuilder {
                 }
             }
         } catch (e: Exception) {
-            Log.d("qwerty", "Inside getProfileImage Exception ===> $e")
+            Log.d("qwerty", "Inside getProfileImage Exception ===> ${e.message}")
         }
         return bitmapUserProfile
     }
+
+    private fun getLargeUserOrGroupImage(
+        context: Context,
+        profileDetails: ProfileDetails?,
+        message: ChatMessage
+    ): Bitmap? {
+        var bitmapUserProfile: Bitmap? = null
+        var image = if (!profileDetails?.thumbImage.isNullOrEmpty()) {
+            profileDetails?.thumbImage
+        } else profileDetails?.image ?: Constants.EMPTY_STRING
+        try {
+            if (message.getChatType() == ChatType.TYPE_GROUP_CHAT) {
+                bitmapUserProfile = if (null != image && image.isNotEmpty()) getCircularBitmap(
+                    BitmapFactory.decodeFile(groupFile?.canonicalPath)
+                ) else drawableToBitmap(context.getDrawable(R.drawable.ic_group_avatar))
+
+            } else {
+                bitmapUserProfile = if (null != image && image.isNotEmpty()) getCircularBitmap(
+                    BitmapFactory.decodeFile(file?.canonicalPath)
+                ) else getCircularBitmap(drawableToBitmap(setDrawable(context, profileDetails)))
+            }
+
+        } catch (e: Exception) {
+            Log.d("qwerty", "Inside getProfileImage Exception ===> ${e.message}")
+        }
+        return bitmapUserProfile
+    }
+
 
     private fun getCircularBitmap(bitmap: Bitmap?): Bitmap {
         val output: Bitmap = if (bitmap!!.width > bitmap.height) {

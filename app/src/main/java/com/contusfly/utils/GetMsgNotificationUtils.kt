@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.R
+import com.contusfly.getDisplayName
 import com.contusfly.groupmention.MentionUtils
 import com.contusfly.utils.NotifyRefererUtils.getGroupUserAppendedText
 import com.contusfly.utils.NotifyRefererUtils.hasMultipleSenders
@@ -108,7 +109,7 @@ object GetMsgNotificationUtils {
                     sender = senderDisplayNames[messageFrom]
                 } else {
                     val profileDetails = ProfileDetailsUtils.getProfileDetails(messageFrom)
-                    sender = profileDetails!!.name
+                    sender = profileDetails!!.getDisplayName()
                     senderDisplayNames[messageFrom] = sender
                 }
                 val messageContent = sender + " : " + getMessageSummary(message,context)
@@ -127,7 +128,7 @@ object GetMsgNotificationUtils {
             notificationCompatBuilder.setContentTitle(title)
         } else {
             val profileDetails = ProfileDetailsUtils.getProfileDetails(unseenMessages[0].getChatUserJid())
-            val title = profileDetails!!.name
+            val title = profileDetails!!.getDisplayName()
             inboxStyle.setBigContentTitle(title)
             notificationCompatBuilder.setContentTitle(title)
         }

@@ -14,6 +14,7 @@ import com.contusfly.utils.UserInterfaceUtils
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ChatMessageStatusDetail
+import dagger.android.AndroidInjection
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,6 +38,7 @@ class MessageInfoActivity : BaseMessageInfoActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidInjection.inject(this)
         messageInfoBinding = ActivityMessageInfoBinding.inflate(layoutInflater)
         setContentView(messageInfoBinding.root)
     }

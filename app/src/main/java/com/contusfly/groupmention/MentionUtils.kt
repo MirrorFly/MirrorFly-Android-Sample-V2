@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.contusfly.R
 import com.contusfly.TAG
+import com.contusfly.getDisplayName
 import com.contusfly.views.RoundedBackgroundColorSpan
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
@@ -62,7 +63,7 @@ object MentionUtils {
                     val isMentionedCurrentUser = isMine(message.mentionedUsersIds[count].jid)
                     val trigger = "@"
                     val spannable: SpannableString
-                    val name = mentionedUser.name
+                    val name = mentionedUser.getDisplayName()
                     spannable = SpannableString(trigger + name)
                     setSpanColorText(spannable, context, isMentionedCurrentUser)
                     count = count + 1
@@ -126,7 +127,7 @@ object MentionUtils {
                         val userId = getUserFromJid(mention!!.jid)
                         val mentionUser = MentionUser(userId)
                         var spannable = chatMessageEditText.unSentedMessageAddMentionSpan(
-                            mention.name,
+                            mention.getDisplayName(),
                             mentionUser
                         )
                         val isMentionedCurrentUser = isMine(mentionedUsersIds[count]!!.jid)
@@ -167,7 +168,7 @@ object MentionUtils {
                     val isMentionedCurrentUser = isMine(message.mentionedUsersIds[count].jid)
                     val trigger = "@"
                     val spannable: SpannableString
-                    val name = mentionedUser.name
+                    val name = mentionedUser.getDisplayName()
                     spannable = SpannableString(trigger + name)
                     setSpanColorText(spannable, context, isMentionedCurrentUser)
                     count = count + 1
@@ -208,7 +209,7 @@ object MentionUtils {
                     )
                     val trigger = "@"
                     val spannable: SpannableString
-                    val name = replyMentionUser.name
+                    val name = replyMentionUser.getDisplayName()
                     spannable = SpannableString(trigger + name)
                     setSpanColorText(spannable, context, isMentionedCurrentUser)
                     count = count + 1
@@ -257,7 +258,7 @@ object MentionUtils {
                 val recentChatMentionUser = message.mentionedUsersIds[count]
                 if (count < message.mentionedUsersIds.size && recentChatMentionUser != null) {
                     val trigger = "@"
-                    val spannable = SpannableString(trigger + recentChatMentionUser.name)
+                    val spannable = SpannableString(trigger + recentChatMentionUser.getDisplayName())
                     spannable.setSpan(
                         ForegroundColorSpan(ContextCompat.getColor(context, R.color.color_blue)),
                         0, spannable.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE

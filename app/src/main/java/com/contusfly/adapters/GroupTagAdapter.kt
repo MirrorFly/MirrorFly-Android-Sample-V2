@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.contusfly.databinding.ListGroupUserTagItemBinding
+import com.contusfly.getDisplayName
 import com.contusfly.loadUserProfileImage
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import java.util.Locale
@@ -29,7 +30,7 @@ class GroupTagAdapter(private val context: Context, val userTagClickListener: Us
         holder.bind(item)
     }
     override fun hasSearchKey(item: ProfileDetails, filterKey: String): Boolean {
-        return item.name.toLowerCase(Locale.getDefault()).contains(filterKey.toLowerCase(Locale.getDefault()))
+        return item.getDisplayName().toLowerCase(Locale.getDefault()).contains(filterKey.toLowerCase(Locale.getDefault()))
     }
     override fun setViewHolder(parent: ViewGroup): GroupTagViewHolder {
         var adapterBinding =
@@ -38,7 +39,7 @@ class GroupTagAdapter(private val context: Context, val userTagClickListener: Us
     }
     inner class GroupTagViewHolder(var viewBinding: ListGroupUserTagItemBinding):BaseViewHolder(viewBinding.root){
         fun bind(profileDetails: ProfileDetails) {
-            val name = profileDetails.name
+            val name = profileDetails.getDisplayName()
             viewBinding.userChatName.text = name
             viewBinding.imageChatPicture.loadUserProfileImage(context,profileDetails)
             viewBinding.root.setOnClickListener { userTagClickListener.onUserTagClicked(profileDetails) }

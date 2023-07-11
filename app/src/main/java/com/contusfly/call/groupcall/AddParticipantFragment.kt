@@ -127,7 +127,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
         override fun onItemClicked(position: Int, profileDetails: ProfileDetails) {
             UIKitContactUtils.addUIKitContact(profileDetails)
             if (!selectedList.contains(profileDetails.jid)) {
-                if (selectedList.size >= (CallManager.getMaxCallUsersCount() - CallManager.getCallUsersList().size + 1)) {
+                if (selectedList.size >= (CallManager.getMaxCallUsersCount() - (CallManager.getCallUsersList().size + 1))) {
                     onUserSelectRestriction()
                 } else {
                     selectedList.add(profileDetails.jid)
@@ -289,7 +289,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
     private fun observeNetworkListener() {
         val networkConnection = NetworkConnection(requireContext())
         networkConnection.observe(viewLifecycleOwner) { connected ->
-            if (connected && viewModel.fetchingError.value == true) { //If user list fetch failed then re-fetch user list when internet is reconnected
+            if (!BuildConfig.CONTACT_SYNC_ENABLED && connected && viewModel.fetchingError.value == true) { //If user list fetch failed then re-fetch user list when internet is reconnected
                 if (searchKey.isBlank()) {
                     mAdapter.addLoadingFooter()
                     viewModel.loadUserList(callConnectedUserList)
@@ -337,8 +337,13 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
             setEmptyView(emptyView)
             itemAnimator = null
             adapter = mAdapter
-            if (isAddUsersToOneToOneCall)
-                setScrollListener(this, layoutManager as LinearLayoutManager)
+            if (isAddUsersToOneToOneCall){
+                if (BuildConfig.CONTACT_SYNC_ENABLED) {
+                    viewModel.getInviteUserList(callConnectedUserList)
+                } else {
+                    setScrollListener(this, layoutManager as LinearLayoutManager)
+                }
+            }
         }
     }
 
@@ -448,14 +453,17 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
 
     private fun getRefreshedProfilesList() {
         lifecycleScope.launchWhenStarted {
-            if (!isAddUsersToOneToOneCall)
+            if (isAddUsersToOneToOneCall) {
+                if (BuildConfig.CONTACT_SYNC_ENABLED)
+                    viewModel.getInviteUserList(callConnectedUserList)
+            } else
                 viewModel.getInviteUserListForGroup(groupId, callConnectedUserList)
         }
     }
 
     fun filterResult(searchKey: String) {
         this.searchKey = searchKey.trim()
-        if (isAddUsersToOneToOneCall) {
+        if (isAddUsersToOneToOneCall && !BuildConfig.CONTACT_SYNC_ENABLED) {
             mHandler.removeCallbacksAndMessages(null)
             mHandler.postDelayed({
                 mSearchAdapter.resetSearch()

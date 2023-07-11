@@ -3,6 +3,7 @@ package com.contusfly.call.groupcall
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.contusfly.BuildConfig
 import com.contusfly.call.calllog.CallLogRepository
 import com.contusfly.getDisplayName
 import com.contusfly.sortProfileList
@@ -46,7 +47,7 @@ constructor(private val callLogRepository: CallLogRepository) : ViewModel() {
     }
 
     fun getUserListFetching(): Boolean {
-        return isUserFetching
+        return BuildConfig.CONTACT_SYNC_ENABLED || isUserFetching
     }
 
     private fun setSearchUserListFetching(isSearchFetching: Boolean) {
@@ -54,7 +55,7 @@ constructor(private val callLogRepository: CallLogRepository) : ViewModel() {
     }
 
     fun getSearchUserListFetching(): Boolean {
-        return isSearchUserFetching
+        return BuildConfig.CONTACT_SYNC_ENABLED || isSearchUserFetching
     }
 
     fun addLoaderToTheList() {

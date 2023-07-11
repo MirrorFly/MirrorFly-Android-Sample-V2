@@ -72,6 +72,9 @@ public class GoogleTranslation {
                         case 400:
                             listener.onFailed("Can't be translated");
                             break;
+                        case 403:
+                            listener.onFailed("Can't be translated");
+                            break;
                         case 500:
                             listener.onFailed("server broken");
                             break;

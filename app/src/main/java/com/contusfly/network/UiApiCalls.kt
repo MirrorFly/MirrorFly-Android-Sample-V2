@@ -1,6 +1,7 @@
 package com.contusfly.network
 
 import com.contusfly.models.ContactSyncData
+import com.contusfly.models.ContusContactSyncTime
 import com.contusfly.models.RegisterData
 import com.contusfly.utils.Constants
 import org.json.JSONObject
@@ -26,4 +27,7 @@ interface UiApiCalls {
 
     @POST(Constants.CONTACT_SYNC_END_POINT)
     fun getContactSync(@Body params: HashMap<String, String>): Call<JSONObject>
+
+    @POST(Constants.MAIL_CONTACT_END_POINT)
+    suspend fun getMailContactSync(@Body params: ContusContactSyncTime): ContactSyncData
 }

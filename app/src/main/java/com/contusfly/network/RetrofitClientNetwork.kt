@@ -2,8 +2,9 @@ package com.contusfly.network
 
 import com.mirrorflysdk.flycommons.RequestTokenInterceptor
 import com.mirrorflysdk.flycommons.TokenAuthenticator
-import com.contusfly.BuildConfig
 import com.google.gson.GsonBuilder
+import com.mirrorflysdk.flycommons.Constants
+import com.mirrorflysdk.flycommons.SharedPreferenceManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,8 +29,10 @@ object RetrofitClientNetwork {
                 .build()
         val gson = GsonBuilder().create()
 
+
+
         Retrofit.Builder()
-                .baseUrl(BuildConfig.SDK_BASE_URL)
+                .baseUrl(SharedPreferenceManager.instance.getString(Constants.BASE_URL))
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()

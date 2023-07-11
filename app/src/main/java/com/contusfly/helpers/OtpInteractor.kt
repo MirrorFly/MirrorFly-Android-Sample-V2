@@ -153,6 +153,7 @@ internal class OtpInteractor(activity: Activity, private var otpBinding: Activit
                 otpBinding.viewVerify.isEnabled = true
                 iOtpView.setOtpTextViewEnabled(iOtpView.getOtpEditText())
                 iOtpView.dismissProgress()
+                CustomToast.show(iOtpView.activityContext,"OTP sent successfully")
             }
 
             override fun onCodeAutoRetrievalTimeOut(s: String) {

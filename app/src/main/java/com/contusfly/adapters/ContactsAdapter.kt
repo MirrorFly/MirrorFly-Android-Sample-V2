@@ -138,10 +138,17 @@ class ContactsAdapter(val context: Context, private val commonAlertDialog: Commo
     }
 
     override fun getItemId(position: Int): Long {
-        return if (profilesList.size > position)
-            profilesList[position].jid.hashCode().toLong()
-        else
-            profilesList[0].jid.hashCode().toLong()
+        try{
+            return if (profilesList.size > position)
+                profilesList[position].jid.hashCode().toLong()
+            else
+                if(profilesList.size>0) profilesList[0].jid.hashCode().toLong() else 0
+        }catch(e:ArrayIndexOutOfBoundsException){
+            com.contusfly.utils.LogMessage.e(TAG,e.toString())
+        }catch(e:Exception){
+            com.contusfly.utils.LogMessage.e(TAG,e.toString())
+        }
+        return 0
 
     }
 

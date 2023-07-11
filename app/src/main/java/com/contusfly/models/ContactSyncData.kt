@@ -9,9 +9,9 @@ import com.google.gson.annotations.SerializedName
  */
 data class ContactSyncData(
         @field:SerializedName("data")
-        val data: String? = null,
+        val data: ContusContactList? = null,
 
-         @field:SerializedName("error")
+        @field:SerializedName("error")
         val error: String? = null,
 
         @field:SerializedName("message")

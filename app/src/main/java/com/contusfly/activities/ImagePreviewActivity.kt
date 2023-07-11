@@ -305,7 +305,7 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
             val profileDetail = ProfileDetailsUtils.getProfileDetails(toUser!!)
             selectedImageList[0].imageCaption = FlyMessenger.getUnsentMessageOfAJid(toUser!!)
             if (profileDetail != null)
-                recipientName!!.text = "To: ${profileDetail.name}"
+                recipientName!!.text = "To: ${profileDetail.getDisplayName()}"
         }
         setAdapterForViewPager()
 

@@ -56,6 +56,15 @@ interface OnChatItemClickListener {
     fun onSenderItemClicked(item: ChatMessage?, position: Int)
 
     /**
+     * Handle on sender media message item clicked to make the operation, it may be share or view the
+     * image.
+     *
+     * @param item     Instance of the message
+     * @param position Position of message
+     */
+    fun onHandleStarredItemMediaClickToAction(item: ChatMessage?, position: Int)
+
+    /**
      * Handle on receiver message item clicked to make the operation, it may be share or view the
      * image.
      *
@@ -104,8 +113,9 @@ interface OnChatItemClickListener {
      * @param item Instance of the message
      * @param position The position of chat
      * @param registeredJid The user JID
+     * @param isSavedContact Is the contact is saved or not
      */
-    fun onContactClick(item: ChatMessage, position: Int, registeredJid: String?)
+    fun onContactClick(item: ChatMessage, position: Int, registeredJid: String?, isSavedContact: Boolean)
 
     /**
      * Handle the audio play click

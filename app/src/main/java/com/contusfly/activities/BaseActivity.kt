@@ -1,5 +1,6 @@
 package com.contusfly.activities
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,10 @@ import android.os.Looper
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.contusfly.AppLifecycleListener
+import com.contusfly.BuildConfig
+import com.contusfly.EmailContactSyncService
+import com.contusfly.ForceUpdateChecker
 import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
@@ -20,18 +25,22 @@ import com.contusfly.call.groupcall.isCallNotConnected
 import com.contusfly.call.groupcall.isInComingCall
 import com.contusfly.call.groupcall.isInPIPMode
 import com.contusfly.chat.AndroidUtils
+import com.contusfly.checkInternetAndExecute
 import com.contusfly.constants.MobileApplication
-import com.contusfly.getDisplayName
 import com.contusfly.notification.AppNotificationManager
 import com.contusfly.showToast
 import com.contusfly.utils.*
+import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.activities.FlyBaseActivity
 import com.mirrorflysdk.api.AvailableFeaturesCallback
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycommons.Result
+import com.mirrorflysdk.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -59,6 +68,8 @@ open class BaseActivity : FlyBaseActivity() {
     private var adminBlockStatus = false
 
     private var adminBlockedOtherUserStatus = false
+
+    protected var syncNeeded = false
 
     @Inject
     lateinit var firebaseUtils: FirebaseUtils
@@ -96,7 +107,7 @@ open class BaseActivity : FlyBaseActivity() {
 
     }
 
-    fun availableFeatureCallback(){
+    private fun availableFeatureCallback(){
         ChatManager.setAvailableFeaturesCallback(object : AvailableFeaturesCallback{
             override fun onUpdateAvailableFeatures(features: Features) {
                 updateFeatureActions(features)
@@ -107,22 +118,35 @@ open class BaseActivity : FlyBaseActivity() {
     override fun onResume() {
         super.onResume()
         availableFeatureCallback()
+        checkContactPermission()
+        onFirebaseRemoteConfigFetched()
     }
 
     override fun myProfileUpdated(isSuccess: Boolean) {
         super.myProfileUpdated(isSuccess)
         if (isSuccess) {
-            ContactManager.getUserProfile(SharedPreferenceManager.getString(Constants.SENDER_USER_JID),
-                fetchFromServer = false,
-                saveAsFriend = false) { success, _, data ->
-                if (success && data.isNotEmpty()) {
-                    val profileDetails = data["data"] as ProfileDetails
-                    SharedPreferenceManager.setString(Constants.USER_PROFILE_NAME, profileDetails.getDisplayName())
-                    SharedPreferenceManager.setString(Constants.USER_PROFILE_IMAGE, profileDetails.image)
-                    var status = profileDetails.status
-                    if (status.isNullOrEmpty()) status = getString(R.string.default_status)
-                    SharedPreferenceManager.setString(Constants.USER_STATUS, status)
+            try {
+                ContactManager.getUserProfile(
+                    SharedPreferenceManager.getString(Constants.SENDER_USER_JID),
+                    fetchFromServer = false
+                ) { success, _, data ->
+                    if (success && data.isNotEmpty()) {
+                        val profileDetails = data["data"] as ProfileDetails
+                        SharedPreferenceManager.setString(
+                            Constants.USER_PROFILE_NAME,
+                            profileDetails.name
+                        )
+                        SharedPreferenceManager.setString(
+                            Constants.USER_PROFILE_IMAGE,
+                            profileDetails.image
+                        )
+                        var status = profileDetails.status
+                        if (status.isNullOrEmpty()) status = getString(R.string.default_status)
+                        SharedPreferenceManager.setString(Constants.USER_STATUS, status)
+                    }
                 }
+            } catch (e: Exception) {
+                LogMessage.e(TAG, e.toString())
             }
         }
     }
@@ -132,6 +156,8 @@ open class BaseActivity : FlyBaseActivity() {
      */
     private fun registerBroadcast() {
         val intentFilter = IntentFilter(Constants.FORWARDED_MESSAGE_ITEM)
+        intentFilter.addAction(Constants.EMAIL_CONTACT_SYNC_COMPLETE)
+        intentFilter.addAction(Constants.INTENT_ACTION_FORCIBLE_UPDATE)
         /*
          * Register receiver
          */
@@ -151,6 +177,8 @@ open class BaseActivity : FlyBaseActivity() {
             if (action != null) {
                 when (action) {
                     Constants.FORWARDED_MESSAGE_ITEM -> clearActionMenu()
+                    Constants.EMAIL_CONTACT_SYNC_COMPLETE -> emailContactSyncCompleted()
+                    Constants.INTENT_ACTION_FORCIBLE_UPDATE -> onFirebaseRemoteConfigFetched()
                     Constants.QUICK_SHARE_UPLOAD_RESPONSE -> notifyShareUploadStatus(intent)
                 }
             }
@@ -209,10 +237,7 @@ open class BaseActivity : FlyBaseActivity() {
         } else {
             if (ProfileDetailsUtils.getProfileDetails(jid)?.isMuted != true){
                 GlobalScope.launch(exceptionHandler) {
-                    val userProfile: ProfileDetails? =
-                        ProfileDetailsUtils.getProfileDetails(jid)
-                    if (!userProfile?.image.isNullOrEmpty())
-                        firebaseUtils.callImage(userProfile, this@BaseActivity)
+                        firebaseUtils.updateProfileOnNotification( this@BaseActivity,chatMessage)
 
                     AppNotificationManager.createNotification(MobileApplication.getContext(), chatMessage)
                 }
@@ -288,6 +313,10 @@ open class BaseActivity : FlyBaseActivity() {
     override fun usersIBlockedListFetched(jidList: List<String>) {
         super.usersIBlockedListFetched(jidList)
         UIKitContactUtils.updateBlockedStatusOfUser(jidList)
+        ContusContactUtils.resetBlockedContacts()
+        for (jid in jidList) {
+            ContactUtils.checkEmailContactForBlockAndUnblockUser(jid, true)
+        }
     }
 
     /**
@@ -305,4 +334,120 @@ open class BaseActivity : FlyBaseActivity() {
         startActivity(dashboardIntent)
         finish()
     }
+
+    override fun onContactSyncComplete(isSuccess: Boolean) {
+        super.onContactSyncComplete(isSuccess)
+        LogMessage.e(TAG, "checkContactPermission isSuccess: called8")
+        if (isSuccess && MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
+            SharedPreferenceManager.setInt(ContactUtils.CONTACTS_COUNT, ContactUtils.getContactCount(ChatManager.applicationContext))
+            SharedPreferenceManager.setBoolean(Constants.INITIAL_CONTACT_SYNC_DONE, true)
+            val email = Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.EMAIL))
+            if (ChatUtils.isContusUser(email))
+                EmailContactSyncService.start()
+        }
+    }
+
+    private fun checkContactPermission() {
+        LogMessage.e(TAG, "checkContactPermission called")
+        if (SharedPreferenceManager.getBoolean(Constants.IS_PROFILE_LOGGED) && BuildConfig.CONTACT_SYNC_ENABLED) {
+            LogMessage.e(TAG, "checkContactPermission logged in")
+            if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
+                if (SharedPreferenceManager.getBoolean(Constants.CONTACT_SYNC_DONE) && (syncNeeded || AppLifecycleListener.deviceContactCount == 0)) {
+                    syncNeeded = false
+                    checkContactChange()
+                }
+            } else if (SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE)) {
+                LogMessage.e(TAG, "checkContactPermission revoked")
+                SharedPreferenceManager.setBoolean(Constants.INITIAL_CONTACT_SYNC_DONE, false)
+                FlyCore.revokeContactSync { s, e, _ ->
+                    onContactSyncComplete(true)
+                    LogMessage.e(TAG, "checkContactPermission isSuccess: $s, exception : $e")
+                }
+            }
+        }
+    }
+
+    fun checkContactChange() {
+        if (!AppLifecycleListener.isForeground) {
+            syncNeeded = true
+            return
+        }
+        val mContactCount = SharedPreferenceManager.getInt(ContactUtils.CONTACTS_COUNT)
+        val currentCount = ContactUtils.getContactCount(ChatManager.applicationContext)
+        AppLifecycleListener.deviceContactCount = currentCount
+        when {
+            currentCount < mContactCount -> {
+                // DELETE HAPPENED.
+                LogMessage.d(TAG, "Contact delete happened")
+                updateContacts()
+            }
+            currentCount == mContactCount -> {
+                // UPDATE HAPPENED.
+                LogMessage.d(TAG, "Contact update might be happened")
+                updateContacts()
+            }
+            else -> {
+                // INSERT HAPPENED.
+                LogMessage.d(TAG, "Contact insert happened")
+                updateContacts()
+            }
+        }
+    }
+
+    /**
+     * sync contact whenever its updated
+     *
+     */
+    private fun updateContacts() {
+        if (AppUtils.isNetConnected(this) && FlyCore.contactSyncState.value != Result.InProgress) {
+            LogMessage.d(TAG, "[Contact Sync] Contact syncing due to phone book changes")
+            if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
+                FlyCore.syncContacts(!SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE)) { _, _, _ -> }
+            }
+        } else {
+            LogMessage.d(TAG, "[Contact Sync] Contact syncing is already in progress")
+        }
+    }
+
+    /*
+     * Update Email Contact profile details
+     * */
+    override fun userProfileFetched(jid: String, profileDetails: ProfileDetails) {
+        super.userProfileFetched(jid, profileDetails)
+        ContactUtils.checkEmailContactForProfileUpdate(jid, profileDetails)
+    }
+
+    override fun onConnected() {
+        super.onConnected()
+        if (!BuildConfig.CONTACT_SYNC_ENABLED)
+            return
+        try {
+            checkInternetAndExecute(false) {
+                if (SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE))
+                    FlyCore.getRegisteredUsers(true) { isSuccess, _, _ ->
+                        if (isSuccess)
+                            userDetailsUpdated()
+                    }
+            }
+        }catch (e:Exception){
+            LogMessage.e(TAG,e)
+        }
+    }
+
+
+    /**
+     * Callback for email contact sync completion
+     */
+    protected open fun emailContactSyncCompleted() {
+        /*Implementation will be added in extended activity*/
+    }
+
+    /**
+     * The callback invoked on the completion of fetching the RemoteConfig task.
+     */
+    private fun onFirebaseRemoteConfigFetched() {
+        if (BuildConfig.CONTACT_SYNC_ENABLED)
+            ForceUpdateChecker.with(this).build().check()
+    }
+
 }

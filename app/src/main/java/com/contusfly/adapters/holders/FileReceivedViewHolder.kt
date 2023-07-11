@@ -18,6 +18,7 @@ class FileReceivedViewHolder(val mainView: View) : SenderNameHolder(mainView) {
 
     var spaceView: View = mainView.findViewById(R.id.space_view)
     var fileReceivedViewLayout: View = mainView.findViewById(R.id.layout_file_received_view)
+    var openFileReceivedViewLayout: View = mainView.findViewById(R.id.file_receive_view)
     var fileDownloadLayout: RelativeLayout = mainView.findViewById(R.id.layout_file_download)
     var fileCancelLayout: RelativeLayout = mainView.findViewById(R.id.layout_file_cancel)
     var filePictureImage: ImageView = mainView.findViewById(R.id.image_file_picture)

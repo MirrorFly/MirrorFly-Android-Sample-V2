@@ -171,6 +171,16 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
         }
     }
 
+    private val contactPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        val contactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_CONTACTS)
+
+        if(contactPermissionGranted) {
+            checkContactChange()
+            onAddParticipantsClick()
+        }
+    }
+
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         val readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -250,7 +260,12 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
         binding.muteSwitch.setOnCheckedChangeListener { _, isChecked ->
             FlyCore.updateChatMuteStatus(groupProfileDetails.jid, isChecked)
         }
-        binding.addParticipant.setOnClickListener { onAddParticipantsClick() }
+        binding.addParticipant.setOnClickListener {
+            if (!BuildConfig.CONTACT_SYNC_ENABLED || MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
+                onAddParticipantsClick()
+            } else
+                MediaPermissions.requestContactsReadPermission(this, permissionAlertDialog, contactPermissionLauncher, null)
+        }
         binding.editName.setOnClickListener {
             startActivityForResult(Intent(this, CommonEditorActivity::class.java)
             .putExtra(Constants.TITLE, getString(R.string.text_new_group_name))
@@ -689,9 +704,9 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
     private fun showConfirmDialog(message: String) {
         val vcard = groupMembersList[lastKnownPosition]
         val messageCpy: String = if(message.contains("remove")){
-            message + " " + vcard.name+"?"
+            message + " " + vcard.getDisplayName()+"?"
         } else{
-            message +" " + vcard.name + " the admin?"
+            message +" " + vcard.getDisplayName() + " the admin?"
         }
         mDialog!!.showAlertDialog(messageCpy,
             getString(R.string.action_yes),
@@ -883,7 +898,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
             userList.add(usersList[i].jid)
             i++
         }
-        startActivityForResult(Intent(this, UserListActivity::class.java)
+        startActivityForResult(Intent(this, if (BuildConfig.CONTACT_SYNC_ENABLED) NewContactsActivity::class.java else UserListActivity::class.java)
             .putExtra(com.contusfly.utils.Constants.ADD_PARTICIAPANTS, true)
             .putExtra(com.contusfly.utils.Constants.FROM_GROUP_INFO, true)
             .putExtra(com.contusfly.utils.Constants.GROUP_ID, groupProfileDetails.jid)
@@ -1225,14 +1240,18 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
         if (Utils.isListExist(users)) {
             progressDialog = DoProgressDialog(this)
             progressDialog.showProgress()
-            GroupManager.addUsersToGroup(groupProfileDetails.jid!!, users) { isSuccess, _, data ->
-                progressDialog.dismiss()
-                users.clear()
-                if (isSuccess) {
-                    loadAdapterData()
-                    loadGroupExistence()
-                } else
-                    CustomToast.show(context, data.getMessage())
+            try {
+                GroupManager.addUsersToGroup(groupProfileDetails.jid!!, users) { isSuccess, _, data ->
+                    progressDialog.dismiss()
+                    users.clear()
+                    if (isSuccess) {
+                        loadAdapterData()
+                        loadGroupExistence()
+                    } else
+                        CustomToast.show(context, data.getMessage())
+                }
+            } catch(e:Exception) {
+                LogMessage.e(TAG,e.toString())
             }
         }
     }

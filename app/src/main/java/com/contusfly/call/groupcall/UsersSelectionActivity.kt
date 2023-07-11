@@ -152,7 +152,7 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
     val onItemClickListener = object : RecyclerViewUserItemClick {
         override fun onItemClicked(position: Int, profileDetails: ProfileDetails) {
             if (!selectedList.contains(profileDetails.jid)) {
-                if (selectedList.size >= (CallManager.getMaxCallUsersCount() - CallManager.getCallUsersList().size + 1)) {
+                if (selectedList.size +1 >= CallManager.getMaxCallUsersCount()) {
                     onUserSelectRestriction()
                 } else {
                     selectedList.add(profileDetails.jid)

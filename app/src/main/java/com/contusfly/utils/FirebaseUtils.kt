@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.contusfly.constants.MobileApplication
+import com.contusfly.getChatType
 import com.contusfly.notification.AppNotificationManager
 import com.contusfly.notification.NotificationBuilder
 import com.mirrorflysdk.api.ChatActionListener
@@ -17,6 +18,7 @@ import com.mirrorflysdk.api.notification.PushNotificationManager
 import com.mirrorflysdk.media.MediaUploadHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.installations.FirebaseInstallations
+import com.mirrorflysdk.flycommons.ChatType
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -53,10 +55,22 @@ class FirebaseUtils : CoroutineScope {
     }
 
     fun callImage(profileDetails: ProfileDetails?, context: Context) {
-        var imgUrl = profileDetails?.image ?: ""
-        imgUrl = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
-            .appendPath(Uri.parse(imgUrl).lastPathSegment).build().toString()
+        val image  = if (!profileDetails?.thumbImage.isNullOrEmpty()) {
+            profileDetails?.thumbImage
+        } else profileDetails?.image ?: Constants.EMPTY_STRING
+        val imgUrl = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+            .appendPath(Uri.parse(image).lastPathSegment).build().toString()
         NotificationBuilder.file = Glide.with(context).asFile().load(imgUrl).submit().get()
+    }
+
+    fun callGroupImage(profileDetails: ProfileDetails?, context: Context, chatMessage: ChatMessage) {
+        val image  = if (!profileDetails?.thumbImage.isNullOrEmpty()) {
+            profileDetails?.thumbImage
+        } else profileDetails?.image ?: Constants.EMPTY_STRING
+        val imgUrl = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+            .appendPath(Uri.parse(image).lastPathSegment).build().toString()
+        if (chatMessage.getChatType() == ChatType.TYPE_GROUP_CHAT)
+            NotificationBuilder.groupFile = Glide.with(context).asFile().load(imgUrl).submit().get()
     }
 
 
@@ -71,10 +85,7 @@ class FirebaseUtils : CoroutineScope {
             if (it.containsKey("push_from") && it["push_from"].equals("MirrorFly")) {
                 PushNotificationManager.handleReceivedMessage(it, object : NotificationEventListener {
                     override fun onMessageReceived(chatMessage : ChatMessage) {
-                        val userProfile: ProfileDetails? =
-                            ProfileDetailsUtils.getProfileDetails(chatMessage.getSenderUserJid())
-                        if (!userProfile?.image.isNullOrEmpty())
-                            callImage(userProfile, context)
+                        updateProfileOnNotification(context,chatMessage)
                         val messageType = Utils.returnEmptyStringIfNull(it[com.mirrorflysdk.flycommons.Constants.TYPE])
                         if ((it.containsKey("user_jid") && !ProfileDetailsUtils.getProfileDetails(it["user_jid"].toString())?.isMuted!!) ||
                             (messageType == com.mirrorflysdk.flycommons.Constants.RECALL)) {
@@ -94,6 +105,16 @@ class FirebaseUtils : CoroutineScope {
                 })
             }
         }
+    }
+
+    fun updateProfileOnNotification(context: Context, chatMessage: ChatMessage) {
+        val chatJid = chatMessage.getChatUserJid()
+        val profileDetails = ProfileDetailsUtils.getProfileDetails(chatJid)
+        if (!profileDetails?.image.isNullOrEmpty() || !profileDetails?.thumbImage.isNullOrEmpty()) callGroupImage(profileDetails, context,chatMessage)
+        val userProfile: ProfileDetails? =
+            ProfileDetailsUtils.getProfileDetails(chatMessage.getSenderUserJid())
+        if (!userProfile?.image.isNullOrEmpty() || !userProfile?.thumbImage.isNullOrEmpty()) callImage(userProfile, context)
+
     }
 
     companion object {

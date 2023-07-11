@@ -19,6 +19,7 @@ import com.contusfly.call.CallConfiguration
 import com.contusfly.call.CallNotificationUtils
 import com.contusfly.call.groupcall.GroupCallActivity
 import com.contusfly.call.groupcall.utils.CallUtils
+import com.contusfly.database.MirrorFlyDatabase
 import com.contusfly.database.UIKitDatabase
 import com.contusfly.di.components.DaggerAppComponent
 import com.contusfly.notification.AppNotificationManager
@@ -27,8 +28,6 @@ import com.facebook.stetho.Stetho
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.mirrorflysdk.ChatSDK
-import com.mirrorflysdk.GroupConfig
 import com.mirrorflysdk.api.*
 import com.mirrorflysdk.api.utils.NameHelper
 import com.mirrorflysdk.flycall.webrtc.*
@@ -78,31 +77,33 @@ class MobileApplication : Application(), HasAndroidInjector {
         FirebaseApp.initializeApp(this)
         Stetho.initializeWithDefaults(this)
 
-        //before setting our own exception handler, taking a backup of default handler so
-        // that we don't break any exception handlers/loggers like crashlytics
-        defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler()
-
-        Thread.setDefaultUncaughtExceptionHandler { t, e ->
-            Logger.e(e.stackTraceToString())
-            defaultUncaughtHandler?.uncaughtException(t, e)
+        try {
+            //before setting our own exception handler, taking a backup of default handler so
+            // that we don't break any exception handlers/loggers like crashlytics
+            defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler()
+            Thread.setDefaultUncaughtExceptionHandler { t, e ->
+                Logger.e(e.stackTraceToString())
+                defaultUncaughtHandler?.uncaughtException(t, e)
+            }
+        } catch (e:Exception) {
+            com.mirrorflysdk.flycommons.LogMessage.e(e)
         }
 
-
-        val groupConfiguration = GroupConfig.Builder()
-                .enableGroupCreation(true)
-                .setMaximumMembersInAGroup(250)
-                .onlyAdminCanAddOrRemoveMembers(true)
-                .build()
-
-        ChatSDK.Builder()
-            .setIsTrialLicenceKey(BuildConfig.IS_TRIAL_LICENSE)
-            .setDomainBaseUrl(BuildConfig.SDK_BASE_URL)
-            .setGroupConfiguration(groupConfiguration)
-            .setLicenseKey(BuildConfig.LICENSE)
-            .build()
+        try{
+            ChatManager.initializeSDK(BuildConfig.LICENSE){ isSuccess, _, data ->
+                if (isSuccess) {
+                    LogMessage.d(TAG,"Config Details Fetched")
+                } else {
+                    LogMessage.d(TAG,data.getMessage())
+                }
+            }
+        }catch(exception:Exception){
+            LogMessage.e(TAG,"Exception while trying to initialize sdk!!")
+        }
 
         ChatManager.enableMobileNumberLogin(true)
         ChatManager.setMediaFolderName(Constants.LOCAL_PATH)
+        ChatManager.enableChatHistory(false)
 
         //activity to open when use clicked from notification
         //activity to open when a user logout from the app.
@@ -128,13 +129,15 @@ class MobileApplication : Application(), HasAndroidInjector {
 
         initEmojiCompat()
         UIKitDatabase.initDatabase(this)
+        MirrorFlyDatabase.initDatabase(this)
 
         //Set Name based on the Profile data
         ChatManager.setNameHelper(object  : NameHelper {
             override fun getDisplayName(jid: String): String {
-                return if (ProfileDetailsUtils.getProfileDetails(jid) != null) ProfileDetailsUtils.getProfileDetails(jid)!!.name else Constants.EMPTY_STRING
+                return if (ProfileDetailsUtils.getProfileDetails(jid) != null) ProfileDetailsUtils.getProfileDetails(jid)!!.getDisplayName() else Constants.EMPTY_STRING
             }
         })
+
 
         //initialize call sdk
         initializeCallSdk()
@@ -238,7 +241,7 @@ class MobileApplication : Application(), HasAndroidInjector {
 
         CallManager.setCallNameHelper(object : CallNameHelper {
             override fun getDisplayName(jid: String): String {
-                return if (ProfileDetailsUtils.getProfileDetails(jid) != null) ProfileDetailsUtils.getProfileDetails(jid)!!.name else Constants.EMPTY_STRING
+                return if (ProfileDetailsUtils.getProfileDetails(jid) != null) ProfileDetailsUtils.getProfileDetails(jid)!!.getDisplayName() else Constants.EMPTY_STRING
             }
         })
 
@@ -258,11 +261,11 @@ class MobileApplication : Application(), HasAndroidInjector {
                 missedCallMessage.append("a ")
             }
             missedCallMessage.append(callType).append(" call")
-            messageContent = ProfileDetailsUtils.getProfileDetails(userJid)?.name!!
+            messageContent = ProfileDetailsUtils.getProfileDetails(userJid)?.getDisplayName()!!
         } else {
             missedCallMessage.append("a group ").append(callType).append(" call")
             messageContent = if (!groupId.isNullOrBlank()) {
-                ProfileDetailsUtils.getProfileDetails(groupId)?.name!!
+                ProfileDetailsUtils.getProfileDetails(groupId)?.getDisplayName()!!
             } else {
                 CallUtils.getCallUsersName(userList).toString()
             }

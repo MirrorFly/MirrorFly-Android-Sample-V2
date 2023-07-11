@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
+import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
@@ -466,10 +467,14 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     }
 
     private fun updateMessageUpdate(messageId: String) {
-        if (messageId.isEmpty()) return
-        val index = viewModel.chatList.value!!.indexOfFirst { it.lastMessageId == messageId }
-        if (index.isValidIndex()) {
-            getArchiveChatFor(viewModel.chatList.value!![index].jid, RecentChatEvent.MESSAGE_UPDATED)
+        try {
+            if (messageId.isEmpty()) return
+            val index = viewModel.chatList.value?.indexOfFirst { it.lastMessageId == messageId }?:-1
+            if (index.isValidIndex()) {
+                getArchiveChatFor(viewModel.chatList.value!![index].jid, RecentChatEvent.MESSAGE_UPDATED)
+            }
+        } catch (e:Exception) {
+            Log.e(TAG, "updateMessageUpdate: $e")
         }
     }
 
@@ -477,7 +482,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         val bundle = Bundle()
         bundle.putInt(Constants.NOTIFY_PROFILE_ICON, 2)
         bundle.putInt(Constants.NOTIFY_MUTE_UNMUTE, 2)
-        val index = viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == jid }
+        val index = viewModel.chatList.value?.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == jid } ?: -1
+
         if (index.isValidIndex()) {
             val recent = FlyCore.getRecentChatOf(jid)
             recent?.let {

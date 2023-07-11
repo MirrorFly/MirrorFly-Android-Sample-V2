@@ -176,6 +176,7 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             UserInterfaceUtils.initializeCustomToolbar(this, profileStartBinding.toolbar.root)
             profileStartBinding.toolbar.root.navigationIcon?.applySrcInColorFilter(ContextCompat.getColor(this, R.color.dashboard_toolbar_text_color))
+            checkContusMail()
         } else {
             profileStartBinding.toolbar.toolbarTitle.text = getString(R.string.profile_label)
             supportActionBar?.title = Constants.EMPTY_STRING
@@ -349,7 +350,7 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
     private fun getProfileFromServer(isUpdated: Boolean) {
         checkInternetAndExecute {
             if (progressDialog != null) progressDialog!!.showProgress()
-            ContactManager.getUserProfile(SharedPreferenceManager.getString(Constants.SENDER_USER_JID), fetchFromServer = !isUpdated, saveAsFriend = false,
+            ContactManager.getUserProfile(SharedPreferenceManager.getString(Constants.SENDER_USER_JID), fetchFromServer = !isUpdated,
                     flyCallback = { success, _, data ->
                         if (success && data.isNotEmpty()) {
                             profileDetails = data["data"] as ProfileDetails
@@ -745,6 +746,10 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
                     ConfigurationUtils.insertDefaultStatus(this, mStatus)
                     ConfigurationUtils.insertDefaultBusyStatus(this)
                     navigateToDashboard()
+                    if(isFromSettingsProfile) {
+                        checkContusMail()
+                        SharedPreferenceManager.setBoolean(Constants.IS_PROFILE_UPDATED, true)
+                    }
                 } else {
                     progressDialog?.dismiss()
                     val errorMsg: String = if (throws!!.message!!.contains(getString(R.string.msg_profile_pic_update_failure))) {
@@ -809,8 +814,14 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
         FlyCore.setMyProfileStatus(mStatus!!, FlyCallback { _, _, _ -> })
         showResponseToast(true)
         if (intent.getBooleanExtra(Constants.IS_FIRST_LOGIN, false) && isUpdateClickedOnStart) {
+            if (FlyCore.getIsProfileBlockedByAdmin()) return
             updateArchiveChatsSettings()
-            navigateToMainPage()
+            if (BuildConfig.CONTACT_SYNC_ENABLED){
+                UserProfileUtils().closeProgress(progressDialog)
+                navigateToContactSync()
+            } else {
+                navigateToMainPage()
+            }
         } else if (isFromSettingsProfile) updateProfileImageIfUrlEmpty()
     }
 
@@ -840,6 +851,12 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
         FlyCore.getUsersIBlocked(true) { _, _, _ -> }
         UserProfileUtils().closeProgress(progressDialog)
         startActivity(Intent(this, DashboardActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        finish()
+    }
+
+    private fun navigateToContactSync(){
+        startActivity(Intent(this, SynchronizeContactActivity::class.java)
+            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
         finish()
     }
 
@@ -926,6 +943,11 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
                 Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_STATUS))
         }
         setUserProfile()
+    }
+
+    private fun checkContusMail() {
+        val email = Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.EMAIL))
+        profileStartBinding.textEmail.isEnabled = ChatUtils.isContusUser(email)
     }
 
     override fun onConnected() {

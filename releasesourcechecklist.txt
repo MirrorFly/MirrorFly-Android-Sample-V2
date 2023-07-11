@@ -1,0 +1,52 @@
+Date: 05 July 2023
+
+Note: While sharing the UI Kit source code, please do follow the below mentioned steps and share the source.
+
+1. app/build.gradle -> remove the qa build variant
+2. Remove Product Flavors block in build.gradle file
+3. In release build variant check the server config details as mentioned below
+     buildConfigField 'Boolean', 'IS_QA_BUILD', 'true'
+     buildConfigField 'String', 'LICENSE', '"lu3Om85JYSghcsB6vgVoSgTlSQArL5"'
+     buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
+     buildConfigField "String", "SUPPORT_MAIL", '"contussupport@gmail.com"'
+     resValue("string", "app_name", "UI Kit")
+4. Replace debug build variant config details with release config details
+5. Add below line in the default config block
+    applicationId "com.mirrorfly.uikit"
+6. Make sure that License Key value[lu3Om85JYSghcsB6vgVoSgTlSQArL5] should be removed and replace the String as "Please enter your License key"
+    Ex: 'LICENSE', '"Please enter your License key"'
+7. Make sure that Google Translate Key value should be removed and replace the String as "Please enter your google translate key"
+    Ex: GOOGLE_TRANSLATE_KEY="Please enter your google translate key"
+8. Remove below submodule dependency from settings.gradle file
+    include ':SubmoduleSDK:MirrorFlySDK'
+9. Remove snapshot dependency from project level build.gradle file, keep below release dependency alone.
+    maven {
+        url "https://repo.mirrorfly.com/release"
+    }
+10. Remove submodule dependency from app level build.gradle file, keep the latest release dependency like below.
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.5.0'
+11. Move google services file from "app/src/uikit/google-services.json" to this path "app/google-services.json"
+12. Delete below folders under src folders
+    uikit
+    uikitdev
+    uikitqa
+    uikituat
+13. Delete below jenkins folder and files in the root project folder
+    fastlane/
+    build.properties
+    build_android.sh
+    changelogs.txt
+    Gemfile
+    generate_settings_gradle.sh
+    gradlew
+    gradlew.bat
+    Jenkinsfile
+    qamail.properties
+    releasenote.txt
+    sonar.json
+    sonar-project.properties
+14. Sync gradle and try to run the application, make sure app is installing properly without any gradle issues
+15. Cross check any SubModule empty folders are present inside root_project/Submodule folder, if any empty folders present delete them.
+16. Delete this releasesourcechecklist.txt file
+17. Export UIKit Code through Android Studio "File -> Export -> Export to Zip File..."
+18. Once file exported revert all the changes made in this branch

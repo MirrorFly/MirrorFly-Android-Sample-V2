@@ -32,6 +32,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <!-- android 13 permission-->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
@@ -71,6 +72,13 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
         tools:replace="android:label,android:allowBackup">
+        <activity
+            android:name=".activities.SynchronizeContactActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SelectContactMessageActivity"
+            android:screenOrientation="portrait"
+            android:exported="true" />
         <activity
             android:name=".chatTag.activities.AddPeopleActivity"
             android:exported="false" />
@@ -308,6 +316,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".EmailContactSyncService"
+            android:enabled="true"
+            android:exported="false" />
 
         <receiver
             android:name=".backup.broadcastreceivers.BootCompletedTimeChangedListener"

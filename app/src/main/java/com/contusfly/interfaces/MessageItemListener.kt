@@ -7,9 +7,8 @@ package com.contusfly.interfaces
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import android.widget.TextView
+import com.contusfly.models.MediaCaption
 import com.contusfly.models.MediaStatus
 import com.mirrorflysdk.api.MessageStatus
 import com.mirrorflysdk.api.models.ChatMessage
@@ -70,6 +69,16 @@ interface MessageItemListener {
      * @param cancelImageview Cancelling upload/download option
      */
     fun setMediaStatus(mediStatus: MediaStatus)
+
+    /**
+     * Sets the media caption
+     * @param htmlText           Caption Text
+     * @param captionView        Caption TextView
+     * @param searchEnabled      Search Enabled Status
+     * @param searchKey          Search Key value
+     * @param mentionedUserName  Mention UserName
+     */
+    fun setMediaCaption(mediStatus: MediaCaption)
 
     /**
      * Set the media duration for downloaded/uploaded video/audio file

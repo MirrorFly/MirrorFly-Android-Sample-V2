@@ -14,6 +14,7 @@ import com.contusfly.TAG
 import com.contusfly.chatTag.interfaces.ChatTagClickListener
 import com.contusfly.databinding.PeopleSelectionListItemLayoutBinding
 import com.contusfly.databinding.PeopleViewListItemLayoutBinding
+import com.contusfly.getDisplayName
 import com.contusfly.loadUserProfileImage
 import com.contusfly.utils.*
 import com.contusfly.views.CircularImageView
@@ -156,7 +157,7 @@ class PeopleSelectionListAdapter(
                 holder.textChatName.text = recent.nickName
             }
             else -> {
-                holder.textChatName.text = recent.profileName
+                holder.textChatName.text = recent.getDisplayName()
                 holder.imageChatPicture.loadUserProfileImage(context, recent)
             }
         }

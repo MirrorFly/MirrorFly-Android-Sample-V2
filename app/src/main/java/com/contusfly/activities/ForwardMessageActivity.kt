@@ -375,6 +375,7 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
     private val onItemClickListener = object : RecyclerViewItemClick {
         override fun onItemClicked(position: Int, profileDetails: ProfileDetails) {
             ContactManager.insertProfile(profileDetails)
+
             ProfileDetailsUtils.addContact(profileDetails)
             if (isSelected(profileDetails.jid))
                 selectedUsersWithNames.remove(profileDetails.jid)
@@ -459,5 +460,11 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
         viewModel.removeProfileDetails(jid)
         viewModel.removeSearchProfileDetails(jid)
         binding.selectedUsers.text = selectedUserNames
+    }
+
+    override fun onContactSyncComplete(isSuccess: Boolean) {
+        super.onContactSyncComplete(isSuccess)
+        if (isSuccess)
+            viewModel.loadForwardChatList(null)
     }
 }
