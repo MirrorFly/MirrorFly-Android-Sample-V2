@@ -848,7 +848,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun initialization() {
         loaderShowHide(false)
         loaderObserver()
-        parentViewModel.setParticpantDetails(chatType)
         FirebaseUtils.setAnalytics(FirebaseAnalytics.Event.VIEW_ITEM, "Chat View", "")
         initViews()
         setUpListeners()

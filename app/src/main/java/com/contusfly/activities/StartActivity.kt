@@ -36,10 +36,26 @@ class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userView()
+        initializeSDK()
+    }
+
+    private fun initializeSDK(){
+        try{
+            ChatManager.initializeSDK(BuildConfig.LICENSE){ isSuccess, _, data ->
+                if (isSuccess) {
+                    LogMessage.d(TAG,"Config Details Fetched")
+                } else {
+                    LogMessage.d(TAG,"initializeSDK failed with reason:${data.getMessage()}")
+                }
+                userView()
+            }
+        }catch(exception:Exception){
+            LogMessage.e(TAG,"Exception while trying to initialize sdk!!")
+        }
     }
 
     private fun userView() {
+        val licenseKey = ChatManager.getLicenseKey()
         SharedPreferenceManager.setBoolean(Constants.PIN_SCREEN,false)
         val callLink = if (!intent.dataString.isNullOrEmpty()) intent.dataString!!.replace(
             BuildConfig.WEB_CHAT_LOGIN, "") else ""
@@ -47,7 +63,7 @@ class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
             val showCallsTab = intent.getBooleanExtra(CallUtils.IS_CALL_NOTIFICATION, false)
             CallUtils.setCallsTabToBeShown(showCallsTab)
         }
-        if (SharedPreferenceManager.getBoolean(Constants.IS_LOGGED_IN)) {
+        if (licenseKey?.isNotEmpty()!! && SharedPreferenceManager.getBoolean(Constants.IS_LOGGED_IN)) {
             if (SharedPreferenceManager.getBoolean(Constants.IS_PROFILE_LOGGED)) {
                 if (callLink.isNotEmpty())
                     validateCallLinkAndNavigateToRespectivePage(callLink)

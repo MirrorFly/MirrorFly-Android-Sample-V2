@@ -232,6 +232,13 @@ constructor() : ViewModel() {
         restartactivityRecentChatListlivedata.value=true
     }
 
+    fun chatHistoryMigration() {
+        var fetchedPageNumber=
+            com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.getInt(RECENT_CHAT_FETCHED_PAGE_NUMBER)
+        if(recentChatAdapter.size == 0 && fetchedPageNumber == 0) {
+            getInitialChatList()
+        }
+    }
 
 
     private fun setSwipeLoader(isShowStatus:Boolean){

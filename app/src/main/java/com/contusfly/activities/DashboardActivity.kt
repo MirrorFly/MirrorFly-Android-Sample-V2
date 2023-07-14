@@ -788,8 +788,8 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         }
     }
 
-    override fun updateRecentChat() {
-        super.updateRecentChat()
-        viewModel.getInitialChatList()
+    override fun onConnected() {
+        super.onConnected()
+        viewModel.chatHistoryMigration()
     }
 }

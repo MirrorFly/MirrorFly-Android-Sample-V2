@@ -63,18 +63,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
 
     private var toUser: String? = null
 
-    private var participantChatType: String? = null
-
     val groupParticipantsName = MutableLiveData<String>()
-
-
-    fun setParticpantDetails(chatType:String) {
-        if(chatType == ChatType.TYPE_GROUP_CHAT) {
-            participantChatType=com.mirrorflysdk.flycommons.Constants.MESSAGE_HISTORY_GROUP_CHAT
-        } else {
-            participantChatType=com.mirrorflysdk.flycommons.Constants.MESSAGE_HISTORY_SINGLE_CHAT
-        }
-    }
 
     /**
      * get the message given to the smart reply
@@ -250,8 +239,6 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                 limit = 30
                 messageId = loadFromMessageId
                 inclusive = true
-                chatType= participantChatType!!
-                direction=Constants.LOAD_PREV_MESSAGE
             }
             messageListQuery = FetchMessageListQuery(messageListParams)
 
