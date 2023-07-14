@@ -89,18 +89,6 @@ class MobileApplication : Application(), HasAndroidInjector {
             com.mirrorflysdk.flycommons.LogMessage.e(e)
         }
 
-        try{
-            ChatManager.initializeSDK(BuildConfig.LICENSE){ isSuccess, _, data ->
-                if (isSuccess) {
-                    LogMessage.d(TAG,"Config Details Fetched")
-                } else {
-                    LogMessage.d(TAG,data.getMessage())
-                }
-            }
-        }catch(exception:Exception){
-            LogMessage.e(TAG,"Exception while trying to initialize sdk!!")
-        }
-
         ChatManager.enableMobileNumberLogin(true)
         ChatManager.setMediaFolderName(Constants.LOCAL_PATH)
         ChatManager.enableChatHistory(false)
