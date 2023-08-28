@@ -10,6 +10,9 @@ import android.os.Handler
 import android.os.Looper
 import android.view.MenuItem
 import android.view.WindowManager
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.contusfly.AppLifecycleListener
 import com.contusfly.BuildConfig
@@ -44,7 +47,6 @@ import com.mirrorflysdk.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  *
@@ -71,7 +73,6 @@ open class BaseActivity : FlyBaseActivity() {
 
     protected var syncNeeded = false
 
-    @Inject
     lateinit var firebaseUtils: FirebaseUtils
 
     private val adminBlockRunnable = Runnable {
@@ -91,12 +92,11 @@ open class BaseActivity : FlyBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firebaseUtils=FirebaseUtils()
         AndroidUtils.calculateAndStoreDeviceWidth(this)
         handler = Handler(Looper.getMainLooper())
         otherUserHandler = Handler(Looper.getMainLooper())
-        if (com.contusfly.AppLifecycleListener.isPinEnabled) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-        }
+        setSecureFlag()
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 handleBroadcastActions(intent)
@@ -105,6 +105,25 @@ open class BaseActivity : FlyBaseActivity() {
 
         registerBroadcast()
 
+    }
+
+    private fun setSecureFlag(){
+        if(AppLifecycleListener.isPinEnabled){
+            setFlag()
+        } else if(AppLifecycleListener.pinAvailable && AppLifecycleListener.isPresentPrivateChat){
+            setFlag()
+        } else if(AppLifecycleListener.pinAvailable && AppLifecycleListener.getCurrentChatUserIsPrivateOrNot()){
+            setFlag()
+        } else {
+            removeFlag()
+        }
+    }
+
+    private fun setFlag(){
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
+    private fun removeFlag(){
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 
     private fun availableFeatureCallback(){
@@ -117,6 +136,7 @@ open class BaseActivity : FlyBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        setSecureFlag()
         availableFeatureCallback()
         checkContactPermission()
         onFirebaseRemoteConfigFetched()
@@ -232,20 +252,47 @@ open class BaseActivity : FlyBaseActivity() {
 
     override fun showOrUpdateOrCancelNotification(jid: String, chatMessage: ChatMessage?) {
         super.showOrUpdateOrCancelNotification(jid, chatMessage)
+        updateNotificationShowCancel(jid,chatMessage)
+    }
+
+    private fun updateNotificationShowCancel(jid: String, chatMessage: ChatMessage?) {
+        if(ChatManager.isPrivateChat(jid)){
+            privateChatNotification(jid,chatMessage)
+        } else {
+            normalChatNotification(jid,chatMessage)
+        }
+    }
+    private fun normalChatNotification(jid: String,chatMessage: ChatMessage?) {
         if (FlyMessenger.getUnreadMessagesCount() <= 0 || !SharedPreferenceManager.getBoolean(Constants.IS_PROFILE_LOGGED) || chatMessage == null) {
             AppNotificationManager.cancelNotifications(applicationContext)
         } else {
-            if (ProfileDetailsUtils.getProfileDetails(jid)?.isMuted != true){
-                GlobalScope.launch(exceptionHandler) {
-                        firebaseUtils.updateProfileOnNotification( this@BaseActivity,chatMessage)
+            updateNotification(jid,chatMessage)
+        }
+    }
 
-                    AppNotificationManager.createNotification(MobileApplication.getContext(), chatMessage)
-                }
 
+    private fun privateChatNotification(jid: String,chatMessage: ChatMessage?) {
+        if (FlyMessenger.getUnreadPrivateChatMessagesCount() <= 0 || !SharedPreferenceManager.getBoolean(Constants.IS_PROFILE_LOGGED) || chatMessage == null) {
+            AppNotificationManager.cancelNotifications(applicationContext)
+        } else {
+            updateNotification(jid,chatMessage)
+        }
+    }
+
+    private fun updateNotification(jid: String,chatMessage: ChatMessage?){
+        if (ProfileDetailsUtils.getProfileDetails(jid)?.isMuted != true){
+            GlobalScope.launch(exceptionHandler) {
+                if(firebaseUtils!=null)
+                    firebaseUtils.updateProfileOnNotification( this@BaseActivity, chatMessage!!)
+
+                AppNotificationManager.createNotification(MobileApplication.getContext(),
+                    chatMessage!!)
             }
 
         }
     }
+
+
     override fun updateGroupReplyNotificationForArchivedSettingsEnabled(chatMessage: ChatMessage) {
         super.updateGroupReplyNotificationForArchivedSettingsEnabled(chatMessage)
         AppNotificationManager.createNotification(MobileApplication.getContext(), chatMessage)
@@ -338,6 +385,7 @@ open class BaseActivity : FlyBaseActivity() {
     override fun onContactSyncComplete(isSuccess: Boolean) {
         super.onContactSyncComplete(isSuccess)
         LogMessage.e(TAG, "checkContactPermission isSuccess: called8")
+        LogMessage.d(TAG, "#contact sync onContactSyncComplete $isSuccess")
         if (isSuccess && MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
             SharedPreferenceManager.setInt(ContactUtils.CONTACTS_COUNT, ContactUtils.getContactCount(ChatManager.applicationContext))
             SharedPreferenceManager.setBoolean(Constants.INITIAL_CONTACT_SYNC_DONE, true)
@@ -348,26 +396,28 @@ open class BaseActivity : FlyBaseActivity() {
     }
 
     private fun checkContactPermission() {
-        LogMessage.e(TAG, "checkContactPermission called")
+        LogMessage.d(TAG, "#contact sync checkContactPermission called")
         if (SharedPreferenceManager.getBoolean(Constants.IS_PROFILE_LOGGED) && BuildConfig.CONTACT_SYNC_ENABLED) {
-            LogMessage.e(TAG, "checkContactPermission logged in")
+            LogMessage.d(TAG, "#contact sync checkContactPermission logged in")
             if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
                 if (SharedPreferenceManager.getBoolean(Constants.CONTACT_SYNC_DONE) && (syncNeeded || AppLifecycleListener.deviceContactCount == 0)) {
                     syncNeeded = false
                     checkContactChange()
                 }
             } else if (SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE)) {
-                LogMessage.e(TAG, "checkContactPermission revoked")
+                LogMessage.d(TAG, "#contact sync checkContactPermission revoked")
                 SharedPreferenceManager.setBoolean(Constants.INITIAL_CONTACT_SYNC_DONE, false)
                 FlyCore.revokeContactSync { s, e, _ ->
                     onContactSyncComplete(true)
-                    LogMessage.e(TAG, "checkContactPermission isSuccess: $s, exception : $e")
+                    LogMessage.d(TAG, "#contact sync revoked $s")
+                    LogMessage.e(TAG, "#contact sync checkContactPermission isSuccess: $s, exception : $e")
                 }
             }
         }
     }
 
     fun checkContactChange() {
+        LogMessage.d(TAG, "#contact sync checkContactChange ")
         if (!AppLifecycleListener.isForeground) {
             syncNeeded = true
             return
@@ -378,17 +428,17 @@ open class BaseActivity : FlyBaseActivity() {
         when {
             currentCount < mContactCount -> {
                 // DELETE HAPPENED.
-                LogMessage.d(TAG, "Contact delete happened")
+                LogMessage.d(TAG, "#contact Contact delete happened")
                 updateContacts()
             }
             currentCount == mContactCount -> {
                 // UPDATE HAPPENED.
-                LogMessage.d(TAG, "Contact update might be happened")
+                LogMessage.d(TAG, "#contact Contact update might be happened")
                 updateContacts()
             }
             else -> {
                 // INSERT HAPPENED.
-                LogMessage.d(TAG, "Contact insert happened")
+                LogMessage.d(TAG, "#contact Contact insert happened")
                 updateContacts()
             }
         }
@@ -400,12 +450,12 @@ open class BaseActivity : FlyBaseActivity() {
      */
     private fun updateContacts() {
         if (AppUtils.isNetConnected(this) && FlyCore.contactSyncState.value != Result.InProgress) {
-            LogMessage.d(TAG, "[Contact Sync] Contact syncing due to phone book changes")
+            LogMessage.d(TAG, "#contact Contact syncing due to phone book changes")
             if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
                 FlyCore.syncContacts(!SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE)) { _, _, _ -> }
             }
         } else {
-            LogMessage.d(TAG, "[Contact Sync] Contact syncing is already in progress")
+            LogMessage.d(TAG, "#contact Contact syncing is already in progress")
         }
     }
 
@@ -423,6 +473,7 @@ open class BaseActivity : FlyBaseActivity() {
             return
         try {
             checkInternetAndExecute(false) {
+                LogMessage.i(TAG, "#contact #NewContacts #chatServer SDK has connected INITIAL_CONTACT_SYNC_DONE ")
                 if (SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE))
                     FlyCore.getRegisteredUsers(true) { isSuccess, _, _ ->
                         if (isSuccess)
@@ -448,6 +499,34 @@ open class BaseActivity : FlyBaseActivity() {
     private fun onFirebaseRemoteConfigFetched() {
         if (BuildConfig.CONTACT_SYNC_ENABLED)
             ForceUpdateChecker.with(this).build().check()
+    }
+
+     fun launchAuthPinActivity() {
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            privateChatActivityResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            privateChatActivityResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var privateChatActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode != AppCompatActivity.RESULT_OK) {
+                launchDashboardActivity()
+            }
+        }
+
+    private fun launchDashboardActivity(){
+        val intent = Intent(this, DashboardActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
     }
 
 }

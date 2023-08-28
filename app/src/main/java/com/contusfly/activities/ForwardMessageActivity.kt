@@ -8,12 +8,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.R
+import com.contusfly.TAG
 import com.contusfly.adapters.SectionedShareAdapter
 import com.contusfly.chat.MessageUtils
 import com.contusfly.databinding.ActivityForwardMessageBinding
@@ -26,6 +30,7 @@ import com.contusfly.isValidIndex
 import com.contusfly.network.NetworkConnection
 import com.contusfly.utils.Constants
 import com.contusfly.utils.ProfileDetailsUtils
+import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.viewmodels.ForwardMessageViewModel
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.CustomRecyclerView
@@ -35,6 +40,8 @@ import com.mirrorflysdk.api.ChatActionListener
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycommons.ChatType
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.helpers.ResourceHelper
 import com.mirrorflysdk.views.CustomToast
 import dagger.android.AndroidInjection
@@ -82,6 +89,10 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
      */
     private var commonAlertDialog: CommonAlertDialog? = null
 
+    private var senderJid : String=""
+
+    private var pair = Pair<Boolean,String>(false,Constants.EMPTY_STRING)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -94,9 +105,9 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
         super.onPostCreate(savedInstanceState)
 
         initViews()
-
+        getIntentValues()
+        pair=Pair(isPrivateChatOfSender(),senderJid)
         inputIntent = intent
-
         setClickListeners()
         setObservers()
         observeNetworkListener()
@@ -108,7 +119,12 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
 
         shareDialog = ShareDialog(this)
 
-        viewModel.loadForwardChatList(null)
+        viewModel.loadForwardChatList(null,pair)
+    }
+
+    private fun getIntentValues() {
+        if(intent.hasExtra(Constants.FROMUSER))
+        senderJid = intent.getStringExtra(Constants.FROMUSER)!!
     }
 
     private fun setClickListeners() {
@@ -122,6 +138,7 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
 
     override fun onGroupProfileUpdated(groupJid: String) {
         super.onGroupProfileUpdated(groupJid)
+        LogMessage.d(TAG, "#ForwardMessage  onGroupProfileUpdated $groupJid")
         updateProfileDetails(groupJid)
     }
 
@@ -422,14 +439,63 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
 
     private fun finishForwardMedia(isSuccess: Boolean) {
         shareDialog.dismissShareDialog()
-        finish()
         if (isSuccess && selectedUsersWithNames.size == 1){
+            privateChatUserChecking(selectedUsersWithNames.keys.first())
+        } else {
+            finish()
+        }
+    }
+
+    private fun isPrivateChatOfSender() : Boolean {
+        return if(senderJid.isNotEmpty() && ChatManager.isPrivateChat(senderJid)) {
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun privateChatUserChecking(toUser:String) {
+        if(senderJid.isNotEmpty() && ChatManager.isPrivateChat(senderJid) && ChatManager.isPrivateChat(toUser)){
+            launchChatView()
+        } else if(ChatManager.isPrivateChat(toUser)) {
+            launchAuthenticationActivity()
+        } else {
+            launchChatView()
+        }
+    }
+
+    private fun launchChatView() {
+        if(selectedUsersWithNames.size>0) {
             val intent = Intent(context, ChatActivity::class.java)
             startActivity(intent.putExtra(LibConstants.JID,  selectedUsersWithNames.keys.first())
                 .putExtra(Constants.CHAT_TYPE, ProfileDetailsUtils.getProfileDetails(selectedUsersWithNames.keys.first())?.getChatType())
                 .putExtra("externalCall", true))
+            finish()
         }
     }
+
+    private fun launchAuthenticationActivity() {
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            activityResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            activityResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var activityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                launchChatView()
+            }
+        }
+
 
     override fun onBackPressed() {
         finishForwardMedia(false)
@@ -441,17 +507,19 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
     /*
     * Update Profile Details */
     private fun updateProfileDetails(userJid: String) {
+        LogMessage.d(TAG, "#ForwardMessage  updateProfileDetails $userJid")
         val position = viewModel.getPositionOfProfile(userJid)
         if (position >= 0) {
             val profileDetails = ProfileDetailsUtils.getProfileDetails(userJid)
             mForwardSectionAdapter.updateProfileDetails(profileDetails)
             mForwardSearchSectionAdapter.updateProfileDetails(profileDetails)
         } else
-            viewModel.loadForwardChatList(userJid)
+            viewModel.loadForwardChatList(userJid, pair)
     }
 
     override fun onAdminBlockedOtherUser(jid: String, type: String, status: Boolean) {
         super.onAdminBlockedOtherUser(jid, type, status)
+        LogMessage.d(TAG, "#ForwardMessage  onAdminBlockedOther jid $jid type: $type status:$status")
         if (status && selectedUsersWithNames.containsKey(jid)) {
             selectedUsersWithNames.remove(jid)
         }
@@ -464,7 +532,8 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
 
     override fun onContactSyncComplete(isSuccess: Boolean) {
         super.onContactSyncComplete(isSuccess)
+        LogMessage.d(TAG, "#ForwardMessage  onContactSyncComplete isSuccess $isSuccess")
         if (isSuccess)
-            viewModel.loadForwardChatList(null)
+            viewModel.loadForwardChatList(null, pair)
     }
 }

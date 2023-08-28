@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -13,9 +16,13 @@ import com.contusfly.*
 import com.contusfly.R
 import com.contusfly.R.string.fly_error_forbidden_exception
 import com.contusfly.databinding.ActivityUserInfoBinding
+import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.network.NetworkConnection
+import com.contusfly.privateChat.PrivateChatEnableDisableActivity
 import com.contusfly.utils.AppConstants
 import com.contusfly.utils.ChatUtils
+import com.contusfly.utils.LogMessage
+import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.DoProgressDialog
 import com.mirrorflysdk.api.ChatManager
@@ -24,7 +31,11 @@ import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.utils.Utils
 import com.google.android.material.appbar.AppBarLayout
+import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener {
 
@@ -57,6 +68,7 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
         userProfileDetails = intent.getParcelableExtra(AppConstants.PROFILE_DATA)!!
         commonAlertDialog = CommonAlertDialog(this)
         commonAlertDialog!!.setOnDialogCloseListener(this)
+
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -64,6 +76,7 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
         setToolbar()
         getLastSeenData()
         setUserData()
+        SharedPreferenceManager.setString(com.contusfly.utils.Constants.ON_GOING_CHAT_USER,userProfileDetails.jid)
         binding.muteSwitch.setOnCheckedChangeListener { _, isChecked ->
             FlyCore.updateChatMuteStatus(userProfileDetails.jid, isChecked)
         }
@@ -93,9 +106,53 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
             commonAlertDialog!!.showAlertDialog(userName, getString(R.string.label_user_report_5_message), reportLabel,
                 getString(R.string.action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL)
         }
+        checkPrivateChatAvailable()
+        onClickFunction()
         observeNetworkListener()
         mediaValidation()
         userFeatureValidation(ChatManager.getAvailableFeatures())
+    }
+
+    private fun checkPrivateChatAvailable() {
+        try {
+            if(ChatManager.getIsRecentChatOfUser(userProfileDetails.jid)) {
+                binding.privateChatView.privateChatLayout.visibility=View.VISIBLE
+                checkingIsArchivedChatUser()
+            } else {
+                binding.privateChatView.privateChatLayout.visibility=View.GONE
+            }
+        } catch(e : Exception){
+            LogMessage.e(TAG,e.toString())
+        }
+    }
+
+    private fun checkingIsArchivedChatUser() {
+        if(FlyCore.isArchivedUser(userProfileDetails.jid)){
+            binding.privateChatView.privateChatTv.setTextColor(ContextCompat.getColor(this,R.color.color_light_gray))
+        } else {
+            binding.privateChatView.privateChatTv.setTextColor(ContextCompat.getColor(this,R.color.text_color_black))
+
+        }
+    }
+
+
+    private fun onClickFunction() {
+        binding.privateChatView.privateChatLayout.setOnClickListener {
+            if(FlyCore.isArchivedUser(userProfileDetails.jid)){
+                makeUnArchiveAlertShow()
+            } else {
+                val intent=Intent(this,PrivateChatEnableDisableActivity::class.java)
+                intent.putExtra(LibConstants.JID, userProfileDetails.jid)
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun makeUnArchiveAlertShow(){
+        commonAlertDialog!!.dialogAction = CommonAlertDialog.DialogAction.UNARCHIVE
+        val archiveLabel = getString(R.string.unarchive_label)
+        commonAlertDialog!!.showAlertDialog(Constants.EMPTY_STRING, getString(R.string.archive_chat_lock_title), archiveLabel,
+            getString(R.string.action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL)
     }
 
     private fun observeNetworkListener() {
@@ -341,8 +398,19 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
                     }
                     progressDialog.dismiss()
                 }
+            } else if (isSuccess && action == CommonAlertDialog.DialogAction.UNARCHIVE) {
+                unArchiveUser()
             }
         }
+    }
+
+    private fun unArchiveUser(){
+        FlyCore.updateArchiveUnArchiveChat(userProfileDetails.jid, false, FlyCallback { isSuccess, _, _ ->
+            if (isSuccess) {
+                //No implement
+                checkingIsArchivedChatUser()
+            }
+        })
     }
 
     override fun listOptionSelected(position: Int) {
@@ -366,4 +434,46 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
             makeViewsGone(binding.textMedia)
         }
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(messageEvent: PrivateChatAuthenticationModel?) {
+        if(messageEvent!!.isAutheticationShow) {
+            privateChatlaunchPinActivity()
+        }
+    }
+
+    private fun privateChatlaunchPinActivity() {
+        if (SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(com.contusfly.utils.Constants.GO_TO, com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+            privateChatActivityResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(com.contusfly.utils.Constants.GO_TO, com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+            privateChatActivityResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var privateChatActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode != AppCompatActivity.RESULT_OK) {
+                launchAuthPinActivity()
+            }
+        }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+
+
 }

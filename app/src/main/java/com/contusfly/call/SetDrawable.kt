@@ -10,6 +10,7 @@ import com.contusfly.utils.Constants
 import com.contusfly.views.BaseDrawable
 import com.contusfly.views.CustomDrawable
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycommons.LogMessage
 
 class SetDrawable : BaseDrawable {
 
@@ -35,19 +36,24 @@ class SetDrawable : BaseDrawable {
                 icon.setDrawableProfileColour(com.contus.call.R.color.light_blue)
                 icon
             } else {
-                val firstletter = initialname[0][0].toString()
-                val secondletter = initialname[0][1].toString()
-                icon.setText(firstletter.toUpperCase() + secondletter.toUpperCase())
-                icon.setDrawableProfileColour(com.contus.call.R.color.light_blue)
-                icon
+                setDrawableProfile(initialname,icon)
             }
         } else {
+            setDrawableProfile(initialname,icon)
+        }
+    }
+
+    private fun setDrawableProfile(initialname: Array<String>, icon: CustomDrawable): Drawable{
+        try {
             val firstletter = initialname[0][0].toString()
             val secondletter = initialname[1][0].toString()
-            icon.setText(firstletter.toUpperCase() + secondletter.toUpperCase())
+            icon.setText(firstletter.uppercase() + secondletter.uppercase())
             icon.setDrawableProfileColour(com.contus.call.R.color.light_blue)
             icon
+        } catch(e:Exception) {
+            LogMessage.e("Error",e.toString())
         }
+        return icon
     }
 
     @Synchronized

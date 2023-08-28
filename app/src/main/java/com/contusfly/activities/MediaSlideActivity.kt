@@ -14,6 +14,7 @@ import com.mirrorflysdk.flycommons.MediaUploadStatus
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.R
 import com.contusfly.adapters.MediaSliderAdapter
+import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.utils.Constants
 import com.contusfly.utils.UserInterfaceUtils.Companion.setUpToolBar
 import com.mirrorflysdk.api.ChatManager
@@ -21,7 +22,9 @@ import com.mirrorflysdk.api.ChatManager.getMediaMessages
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.flycommons.LogMessage
-import java.util.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import kotlin.collections.ArrayList
 
 /**
@@ -126,6 +129,7 @@ class MediaSlideActivity : BaseActivity() {
                 setToolbar(mediaMessages[position].isMessageSentByMe(), toolbar)
             }
         })
+
     }
 
     override fun onMessageStatusUpdated(msgId: String) {
@@ -180,5 +184,24 @@ class MediaSlideActivity : BaseActivity() {
         }
 
         return isLoaded
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(messageEvent: PrivateChatAuthenticationModel?) {
+        if(messageEvent!!.isAutheticationShow) {
+            launchAuthPinActivity()
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
     }
 }

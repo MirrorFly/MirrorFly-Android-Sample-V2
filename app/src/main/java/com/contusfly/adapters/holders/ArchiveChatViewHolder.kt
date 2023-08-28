@@ -21,7 +21,7 @@ class ArchiveChatViewHolder(var viewBinding: RowLayoutArchivedBinding, val conte
 
     private fun bindArchiveChatStatus(isArchiveSettingsEnabled: Boolean, unreadArchiveChatCount: Int, position: Int) {
         if (isArchiveSettingsEnabled) {
-            if (position == 0) {
+            if (position == 1) {
                 viewBinding.rootLayout.show()
                 viewBinding.viewSpace.gone()
                 viewBinding.textUnreadChatCount.text = if (unreadArchiveChatCount > 0) unreadArchiveChatCount.toString() else Constants.EMPTY_STRING
@@ -30,7 +30,7 @@ class ArchiveChatViewHolder(var viewBinding: RowLayoutArchivedBinding, val conte
                 viewBinding.viewSpace.show()
             }
         } else {
-            if (position == 0)
+            if (position == 1)
                 hideView()
             else {
                 viewBinding.viewSpace.show()

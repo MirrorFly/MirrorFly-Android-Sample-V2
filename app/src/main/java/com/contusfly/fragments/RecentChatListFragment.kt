@@ -10,6 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -22,9 +25,6 @@ import com.mirrorflysdk.flycommons.*
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.*
-import com.contusfly.activities.ArchivedChatsActivity
-import com.contusfly.activities.ChatActivity
-import com.contusfly.activities.DashboardActivity
 import com.contusfly.activities.parent.DashboardParent
 import com.contusfly.adapters.RecentChatListAdapter
 import com.contusfly.adapters.RecentChatSearchAdapter
@@ -48,14 +48,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import com.contusfly.R
+import com.contusfly.activities.*
 import com.contusfly.helpers.RecentChatPaginationScrollListener
+import com.contusfly.interfaces.PrivateChatReleaseListener
+import com.contusfly.privateChat.PrivateChatListActivity
+import com.contusfly.utils.SharedPreferenceManager
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
+import kotlinx.coroutines.launch
 
 /**
  * @author ContusTeam <developers@contus.in>
  * @version 1.0
  */
-class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener {
+class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,PrivateChatReleaseListener {
 
     private var recentChatClickedPos: RecentChat= RecentChat()
     private lateinit var mContext: Context
@@ -119,6 +125,8 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
     private var chatTagselectedposition: Int = 0
     private var isRestartActivity:Boolean=false
 
+    private lateinit var effectFactory:BounceEdgeEffectFactory
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
@@ -155,6 +163,8 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
         mRecentChatListType == DashboardParent.RecentChatListType.RECENT
 
     private fun initView(recentChatBinding: FragmentRecentChatBinding) {
+        effectFactory= BounceEdgeEffectFactory()
+        effectFactory.setListener(this)
         emptyView = recentChatBinding.emptyList.textEmptyView
         emptyView.text = getString(R.string.msg_no_results)
         emptyView.setTextColor(
@@ -194,14 +204,14 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
 
         clickSupport.setOnItemClickListener { _, position, _ ->
             if (mRecentChatListType == DashboardParent.RecentChatListType.RECENT && position.isValidIndex())
-                if (position > 0 && position < viewModel.recentChatList.value!!.size - 2)
+                if (position > 1 && position < viewModel.recentChatList.value!!.size - 2) // Header and Footer and Extra added item skip
                     handleOnItemClicked(position)
                 else
-                    startActivity(Intent(context, ArchivedChatsActivity::class.java))
+                    launchHeaderActivity(position)
         }
 
         clickSupport.setOnItemLongClickListener { _, position, _ ->
-            if (mRecentChatListType == DashboardParent.RecentChatListType.RECENT && position > 0 && position < viewModel.recentChatList.value!!.size - 1) {
+            if (mRecentChatListType == DashboardParent.RecentChatListType.RECENT && position > 1 && position < viewModel.recentChatList.value!!.size - 2) {
                 handleOnItemLongClicked(position)
             }
             true
@@ -211,6 +221,45 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
             handleOnSearchItemClicked(it)
         }
     }
+
+    private fun launchHeaderActivity(position:Int) {
+        if(position == 0){
+            launchPinActivity(false)
+        } else {
+            startActivity(Intent(context, ArchivedChatsActivity::class.java))
+        }
+    }
+
+    private fun launchPinActivity(isSearchPage:Boolean) {
+
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            if(isSearchPage){
+                searchActivityResultLauncher.launch(intent)
+            } else {
+                myActivityResultLauncher.launch(intent)
+            }
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            if(isSearchPage){
+                searchActivityResultLauncher.launch(intent)
+            } else {
+                myActivityResultLauncher.launch(intent)
+            }
+        }
+
+    }
+
+    private var myActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                startActivity(Intent(context, PrivateChatListActivity::class.java))
+            }
+        }
 
     private fun setObservers() {
         viewModel.updateMessageStatus.observe(
@@ -365,6 +414,13 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
             mAdapter.setArchiveStatus(it)
         }
 
+        viewModel.privateChatStatus.observe(viewLifecycleOwner) {
+            LogMessage.i(TAG, "privateChatStatus observed")
+            setRecyclerViewBounceEffectValue(it)
+        }
+
+
+
         viewModel.paginationLoader.observe(viewLifecycleOwner) {
             mAdapter.setLoader(it)
         }
@@ -428,6 +484,9 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
         chatTagAdapter = RecentChatTagAdapter(mContext, object : ListItemClickListener {
 
             override fun itemclicklistener(position: Int) {
+                if (mRecentChatListType == DashboardParent.RecentChatListType.RECENT){
+                    viewModel.getPrivateChatStatus()
+                }
                 chatTagselectedposition = position
                 getRecentChatListBasedOnTagData()
                 chatTagAdapter.updateSelectedPosition(position)
@@ -486,11 +545,34 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
 
     private fun handleOnSearchItemClicked(position: Int) {
         (activity as DashboardActivity).searchItemClickedPosition = position
-        requireContext().launchActivity<ChatActivity> {
-            putExtra(LibConstants.JID, mRecentSearchList[position].jid.returnEmptyIfNull())
-            putExtra(Constants.CHAT_TYPE, mRecentSearchList[position].chatType)
+        searchListPrivateChatUserChecking(mRecentSearchList[position].jid)
+    }
+
+
+    private fun searchListPrivateChatUserChecking(jid:String) {
+        if(ChatManager.isPrivateChat(jid)) {
+            launchPinActivity(true)
+        } else {
+            launchChatPage()
         }
     }
+
+    private fun launchChatPage(){
+        requireContext().launchActivity<ChatActivity> {
+            putExtra(LibConstants.JID, mRecentSearchList[(activity as DashboardActivity).searchItemClickedPosition].jid.returnEmptyIfNull())
+            putExtra(Constants.CHAT_TYPE, mRecentSearchList[(activity as DashboardActivity).searchItemClickedPosition].chatType)
+        }
+    }
+
+    private var searchActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                launchChatPage()
+            }
+        }
+
 
     fun updateSearchAdapter(position: Int) {
         mSearchAdapter.notifyItemChanged(position)
@@ -606,12 +688,15 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
             return
 
         if (searchKey.isEmpty()) {
+            viewModel.getPrivateChatStatus()
+            recentChatBinding.noSearchMessageView.root.visibility=View.GONE
             listRecent.setEmptyView(emptyView)
             viewModel.setSearchUserListFetching(false)
             mHandler.removeCallbacks(filterContactRunnable)
             mRecentChatListType = DashboardParent.RecentChatListType.RECENT
             setAdapterBasedOnSearchType()
         } else {
+            disablePrivateChatView()
             this.searchKey = searchKey
             viewModel.setSearchUserListFetching(true)
             mRecentChatListType = DashboardParent.RecentChatListType.SEARCH
@@ -695,12 +780,13 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
         /*
         * Hide empty view */
         if (viewModel.recentChatAdapter.isNotEmpty()) {
-            if (viewModel.recentChatAdapter.size == 3 &&
-                viewModel.recentChatAdapter[0].jid == null && viewModel.recentChatAdapter[2].jid == null
+            if (viewModel.recentChatAdapter.size == 4 &&
+                viewModel.recentChatAdapter[0].jid == null && viewModel.recentChatAdapter[3].jid == null
             ) {
                 emptyViewVisibleOrGone()
             } else {
                 recentChatBinding.noMessageView.root.visibility = View.GONE
+                recentChatBinding.privateChatUnlockView.root.visibility = View.GONE
             }
         }
         val listPositions = findAndReplaceNewItem(viewModel.recentChatAdapter, viewModel.selectedRecentChats)
@@ -715,8 +801,31 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
         var archiveChats: MutableList<RecentChat>? = null
         FlyCore.getArchivedChatList { _, _, data ->
             archiveChats = (data["data"] as MutableList<RecentChat>)
-            recentChatBinding.noMessageView.root.visibility =
-                if (archiveChats?.size == 0) View.VISIBLE else View.GONE
+            CoroutineScope(Dispatchers.Main).launch {
+                var privateChatList=ChatManager.getPrivateChatList()
+                recentChatBinding.noMessageView.root.visibility =
+                    if (archiveChats?.size == 0 && privateChatList.size == 0) View.VISIBLE else View.GONE
+                showPrivateChatView(archiveChats!!,privateChatList)
+                privateChatPullRefreshViewVisibleGone(archiveChats!!,privateChatList)
+            }
+        }
+    }
+
+    private fun privateChatPullRefreshViewVisibleGone(
+        archiveChats: MutableList<RecentChat>,
+        privateChatList: ArrayList<RecentChat>) {
+        if (archiveChats?.size == 0 && privateChatList.size == 0){
+            recentChatBinding.privateChatReleaseView.privateChatReleaseParentLayout.visibility =View.GONE
+        }
+    }
+
+    private fun showPrivateChatView(archiveChats: MutableList<RecentChat>,
+                                    privateChatList: ArrayList<RecentChat>) {
+        if(archiveChats?.size == 0 && privateChatList.size > 0){
+            recentChatBinding.privateChatUnlockView.root.visibility=View.VISIBLE
+            recentChatBinding.privateChatUnlockView.unlockChatTv.setOnClickListener {
+                launchPinActivity(false)
+            }
         }
     }
 
@@ -742,9 +851,11 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
             setEmptyView(null)
             itemAnimator = null
             adapter = mAdapter
+            edgeEffectFactory=effectFactory
             if (!BuildConfig.CONTACT_SYNC_ENABLED)
                 setScrollListener(this, layoutManager as LinearLayoutManager)
         }
+
     }
 
     private fun setScrollListener(
@@ -773,6 +884,13 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
                     return viewModel.getRecentChatListFetching()
             }
 
+            override fun hidePrivateChat() {
+                if(mAdapter!=null && mAdapter.getPrivateChatStatus()){
+                    mAdapter.setPrivateChatStatus(false)
+                    setRecyclerViewBounceEffectValue(true)
+                }
+            }
+
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if ((activity as DashboardActivity).mSearchView != null) {
@@ -783,6 +901,13 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
 
             }
         })
+    }
+
+    private fun disablePrivateChatView(){
+        if(mAdapter!=null && mAdapter.getPrivateChatStatus()){
+            mAdapter.setPrivateChatStatus(false)
+        }
+        setRecyclerViewBounceEffectValue(false)
     }
 
     fun isRecentListInitialized(): Boolean {
@@ -836,12 +961,17 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
         viewModel.filterMessageList(searchKey)
         mSearchAdapter.setRecentSearch(mRecentSearchList, searchKey)
         setAdapterBasedOnSearchType()
-        setEmptyView(mRecentSearchList)
     }
 
     private fun setEmptyView(mRecentSearchList: java.util.ArrayList<com.contusfly.models.RecentSearch>) {
-        if (mRecentSearchList.isEmpty())
+        if (mRecentSearchList.isEmpty()) {
+            recentChatBinding.privateChatReleaseView.privateChatReleaseParentLayout.visibility=View.GONE
             recentChatBinding.noMessageView.root.visibility = View.GONE
+            recentChatBinding.noSearchMessageView.root.visibility=View.VISIBLE
+        } else {
+            recentChatBinding.noSearchMessageView.root.visibility=View.GONE
+        }
+
     }
 
     private fun observeFilteredContactsList(list: List<ProfileDetailsShareModel>) {
@@ -908,6 +1038,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
         mSearchAdapter.setRecentSearch(mRecentSearchList, searchKey)
         setAdapterBasedOnSearchType()
         mSearchAdapter.notifyDataSetChanged()
+        setEmptyView(mRecentSearchList)
     }
 
     private val filterContactRunnable = Runnable {
@@ -1078,5 +1209,25 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener 
     override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
         return true
     }
+
+    override fun privateChatReleased() {
+        privateChatAdapterChangeStatus(true)
+        setRecyclerViewBounceEffectValue(false)
+    }
+
+    private fun privateChatAdapterChangeStatus(status:Boolean){
+        mAdapter.setPrivateChatStatus(status)
+    }
+
+    private fun setRecyclerViewBounceEffectValue(isBounceNeed:Boolean){
+        if(isBounceNeed) {
+            recentChatBinding.privateChatReleaseView.privateChatReleaseParentLayout.visibility=View.VISIBLE
+            effectFactory.setTranslationValue(0.6f,0.0f)
+            privateChatAdapterChangeStatus(false)
+        } else {
+            effectFactory.setTranslationValue(0.0f,0.0f)
+        }
+    }
+
 
 }

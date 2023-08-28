@@ -3,17 +3,19 @@ package com.contusfly.activities.parent
 import android.content.Intent
 import android.os.SystemClock
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.FlyCallback
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.R
-import com.contusfly.activities.BaseActivity
-import com.contusfly.activities.ChatActivity
-import com.contusfly.activities.SettingsActivity
+import com.contusfly.activities.*
 import com.contusfly.fragments.ProfileDialogFragment
 import com.contusfly.showToast
 import com.contusfly.utils.Constants
 import com.contusfly.utils.ProfileDetailsUtils
+import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.contusfly.views.CustomAlertDialog
 import com.mirrorflysdk.api.ChatManager
@@ -32,6 +34,8 @@ abstract class BaseContactActivity : BaseActivity() {
 
     protected var addParticipants = false
     protected var fromGroupInfo = false
+
+    private var profiledetails:ProfileDetails?=null
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -81,14 +85,52 @@ abstract class BaseContactActivity : BaseActivity() {
                 }
                 ft.addToBackStack(null)
                 dialogFragment.show(ft, "dialog")
-            } else{
-                startActivity(
-                    Intent(context, ChatActivity::class.java)
-                    .putExtra(LibConstants.JID, profile.jid)
-                    .putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT))
+            } else {
+                privateChatUserChecking(profile)
             }
         }
     }
+
+    private fun privateChatUserChecking(profile: ProfileDetails){
+        profiledetails=profile
+        if(ChatManager.isPrivateChat(profile.jid)){
+            launchPinActivity()
+        } else {
+            launchChatPage(profile)
+        }
+    }
+
+    private fun launchChatPage(profile: ProfileDetails){
+        if(profile!=null){
+            startActivity(
+                Intent(context, ChatActivity::class.java)
+                    .putExtra(LibConstants.JID, profile.jid)
+                    .putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT))
+        }
+    }
+
+    private fun launchPinActivity() {
+        if (SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(com.contusfly.utils.Constants.GO_TO, com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+            myActivityResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(com.contusfly.utils.Constants.GO_TO, com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+            myActivityResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var myActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                profiledetails?.let { launchChatPage(it) }
+            }
+        }
+
 
     private fun handleMultiSelection(profile: ProfileDetails) {
         if (profile.isBlocked)

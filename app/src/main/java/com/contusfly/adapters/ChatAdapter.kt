@@ -3163,6 +3163,7 @@ class ChatAdapter(
                 onclickLinkStatus: Boolean
             ): Boolean {
                 var clickedposition=mainlist.indexOf(view)
+                if(clickedposition == -1) clickedposition=mainlist.size-1
                 isLinkLongclick = onclickLinkStatus
                 listener?.onSenderItemLongClick(view, clickedposition)
                 return true
@@ -3178,6 +3179,7 @@ class ChatAdapter(
                 view: ChatMessage
             ): Boolean {
                 var clickedposition=mainlist.indexOf(view)
+                if(clickedposition == -1) clickedposition=mainlist.size-1
                 listener?.onSenderItemClicked(view, clickedposition)
                 return true
             }

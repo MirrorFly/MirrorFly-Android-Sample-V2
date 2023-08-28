@@ -94,6 +94,8 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
 
     private var phoneAuthCredential: PhoneAuthCredential? = null
 
+    private var comingPage:String=""
+
 
     /**
      * to get the api type
@@ -343,11 +345,7 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
                     progressDialog!!.dismiss()
                     countDownTimer!!.cancel()
                     dismiss()
-                    startActivityForResult(
-                        Intent(activity, PinEntryChange::class.java)
-                            .putExtra("TYPE", "forgot")
-                            .putExtra("FROM_SETTINGS", false),
-                        RequestCode.SET_NEW_PIN)
+                    launchPinChangeActivity()
                 } else {
                     progressDialog!!.dismiss()
                     LogMessage.e(TAG, Objects.requireNonNull(task.exception!!.message))
@@ -360,6 +358,27 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
                     }
                 }
             }
+    }
+
+    private fun launchPinChangeActivity(){
+
+        if (comingPage == com.contusfly.utils.Constants.PRIVATE_CHAT_LIST || comingPage == com.contusfly.utils.Constants.PRIVATE_CHAT_DISABLE) {
+
+            startActivityForResult(
+                Intent(activity, PinEntryChange::class.java)
+                    .putExtra("TYPE", "forgot")
+                    .putExtra("FROM_SETTINGS", false)
+                    .putExtra("FROM_PRIVATE_CHAT", true),
+                RequestCode.SET_NEW_PIN)
+
+        } else {
+
+            startActivityForResult(
+                Intent(activity, PinEntryChange::class.java)
+                    .putExtra("TYPE", "forgot")
+                    .putExtra("FROM_SETTINGS", false),
+                RequestCode.SET_NEW_PIN)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -426,6 +445,10 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
                 resendingCode = forceResendingToken
             }
         }
+    }
+
+    fun setComingPage(comingPage:String){
+        this.comingPage = comingPage
     }
 
     fun setCancelButton(cancel: Cancel?) {

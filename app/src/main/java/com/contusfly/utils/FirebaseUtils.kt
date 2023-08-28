@@ -29,6 +29,8 @@ import kotlin.coroutines.CoroutineContext
  */
 class FirebaseUtils : CoroutineScope {
 
+    class FirebaseUtils()
+
     /**
      * The notification data read from the Firebase.
      */

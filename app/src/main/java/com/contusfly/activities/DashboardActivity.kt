@@ -15,9 +15,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.mirrorflysdk.flycommons.ChatType
-import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
-import com.mirrorflysdk.flycommons.Features
 import com.contusfly.*
 import com.contusfly.activities.parent.DashboardParent
 import com.contusfly.adapters.ViewPagerAdapter
@@ -29,15 +26,18 @@ import com.contusfly.interfaces.RecentChatEvent
 import com.contusfly.utils.*
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.PermissionAlertDialog
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import com.mirrorflysdk.AppUtils
-import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
+import com.mirrorflysdk.flycommons.ChatType
+import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.flycommons.Result
 import dagger.android.AndroidInjection
 
@@ -379,13 +379,21 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                 recentChatFragment.updateSearchAdapter(searchItemClickedPosition)
         }
         viewModel.getRestartActivitygetrecentChatList()
+        viewModel.getPrivateChatStatus()
         viewModel.getArchivedChatStatus()
         viewModel.updateUnReadChatCount()
         validateMissedCallsCount()
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.getPrivateChatStatus()
+    }
+
     override fun onResume() {
         super.onResume()
+        SharedPreferenceManager.setBoolean(Constants.PRIVATE_CHAT, false)
+        viewModel.getPrivateChatStatus()
         viewModel.getArchivedChatStatus()
         viewModel.updateUnReadChatCount()
         callLogviewModel.resetPagination()
@@ -410,6 +418,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         }
         callLogviewModel.uploadUnSyncedCallLogs()
         ChatManager.setOnGoingChatUser("")
+        SharedPreferenceManager.setString(Constants.ON_GOING_CHAT_USER,"")
         callLogMenuShowHide()
     }
 
@@ -694,6 +703,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
 
     override fun restoreCompleted() {
         viewModel.refreshFetchedRecentChat()
+        viewModel.getPrivateChatStatus()
         viewModel.getArchivedChatStatus()
     }
 
@@ -721,6 +731,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
 
     override fun onContactSyncComplete(isSuccess: Boolean) {
         super.onContactSyncComplete(isSuccess)
+        LogMessage.v(TAG, "#contact sync  onContactSyncComplete isSuccess:$isSuccess ")
         callLogviewModel.getCallLogsList(false)
         viewModel.onContactSyncFinished(isSuccess)
         viewModel.isContactSyncSuccess.value = true

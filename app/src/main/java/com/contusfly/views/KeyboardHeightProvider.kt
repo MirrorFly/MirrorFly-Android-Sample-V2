@@ -33,13 +33,18 @@ class KeyboardHeightProvider(private val activity: Activity) : PopupWindow(activ
     }
 
     fun onResume() {
-        parentView = activity.findViewById(android.R.id.content)
-        parentView?.post {
-            resizableView.viewTreeObserver.addOnGlobalLayoutListener(getGlobalLayoutListener())
-            if (!isShowing && parentView?.windowToken != null) {
-                showAtLocation(parentView, Gravity.NO_GRAVITY, 0, 0)
+        try {
+            parentView = activity.findViewById(android.R.id.content)
+            parentView?.post {
+                resizableView.viewTreeObserver.addOnGlobalLayoutListener(getGlobalLayoutListener())
+                if (!isShowing && parentView?.windowToken != null) {
+                    showAtLocation(parentView, Gravity.NO_GRAVITY, 0, 0)
+                }
             }
+        } catch(e:Exception) {
+            LogMessage.e("keyBoardException",e.toString())
         }
+
     }
 
     fun onPause() {

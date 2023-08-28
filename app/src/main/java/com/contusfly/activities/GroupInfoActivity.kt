@@ -11,7 +11,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -26,6 +28,8 @@ import com.contusfly.R
 import com.contusfly.activities.parent.ChatParent
 import com.contusfly.adapters.GroupMembersAdapter
 import com.contusfly.databinding.ActivityGroupInfoBinding
+import com.contusfly.models.PrivateChatAuthenticationModel
+import com.contusfly.privateChat.PrivateChatEnableDisableActivity
 import com.contusfly.utils.*
 import com.contusfly.utils.ChatUtils
 import com.contusfly.utils.CommonUtils
@@ -48,12 +52,15 @@ import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.utils.ImageUtils
 import com.mirrorflysdk.utils.FilePathUtils
 import com.mirrorflysdk.utils.ImagePopUpUtils
-import com.mirrorflysdk.utils.*
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.utils.VideoRecUtils
 import com.mirrorflysdk.views.CustomToast
 import com.google.android.material.appbar.AppBarLayout
+import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -144,6 +151,8 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
 
     private var userParticipantStatusChange:Boolean = false
 
+    private var commonAlertDialog: CommonAlertDialog? = null
+
     private val isGroupMember: Boolean
             by lazy {
                 ChatManager.getAvailableFeatures().isGroupChatEnabled &&  GroupManager.isMemberOfGroup(
@@ -203,7 +212,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
      * Alert dialog action mode to handle when the dialog closed
      */
     private enum class DIALOGMODE {
-        REMOVE_GROUP, EXIT_GROUP, DELETE_GROUP, MAKE_ADMIN, REMOVE_ADMIN, REMOVE_PHOTO, REPORT_GROUP
+        REMOVE_GROUP, EXIT_GROUP, DELETE_GROUP, MAKE_ADMIN, REMOVE_ADMIN, REMOVE_PHOTO, REPORT_GROUP, UNARCHIVE
     }
 
 
@@ -220,6 +229,8 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
      * check weather the collapsed or not
      */
     private var isToolbarCollapsed = false
+
+    private var isOpenUserInfoView:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -298,7 +309,11 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
     }
 
     private fun initViews() {
-
+        SharedPreferenceManager.setString(com.contusfly.utils.Constants.ON_GOING_CHAT_USER,groupProfileDetails.jid)
+        commonAlertDialog = CommonAlertDialog(this)
+        commonAlertDialog!!.setOnDialogCloseListener(this)
+        checkPrivateChatAvailable()
+        onClickFunction()
         groupMembersAdapter.setHasStableIds(true)
         groupMediaValidation()
         binding.membersListView.apply {
@@ -315,6 +330,41 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
          */
 
         initFileObjects()
+    }
+
+    private fun checkPrivateChatAvailable() {
+        try {
+
+            if(ChatManager.getIsRecentChatOfUser(groupProfileDetails.jid)) {
+                binding.privateChatView.privateChatLayout.visibility=View.VISIBLE
+            } else {
+                binding.privateChatView.privateChatLayout.visibility=View.GONE
+            }
+
+        } catch(e : Exception){
+            com.contusfly.utils.LogMessage.e(TAG,e.toString())
+        }
+
+    }
+
+    private fun onClickFunction(){
+        binding.privateChatView.privateChatLayout.setOnClickListener {
+            if(FlyCore.isArchivedUser(groupProfileDetails.jid)){
+                makeUnArchiveAlertShow()
+            } else {
+                val intent=Intent(this, PrivateChatEnableDisableActivity::class.java)
+                intent.putExtra(LibConstants.JID, groupProfileDetails.jid)
+                startActivity(intent)
+            }
+
+        }
+    }
+
+    private fun makeUnArchiveAlertShow(){
+        dialogMode = DIALOGMODE.UNARCHIVE
+        val archiveLabel = getString(R.string.unarchive_label)
+        commonAlertDialog!!.showAlertDialog(Constants.EMPTY_STRING, getString(R.string.archive_chat_lock_title), archiveLabel,
+            getString(R.string.action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL)
     }
 
     private fun initFileObjects() {
@@ -596,6 +646,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
                     }
                 DIALOGMODE.REMOVE_PHOTO -> revokeAccessForProfileImage()
                 DIALOGMODE.REPORT_GROUP -> reportGroup()
+                DIALOGMODE.UNARCHIVE -> unArchiveUser()
                 else -> {
                     /*
                     * No Implementation needed
@@ -603,6 +654,14 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
                 }
             }
         }
+    }
+
+    private fun unArchiveUser(){
+        FlyCore.updateArchiveUnArchiveChat(groupProfileDetails.jid, false, FlyCallback { isSuccess, _, _ ->
+            if (isSuccess) {
+                //No implement
+            }
+        })
     }
 
     private fun reportGroup() {
@@ -718,8 +777,47 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
      * Open the chat view of the Group user.
      */
     private fun openChatView() {
+        isOpenUserInfoView=false
+        if(ChatManager.isPrivateChat(groupMembersList[lastKnownPosition].jid) && !ChatManager.isPrivateChat(groupProfileDetails.jid)){
+            launchPinActivity()
+        } else {
+            launchChatPage()
+        }
+    }
+
+    private fun launchChatPage(){
         ChatParent.startActivity(this, groupMembersList[lastKnownPosition].jid, ChatType.TYPE_CHAT)
     }
+
+    private fun launchPinActivity() {
+
+        if (SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(com.contusfly.utils.Constants.GO_TO, com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+            myActivityResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(com.contusfly.utils.Constants.GO_TO, com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+            myActivityResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var myActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                if(isOpenUserInfoView){
+                    launchUserInfoPage()
+                } else {
+                    launchChatPage()
+                }
+            }
+        }
+
+
+
     private fun setToolbarTitle(title: String) {
 
         collapsingToolbar.title = title
@@ -882,6 +980,16 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
      * Open Chat info view of the Group user.
      */
     private fun openInfoView() {
+        isOpenUserInfoView=true
+        if(ChatManager.isPrivateChat(groupMembersList[lastKnownPosition].jid) && !ChatManager.isPrivateChat(groupProfileDetails.jid)){
+            launchPinActivity()
+        } else {
+            launchUserInfoPage()
+        }
+
+    }
+
+    private fun launchUserInfoPage() {
         launchActivity<UserInfoActivity> {
             putExtra(AppConstants.PROFILE_DATA, groupMembersList[lastKnownPosition])
         }
@@ -931,6 +1039,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
             val index = groupMembersList.indexOfFirst { it.jid == jid }
             if (index.isValidIndex()) {
                 groupMembersList[index] = ProfileDetailsUtils.getProfileDetails(jid)!!
+                groupMembersList[index].isGroupAdmin=GroupManager.isAdmin(groupProfileDetails.jid,jid)
                 groupMembersAdapter.notifyItemChanged(index)
             }
         }
@@ -1431,4 +1540,25 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
 
         loadGroupExistence()
     }
+
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(messageEvent: PrivateChatAuthenticationModel?) {
+        if(messageEvent!!.isAutheticationShow) {
+            launchAuthPinActivity()
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+
 }
