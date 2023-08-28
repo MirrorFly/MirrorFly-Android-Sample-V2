@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".privateChat.PrivateChatEnableDisableActivity"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/common_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/padding_20">
+
+        <ImageView
+            android:layout_width="@dimen/margin_100"
+            android:layout_height="@dimen/margin_100"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/circular_shape_opacity"
+            android:layout_marginTop="@dimen/margin_20"
+            android:src="@drawable/private_chat_icon"
+            android:padding="@dimen/margin_10" />
+
+        <com.contusfly.views.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_20"
+            style="@style/TextBoldStyle"
+            android:text="@string/private_chat_info_title"/>
+
+        <com.contusfly.views.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_20"
+            style="@style/ProfileValueStyle"
+            android:text="@string/private_chat_info"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.2"
+            android:layout_marginTop="@dimen/margin_30"
+            android:background="?attr/menu_divider_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/padding_50"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/private_chat_tv"
+                    style="@style/TitleSemiBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/label_lock_chat"
+                    android:drawablePadding="@dimen/padding_15" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/switch_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:orientation="horizontal"
+                android:gravity="right | center_vertical">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/lock_chat_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:thumb="@drawable/thumb_selector"
+                    app:track="@drawable/track_selector" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.2"
+            android:background="?attr/menu_divider_color" />
+
+    </LinearLayout>
+
+</LinearLayout>

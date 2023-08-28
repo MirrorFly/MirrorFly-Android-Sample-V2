@@ -174,7 +174,7 @@ class CallConnectedViewHelper(
             /* setting Target SurfaceViews to VideoSinks  */
             CallManager.getLocalProxyVideoSink()?.setTarget(binding.viewVideoLocal)
             binding.viewVideoLocal.setMirror(true)
-
+            binding.viewVideoLocal.scaleX=1.0f
             binding.viewVideoPinned.init(CallManager.getRootEglBase()?.eglBaseContext, null)
             binding.viewVideoPinned.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
         }
@@ -432,12 +432,16 @@ class CallConnectedViewHelper(
                 binding.viewVideoLocal.setMirror(false)
                 /* we don't need mirror view for back camera */
                 binding.viewVideoPinned.setMirror(!CallUtils.getIsBackCameraCapturing())
+                binding.viewVideoLocal.scaleX=1.0f
             } else {
                 CallManager.getLocalProxyVideoSink()?.setTarget(binding.viewVideoLocal)
                 CallManager.getRemoteProxyVideoSink(CallUtils.getPinnedUserJid())?.setTarget(binding.viewVideoPinned)
                 binding.viewVideoPinned.setMirror(false)
                 /* we don't need mirror view for back camera */
                 binding.viewVideoLocal.setMirror(!CallUtils.getIsBackCameraCapturing())
+                if(!CallUtils.getIsBackCameraCapturing()){
+                    binding.viewVideoLocal.scaleX=1.0f
+                }
             }
         }
     }
@@ -620,7 +624,7 @@ class CallConnectedViewHelper(
             val profileDetails = ProfileDetailsUtils.getProfileDetails(CallUtils.getPinnedUserJid())
             val setDrawable = SetDrawable(activity, profileDetails)
             val userName = Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME))
-            val icon = setDrawable.setDrawable(userName)
+            val icon = setDrawable.setDrawableForProfile(userName)
 
             MediaUtils.loadImageWithGlideSecure(
                 activity,

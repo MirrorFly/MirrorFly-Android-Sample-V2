@@ -502,7 +502,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             archivedListRecent.layoutManager?.onRestoreInstanceState(previousState)
         }
         mAdapter.notifyDataSetChanged()
-        setEmptyView(if (viewModel.chatAdapter.size <= 2) View.VISIBLE else View.GONE)
+        setEmptyView(if (viewModel.chatAdapter.size <= 4) View.VISIBLE else View.GONE)
     }
 
     private fun observeFilteredArchiveChatList(list: List<RecentChat>) {
@@ -665,7 +665,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                 viewModel.chatList.value!!.removeAt(index)
                 viewModel.chatAdapter.removeAt(index)
                 mAdapter.notifyItemRemoved(index)
-                setEmptyView(if (viewModel.chatAdapter.size <= 2) View.VISIBLE else View.GONE)
+                setEmptyView(if (viewModel.chatAdapter.size <= 4) View.VISIBLE else View.GONE)
             }
         } catch (e: Exception) {
             LogMessage.e(TAG, e)
@@ -782,7 +782,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                 viewModel.chatList.value!!.removeAt(index)
                 viewModel.chatAdapter.removeAt(index)
                 mAdapter.notifyItemRemoved(index)
-                setEmptyView(if (viewModel.chatAdapter.size <= 2) View.VISIBLE else View.GONE)
+                setEmptyView(if (viewModel.chatAdapter.size <= 4) View.VISIBLE else View.GONE)
             }
         }
         if (isDeleteChat)

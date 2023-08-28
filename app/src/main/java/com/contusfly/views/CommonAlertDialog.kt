@@ -11,15 +11,17 @@ import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import com.contus.call.CallConstants
-import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.R
 import com.contusfly.call.groupcall.OnGoingCallPreviewActivity
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.databinding.CommonAlertDialogBinding
+import com.contusfly.databinding.PrivateChatEnableDialogLayoutBinding
 import com.contusfly.runOnUiThread
 import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
+import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+
 
 /**
  *
@@ -367,6 +369,33 @@ class CommonAlertDialog(context: Context?) {
         builder.create().show()
     }
 
+
+    fun privateChatEnableDialog(activity: Activity,dialogType: DIALOGTYPE, listener: CommonDialogClosedListener?) {
+        val dialogBuilder = AlertDialog.Builder(context,  R.style.CustomAlertDialog)
+        val inflater: LayoutInflater = activity.layoutInflater
+        val dialogBinding = PrivateChatEnableDialogLayoutBinding.inflate(inflater)
+
+        dialogBuilder.apply {
+            setCancelable(true)
+            setView(dialogBinding.root)
+        }
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        dialogBinding.viewTv.setOnClickListener {
+            alertDialog.dismiss()
+            listener?.onDialogClosed(dialogType, true)
+        }
+        dialogBinding.cancelTv.setOnClickListener {
+            alertDialog.dismiss()
+            listener?.onDialogClosed(dialogType, false)
+        }
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(alertDialog.window!!.attributes)
+        layoutParams.width = (AndroidUtils.getScreenWidth(activity) * 0.8).toInt()
+        alertDialog.window!!.attributes = layoutParams
+    }
+
+
     /**
      * The Enum DIALOGTYPE.
      */
@@ -393,7 +422,7 @@ class CommonAlertDialog(context: Context?) {
     enum class DialogAction {
         CLEAR_CONVERSATION, DELETE_CHAT, CAMERA, GALLERY, STATUS_BUSY, UNBLOCK, BLOCK, SMART_REPLY_UNBLOCK, SMART_REPLY_BUSY,
         SET_PIN_ALERT, INVITE, STATUS_BUSY_KEYBOARD, STATUS_BUSY_EMOJI,FORWARD_STATUS_BUSY, SAFE_CHAT_ENABLED,
-        SAFE_CHAT_ENABLE_APP_LOCK, REPORT_MESSAGES
+        SAFE_CHAT_ENABLE_APP_LOCK, REPORT_MESSAGES, UNARCHIVE
     }
 
     /**

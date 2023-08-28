@@ -84,7 +84,7 @@ class SetDrawable : BaseDrawable {
     private fun getProfileNameIcon(username: String): String {
         var profileLetters = username.substring(0, 2)
         if (isEmojiOnly(profileLetters) == true) {
-            profileLetters = if (isEmojiOnly(username.substring(0, 4)) == true) username.substring(0, 4) else username.substring(0, 3)
+            profileLetters = if (username.length>=4 && isEmojiOnly(username.substring(0, 4)) == true) username.substring(0, 4) else username.substring(0, 3)
         }
         return profileLetters.toUpperCase()
     }

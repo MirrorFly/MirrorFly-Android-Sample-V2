@@ -138,6 +138,12 @@
 
             </RelativeLayout>
 
+            <include
+                android:id="@+id/private_chat_view"
+                layout="@layout/private_chat_toggle_layout">
+
+            </include>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

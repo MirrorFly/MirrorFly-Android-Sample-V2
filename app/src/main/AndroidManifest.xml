@@ -32,14 +32,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-
-    <!-- android 13 permission-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- android 13 permission -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <!-- Required to maintain app compatibility. -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- Required to maintain app compatibility. -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
@@ -67,18 +65,25 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:label,android:allowBackup">
+        <activity
+            android:name=".privateChat.PrivateChatListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".privateChat.PrivateChatEnableDisableActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SynchronizeContactActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SelectContactMessageActivity"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".chatTag.activities.AddPeopleActivity"
             android:exported="false" />
@@ -132,13 +137,13 @@
         <activity android:name=".activities.GroupMessageInfoActivity" />
         <activity
             android:name=".activities.BiometricActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.PinSetting" />
         <activity android:name=".activities.PinEntryChange" />
         <activity
             android:name=".activities.PinActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.GroupInfoActivity"
@@ -241,6 +246,7 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
+            android:lockTaskMode="if_whitelisted"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true"
@@ -249,7 +255,6 @@
             android:taskAffinity="call.video"
             android:turnScreenOn="true"
             android:windowSoftInputMode="stateHidden"
-            android:lockTaskMode="if_whitelisted"
             tools:targetApi="R" />
         <activity
             android:name=".call.calllog.CallHistoryDetailActivity"
@@ -259,7 +264,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCe4m08a3eMvInU8LBxAjAyEIyG-Kj_Ayw" />
-
         <meta-data
             android:name="com.google.android.geo.API_THUMP_KEY"
             android:value="AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ" />
@@ -316,7 +320,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".EmailContactSyncService"
             android:enabled="true"

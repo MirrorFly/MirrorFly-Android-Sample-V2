@@ -3,24 +3,20 @@ package com.contusfly.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.contusfly.BuildConfig
+import com.contusfly.*
 import com.mirrorflysdk.flycommons.ChatType
-import com.contusfly.getChatType
-import com.contusfly.getDisplayName
-import com.contusfly.isDeletedContact
-import com.contusfly.isUnknownContact
-import com.contusfly.isValidIndex
 import com.contusfly.models.ProfileDetailsShareModel
 import com.contusfly.utils.Constants
 import com.contusfly.utils.ContusContactUtils
 import com.contusfly.utils.ProfileDetailsUtils
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.RecentChat
+import com.mirrorflysdk.flycommons.LogMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.ArrayList
 import javax.inject.Inject
 
 class ForwardMessageViewModel @Inject constructor() : ViewModel() {
@@ -66,12 +62,17 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
         return BuildConfig.CONTACT_SYNC_ENABLED || isSearchFetching
     }
 
-    fun loadForwardChatList(jid: String?) {
+    fun loadForwardChatList(jid: String?, privateChatPair : Pair<Boolean,String> = Pair(false,Constants.EMPTY_STRING)) {
+        LogMessage.d(TAG, "#ForwardMessage loadForwardChatList()")
         viewModelScope.launch(Dispatchers.IO) {
             GroupManager.getAllGroups(false) { isSuccess, _, data ->
                 groupList = mutableListOf()
                 if (isSuccess) {
-                    groupList!!.addAll(ProfileDetailsUtils.sortProfileList(data[Constants.SDK_DATA] as ArrayList<ProfileDetails>))
+                    LogMessage.d(TAG, "#ForwardMessage loadForwardChatList() getAllGroups isSuccess")
+                    var groupFilterList=loadPrivateChatGroupList(data[Constants.SDK_DATA] as MutableList<ProfileDetails>,privateChatPair)
+                    groupList!!.addAll(ProfileDetailsUtils.sortProfileList(groupFilterList))
+
+                   // groupList!!.addAll(ProfileDetailsUtils.sortProfileList(data[Constants.SDK_DATA] as ArrayList<ProfileDetails>))
                 }
                 isForwardChatListLoaded(jid)
             }
@@ -80,12 +81,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
                 recentList = mutableListOf()
                 if (isSuccess) {
                     val recentChatList = data[Constants.SDK_DATA] as MutableList<RecentChat>
-                    recentChatList.filter { !it.isDeletedContact() }.take(3).forEach {
-                        val profileDetails = ProfileDetailsUtils.getProfileDetails(it.jid)
-                        profileDetails?.let {
-                            recentList!!.add(it)
-                        }
-                    }
+                    loadrecentChatList(recentChatList,privateChatPair)
                 }
                 isForwardChatListLoaded(jid)
             }
@@ -93,12 +89,69 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    private fun loadPrivateChatGroupList(
+        groupList: MutableList<ProfileDetails>,
+        privateChatPair: Pair<Boolean, String>
+    ): MutableList<ProfileDetails> {
+
+        for (i in groupList.indices.reversed()) {
+            var profile=groupList.get(i)
+            var isPrivateChat = ChatManager.isPrivateChat(profile.jid)
+            if(!privateChatPair.first && isPrivateChat) {
+                groupList.removeAt(i)
+            }
+
+        }
+
+        return groupList!!
+    }
+
+    private fun loadPrivateChatList(senderJid: String): MutableList<ProfileDetails> {
+         recentList = mutableListOf()
+        var privateChatList=ChatManager.getPrivateChatList()
+        privateChatList.forEach { recentChat ->
+            if(senderJid != recentChat.jid){
+                val profileDetails = ProfileDetailsUtils.getProfileDetails(recentChat.jid)
+                profileDetails?.let {
+                    recentList!!.add(it)
+                }
+            }
+        }
+
+        return recentList!!
+    }
+
+
+    private fun loadrecentChatList(
+        recentChatList: MutableList<RecentChat>,
+        privateChatPair: Pair<Boolean, String>
+    ): MutableList<ProfileDetails> {
+
+        if(privateChatPair.first.isTrue()) recentList=loadPrivateChatList(privateChatPair.second)
+
+        if(recentList!!.size < 3) {
+            recentChatList.filter { !it.isDeletedContact() }.take(3 - this.recentList!!.size).forEach { recentChat ->
+                val profileDetails = ProfileDetailsUtils.getProfileDetails(recentChat.jid)
+                profileDetails?.let {
+                    this.recentList!!.add(it)
+                }
+            }
+        } else {
+            recentList=recentList!!.take(3) as MutableList<ProfileDetails>
+        }
+
+        return recentList!!
+    }
+
+
     private suspend fun checkAndLoadUserList(jid: String?) {
+        LogMessage.d(TAG, "#ForwardMessage checkAndLoadUserList()")
         if (BuildConfig.CONTACT_SYNC_ENABLED) {
             val contusContacts = ContusContactUtils.getContusContacts()
             FlyCore.getRegisteredUsers(false) { isSuccess, _, data ->
                 friendsList = mutableListOf()
                 if (isSuccess) {
+                    LogMessage.d(TAG, "#ForwardMessage checkAndLoadUserList() getRegisteredUsers isSuccess")
                     val profileDetails = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
                     profileDetails.forEach { contact ->
                         val index = contusContacts.indexOfFirst { it.jid == contact.jid }
@@ -117,14 +170,16 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     }
 
     fun loadUserList() {
+        LogMessage.d(TAG, "#ForwardMessage loadUserList() ")
         if (lastPageFetched())
             return
-        fetchingError.value = false
+        fetchingError.postValue(false)
         viewModelScope.launch(Dispatchers.IO) {
             currentPage += 1
             setUserListFetching(true)
             FlyCore.getUserList(currentPage, resultPerPage) { isSuccess, _, data ->
                 if (isSuccess) {
+                    LogMessage.d(TAG, "#ForwardMessage getUserList isSuccess")
                     val profileList = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
                     totalPage = data[Constants.TOTAL_PAGES] as Int
                     val userListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileList, false)
@@ -157,6 +212,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     fun lastPageFetched() = currentPage >= totalPage
 
     private fun isForwardChatListLoaded(jid: String?) {
+        LogMessage.d(TAG, "#ForwardMessage isForwardChatListLoaded() ")
         if (groupList != null && recentList != null && (!BuildConfig.CONTACT_SYNC_ENABLED || friendsList != null)) {
             loadProfileDetailsShareModel(jid)
             if (!BuildConfig.CONTACT_SYNC_ENABLED)
@@ -165,6 +221,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun loadProfileDetailsShareModel(jid: String?) {
+        LogMessage.d(TAG, "#ForwardMessage loadProfileDetailsShareModel() ")
         shareModelList = mutableListOf()
         recentList!!.forEach { profileDetail ->
             val profileDetailsShareModel = ProfileDetailsShareModel("recentChat", profileDetail)
@@ -187,11 +244,12 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
             val profileDetailsShareModel = ProfileDetailsShareModel(profileDetail.getChatType(), profileDetail)
             if (!profileDetail.isAdminBlocked) shareModelList.add(profileDetailsShareModel)
         }
-
+        LogMessage.d(TAG, "#ForwardMessage loadProfileDetailsShareModel() shareModelList${shareModelList.size}")
         notifyResults(jid, shareModelList)
     }
 
     private fun notifyResults(jid: String?, shareModelList: MutableList<ProfileDetailsShareModel>) {
+        LogMessage.d(TAG, "#ForwardMessage  notifyResults")
         if (jid == null) {
             if (BuildConfig.CONTACT_SYNC_ENABLED){
                 shareModelListLiveData.postValue(shareModelList)
@@ -221,7 +279,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
             val profileDetailsShareModel = ProfileDetailsShareModel(profileDetail.getChatType(), profileDetail)
             if (!profileDetail.isAdminBlocked) profileShareModelList.add(profileDetailsShareModel)
         }
-
+        LogMessage.d(TAG, "#ForwardMessage  filterUserList")
         return profileShareModelList
     }
 
@@ -238,7 +296,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
                 ProfileDetailsShareModel(profileDetail.getChatType(), profileDetail)
             if (!profileDetail.isAdminBlocked) profileShareModelList.add(profileDetailsShareModel)
         }
-
+        LogMessage.d(TAG, "#ForwardMessage  filterSearchList")
         return profileShareModelList
     }
 
@@ -251,18 +309,21 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     }
 
     fun removeProfileDetails(userId: String) {
+        LogMessage.d(TAG, "#ForwardMessage  removeProfileDetails userId:$userId")
         val index = getPositionOfProfile(userId)
         if (index.isValidIndex())
             shareModelList.removeAt(index)
     }
 
     fun removeSearchProfileDetails(userId: String) {
+        LogMessage.d(TAG, "#ForwardMessage  removeSearchProfileDetails userId:$userId")
         val index = searchList.indexOfFirst { it.profileDetails.jid == userId }
         if (index.isValidIndex())
             searchList.removeAt(index)
     }
 
     fun searchProfileList(searchString: String) {
+        LogMessage.d(TAG, "#ForwardMessage  searchProfileList searchString:$searchString")
         if (BuildConfig.CONTACT_SYNC_ENABLED){
             searchList.clear()
             searchList.addAll(shareModelList.filter {
@@ -289,6 +350,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     }
 
     fun searchUserList(searchString: String) {
+        LogMessage.d(TAG, "#ForwardMessage  searchProfileList searchString:$searchString")
         if (searchLastPageFetched())
             return
         addSearchLoader.postValue(true)
@@ -298,6 +360,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
             setSearchUserListFetching(true)
             FlyCore.getUserList(currentSearchPage, resultPerPage, searchString) { isSuccess, _, data ->
                 if (isSuccess) {
+                    LogMessage.d(TAG, "#ForwardMessage  searchProfileList getUserList: isSuccess")
                     val profileList = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
                     totalSearchPage = data[Constants.TOTAL_PAGES] as Int
                     val searchListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileList, false)
@@ -330,6 +393,7 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     fun searchLastPageFetched() = currentSearchPage >= totalSearchPage
 
     private fun resetSearch() {
+        LogMessage.d(TAG, "#ForwardMessage  resetSearch")
         currentSearchPage = 0
         totalSearchPage = 1
         setSearchUserListFetching(false)

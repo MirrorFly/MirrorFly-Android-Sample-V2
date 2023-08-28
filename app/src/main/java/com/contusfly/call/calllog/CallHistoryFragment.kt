@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -36,9 +37,6 @@ import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.*
 import com.contusfly.TAG
-import com.contusfly.activities.ChatActivity
-import com.contusfly.activities.DashboardActivity
-import com.contusfly.activities.UserListActivity
 import com.contusfly.call.CallConfiguration
 import com.contusfly.call.CallPermissionUtils
 import com.contusfly.call.groupcall.utils.CallUtils
@@ -61,10 +59,10 @@ import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import com.contusfly.R
-import com.contusfly.activities.BaseActivity
-import com.contusfly.activities.NewContactsActivity
+import com.contusfly.activities.*
 import com.contusfly.utils.ChatUtils
 import com.contusfly.utils.ItemClickSupport
+import com.contusfly.utils.SharedPreferenceManager
 
 class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.CommonDialogClosedListener, CallLogManager.CallLogActionListener {
 
@@ -161,6 +159,14 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
         }
     }
 
+    private fun launchCall(lastCallAction: String) {
+        if(lastCallAction == CallType.AUDIO_CALL) {
+            launchAudioCall()
+        } else {
+            launchVideoCall()
+        }
+    }
+
     private fun launchVideoCall() {
         if(CallManager.isNotificationPermissionsGranted()) {
             callPermissionUtils.videoCall()
@@ -200,6 +206,14 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
+
+    private var toUserJid:String=""
+
+    private var callType: String = ""
+    private var groupId: String  = ""
+    private var isBlocked: Boolean = false
+    private var isAdminBlocked: Boolean = false
+    private var jidList= java.util.ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         callHistoryBinding = FragmentCallHistoryBinding.inflate(inflater, container, false)
@@ -600,14 +614,68 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
             if (view?.id == R.id.img_call_type) {
                 makeJanusCall(toUser, callLog, profileDetails, false)
             } else {
-                startActivity(
-                    Intent(activity, ChatActivity::class.java)
-                        .putExtra(LibConstants.JID, toUser)
-                        .putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT)
-                )
+                privateChatUserChecking(toUser)
             }
         }
     }
+
+    private fun launchChatPage(toUser: String) {
+        startActivity(
+            Intent(activity, ChatActivity::class.java)
+                .putExtra(LibConstants.JID, toUser)
+                .putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT)
+        )
+    }
+
+    private fun privateChatUserChecking(toUser: String) {
+        toUserJid=toUser
+        if(ChatManager.isPrivateChat(toUser)) {
+            launchPinActivity(true)
+        } else {
+            launchChatPage(toUser)
+        }
+    }
+
+    private fun launchPinActivity(isChatPage: Boolean) {
+        if (SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(com.contusfly.utils.Constants.GO_TO, com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+            if(isChatPage){
+                myActivityResultLauncher.launch(intent)
+            } else {
+                callActivityResultLauncher.launch(intent)
+            }
+
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(com.contusfly.utils.Constants.GO_TO, com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+            if(isChatPage){
+                myActivityResultLauncher.launch(intent)
+            } else {
+                callActivityResultLauncher.launch(intent)
+            }
+        }
+
+    }
+
+    private var myActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                launchChatPage(toUserJid)
+            }
+        }
+
+    private var callActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+               launchCall(lastCallAction)
+            }
+        }
+
 
     private fun makeJanusCall(jid: String, callLog: CallLog, profileDetails: ProfileDetails?, isGroupCall: Boolean) {
         if (isGroupCall) {
@@ -696,13 +764,12 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
                     ?: "", false
             )
             if (CallManager.isAudioCallPermissionsGranted(skipBlueToothPermission = false)) {
-                launchAudioCall()
+                launchCall(lastCallAction)
             } else {
                 MediaPermissions.requestAudioCallPermissions(
                     requireActivity(),
                     permissionAlertDialog,
-                    requestCallPermissions
-                )
+                    requestCallPermissions)
             }
         } else if (callType == CallType.VIDEO_CALL) {
             CallUtils.setIsCallStarted(CallType.VIDEO_CALL)
@@ -711,7 +778,7 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
                     ?: "", false
             )
             if (CallManager.isVideoCallPermissionsGranted(skipBlueToothPermission = false)) {
-                launchVideoCall()
+                launchCall(lastCallAction)
             } else {
                 MediaPermissions.requestVideoCallPermissions(
                     requireActivity(),
@@ -725,6 +792,9 @@ class CallHistoryFragment : Fragment(), CoroutineScope, CommonAlertDialog.Common
         if (!isBlocked)
             CallUtils.setIsCallStarted(null)
     }
+
+
+
 
     /**
      * Displays an alert dialog to get the confirmation from the user to clear

@@ -8,7 +8,9 @@ import androidx.core.app.NotificationManagerCompat
 import com.contusfly.BuildConfig
 import com.contusfly.call.CallNotificationUtils
 import com.contusfly.utils.Constants
+import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SharedPreferenceManager
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.models.ChatMessage
 
 object AppNotificationManager {
@@ -30,10 +32,25 @@ object AppNotificationManager {
             if (BuildConfig.HIPAA_COMPLIANCE_ENABLED)
                 NotificationBuilder.createSecuredNotification(context, chatMessage)
             else
-                NotificationBuilder.createNotification(context, chatMessage)
+                privateChatNotificationValidate(context, chatMessage)
+
         } else {
             NotificationBuilderBelow24.createNotification(context, chatMessage)
         }
+    }
+
+    private fun privateChatNotificationValidate(context: Context, chatMessage: ChatMessage) {
+        try {
+            val chatJid = chatMessage.getChatUserJid()
+            if(ChatManager.isPrivateChat(chatJid)) {
+                NotificationBuilder.privateChatNotification(context, chatMessage)
+            } else {
+                NotificationBuilder.createNotification(context, chatMessage)
+            }
+        } catch(e:Exception){
+            LogMessage.e("Notification_Exception",e.toString())
+        }
+
 
     }
 

@@ -159,6 +159,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private var enableEdt = true
     var isFromQuickShare = false
 
+    var isFileChooser: Boolean = false
+
     protected var supportedFormats = listOf(*AppConstants.supportedFormats)
 
     protected var selectedOptionName: String? = null
@@ -437,9 +439,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         val readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
         if(readPermissionGranted) {
-            PickFileUtils.pickFile(this)
+            fileUpload()
         } else if(ChatUtils.checkMediaPermission(this, Manifest.permission.POST_NOTIFICATIONS)){
-            PickFileUtils.pickFile(this)
+            fileUpload()
         }
     }
 
@@ -827,7 +829,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
     }
 
-    fun setScrollListener(
+    private fun setScrollListener(
         layoutManager: LinearLayoutManager) {
 
         listChats.addOnScrollListener(object : MessagePaginationScrollListener(layoutManager) {
@@ -1367,9 +1369,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
 
     private fun updateCopyMessageMenu(menu: Menu) {
-        if (clickedMessages.size > 0) {
-            val chat = getMessagebyID(clickedMessages[0])
-            menu.get(R.id.action_copy).isVisible = chat != null && chat.messageType == MessageType.TEXT || (null != chat && chat.mediaChatMessage.mediaCaptionText != null && !chat.mediaChatMessage.mediaCaptionText.equals(""))
+        try {
+            if (clickedMessages.size > 0) {
+                val chat = getMessagebyID(clickedMessages[0])
+                menu.get(R.id.action_copy).isVisible = chat != null && chat.messageType == MessageType.TEXT || (null != chat && chat.mediaChatMessage.mediaCaptionText != null && !chat.mediaChatMessage.mediaCaptionText.equals(""))
+            }
+        } catch(e:Exception){
+            LogMessage.e(TAG,e.toString())
         }
     }
 
@@ -1811,7 +1817,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             if (MediaPermissions.isReadFilePermissionAllowed(this)
                 && MediaPermissions.isWriteFilePermissionAllowed(this)
             )
-                PickFileUtils.pickFile(this)
+                fileUpload()
             else
                 MediaPermissions.requestStorageAccess(
                     this,
@@ -1821,7 +1827,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             closeControls()
         } else {
             if (ChatUtils.checkMediaPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
-                PickFileUtils.pickFile(this)
+                fileUpload()
             } else {
                 MediaPermissions.requestNotificationPermission(
                     this,
@@ -1830,6 +1836,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 closeControls()
             }
         }
+    }
+
+    private fun fileUpload() {
+        isFileChooser=true
+        PickFileUtils.pickFile(this)
     }
 
     /**
@@ -1885,8 +1896,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     private fun selectAudioFileFromStorage() {
+        isFileChooser = true
         val manufacturer = Build.MANUFACTURER.toUpperCase(Locale.getDefault())
-
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
         val audioListIntent = Intent(Intent.ACTION_GET_CONTENT)
         audioListIntent.type = Constants.AUDIO_FILE
@@ -1927,8 +1938,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 }
 
             }
-            else -> showToast("No suitable app found!")
+            else -> noAudioFound()
         }
+    }
+
+    private fun noAudioFound(){
+        isFileChooser = false
+        showToast("No suitable app found!")
     }
 
     private fun openCustomOSAudioSelection() {
@@ -2106,6 +2122,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             if (position != -1) {
                 isUnreadSeparatorIsAvailable = true
                 message = mainList[position].messageTextContent
+                unReadMessageScrollPosition(position)
             }
             if (position != -1 && lastCompletelyVisibleItemPosition == 0)
                 listChats.scrollToPosition(position + 1)
@@ -2118,6 +2135,23 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             return Triple(false, 0, "")
         }
         return Triple(isUnreadSeparatorIsAvailable, position, message)
+    }
+
+    private fun unReadMessageScrollPosition(position: Int) {
+        try {
+            if(mainList.size > position){
+                val sublist= mainList.subList(position, mainList.size)
+                if(sublist.size>3) {
+                    listChats.scrollToPosition(position + 3)
+                } else {
+                    listChats.scrollToPosition(position + 1)
+                }
+            } else {
+                listChats.scrollToPosition(position + 1)
+            }
+        } catch(e:Exception) {
+            LogMessage.e(TAG,e.toString())
+        }
     }
 
     protected fun handleUnreadMessageSeparator(remove: Boolean) {
@@ -2299,6 +2333,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             hideKeyboard()
             launchActivity<ForwardMessageActivity> {
                 putStringArrayListExtra(Constants.CHAT_MESSAGE, forwardMessageList)
+                putExtra(Constants.FROMUSER, chat.toUser)
             }
         }
         return true
@@ -2307,6 +2342,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     fun handleOnResume() {
         try {
             ChatManager.setOnGoingChatUser(chat.toUser)
+            SharedPreferenceManager.setString(Constants.ON_GOING_CHAT_USER,chat.toUser)
             selectedMessageIdForReply = ReplyHashMap.getReplyId(chat.toUser)
             sendMessageSeenStatus()
             NotificationManagerCompat.from(context!!).cancel(Constants.NOTIFICATION_ID)
@@ -2451,6 +2487,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private fun exportChatEmail(){
         isEmailChatClicked = false
+        isFileChooser=true
         FlyCore.exportChatConversationToEmail(chat.toUser, emptyList())
     }
 
@@ -2795,7 +2832,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private fun searchKeyObserver(){
 
-        parentViewModel.searchkeydata.observe(this) { keyword ->
+        parentViewModel.searchKeyData.observe(this) { keyword ->
             try{
                 searchedPrev=""
                 searchedNxt=""
@@ -2977,7 +3014,7 @@ override fun onAttachDocument() {
 
     override fun onDestroy() {
         super.onDestroy()
-        parentViewModel.searchkeydata.removeObservers(this)
+        parentViewModel.searchKeyData.removeObservers(this)
     }
 
     open fun bindUserMention(mentionConfig: UserMentionConfig, handler: OnMentionEventListener) {

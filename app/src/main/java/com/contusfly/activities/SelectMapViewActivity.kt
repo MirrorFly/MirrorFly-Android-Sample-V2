@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
+import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.utils.LocationFinder
 import com.contusfly.utils.LocationUtils
 import com.contusfly.utils.UserInterfaceUtils
@@ -24,6 +25,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.IOException
 import java.util.*
 
@@ -68,6 +72,7 @@ class SelectMapViewActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
 
     override fun onStop() {
         super.onStop()
+        EventBus.getDefault().unregister(this)
         locationFinder!!.stop()
     }
 
@@ -184,4 +189,18 @@ class SelectMapViewActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     override fun onLocationFixFailed(whatHappened: String) {
         //Have to implement.
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(messageEvent: PrivateChatAuthenticationModel?) {
+        if(messageEvent!!.isAutheticationShow) {
+            launchAuthPinActivity()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
 }

@@ -206,7 +206,16 @@ fun RecentChat.isEmailContact() : Boolean{
     } else false
 }
 
-fun RecentChat.getDisplayName(): String = (if (isSingleChat() && BuildConfig.CONTACT_SYNC_ENABLED) nickName else profileName) ?: jid
+fun RecentChat.getDisplayName(): String {
+    return if (BuildConfig.CONTACT_SYNC_ENABLED) {
+        when {
+            isUnknownContact() || nickName.isNullOrBlank() -> Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(jid))
+            else -> nickName
+        }
+    } else {
+        profileName ?: jid
+    }
+}
 
 fun ChatMessage.isContactMessage() = messageType == com.mirrorflysdk.flycommons.models.MessageType.CONTACT
 
@@ -329,7 +338,7 @@ fun CustomDrawable.getDefaultDrawable(recentChat: RecentChat): Drawable {
             if (profileDetails?.isBlockedMe!! || profileDetails.isAdminBlocked || profileDetails.isDeletedContact()) {
                 this.context.getDefaultDrawable(profileDetails.getChatType())
             } else {
-                SetDrawable(context, profileDetails).setDrawable(profileDetails.getDisplayName())!!
+                SetDrawable(context, profileDetails).setDrawableForProfile(profileDetails.getDisplayName())!!
             }
         }
     }
@@ -341,7 +350,7 @@ fun CustomDrawable.getDefaultDrawable(profileDetails: ProfileDetails): Drawable 
         profileDetails.isGroupProfile -> this.context.getDefaultDrawable(ChatType.TYPE_GROUP_CHAT)
         else -> {
             if(!profileDetails.isBlockedMe && !profileDetails.isAdminBlocked && !profileDetails.isDeletedContact() && profileDetails.nickName != null)
-                SetDrawable(context, profileDetails).setDrawable(profileDetails.getDisplayName())!!
+                SetDrawable(context, profileDetails).setDrawableForProfile(profileDetails.getDisplayName())
             else
                 this.context.getDefaultDrawable(profileDetails.getChatType())
         }
@@ -522,7 +531,6 @@ fun ProfileDetails.getDisplayName() : String {
     return if (BuildConfig.CONTACT_SYNC_ENABLED) {
         when {
             jid.equals(getCurrentUserJid()) -> Constants.YOU
-            isDeletedContact() -> Constants.DELETED_USER
             isUnknownContact() || nickName.isNullOrBlank() -> Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(jid))
             else -> nickName
         }

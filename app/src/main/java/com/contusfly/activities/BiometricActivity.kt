@@ -7,6 +7,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.TaskStackBuilder
 import com.an.biometric.BiometricCallback
@@ -15,11 +18,12 @@ import com.an.biometric.BiometricManager.BiometricBuilder
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.AppLifecycleListener
 import com.contusfly.R
+import com.contusfly.TAG
+import com.contusfly.privateChat.PrivateChatListActivity
 import com.contusfly.utils.Constants
 import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SafeChatUtils
 import com.contusfly.utils.SharedPreferenceManager
-import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.ChatManager.closeXMPPConnection
 import com.mirrorflysdk.api.ChatManager.pinActivity
 import com.google.android.material.snackbar.Snackbar
@@ -41,6 +45,8 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
             AppLifecycleListener.pinActivityShowing = isShow
         }
     }
+
+    private var isSwitchedToPin:Boolean=false
 
 
     /**
@@ -147,7 +153,6 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
             Toast.makeText(applicationContext, getString(R.string.biometric_failure), Toast.LENGTH_LONG)
                 .show()
             mBiometricManager?.cancelAuthentication()
-            finish()
             pinForDashBoard()
         }
     }
@@ -165,6 +170,7 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
 
     override fun onStart() {
         super.onStart()
+        if(!isSwitchedToPin)
         showBiometricDialog()
     }
 
@@ -201,16 +207,24 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
     private fun checkAndRedirect() {
         when {
             "CHATVIEW" == goTo -> {
-                startActivities(TaskStackBuilder.create(this)
-                    .addNextIntent(
-                        Intent(this, DashboardActivity::class.java).setAction(Intent.ACTION_VIEW)
-                    )
-                    .addNextIntent(
-                        Intent(this, ChatActivity::class.java)
-                            .setAction(Intent.ACTION_VIEW).putExtra(LibConstants.JID, jid)
-                            .putExtra(Constants.CHAT_TYPE, chatType)
-                    ).intents
-                )
+                launchChatView()
+            }
+            Constants.PRIVATE_CHAT_DISABLE == goTo -> {
+
+                intent.putExtra(Constants.PRIVATE_CHAT_TYPE, Constants.PRIVATE_CHAT_DISABLE)
+                setResult(RESULT_OK,intent)
+                finish()
+            }
+
+            Constants.PRIVATE_CHAT_ENABLE == goTo -> {
+
+                intent.putExtra(Constants.PRIVATE_CHAT_TYPE, Constants.PRIVATE_CHAT_ENABLE)
+                setResult(RESULT_OK,intent)
+                finish()
+            }
+
+            Constants.PRIVATE_CHAT_LIST == goTo -> {
+                setResult(RESULT_OK,intent)
                 finish()
             }
             SafeChatUtils.updateSafeChat != SafeChatUtils.SafeChatUpdate.NONE-> {
@@ -233,6 +247,32 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
         }
     }
 
+    private fun launchChatView(){
+
+        if(intent.hasExtra(Constants.IS_SHOW_PRIVATE_CHAT_LIST)){
+
+            startActivities(
+                TaskStackBuilder.create(this)
+                    .addNextIntent(Intent(this, DashboardActivity::class.java).setAction(Intent.ACTION_VIEW))
+                    .addNextIntent(Intent(this, PrivateChatListActivity::class.java).setAction(Intent.ACTION_VIEW))
+                    .addNextIntent(Intent(this, ChatActivity::class.java).setAction(Intent.ACTION_VIEW)
+                        .putExtra(LibConstants.JID, jid).putExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE, chatType)).intents)
+            finish()
+        } else {
+            startActivities(TaskStackBuilder.create(this)
+                .addNextIntent(
+                    Intent(this, DashboardActivity::class.java).setAction(Intent.ACTION_VIEW)
+                )
+                .addNextIntent(
+                    Intent(this, ChatActivity::class.java)
+                        .setAction(Intent.ACTION_VIEW).putExtra(LibConstants.JID, jid)
+                        .putExtra(Constants.CHAT_TYPE, chatType)
+                ).intents
+            )
+            finish()
+        }
+    }
+
     override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
         Toast.makeText(applicationContext, helpString, Toast.LENGTH_LONG).show()
     }
@@ -242,7 +282,6 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
         if (errorCode == BiometricPrompt.BIOMETRIC_ERROR_LOCKOUT) {
             val upTimeWhenCallBackReceive = SystemClock.uptimeMillis()
             SharedPreferenceManager.setInt("Uptime", upTimeWhenCallBackReceive.toInt())
-            finish()
             pinForDashBoard()
         } else if (errorCode == BiometricPrompt.BIOMETRIC_ERROR_LOCKOUT_PERMANENT) {
             mBiometricManager?.cancelAuthentication()
@@ -278,10 +317,51 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
         intent.putExtra(GOTOCONST, goTo)
         intent.putExtra(LibConstants.JID, jid)
         intent.putExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE, chatType)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        applicationContext.startActivity(intent)
+        if(goTo == Constants.PRIVATE_CHAT_DISABLE || goTo == Constants.PRIVATE_CHAT_LIST || goTo == Constants.PRIVATE_CHAT_ENABLE){
+        myActivityResultLauncher.launch(intent)
+        isSwitchedToPin=true
+        } else {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    private var myActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK && result.data!=null) {
+                setPrivateChatEnableOrDisable(result.data!!)
+            } else {
+                finish()
+            }
+        }
+
+    private fun setPrivateChatEnableOrDisable(data: Intent) {
+        try {
+            var privateChatType=data.getStringExtra(Constants.PRIVATE_CHAT_TYPE)
+            if(privateChatType == Constants.PRIVATE_CHAT_ENABLE) {
+                setResultLaunchType(Constants.PRIVATE_CHAT_ENABLE)
+            } else if(privateChatType == Constants.PRIVATE_CHAT_DISABLE) {
+                setResultLaunchType(Constants.PRIVATE_CHAT_DISABLE)
+            } else if(privateChatType == Constants.PRIVATE_CHAT_LIST) {
+                setResultLaunchType(Constants.PRIVATE_CHAT_LIST)
+            } else {
+                finish()
+            }
+        } catch(e: Exception) {
+            LogMessage.e(TAG,e.toString())
+        }
+    }
+
+    private fun setResultLaunchType(type:String){
+        val intent=Intent()
+        intent.putExtra(Constants.PRIVATE_CHAT_TYPE,type)
+        setResult(RESULT_OK,intent)
         finish()
     }
+
 
     private fun getIntentExtras() {
         if (intent.hasExtra(GOTOCONST)) {
@@ -310,5 +390,17 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
     override fun onBackPressed() {
         SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.BACK_PRESS, false)
         ActivityCompat.finishAffinity(this)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val intentKey = com.contusfly.utils.Constants.GO_TO
+        if (intent != null && intent.hasExtra(intentKey)) {
+            goTo = intent.getStringExtra(intentKey).toString()
+            if (goTo.equals("CHATVIEW", ignoreCase = true)) {
+                jid = intent.getStringExtra(LibConstants.JID)
+                chatType = intent.getStringExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE)
+            }
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.contusfly.call.groupcall.helpers
 
 import android.Manifest
 import android.content.DialogInterface
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
@@ -35,7 +37,7 @@ class CallOptionsViewHelper(
     private val activityOnClickListener: ActivityOnClickListener,
     private val baseViewOnClickListener: BaseViewOnClickListener
 ) : View.OnClickListener {
-
+    var isCameraButtonClick:Boolean=false
     init {
         binding.imageMuteAudio.setOnClickListener(this)
         binding.imageMuteVideo.setOnClickListener(this)
@@ -50,8 +52,7 @@ class CallOptionsViewHelper(
             R.id.image_switch_camera -> {
                 if (CallManager.isCallOnHold())
                     return
-                v.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.alpha))
-                swapCamera()
+                switchCamera(v)
             }
             R.id.image_mute_video -> {
                 if (CallManager.isCallOnHold())
@@ -82,6 +83,30 @@ class CallOptionsViewHelper(
             !binding.imageMuteAudio.isActivated
         CallManager.muteAudio(binding.imageMuteAudio.isActivated)
         baseViewOnClickListener.ownAudioMuteStatusUpdated()
+    }
+
+    private fun switchCamera(v: View) {
+
+        if(!isCameraButtonClick){
+
+            isCameraButtonClick=true
+
+            v.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.alpha))
+
+            swapCamera()
+
+            Handler(Looper.getMainLooper()).postDelayed(object:Runnable{
+
+                override fun run() {
+
+                    isCameraButtonClick=false
+
+                }
+
+            },1000)
+
+        }
+
     }
 
     /**
@@ -191,7 +216,7 @@ class CallOptionsViewHelper(
             binding.imageMuteVideo.isEnabled = CallManager.isCallConnected()
         } else {
             binding.imageSwitchCamera.show()
-            binding.imageSwitchCamera.isActivated = true
+            binding.imageSwitchCamera.isActivated = !CallUtils.getIsBackCameraCapturing()
             binding.imageSwitchCamera.isEnabled = true
             binding.imageMuteVideo.isActivated = true
             binding.imageMuteVideo.isEnabled = true
@@ -282,10 +307,12 @@ class CallOptionsViewHelper(
                     if (binding.imageMuteVideo.isActivated) {
                         showOrHideSwitchCamera(true)
                         enableOrDisableSwitchCamera(true)
+                        binding.imageSwitchCamera.isActivated = !CallUtils.getIsBackCameraCapturing()
                         baseViewOnClickListener.ownVideoMuteStatusUpdated()
                     } else {
                         showOrHideSwitchCamera(false)
                         enableOrDisableSwitchCamera(false)
+                        binding.imageSwitchCamera.isActivated = false
                         baseViewOnClickListener.ownVideoMuteStatusUpdated()
                     }
                 }

@@ -31,7 +31,7 @@ class ChatTagViewModel @Inject constructor() : ViewModel()  {
     fun getRecentChatBasedOnChatTag(jidList:ArrayList<String>){
         LogMessage.d(TAG, "getChatTag Items")
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            chatTagRecentItems.value = ArrayList(FlyCore.getRecentChatListByChatTag(jidList))
+            chatTagRecentItems.value = ArrayList(FlyCore.getChatTagList(jidList))
         }
     }
 

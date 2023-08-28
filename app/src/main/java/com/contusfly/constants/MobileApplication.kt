@@ -274,7 +274,7 @@ class MobileApplication : Application(), HasAndroidInjector {
     }
 
     fun getNotificationMessage() : String {
-        return if (CallManager.isOneToOneCall() && CallManager.getGroupID().isEmpty()) {
+        return if (CallManager.isOneToOneCall() && CallManager.getGroupID().isEmpty() && CallManager.getCallUsersList().isNotEmpty()) {
             ProfileDetailsUtils.getDisplayName(CallManager.getCallUsersList().first())
         } else {
             if (CallManager.getGroupID().isNotBlank()) {
