@@ -9,7 +9,29 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce9a4a80-ef34-4227-9508-1dafe40c2fd9" name="Changes" comment="release V7.7.3 sdk version updated">
+    <list default="true" id="ce9a4a80-ef34-4227-9508-1dafe40c2fd9" name="Changes" comment="SDK new version V7.7.3 updated">
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/privatechat_swipe_animation.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/holders/PrivateChatViewHolder.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/interfaces/PrivateChatReleaseListener.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/models/PrivateChatAuthenticationModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/privateChat/PrivateChatEnableDisableActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/privateChat/PrivateChatListActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/BounceEdgeEffectFactory.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circular_shape_opacity.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/corner_radius_bg.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/down_arrow_round_icon.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/private_chat_enable_pull_refresh_image.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/private_chat_icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_private_chat_enable_disable.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_private_chat_list.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/private_chat_empty_view_recent_screen_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/private_chat_enable_dialog_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/private_chat_list_item_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/private_chat_toggle_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/pull_refresh_private_chat_view_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/view_no_search_message_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/menu/menu_private_chat.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/raw/privatechat_swipe_animation.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
@@ -247,7 +269,14 @@
       <option name="project" value="LOCAL" />
       <updated>1693214629753</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="SDK new version V7.7.3 updated">
+      <created>1693218274347</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1693218274347</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -265,7 +294,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Release 7.3.2" />
     <MESSAGE value="release V7.7.3 sdk version updated" />
-    <option name="LAST_COMMIT_MESSAGE" value="release V7.7.3 sdk version updated" />
+    <MESSAGE value="SDK new version V7.7.3 updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="SDK new version V7.7.3 updated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
