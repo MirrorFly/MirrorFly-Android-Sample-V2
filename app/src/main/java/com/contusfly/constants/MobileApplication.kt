@@ -91,7 +91,7 @@ class MobileApplication : Application(), HasAndroidInjector {
 
         ChatManager.enableMobileNumberLogin(true)
         ChatManager.setMediaFolderName(Constants.LOCAL_PATH)
-        ChatManager.enableChatHistory(false)
+        ChatManager.enableChatHistory(true)
 
         //activity to open when use clicked from notification
         //activity to open when a user logout from the app.
