@@ -34,15 +34,15 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
+        applicationId "com.mirrorfly.uikit"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 15
-        versionName "7.7.3"
+        versionName "7.7.5"
         multiDexEnabled true
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        applicationId "com.mirrorfly.uikit"
     }
 
     buildTypes {
@@ -204,7 +204,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.7.4'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.7.5'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
