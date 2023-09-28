@@ -18,10 +18,152 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+
+    <RelativeLayout
+        android:id="@+id/layout_profile"
+        android:layout_width="@dimen/margin_180"
+        android:layout_height="@dimen/margin_180"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_90">
+
+        <com.contus.call.RippleBackgroundView
+            android:id="@+id/ripple_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            app:rb_color="@color/color_pinned_speaking_indicator"
+            app:rb_duration="2000"
+            app:rb_radius="@dimen/margin_50"
+            app:rb_rippleAmount="4"
+            app:rb_scale="1.5"
+            app:rb_strokeWidth="0dp"
+            app:rb_type="fillRipple">
+
+            <com.contusfly.views.CircularImageView
+                android:id="@+id/caller_profile_image"
+                android:layout_width="@dimen/margin_105"
+                android:layout_height="@dimen/margin_105"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_profile" />
+
+        </com.contus.call.RippleBackgroundView>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_audio_muted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/ic_audio_muted" />
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_audio_muted_for_video_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/ic_audio_muted" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_unpin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/margin_90"
+        android:layout_marginEnd="@dimen/margin_16"
+        app:srcCompat="@drawable/ic_unpin_user" />
+
+    <TextView
+        android:id="@+id/text_call_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/image_audio_muted_for_video_call"
+        android:layout_below="@+id/layout_profile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padding_10"
+        android:layout_marginBottom="@dimen/padding_20"
+        android:fontFamily="@font/sf_ui_display_medium"
+        android:gravity="center"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/text_size_13" />
+
+    <RelativeLayout
+        android:id="@+id/layout_one_to_one_audio_call"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignWithParentIfMissing="true"
+        android:visibility="gone">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardBackgroundColor="@color/list_background"
+            app:cardCornerRadius="@dimen/margin_12">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.contusfly.views.CircularImageView
+                    android:id="@+id/local_profile_image"
+                    android:layout_width="@dimen/margin_48"
+                    android:layout_height="@dimen/margin_48"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_profile" />
+
+                <com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
+                    android:id="@+id/view_video_local"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/single_user_text_call_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/local_profile_image"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/padding_10"
+                    android:layout_marginBottom="@dimen/padding_20"
+                    android:fontFamily="@font/sf_ui_display_medium"
+                    android:gravity="center"
+                    android:text="Reconnecting..."
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/text_size_13"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/sf_ui_display_regular"
+                    android:padding="@dimen/padding_8"
+                    android:text="@string/call_you"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/text_size_14" />
+
+
+
+                <com.contus.call.SpeakingIndicatorView
+                    android:id="@+id/view_speaking_indicator"
+                    android:layout_width="@dimen/margin_41"
+                    android:layout_height="@dimen/margin_41"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:padding="@dimen/margin_8"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
 
         <View
             android:id="@+id/background_view"
@@ -87,128 +229,6 @@
             android:textSize="@dimen/text_size_12" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/layout_profile"
-        android:layout_width="@dimen/margin_180"
-        android:layout_height="@dimen/margin_180"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_90">
-
-        <com.contus.call.RippleBackgroundView
-            android:id="@+id/ripple_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            app:rb_color="@color/color_pinned_speaking_indicator"
-            app:rb_duration="2000"
-            app:rb_radius="@dimen/margin_50"
-            app:rb_rippleAmount="4"
-            app:rb_scale="1.5"
-            app:rb_strokeWidth="0dp"
-            app:rb_type="fillRipple">
-
-            <com.contusfly.views.CircularImageView
-                android:id="@+id/caller_profile_image"
-                android:layout_width="@dimen/margin_105"
-                android:layout_height="@dimen/margin_105"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_profile" />
-
-        </com.contus.call.RippleBackgroundView>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image_audio_muted"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/ic_audio_muted" />
-    </RelativeLayout>
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/image_audio_muted_for_video_call"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:srcCompat="@drawable/ic_audio_muted" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/image_unpin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/margin_90"
-        android:layout_marginEnd="@dimen/margin_16"
-        app:srcCompat="@drawable/ic_unpin_user" />
-
-    <TextView
-        android:id="@+id/text_call_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_profile"
-        android:layout_above="@+id/image_audio_muted_for_video_call"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/padding_20"
-        android:layout_marginTop="@dimen/padding_10"
-        android:fontFamily="@font/sf_ui_display_medium"
-        android:gravity="center"
-        android:textColor="@color/color_white"
-        android:textSize="@dimen/text_size_13" />
-
-    <RelativeLayout
-        android:id="@+id/layout_one_to_one_audio_call"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignWithParentIfMissing="true"
-        android:visibility="gone">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:cardCornerRadius="@dimen/margin_12"
-            app:cardBackgroundColor="@color/list_background">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.contusfly.views.CircularImageView
-                    android:id="@+id/local_profile_image"
-                    android:layout_width="@dimen/margin_48"
-                    android:layout_height="@dimen/margin_48"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_profile" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:fontFamily="@font/sf_ui_display_regular"
-                    android:padding="@dimen/padding_8"
-                    android:text="@string/call_you"
-                    android:textColor="@color/color_white"
-                    android:textSize="@dimen/text_size_14" />
-
-                <com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
-                    android:id="@+id/view_video_local"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
-
-                <com.contus.call.SpeakingIndicatorView
-                    android:id="@+id/view_speaking_indicator"
-                    android:layout_width="@dimen/margin_41"
-                    android:layout_height="@dimen/margin_41"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:padding="@dimen/margin_8"
-                    android:visibility="gone" />
-
-            </RelativeLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/call_grid_users_recyclerview"
@@ -216,8 +236,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_margin="@dimen/margin_8"
+        android:layout_marginStart="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_8"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:layout_marginBottom="@dimen/margin_8"
         android:overScrollMode="never"
+        android:visibility="gone"
         android:scrollbars="vertical" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -227,7 +251,7 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/margin_10"
-        android:paddingBottom="@dimen/margin_5"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        android:paddingBottom="@dimen/margin_5" />
 
 </RelativeLayout>

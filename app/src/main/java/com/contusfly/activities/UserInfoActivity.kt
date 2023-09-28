@@ -177,10 +177,6 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
         actionBar?.setDisplayHomeAsUpEnabled(true)
         mAppBarLayout = binding.appBarLayout
         mCoordinatorLayout = binding.coordinatorLayout
-        mAppBarLayout.post {
-            val heightPx = collapsingToolbar.height
-            setAppBarOffset(heightPx / 3)
-        }
         toolbar.setNavigationIcon(R.drawable.ic_back)
         toolbar.navigationIcon!!.applyMultiplyColorFilter(ContextCompat.getColor(this, R.color.color_black))
         toolbar.setNavigationOnClickListener { finish() }
@@ -191,12 +187,6 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
             else toolbar.navigationIcon!!.applySourceColorFilter(ContextCompat.getColor(this, R.color.color_white))
         } as AppBarLayout.BaseOnOffsetChangedListener<*>)
 
-    }
-
-    private fun setAppBarOffset(offsetPx: Int) {
-        val params = mAppBarLayout.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = params.behavior as AppBarLayout.Behavior
-        behavior.onNestedPreScroll(mCoordinatorLayout, mAppBarLayout, binding.nestedScrollView, 0, offsetPx, intArrayOf(0, 0), 0)
     }
 
     private fun setToolbarTitle(title: String) {

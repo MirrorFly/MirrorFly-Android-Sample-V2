@@ -1023,8 +1023,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         Log.e("sendTextMessageWithMentionFormat",sendTextMessageWithMentionFormat.toString())
         val textMessage = messagingClient.composeTextMessage(chat.toUser, sendTextMessageWithMentionFormat.toString().trim(), selectedMessageIdForReply,mentionedUsersIds)
         validateAndSendMessage(textMessage)
-        if(!FlyCore.isBusyStatusEnabled())
-            chatMessageEditText.setText(Constants.EMPTY_STRING)
     }
 
     private fun sendImageMessage(imagePath: String) {
@@ -1120,9 +1118,14 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         sendTypingGone()
         isLoadNextAvailable = parentViewModel.isLoadNextAvailable()
         messagingClient.sendMessage(messageObject, this@ChatActivity)
-        chatMessageEditText.setText(Constants.EMPTY_STRING)
         mentionedUsersIds.clear()
         sendTextMessageWithMentionFormat = emptyString()
+    }
+
+    private fun clearEditText() {
+        if(chatMessageEditText.text!!.isNotEmpty()){
+            chatMessageEditText.setText(Constants.EMPTY_STRING)
+        }
     }
 
 
@@ -2124,13 +2127,16 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 unreadMessageCount++
             showHideRedirectToLatest.onNext(true)
         } else
-            scrollPosition()
+            scrollPosition(tempMessage)
         handleUnreadMessageSeparator(false)
     }
 
-    private fun scrollPosition() {
+    private fun scrollPosition(tempMessage: ChatMessage) {
         if(!getUnreadMessageAvailable()) {
             listChats.scrollToPosition(mainList.size - 1)
+            if(tempMessage.isMessageSentByMe){
+                clearEditText()
+            }
         }
     }
 
@@ -2138,7 +2144,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         val (isUnreadSeparatorIsAvailable, separatorPosition) = findIndexOfUnreadMessageType()
         com.contusfly.utils.LogMessage.e("UnReadMessage","Availability----$isUnreadSeparatorIsAvailable---$separatorPosition")
         return  isUnreadSeparatorIsAvailable
-
     }
 
     override fun setTypingStatus(singleOrGroupJid: String, userId: String, composing: String) {

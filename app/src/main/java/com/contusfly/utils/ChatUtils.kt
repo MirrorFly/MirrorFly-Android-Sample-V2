@@ -1,5 +1,6 @@
 package com.contusfly.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,10 +11,9 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.format.DateUtils
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import com.contus.call.CallConstants
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.BuildConfig
 import com.contusfly.R
 import com.contusfly.TAG
@@ -31,27 +31,41 @@ import com.google.gson.reflect.TypeToken
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import io.michaelrocks.libphonenumber.android.NumberParseException
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.nio.channels.FileChannel
-import java.util.*
+import java.util.Calendar
+
 
 object ChatUtils {
 
-    fun setSelectedChatItem(view: View, message: ChatMessage, selectedMessages: List<String>?, context: Context?) {
-        if (Utils.isListExist(selectedMessages) && selectedMessages != null && selectedMessages.contains(message.getMessageId())) {
+    fun setSelectedChatItem(
+        view: View,
+        message: ChatMessage,
+        selectedMessages: List<String>?,
+        context: Context?
+    ) {
+        if (Utils.isListExist(selectedMessages) && selectedMessages != null && selectedMessages.contains(
+                message.messageId
+            )
+        ) {
             view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.color_selected_item))
         } else {
             view.setBackgroundColor(ContextCompat.getColor(context!!, android.R.color.transparent))
         }
     }
 
-    fun setSelectedChatItem(view: View, isHighLighted:Boolean, context: Context?) {
+    fun setSelectedChatItem(view: View, isHighLighted: Boolean, context: Context?) {
         if (isHighLighted) {
             view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.color_selected_item))
         } else {
@@ -81,8 +95,8 @@ object ChatUtils {
     fun copy(src: File?, dst: File?) {
         var inStream: FileInputStream? = null
         var outStream: FileOutputStream? = null
-        var inChannel: FileChannel? = null
-        var outChannel: FileChannel? = null
+        val inChannel: FileChannel?
+        val outChannel: FileChannel?
         if (!dst!!.exists())
             dst.createNewFile()
         try {
@@ -119,7 +133,11 @@ object ChatUtils {
         return MediaPermissions.isPermissionAllowed(context, permission) || minSdk30
     }
 
-    fun setPreviewActivity(previewClass: Class<MediaPreviewActivity>, toUser: String, chatType: String) {
+    fun setPreviewActivity(
+        previewClass: Class<MediaPreviewActivity>,
+        toUser: String,
+        chatType: String
+    ) {
         val mediaPreviewIntent = com.contusfly.mediapicker.helper.MediaPreviewIntent.instance
         mediaPreviewIntent?.let {
             it.mediaClass = previewClass
@@ -128,7 +146,11 @@ object ChatUtils {
         }
     }
 
-    fun setCameraPreviewActivity(chatClass: Class<MediaPreviewActivity>, toUser: String, chatType: String) {
+    fun setCameraPreviewActivity(
+        chatClass: Class<MediaPreviewActivity>,
+        toUser: String,
+        chatType: String
+    ) {
         val mediaPreviewIntent = com.fxn.modals.MediaPreviewIntent.getInstance()
         mediaPreviewIntent.setMediaClass(chatClass)
         mediaPreviewIntent.toUser = toUser
@@ -179,14 +201,21 @@ object ChatUtils {
         return BigDecimal.valueOf(unscaledValue).setScale(1, RoundingMode.HALF_UP).toDouble()
     }
 
-    fun getJidFromPhoneNumber(phoneNumberUtil: PhoneNumberUtil, mobileNumber: String, countryCode: String): String? {
+    fun getJidFromPhoneNumber(
+        phoneNumberUtil: PhoneNumberUtil,
+        mobileNumber: String,
+        countryCode: String
+    ): String? {
         return if (mobileNumber.startsWith("*")) {
             LogMessage.d(TAG, "Invalid PhoneNumber:$mobileNumber")
             return null
         } else {
             try {
-                val phoneNumber = phoneNumberUtil.parse(mobileNumber.replace("^0+".toRegex(), ""), countryCode)
-                val unformattedPhoneNumber = phoneNumberUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164).replace("+", "")
+                val phoneNumber =
+                    phoneNumberUtil.parse(mobileNumber.replace("^0+".toRegex(), ""), countryCode)
+                val unformattedPhoneNumber =
+                    phoneNumberUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164)
+                        .replace("+", "")
                 unformattedPhoneNumber + "@" + com.mirrorflysdk.flycommons.Constants.getDomain()
             } catch (var6: NumberParseException) {
                 LogMessage.e(TAG, var6)
@@ -195,12 +224,29 @@ object ChatUtils {
         }
     }
 
-    fun navigateToOnGoingCallPreviewScreen(context: Context, userJid: String, url: String): Boolean {
+    fun hideKeyboard(context: Context) {
+        val inputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        // Check if no view has focus
+        val currentFocusedView = (context as Activity).currentFocus
+        currentFocusedView?.let {
+            inputMethodManager.hideSoftInputFromWindow(
+                currentFocusedView.windowToken, 0
+            )
+        }
+    }
+
+    fun navigateToOnGoingCallPreviewScreen(
+        context: Context,
+        userJid: String,
+        url: String
+    ): Boolean {
         val callLink = url.replace(BuildConfig.WEB_CHAT_LOGIN, "")
         if (AppUtils.isNetConnected(context)) {
             return if (CallManager.isOnGoingCall()) {
                 val onGngCallLink = CallManager.getCallLink()
                 if (onGngCallLink == callLink) {
+                    hideKeyboard(context)
                     context.startActivity(Intent(context, GroupCallActivity::class.java))
                     true
                 } else {
@@ -211,9 +257,14 @@ object ChatUtils {
                 CallPermissionUtils.showTelephonyCallAlert(context)
                 false
             } else {
+                hideKeyboard(context)
                 context.startActivity(
-                    Intent(context, OnGoingCallPreviewActivity::class.java).putExtra(CallConstants.CALL_LINK, callLink)
-                        .putExtra(Constants.USER_JID, userJid))
+                    Intent(
+                        context,
+                        OnGoingCallPreviewActivity::class.java
+                    ).putExtra(CallConstants.CALL_LINK, callLink)
+                        .putExtra(Constants.USER_JID, userJid)
+                )
                 true
             }
         } else {
@@ -224,10 +275,12 @@ object ChatUtils {
 
     private fun askCallSwitchPopup(context: Context, url: String) {
         val commonAlertDialog = CommonAlertDialog(context)
-        commonAlertDialog.showCallSwitchDialog(url,
+        commonAlertDialog.showCallSwitchDialog(
+            url,
             context.getString(R.string.action_ok),
             context.getString(R.string.action_cancel),
-            CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL)
+            CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL
+        )
     }
 
     /**
@@ -237,7 +290,8 @@ object ChatUtils {
      */
     fun getSpannedText(context: Context, message: String?): Spanned {
         val htmlText: Spanned
-        val chatMessage = getHtmlChatMessageText(context, message!!).replace("\n", "<br>").replace("  ", "&nbsp;&nbsp;")
+        val chatMessage = getHtmlChatMessageText(context, message!!).replace("\n", "<br>")
+            .replace("  ", "&nbsp;&nbsp;")
         htmlText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             Html.fromHtml(getHtmlChatMessageText(context, chatMessage), Html.FROM_HTML_MODE_LEGACY)
         else
@@ -278,35 +332,44 @@ object ChatUtils {
     }
 
     /**
-     * Returns mentionformatted message
+     * Returns mentionFormatted message
      *
      * @param context Context
      * @param chatMessage ChatMessage content
      * @return SpannableStringBuilder Result
      */
-    fun setMentionFormattedTextForRecentChat(context: Context,chatMessage: ChatMessage) : SpannableStringBuilder{
+    fun setMentionFormattedTextForRecentChat(
+        context: Context,
+        chatMessage: ChatMessage
+    ): SpannableStringBuilder {
         return MentionUtils.getMentionTextForRecentChat(
             context,
             chatMessage
         )
     }
+
     /**
      * Convert mention original format to name for mention tag
      *
      * @param context Context
      * @param replyMessage ChatMessage content
      * @param textView MessageTextView
-     * @param messageMediaCaption String to set the messagecontent from mediaMEssage for message info
+     * @param messageMediaCaption String to set the message caption from mediaMessage for message info
      * @param isMediaMessage Boolean to identify image,video or text
      **/
-    fun setReplyViewMessageFormat(replyMessage: ChatMessage, context:Context, textView: MessageTextView, messageMediaCaption: String,isMediaMessage: Boolean){
-        if(replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
-            val formattedSpanText = MentionUtils.formatMentionText(context,replyMessage,false)
+    fun setReplyViewMessageFormat(
+        replyMessage: ChatMessage,
+        context: Context,
+        textView: MessageTextView,
+        messageMediaCaption: String,
+        isMediaMessage: Boolean
+    ) {
+        if (replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
+            val formattedSpanText = MentionUtils.formatMentionText(context, replyMessage, false)
             textView.text = formattedSpanText
-        }
-        else {
-            if(isMediaMessage) {
-                if(messageMediaCaption == "")
+        } else {
+            if (isMediaMessage) {
+                if (messageMediaCaption == "")
                     EmojiUtils.setMessageTextWithEllipsis(
                         textView,
                         getSpannedText(
@@ -321,18 +384,23 @@ object ChatUtils {
                         messageMediaCaption
                     ).toString()
                 )
-            }  else {
-                setReplyParentMessage(replyMessage,textView, context)
+            } else {
+                setReplyParentMessage(replyMessage, textView, context)
             }
         }
     }
+
     /**
      * setReplyMessage
-     * @param replyMessage ChatMeasage
+     * @param replyMessage ChatMessage
      * @param textView MessageTextview
      * @param context Context
      */
-    private fun setReplyParentMessage(replyMessage: ChatMessage, textView: MessageTextView, context: Context){
+    private fun setReplyParentMessage(
+        replyMessage: ChatMessage,
+        textView: MessageTextView,
+        context: Context
+    ) {
         EmojiUtils.setMessageTextWithEllipsis(
             textView,
             getSpannedText(
@@ -341,30 +409,38 @@ object ChatUtils {
             ).toString()
         )
     }
+
     /**
-     * Convert mentionuser model object into list
+     * Convert mentionUser model object into list
      *
-     * @param mentionedUsersId mentioned usersids as modelclass
+     * @param mentionedUsersId mentionedUsersId as model class
      * @param mentionedUsersIds MutableList<String>
      *
      * @return mentionedUsersIds MutableList<String>
      **/
-    fun setSelectedUserIdForMention(mentionedUsersId: List<MentionUser>, mentionedUsersIds: MutableList<String>) : MutableList<String>{
-        for(userIds in mentionedUsersId) {
+    fun setSelectedUserIdForMention(
+        mentionedUsersId: List<MentionUser>,
+        mentionedUsersIds: MutableList<String>
+    ): MutableList<String> {
+        for (userIds in mentionedUsersId) {
             mentionedUsersIds.add(userIds.userId)
         }
         return mentionedUsersIds
     }
 
-    fun getLastSeenTime(context: Context,time:String): String {
-        return if (time==null || time.isEmpty()) Constants.EMPTY_STRING else if (time.equals(Constants.ONLINE_STATUS)) Constants.ONLINE else {
-            var lastSeen=time.toLong()
+    fun getLastSeenTime(context: Context, time: String): String {
+        return if (time == null || time.isEmpty()) Constants.EMPTY_STRING else if (time.equals(
+                Constants.ONLINE_STATUS
+            )
+        ) Constants.ONLINE else {
+            val lastSeen = time.toLong()
             val calendar = Calendar.getInstance()
-            calendar.timeInMillis=lastSeen
+            calendar.timeInMillis = lastSeen
             var status = DateUtils.getRelativeTimeSpanString(context, lastSeen, true)
                 .toString()
             val todayDate = Calendar.getInstance()
-            if (todayDate[Calendar.DATE] - calendar[Calendar.DATE] == 1) status = "on Yesterday" // date are not equal to current date it's taken an yesterday
+            if (todayDate[Calendar.DATE] - calendar[Calendar.DATE] == 1) status =
+                "on Yesterday" // date are not equal to current date it's taken an yesterday
             String.format(context.getString(R.string.fly_info_status_last_seen), status)
         }
     }
@@ -402,13 +478,17 @@ object ChatUtils {
             newWidth = newHeight * originalWidth / originalHeight
         }
 
-        return Pair(if (newWidth > Constants.MOBILE_IMAGE_MIN_WIDTH) newWidth else Constants.MOBILE_IMAGE_MIN_WIDTH, if (newHeight > Constants.MOBILE_IMAGE_MIN_HEIGHT) newHeight else Constants.MOBILE_IMAGE_MIN_HEIGHT)
+        return Pair(
+            if (newWidth > Constants.MOBILE_IMAGE_MIN_WIDTH) newWidth else Constants.MOBILE_IMAGE_MIN_WIDTH,
+            if (newHeight > Constants.MOBILE_IMAGE_MIN_HEIGHT) newHeight else Constants.MOBILE_IMAGE_MIN_HEIGHT
+        )
     }
 
     fun toUserList(list: ArrayList<ProfileDetails>): String? {
         val gson = Gson()
         return gson.toJson(list)
     }
+
     fun convertProfileDetailsList(value: String?): ArrayList<ProfileDetails?>? {
         val listType = object : TypeToken<ArrayList<ProfileDetails?>?>() {}.type
         return Gson().fromJson(value, listType)

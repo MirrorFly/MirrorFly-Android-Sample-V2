@@ -14,6 +14,7 @@ import com.contusfly.getDisplayName
 import com.contusfly.isValidIndex
 import com.contusfly.loadUserProfileImage
 import com.contusfly.utils.ProfileDetailsUtils
+import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
 import java.util.ArrayList
 
@@ -53,7 +54,7 @@ class ParticipantsListAdapter(private val context: Context) : RecyclerView.Adapt
     override fun onBindViewHolder(holder: ParticipantsListViewHolder, position: Int) {
         val profileJid = profilesUserList!![position]
         val profile = ProfileDetailsUtils.getProfileDetails(profileJid)
-        val userName = Utils.returnEmptyStringIfNull(profile?.getDisplayName())
+        val userName = profile?.getDisplayName() ?: Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(profileJid))
         //Set User Name
         holder.viewBinding.textUserName.text = userName
         //Load Profile Pic

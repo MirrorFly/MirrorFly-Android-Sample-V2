@@ -103,10 +103,6 @@ class ContactSelectionActivity : BaseActivity() {
                 contactSelectionBinding.selectedContactsRecyclerView.scrollToPosition(contactSelectionViewModel.selectedContactList.size)
         }
 
-        contactSectionAdapter.onContactMaxLimitReached {
-            showMaxRestrictionToast(it)
-        }
-
         contactSelectionPreviewAdapter.onContactRemoved { item ->
             contactSelectionViewModel.onContactItemClicked(item)
             contactSectionAdapter.onContactRemoved(item)

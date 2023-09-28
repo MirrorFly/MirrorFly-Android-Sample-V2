@@ -13,11 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.contus.call.CallActions
 import com.contus.call.CallConstants
 import com.contus.call.CallConstants.CALL_UI
+import com.contus.call.CallConstants.JOIN_CALL
 import com.contus.call.SpeakingIndicatorListener
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycall.webrtc.CallStatus
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
+import com.contusfly.BuildConfig
 import com.contusfly.R
 import com.contusfly.adapters.BaseViewHolder
 import com.contusfly.call.SetDrawable
@@ -30,11 +28,14 @@ import com.contusfly.utils.Constants
 import com.contusfly.utils.MediaUtils
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
+import com.jakewharton.rxbinding3.view.clicks
+import com.mirrorflysdk.flycall.webrtc.CallStatus
+import com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
-import com.jakewharton.rxbinding3.view.clicks
 import org.webrtc.RendererCommon
-import java.util.ArrayList
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
@@ -188,9 +189,24 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
             MediaUtils.loadImageWithGlideSecure(context, image, holder.binding.imgProfileImage, icon)
 
         } else {
-            holder.binding.textUserName.text = Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(gridCallUserList[position]))
+            val userJid = ChatUtils.getUserFromJid(gridCallUserList[position])
+            holder.binding.textUserName.text = Utils.getFormattedPhoneNumber(userJid)
             holder.binding.imgProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-            MediaUtils.loadImageWithGlideSecure(context, "", holder.binding.imgProfileImage, ContextCompat.getDrawable(context, R.drawable.ic_group_call_user_default_pic))
+            if(BuildConfig.CONTACT_SYNC_ENABLED)
+                MediaUtils.loadImageWithGlideSecure(
+                    context,
+                    "",
+                    holder.binding.imgProfileImage,
+                    ContextCompat.getDrawable(context, R.drawable.ic_group_call_user_default_pic)
+                )
+            else{
+                val setDrawable = SetDrawable(context)
+                val icon = setDrawable.setDrawableForGroupCall(userJid, CallConstants.DRAWABLE_SIZE,
+                    isProfile = true,
+                    isUnknownContact = true
+                )
+                MediaUtils.loadImageWithGlideSecure(context,"" ,holder.binding.imgProfileImage, icon)
+            }
         }
     }
 
@@ -405,8 +421,9 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
     }
 
     fun removeUser(userJid: String) {
-        LogMessage.d(TAG, "$CALL_UI removeUser() userJid:${userJid}")
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL Grid gridCallUserList: $gridCallUserList ")
         val index = gridCallUserList.indexOf(userJid)
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL Grid removeUser() userJid:${userJid} index: $index")
         if (index >= 0) {
             //notify item changed will not work here, since we are immediately removing view
             val surfaceViewRenderer = callUsersGridSurfaceViews.remove(userJid)

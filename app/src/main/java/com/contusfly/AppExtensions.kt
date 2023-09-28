@@ -198,7 +198,7 @@ fun Boolean.ifElse(functionOne: () -> Unit, functionTwo: () -> Unit) {
 fun RecentChat.isDeletedContact() = contactType == ContactType.DELETED_CONTACT
 fun RecentChat.isSingleChat() = !isGroup && !isBroadCast
 
-fun RecentChat.isUnknownContact() = !isDeletedContact() && !isItSavedContact() && !isGroup
+fun RecentChat.isUnknownContact() = !isDeletedContact() && !isItSavedContact && !isGroup
 
 fun RecentChat.isEmailContact() : Boolean{
     return if (isUnknownContact()) {
@@ -338,7 +338,7 @@ fun CustomDrawable.getDefaultDrawable(recentChat: RecentChat): Drawable {
             if (profileDetails?.isBlockedMe!! || profileDetails.isAdminBlocked || profileDetails.isDeletedContact()) {
                 this.context.getDefaultDrawable(profileDetails.getChatType())
             } else {
-                SetDrawable(context, profileDetails).setDrawableForProfile(profileDetails.getDisplayName())!!
+                SetDrawable(context, profileDetails).setDrawableForProfile(profileDetails.getDisplayName())
             }
         }
     }
@@ -398,7 +398,7 @@ fun ChatMessage.isMessageSeen() = messageStatus == MessageStatus.SEEN
 
 fun ChatMessage.isGroupMessage() = messageChatType == ChatTypeEnum.groupchat
 fun ChatMessage.getSenderJid(): String =
-    if (isGroupMessage()) getChatUserJid() else getSenderUserJid()
+    if (isGroupMessage()) chatUserJid else senderUserJid
 
 fun ChatMessage.isTextMessage() = messageType == com.mirrorflysdk.flycommons.models.MessageType.TEXT
 fun ChatMessage.isAudioMessage() =
@@ -832,4 +832,16 @@ fun Context.isWritePermissionAllowed(permission: String): Boolean{
 
 fun Context.isNotificationPermissionAllowed(permission: String): Boolean{
     return Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+}
+
+fun View.visibilityChanged(action: (View) -> Unit) {
+    this.viewTreeObserver.addOnGlobalLayoutListener {
+        val newVis: Int = this.visibility
+        if (this.tag as Int? != newVis) {
+            this.tag = this.visibility
+
+            // visibility has changed
+            action(this)
+        }
+    }
 }

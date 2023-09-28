@@ -987,4 +987,13 @@
     <string name="archive_chat_lock_title">This chat is Archived. To lock this chat Unarchive it.</string>
     <string name="loacked_chat_title_label">All Chats are Locked</string>
     <string name="unlock_chat_label">Unlock Your Private Chat</string>
+    <string name="create_new_meeting">Create new meeting</string>
+    <string name="share_a_link_for_your_mirrorfly_meet">Share a link for your Mirrorfly meet</string>
+    <string name="recent_calls">Recent Calls</string>
+    <string name="generate_meeting_link">Generate Meeting Link</string>
+    <string name="anyone_with_mirror_fly_can_join_call">Anyone with Mirrorfly can use this link to join this meet. Only share it with people you trust</string>
+    <string name="meet_link_will_be_generated_here">meet link will be generated here</string>
+    <string name="join_meeting">Join Meeting</string>
+    <string name="share_call_link">Share</string>
+    <string name="invite_contacts_call_link">Invite Contacts</string>
 </resources>

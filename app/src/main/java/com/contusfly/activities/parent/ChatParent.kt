@@ -24,6 +24,7 @@ import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.*
+import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.BackgroundColorSpan
 import android.text.style.ClickableSpan
@@ -61,11 +62,8 @@ import com.contusfly.chat.ReplyViewHandler
 import com.contusfly.constants.MobileApplication
 import com.contusfly.databinding.ActivityChatBinding
 import com.contusfly.di.factory.AppViewModelFactory
-import com.contusfly.groupmention.MentionEditGroupText
+import com.contusfly.groupmention.*
 import com.contusfly.groupmention.MentionUtils
-import com.contusfly.groupmention.OnMentionEventListener
-import com.contusfly.groupmention.TextUIConfig
-import com.contusfly.groupmention.UserMentionConfig
 import com.contusfly.helpers.MessagePaginationScrollListener
 import com.contusfly.interfaces.ChatAttachmentLister
 import com.contusfly.interfaces.MessageListener
@@ -116,6 +114,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.IOException
+import java.lang.Runnable
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -343,15 +342,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 imgSend.setImageResource(R.drawable.ic_send_active)
                 suggestionLayout.gone()
             } else {
-                imgSend.isEnabled = false
-                imgSend.gone()
-                imgSend.setImageResource(R.drawable.ic_send_inactive)
-                if (isReplyTagged)
-                    parentViewModel.addMessage(
-                        parentViewModel.getMessageForId(
-                            selectedMessageIdForReply
-                        ), chat.toUser
-                    )
+                hideSendView(true)
             }
         }
 
@@ -2140,7 +2131,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private fun unReadMessageScrollPosition(position: Int) {
         try {
             if(mainList.size > position){
-                val sublist= mainList.subList(position, mainList.size)
+                val sublist=
+                    mainList.subList(position, mainList.size)
                 if(sublist.size>3) {
                     listChats.scrollToPosition(position + 3)
                 } else {
@@ -2149,6 +2141,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             } else {
                 listChats.scrollToPosition(position + 1)
             }
+
         } catch(e:Exception) {
             LogMessage.e(TAG,e.toString())
         }
@@ -2429,7 +2422,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             if (emojiHandler.isEmojiShowing) emojiHandler.hideEmoji()
         } else {
             if (chatMessageEditText.text.isNullOrBlank())
-                makeViewsGone(txtNoMsg, imgSend)
+                hideSendView(false)
             else
                 makeViewsGone(txtNoMsg)
             if (audioRecordView.mediaState == com.mirrorflysdk.flycommons.Constants.COUNT_ZERO) {
@@ -2438,6 +2431,35 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             } else
                 showViews(viewChat, chatFooter)
         }
+    }
+
+    private fun hideSendView(isTextWatcher:Boolean) {
+        CoroutineScope(Dispatchers.Main).launch {
+                if(isTextWatcher){
+                    imgSend.isEnabled = false
+                    sendImageViewGone(true)
+                    imgSend.setImageResource(R.drawable.ic_send_inactive)
+                    if (isReplyTagged)
+                        parentViewModel.addMessage(
+                            parentViewModel.getMessageForId(
+                                selectedMessageIdForReply), chat.toUser)
+                } else {
+                    sendImageViewGone(false)
+                }
+        }
+    }
+
+    private fun sendImageViewGone(isTextWatcher:Boolean) {
+        Handler(Looper.getMainLooper()).postDelayed(object:Runnable{
+            override fun run() {
+                if(isTextWatcher){
+                    imgSend.gone()
+                } else {
+                    makeViewsGone(txtNoMsg, imgSend)
+                }
+            }
+
+        },500)
     }
 
     protected fun addDateMessagesIfNeedToRemove() {

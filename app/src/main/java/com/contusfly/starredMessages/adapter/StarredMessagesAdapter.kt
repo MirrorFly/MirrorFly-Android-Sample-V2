@@ -274,7 +274,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     override fun getItemViewType(position: Int): Int {
-        return chatAdapterHelper!!.getItemViewType(starredMessageData!![position])
+        return chatAdapterHelper!!.getItemViewType(starredMessageData[position])
     }
 
     override fun getItemId(position: Int): Long {
@@ -282,7 +282,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     override fun getItemCount(): Int {
-        return starredMessageData!!.size
+        return starredMessageData.size
     }
 
     /**
@@ -293,25 +293,25 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      */
     private fun showSenderNameIfGroupChat(holder: RecyclerView.ViewHolder, position: Int) {
         val senderNameHolder = holder as SenderNameHolder
-        showHideSenderName(senderNameHolder,starredMessageData!![position])
+        showHideSenderName(senderNameHolder, starredMessageData[position])
     }
 
     fun showHideSenderName(senderNameHolder: SenderNameHolder, messageItem: ChatMessage) {
         senderNameHolder.showFavouriteNameView()
-        var messageDate: String = ChatUserTimeUtils.getDateFromTimestamp(messageItem.getMessageSentTime())!!
+        var messageDate: String = ChatUserTimeUtils.getDateFromTimestamp(messageItem.messageSentTime)!!
         if (messageDate.contains("1970")) messageDate = Constants.EMPTY_STRING
-        if (messageItem.getMessageChatType() == ChatTypeEnum.groupchat) {
-            if (messageItem.isMessageSentByMe()) {
-                val toUser = ProfileDetailsUtils.getDisplayName(messageItem.getChatUserJid())
+        if (messageItem.messageChatType == ChatTypeEnum.groupchat) {
+            if (messageItem.isMessageSentByMe) {
+                val toUser = ProfileDetailsUtils.getDisplayName(messageItem.chatUserJid)
                 senderNameHolder.favouriteSenderReceiverName(Constants.YOU, toUser, messageDate)
             } else {
-                val fromUser = ProfileDetailsUtils.getDisplayName(messageItem.getChatUserJid())
-                senderNameHolder.favouriteSenderReceiverName(fromUser, messageItem.getSenderUserName(), messageDate)
+                val fromUser = ProfileDetailsUtils.getDisplayName(messageItem.chatUserJid)
+                senderNameHolder.favouriteSenderReceiverName(fromUser, messageItem.senderUserName, messageDate)
             }
-        } else if (messageItem.isMessageSentByMe()) {
-            senderNameHolder.favouriteSenderReceiverName(Constants.YOU, messageItem.getSenderUserName(), messageDate)
+        } else if (messageItem.isMessageSentByMe) {
+            senderNameHolder.favouriteSenderReceiverName(Constants.YOU, messageItem.senderUserName, messageDate)
         } else {
-            senderNameHolder.favouriteSenderReceiverName(messageItem.getSenderUserName(), Constants.YOU, messageDate)
+            senderNameHolder.favouriteSenderReceiverName(messageItem.senderUserName, Constants.YOU, messageDate)
         }
     }
 
@@ -331,7 +331,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             starredTxtSenderViewHolder.txtChatTime
                     .setTextColor(ContextCompat.getColor(context!!, R.color.color_sent_message_time))
             starredTxtSenderViewHolder.txtChatTime.visibility = View.VISIBLE
-            val msg = item.getMessageTextContent()
+            val msg = item.messageTextContent
             Linkify.addLinks(starredTxtSenderViewHolder.txtChatSender, Linkify.ALL)
             starredTxtSenderViewHolder.txtChatSender.setTextColor(ContextCompat.getColor(context!!, R.color.color_black))
             starredTxtSenderViewHolder.txtChatSender.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
@@ -356,7 +356,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                         setJoinLinkView(
                             starredTxtSenderViewHolder.txtChatSender,
                             starredTxtSenderViewHolder.joinLinkView,
-                            starredTxtSenderViewHolder.joinLinkLogo
+                            starredTxtSenderViewHolder.joinLinkLogo,
+                            msg
                         )
                     isClickable = false
                     isLongClickable = false
@@ -364,7 +365,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 }
             }
             starredTxtSenderViewHolder.imageStar.visibility = View.VISIBLE
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredTxtSenderViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredTxtSenderViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -374,14 +375,31 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         }
     }
 
-    private fun setJoinLinkView(txtChat: TextView, joinLinkView: LinearLayout, joinLinkLogo: ImageView) {
+    private fun setJoinLinkView(txtChat: TextView, joinLinkView: LinearLayout, joinLinkLogo: ImageView,originalMsg: String) {
         txtChat.autoLinkMask = Linkify.ALL
         txtChat.linksClickable = false
-        txtChat.setTextColor(ContextCompat.getColor(context!!, R.color.light_blue))
-        txtChat.setLinkTextColor(ContextCompat.getColor(context!!, R.color.light_blue))
+
         val screenWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
+        //https://webchat-uikit-qa.contus.us/mnf-qjtf-fbr
+        val sampleLink = "https://webchat-uikit-qa.contus.us/mnf-qjtf-fbr"
+        val meetLinkText = txtChat.text
+        LogMessage.d(TAG, "Join Call via Link length sampleLink: ${sampleLink.length}")
+        LogMessage.d(TAG, "Join Call via Link length userPastedLink: $meetLinkText")
+        LogMessage.d(TAG, "Join Call via Link length userPastedLink: ${meetLinkText.length}")
+        val indexOfNewMessageAfterLink = AdapterUtils.checkIndexOfNewMessageAfterLink(originalMsg)
+        com.mirrorflysdk.flycommons.LogMessage.d(TAG, "Join Call via Link  indexOfNewMessageAfterLink: $indexOfNewMessageAfterLink")
+        if (indexOfNewMessageAfterLink !=-1) {
+            AdapterUtils.setTextForCallLink(txtChat,indexOfNewMessageAfterLink,context!!)
+        } else{
+            txtChat.setTextColor(ContextCompat.getColor(context!!, R.color.light_blue))
+            txtChat.setLinkTextColor(ContextCompat.getColor(context!!, R.color.light_blue))
+        }
+
         joinLinkView.show()
-        val lp = LinearLayout.LayoutParams((screenWidth + 20), LinearLayout.LayoutParams.WRAP_CONTENT) //20 is nothing but text message margin Start and End value in XML
+        val lp = LinearLayout.LayoutParams(
+            (screenWidth + 20),
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ) //20 is nothing but text message margin Start and End value in XML
         joinLinkView.layoutParams = lp
         joinLinkLogo.setImageDrawable(ContextCompat.getDrawable(context!!, R.mipmap.ic_launcher)!!)
     }
@@ -389,7 +407,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     /**
      * starred textview for receiver side
      *
-     * @param holder   adapter viewholder object
+     * @param holder   adapter view holder object
      * @param item     object which hold item data
      * @param position of the item
      */
@@ -401,7 +419,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         starredTxtReceiverViewHolder.txtChatRevTime.text = time
         starredTxtReceiverViewHolder.txtChatRevTime
                 .setTextColor(ContextCompat.getColor(context!!, R.color.color_chat_msg_received_time))
-        val msg = item.getMessageTextContent()
+        val msg = item.messageTextContent
         starredTxtReceiverViewHolder.txtChatReceiver.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
         starredTxtReceiverViewHolder.txtChatReceiver.setTextColor(ContextCompat.getColor(context!!, R.color.color_black))
         Linkify.addLinks(starredTxtReceiverViewHolder.txtChatReceiver, Linkify.ALL)
@@ -426,7 +444,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     setJoinLinkView(
                         starredTxtReceiverViewHolder.txtChatReceiver,
                         starredTxtReceiverViewHolder.receiverJoinLinkView,
-                        starredTxtReceiverViewHolder.receiverJoinLinkLogo
+                        starredTxtReceiverViewHolder.receiverJoinLinkLogo,
+                        msg
                     )
                 isClickable = false
                 isLongClickable = false
@@ -434,7 +453,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             }
         }
         starredTxtReceiverViewHolder.imgReceivedStar.visibility = View.VISIBLE
-        if (position == starredMessageData!!.size - 1) {
+        if (position == starredMessageData.size - 1) {
             starredTxtReceiverViewHolder.viewDiver?.visibility = View.GONE
         }else{
             starredTxtReceiverViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -485,18 +504,18 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         val starredImgSenderViewHolder = holder as ImageSentViewHolder
         starredImageItemViewHelper!!.setImageWidthAndHeight(starredImgSenderViewHolder, messageItem)
         val time: String = getChatMsgTime(messageItem)!!
-        val base64Img = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaThumbImage())
-        val filePath = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaLocalStoragePath())
-        val rowmodel=
+        val base64Img = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaThumbImage)
+        val filePath = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaLocalStoragePath)
+        val chatItemRowModel=
             ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
-        starredImageItemViewHelper!!.senderImageItemView(starredImgSenderViewHolder,rowmodel)
+        starredImageItemViewHelper!!.senderImageItemView(starredImgSenderViewHolder,chatItemRowModel)
         replyViewUtils!!.showSenderReplyWindow(starredImgSenderViewHolder, messageItem, context!!)
         setListenersForSenderImageMessages(starredImgSenderViewHolder, messageItem, position)
         senderItemClick(starredImgSenderViewHolder.viewRowItem, messageItem, position,starredImgSenderViewHolder.viewSender)
         senderDownloadClick(starredImgSenderViewHolder.txtRetryView, starredImgSenderViewHolder.cancelUpload,
                 messageItem, starredImgSenderViewHolder.viewSentCarbonDownload)
         setSelectedChatItem(starredImgSenderViewHolder.itemView, messageItem, starredMessageMessages, context)
-        if (position == starredMessageData!!.size - 1) {
+        if (position == starredMessageData.size - 1) {
             starredImgSenderViewHolder.viewDiver?.visibility = View.GONE
         }else{
             starredImgSenderViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -508,7 +527,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     /**
      * starred imageview for receiver side
      *
-     * @param holder      adapter viewholder object
+     * @param holder      adapter view holder object
      * @param messageItem object which hold item data
      * @param position    of the item
      */
@@ -517,11 +536,11 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             setHeader(holder, RECEIVER_HEADER, messageItem)
             val starredImgReceiverViewHolder: ImageReceivedViewHolder = holder as ImageReceivedViewHolder
             starredImageItemViewHelper!!.setImageWidthAndHeight(starredImgReceiverViewHolder, messageItem)
-            val base64Img = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaThumbImage())
-            val filePath = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaLocalStoragePath())
+            val base64Img = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaThumbImage)
+            val filePath = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaLocalStoragePath)
             val time: String = getChatMsgTime(messageItem)!!
-            val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
-            starredImageItemViewHelper!!.receiverImageViewItem(starredImgReceiverViewHolder,rowmodel)
+            val chatItemRowModel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
+            starredImageItemViewHelper!!.receiverImageViewItem(starredImgReceiverViewHolder,chatItemRowModel)
             replyViewUtils!!.showReceiverReplyWindow(starredImgReceiverViewHolder, messageItem, context!!)
             setListenersForReceiverImageMessages(starredImgReceiverViewHolder, messageItem, position)
             receiverItemClick(starredImgReceiverViewHolder.viewRowItem, messageItem, position,starredImgReceiverViewHolder.viewReceiver)
@@ -529,7 +548,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     starredImgReceiverViewHolder.cancelDownload, messageItem, starredImgReceiverViewHolder.txtImgSize)
             setSelectedChatItem(starredImgReceiverViewHolder.itemView,
                     messageItem, starredMessageMessages, context)
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredImgReceiverViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredImgReceiverViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -541,9 +560,9 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     /**
-     * starred videoview for sender side
+     * starred video view for sender side
      *
-     * @param holder      adapter viewholder object
+     * @param holder      adapter view holder object
      * @param messageItem object which hold item data
      * @param position    of the item
      */
@@ -552,11 +571,11 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             setHeader(holder, SENDER_HEADER, messageItem)
             val starredVideoSenderViewHolder: VideoSentViewHolder = holder as VideoSentViewHolder
             starredVideoItemViewHelper!!.setImageWidthAndHeight(starredVideoSenderViewHolder, messageItem)
-            val filePath = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaLocalStoragePath())
+            val filePath = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaLocalStoragePath)
             val time: String = getChatMsgTime(messageItem)!!
-            val base64Img = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaThumbImage())
-            val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
-            starredVideoItemViewHelper!!.senderVideoItemView(starredVideoSenderViewHolder,rowmodel)
+            val base64Img = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaThumbImage)
+            val chatItemRowModel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
+            starredVideoItemViewHelper!!.senderVideoItemView(starredVideoSenderViewHolder,chatItemRowModel)
             replyViewUtils!!.showSenderReplyWindow(starredVideoSenderViewHolder, messageItem, context!!)
             setListenersForSenderVideoMessages(starredVideoSenderViewHolder, messageItem, position)
             senderItemClick(starredVideoSenderViewHolder.viewRowItem, messageItem, position,starredVideoSenderViewHolder.viewSender)
@@ -564,7 +583,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     messageItem, starredVideoSenderViewHolder.viewSentCarbonDownload)
             setSelectedChatItem(starredVideoSenderViewHolder.itemView,
                     messageItem, starredMessageMessages, context)
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredVideoSenderViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredVideoSenderViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -576,9 +595,9 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     /**
-     * starred videoview for receiver side
+     * starred video view for receiver side
      *
-     * @param holder      adapter viewholder object
+     * @param holder      adapter view holder object
      * @param messageItem object which hold item data
      * @param position    of the item
      */
@@ -587,11 +606,11 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             setHeader(holder, RECEIVER_HEADER, messageItem)
             val starredVideoReceiverViewHolder = holder as VideoReceivedViewHolder
             starredVideoItemViewHelper!!.setImageWidthAndHeight(starredVideoReceiverViewHolder, messageItem)
-            val filePath = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaLocalStoragePath())
+            val filePath = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaLocalStoragePath)
             val time: String = getChatMsgTime(messageItem)!!
-            val base64Img = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaThumbImage())
-            val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
-            starredVideoItemViewHelper!!.receiverVideoViewItem(starredVideoReceiverViewHolder,rowmodel)
+            val base64Img = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaThumbImage)
+            val chatItemRowModel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
+            starredVideoItemViewHelper!!.receiverVideoViewItem(starredVideoReceiverViewHolder,chatItemRowModel)
             replyViewUtils!!.showReceiverReplyWindow(starredVideoReceiverViewHolder, messageItem, context!!)
             setListenersForReceiverVideoMessages(starredVideoReceiverViewHolder, messageItem, position)
             receiverItemClick(starredVideoReceiverViewHolder.viewRowItem, messageItem, position, starredVideoReceiverViewHolder.viewReceiver)
@@ -599,7 +618,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     starredVideoReceiverViewHolder.cancelDownload, messageItem, starredVideoReceiverViewHolder.txtImgSize)
             setSelectedChatItem(starredVideoReceiverViewHolder.itemView,
                     messageItem, starredMessageMessages, context)
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredVideoReceiverViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredVideoReceiverViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -621,9 +640,9 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         try {
             setHeader(holder, SENDER_HEADER, item)
             val starredLocationSenderViewHolder = holder as LocationSentViewHolder
-            val locationMessage = item.getLocationChatMessage()
+            val locationMessage = item.locationChatMessage
             val time: String = getChatMsgTime(item)!!
-            val url: String = MapUtils.getMapImageUri(locationMessage.getLatitude(), locationMessage.getLongitude())
+            val url: String = MapUtils.getMapImageUri(locationMessage.latitude, locationMessage.longitude)
             starredLocationSenderViewHolder.txtSendTime.text = time
             replyViewUtils!!.showSenderReplyWindow(starredLocationSenderViewHolder, item, context!!)
             loadMapWithGlide(context, url,
@@ -635,7 +654,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             setListenersForSenderLocationMessages(starredLocationSenderViewHolder, item, position)
             senderItemClick(starredLocationSenderViewHolder.viewRowItem, item, position,starredLocationSenderViewHolder.imageSendLocation)
             setSelectedChatItem(starredLocationSenderViewHolder.itemView, item, starredMessageMessages, context)
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredLocationSenderViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredLocationSenderViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -657,9 +676,9 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         try {
             setHeader(holder, RECEIVER_HEADER, item)
             val starredLocationReceiverViewHolder = holder as LocationReceivedViewHolder
-            val locationMessage = item.getLocationChatMessage()
+            val locationMessage = item.locationChatMessage
             val time: String = getChatMsgTime(item)!!
-            val url = MapUtils.getMapImageUri(locationMessage.getLatitude(), locationMessage.getLongitude())
+            val url = MapUtils.getMapImageUri(locationMessage.latitude, locationMessage.longitude)
             loadMapWithGlide(context, url,
                     starredLocationReceiverViewHolder.imageReceiveLocation, R.drawable.ic_map_placeholder)
             starredLocationReceiverViewHolder.txtRevTime.text = time
@@ -668,7 +687,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             setListenersForReceiverLocationMessages(starredLocationReceiverViewHolder, item, position)
             receiverItemClick(starredLocationReceiverViewHolder.viewRowItem, item, position, starredLocationReceiverViewHolder.imageReceiveLocation)
             setSelectedChatItem(starredLocationReceiverViewHolder.itemView, item, starredMessageMessages, context)
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredLocationReceiverViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredLocationReceiverViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -704,7 +723,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             senderItemClick(starredAudioSenderViewHolder.viewRowItem, item, position)
             uploadClick(starredAudioSenderViewHolder.viewRetry, starredAudioSenderViewHolder.viewCarbonRetry, starredAudioSenderViewHolder.progressUploadDownloadLayout, item)
             setSelectedChatItem(starredAudioSenderViewHolder.itemView, item, starredMessageMessages, context)
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredAudioSenderViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredAudioSenderViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -750,7 +769,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             } else {
                 starredAudioReceiverViewHolder.imgAudioType.setImageResource(R.drawable.ic_audio_music_icon)
             }
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredAudioReceiverViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredAudioReceiverViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -781,7 +800,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             uploadClick(starredFileSentViewHolder.fileUploadViewLayout, starredFileSentViewHolder.fileCarbonDownloadView, starredFileSentViewHolder.fileUploadCancelLayout, item)
             setSelectedChatItem(starredFileSentViewHolder.itemView, item, starredMessageMessages, context)
             setSearchHighlightAppCompatTextView(starredFileSentViewHolder.fileNameText,  SpannableStringBuilder(item.mediaChatMessage.mediaFileName))
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredFileSentViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredFileSentViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -804,13 +823,13 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             setHeader(holder, RECEIVER_HEADER, item)
             val starredFileReceivedViewHolder = holder as FileReceivedViewHolder
             val time: String = getChatMsgTime(item)!!
-            val fileStatus = Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaDownloadStatus().toString())
+            val fileStatus = Utils.returnEmptyStringIfNull(item.mediaChatMessage.getMediaDownloadStatus().toString())
             FileItemView(this).fileReceiverItemView(starredFileReceivedViewHolder, time, item)
             starredFileReceivedViewHolder.fileFavoriteImage.visibility = View.VISIBLE
             if (fileStatus.isNotEmpty())
                 chatAdapterHelper!!.presentFileTypeView(starredFileReceivedViewHolder.fileCancelLayout,
                     starredFileReceivedViewHolder.fileDownloadProgress,
-                    starredFileReceivedViewHolder.fileDownloadProgressBuffer, item.getMessageId(), fileStatus.toInt(),
+                    starredFileReceivedViewHolder.fileDownloadProgressBuffer, item.messageId, fileStatus.toInt(),
                     null, starredFileReceivedViewHolder.fileDownloadLayout)
             replyViewUtils!!.showReceiverReplyWindow(starredFileReceivedViewHolder, item, context!!)
             setListenersForReceivedFileMessages(starredFileReceivedViewHolder, item, position)
@@ -820,7 +839,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             setSelectedChatItem(starredFileReceivedViewHolder.itemView,
                     item, starredMessageMessages, context)
             setSearchHighlightAppCompatTextView(starredFileReceivedViewHolder.fileNameText,  SpannableStringBuilder(item.mediaChatMessage.mediaFileName))
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredFileReceivedViewHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredFileReceivedViewHolder.viewDiver?.visibility = View.VISIBLE
@@ -842,8 +861,8 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         try {
             setHeader(holder, SENDER_HEADER, item)
             val starredContactSentHolder = holder as ContactSentViewHolder
-            val contactMessage = item.getContactChatMessage()
-            val contactName = contactMessage.getContactName()
+            val contactMessage = item.contactChatMessage
+            val contactName = contactMessage.contactName
             val time: String = getChatMsgTime(item)!!
             starredContactSentHolder.txtSendName.text = contactName
             starredContactSentHolder.txtSendTime.text = time
@@ -856,7 +875,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             setSelectedChatItem(starredContactSentHolder.itemView, item, starredMessageMessages, context)
             setSearchHighlightAppCompatTextView(starredContactSentHolder.txtSendName, SpannableStringBuilder(contactName))
 
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredContactSentHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredContactSentHolder.viewDiver?.visibility = View.VISIBLE
@@ -873,7 +892,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         position: Int
     ) {
         if (BuildConfig.CONTACT_SYNC_ENABLED){
-            val contactMessage = item.getContactChatMessage()
+            val contactMessage = item.contactChatMessage
             val registeredJid = getJidFromSharedContact(contactMessage)
             if (registeredJid != null) {
                 if(registeredJid == SharedPreferenceManager.getCurrentUserJid() || registeredJid == item.chatUserJid) {
@@ -891,7 +910,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             } else {
                 starredContactSentHolder.contactActionText.text = context!!.resources.getString(R.string.invite)
                 starredContactSentHolder.txtSendImg.setImageResource(R.drawable.ic_profile)
-                setInviteClickListener(starredContactSentHolder.contactActionText, item, position, item.getChatUserJid())
+                setInviteClickListener(starredContactSentHolder.contactActionText, item, position, item.chatUserJid)
             }
         } else {
             starredContactSentHolder.contactActionText.gone()
@@ -901,10 +920,10 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 
     private fun getJidFromSharedContact(contactMessage: ContactChatMessage): String? {
         var registeredJid: String? = null
-        for (i in contactMessage.getIsChatAppUser().indices) {
-            if (contactMessage.getIsChatAppUser()[i] == java.lang.Boolean.TRUE) {
+        for (i in contactMessage.isChatAppUser.indices) {
+            if (contactMessage.isChatAppUser[i] == java.lang.Boolean.TRUE) {
                 val countryCode = SharedPreferenceManager.getString(Constants.COUNTRY_CODE)
-                registeredJid = Utils.getJidFromPhoneNumber(context, contactMessage.getContactPhoneNumbers()[i], if (countryCode.isEmpty()) "IN" else countryCode)
+                registeredJid = Utils.getJidFromPhoneNumber(context, contactMessage.contactPhoneNumbers[i], if (countryCode.isEmpty()) "IN" else countryCode)
                 break
             }
         }
@@ -912,9 +931,9 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     /**
-     * Method used to set the contact profilepicture for loggedin user
+     * Method used to set the contact profile picture for logged in user
      *
-     * @param txtSendImg The contact profile imag view.
+     * @param txtSendImg The contact profile image view.
      * @param isSender  boolean value to identify sender or receiver
      */
     private fun setLoginUserContactProfilePicture(txtSendImg: ImageView,isSender: Boolean) {
@@ -967,20 +986,20 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         try {
             val starredContactReceivedHolder = holder as ContactReceivedViewHolder
             setHeader(holder, RECEIVER_HEADER, item)
-            val contactMessage = item.getContactChatMessage()
-            val contactName = contactMessage.getContactName()
+            val contactMessage = item.contactChatMessage
+            val contactName = contactMessage.contactName
             val time: String = getChatMsgTime(item)!!
             starredContactReceivedHolder.txtSendTime.text = time
             starredContactReceivedHolder.starredSentImage.visibility = View.VISIBLE
             starredContactReceivedHolder.txtSendName.text = contactName
             checkUserFromReceiver(holder, item)
-            setInviteClickListener(starredContactReceivedHolder.contactActionText, item, position, item.getChatUserJid())
+            setInviteClickListener(starredContactReceivedHolder.contactActionText, item, position, item.chatUserJid)
             replyViewUtils!!.showReceiverReplyWindow(starredContactReceivedHolder, item, context!!)
             receiverItemClick(starredContactReceivedHolder.viewRowItem, item, position)
             setSelectedChatItem(starredContactReceivedHolder.itemView, item, starredMessageMessages, context)
             setSearchHighlightAppCompatTextView(starredContactReceivedHolder.txtSendName, SpannableStringBuilder(contactName))
 
-            if (position == starredMessageData!!.size - 1) {
+            if (position == starredMessageData.size - 1) {
                 starredContactReceivedHolder.viewDiver?.visibility = View.GONE
             }else{
                 starredContactReceivedHolder.viewDiver?.visibility = View.VISIBLE
@@ -1000,7 +1019,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     private fun checkUserFromReceiver(holder: RecyclerView.ViewHolder, item: ChatMessage) {
         val chatUserNumber = Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(SharedPreferenceManager.getCurrentUserJid())).replace(" ".toRegex(), "")
         val number = chatUserNumber.replace(" ".toRegex(), "")
-        val contactMessage = item.getContactChatMessage()
+        val contactMessage = item.contactChatMessage
         val contactReceiverViewHolder = holder as ContactReceivedViewHolder
         val registeredJid = getJidFromSharedContact(contactMessage)
         with(contactReceiverViewHolder) {
@@ -1011,7 +1030,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 contactActionText.show()
                 txtSendImg.setImageResource(R.drawable.ic_contact_img)
             }
-            for (num in contactMessage.getContactPhoneNumbers()) {
+            for (num in contactMessage.contactPhoneNumbers) {
                 val receivedNumber = num.replace(" ".toRegex(), "")
                 if (number.contains(receivedNumber)) {
                     contactActionText.gone()
@@ -1034,7 +1053,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 if (countryCode.isEmpty()) "IN" else countryCode
             ) ?: Constants.EMPTY_STRING
             val profileDetail = ProfileDetailsUtils.getProfileDetails(userJid)
-            if (profileDetail == null || !profileDetail.isItSavedContact() || profileDetail.isEmailContact()) {
+            if (profileDetail == null || !profileDetail.isItSavedContact || profileDetail.isEmailContact()) {
                 if (contactActionText.text.toString() == context!!.resources.getString(R.string.message))
                     contactActionText.text = context!!.resources.getString(R.string.message_or_save_contact)
                 else if (contactActionText.text.toString() == context!!.resources.getString(R.string.invite))
@@ -1068,7 +1087,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param item   message item
      */
     private fun setHeader(holder: RecyclerView.ViewHolder, type: Int, item: ChatMessage) {
-        val profileDetails = ProfileDetailsUtils.getProfileDetails(item.getChatUserJid())
+        val profileDetails = ProfileDetailsUtils.getProfileDetails(item.chatUserJid)
         if (type == SENDER_HEADER) {
             val userName = getUserProfileName()
             val setDrawable = SetDrawable(context!!, profileDetails)
@@ -1102,34 +1121,34 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         val profileNickName: String
         var groupUser = Constants.EMPTY_STRING
         val setDrawable: SetDrawable
-        if (item.getMessageChatType() == ChatTypeEnum.groupchat) {
+        if (item.messageChatType == ChatTypeEnum.groupchat) {
             val profileGroupUser = ProfileDetailsUtils.getProfileDetails(item.senderUserJid)
             groupUser = profileGroupUser!!.getDisplayName()
             profileNickName = profileGroupUser.getDisplayName()
             setDrawable = SetDrawable(context!!, profileGroupUser)
-            loadUserProfileImage(context!!, profileGroupUser, receiverHeader.findViewById<ImageView>(R.id.image_participant_picture), setDrawable.setDrawable(profileNickName)!!)
+            loadUserProfileImage(context!!, profileGroupUser, receiverHeader.findViewById(R.id.image_participant_picture), setDrawable.setDrawable(profileNickName)!!)
         } else {
             profileNickName = profileDetails.getDisplayName()
             setDrawable = SetDrawable(context!!, profileDetails)
-            loadUserProfileImage(context!!, profileDetails, receiverHeader.findViewById<ImageView>(R.id.image_participant_picture), setDrawable.setDrawable(profileNickName)!!)
+            loadUserProfileImage(context!!, profileDetails, receiverHeader.findViewById(R.id.image_participant_picture), setDrawable.setDrawable(profileNickName)!!)
         }
         val receiverName: String = profileDetails.getDisplayName()
-        val userDpName = if (item.getMessageChatType() == ChatTypeEnum.groupchat) "$groupUser --> $receiverName" else "$receiverName --> You"
+        val userDpName = if (item.messageChatType == ChatTypeEnum.groupchat) "$groupUser --> $receiverName" else "$receiverName --> You"
         starredReceiverTextView.text = userDpName
         starredReceiverTextView.isSelected = true
         check(holder)
     }
 
     private fun loadUserProfileImage(context: Context, profileDetails: ProfileDetails, imgView: ImageView, errorImg: Drawable) {
-        var errorImg: Drawable? = errorImg
+        var errorProfileImage: Drawable? = errorImg
         var imageUrl = if (!profileDetails.thumbImage.isNullOrEmpty()) {
             profileDetails.thumbImage
         } else profileDetails.image
         if (profileDetails.isAdminBlocked || profileDetails.isBlockedMe || profileDetails.isDeletedContact()) {
             imageUrl = Constants.EMPTY_STRING
-            errorImg = ProfilePicUtil.getDefaultDrawable(context, ChatType.TYPE_CHAT)
+            errorProfileImage = ProfilePicUtil.getDefaultDrawable(context, ChatType.TYPE_CHAT)
         }
-        MediaUtils.loadImage(context, imageUrl, imgView, errorImg)
+        MediaUtils.loadImage(context, imageUrl, imgView, errorProfileImage)
     }
 
     /**
@@ -1145,11 +1164,11 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     /**
      * This method is used to get the message sent time
      *
-     * @param item messsage item
+     * @param item message item
      * @return time
      */
     private fun getChatMsgTime(item: ChatMessage): String? {
-        return ChatMsgTime(Calendar.getInstance()).getDaySentMsg(context, item.getMessageSentTime())
+        return ChatMsgTime(Calendar.getInstance()).getDaySentMsg(context, item.messageSentTime)
     }
 
     /**
@@ -1206,7 +1225,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position            list item position
      */
     private fun setListenersForSenderTextMessages(txtSenderViewHolder: TextSentViewHolder, item: ChatMessage, position: Int) {
-        txtSenderViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        txtSenderViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         txtSenderViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1248,7 +1267,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position              list item position
      */
     private fun setListenersForReceiverTextMessages(txtReceiverViewHolder: TextReceivedViewHolder, item: ChatMessage, position: Int) {
-        txtReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        txtReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         txtReceiverViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1280,42 +1299,41 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     /**
      * Handle the audio play click
      *
-     * @param filePath        Local path of the audio
-     * @param duration        Local file duration
+     * @param chatMessage        chatMessage
+     * @param holder            holder of the chat message
      * @param position        Position of the chat item
      * @param playImage       Play button of the audio view
      * @param seekBar         Seek bar of the audio
      * @param durationView    Duration text view
      * @param doesSentMessage Boolean to identify whether the audio message is posted in the chat activity.
      */
-    private fun starredAudioPlayClick(item: ChatMessage,holder: RecyclerView.ViewHolder, position: Int, playImage: ImageView,
+    private fun starredAudioPlayClick(chatMessage: ChatMessage, holder: RecyclerView.ViewHolder, position: Int, playImage: ImageView,
                                       seekBar: SeekBar, durationView: TextView, doesSentMessage: Boolean) {
         playImage.setOnClickListener { _: View? ->
-            val filePath = Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaLocalStoragePath())
+            val filePath = Utils.returnEmptyStringIfNull(chatMessage.mediaChatMessage.mediaLocalStoragePath)
             if (mMediaController!!.currentAudioPosition != -1 && position != mMediaController!!.currentAudioPosition) mMediaController!!.resetAudioPlayer(false)
-            mMediaController!!.setMediaResource(filePath, item.getMediaChatMessage().getMediaDuration(), playImage, doesSentMessage)
+            mMediaController!!.setMediaResource(filePath, chatMessage.mediaChatMessage.mediaDuration, playImage, doesSentMessage)
             mMediaController!!.setMediaSeekBar(seekBar)
             mMediaController!!.setMediaTimer(durationView)
             mMediaController!!.currentAudioPosition = position
             mMediaController!!.handlePlayer(doesSentMessage)
         }
-        setAudioSeekBarListener(item, holder, playImage, seekBar, durationView)
+        setAudioSeekBarListener(chatMessage, holder, playImage, seekBar, durationView)
     }
 
     /**
      * Handle the audio seekbar click
      *
-     * @param item            Message Item data
+     * @param chatMessage            Message Item data
      * @param holder          View holder of current view in adapter
      * @param playImage       Play button of the audio view
-     * @param SeekBar         Seek bar of the audio
-     * @param doesSentMessage Boolean to identify whether the audio message is posted in the
+     * @param starredMsgSeekBar         Seek bar of the audio
      * @param durationView to set  duration in the audio
      */
-    private fun setAudioSeekBarListener(item: ChatMessage, holder: RecyclerView.ViewHolder, playImage: ImageView, starredMsgSeekBar: SeekBar,
-                                         durationView: TextView) {
+    private fun setAudioSeekBarListener(chatMessage: ChatMessage, holder: RecyclerView.ViewHolder, playImage: ImageView, starredMsgSeekBar: SeekBar,
+                                        durationView: TextView) {
         with(holder) {
-            val media = item.getMediaChatMessage()
+            val media = chatMessage.mediaChatMessage
             starredMsgSeekBar.setOnSeekBarChangeListener((object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
@@ -1323,7 +1341,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     fromUser: Boolean
                 ) {
                         mMediaController?.updateSeekbarChangesForStarredMsg(progress,layoutPosition,
-                            media.getMediaLocalStoragePath(),fromUser,durationView,
+                            media.mediaLocalStoragePath,fromUser,durationView,
                             starredMsgSeekBar, playImage)
                 }
 
@@ -1332,7 +1350,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 }
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    mMediaController?.onStopTrackingTouch(seekBar,media.getMediaLocalStoragePath())
+                    mMediaController?.onStopTrackingTouch(seekBar,media.mediaLocalStoragePath)
                 }
             }))
 
@@ -1341,7 +1359,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 
 
     override fun setChatStatus(item: ChatMessage?, viewHolder: ImageView?) {
-        chatStarredMessageUtils!!.setChatStatus(viewHolder, item!!.getMessageStatus())
+        chatStarredMessageUtils!!.setChatStatus(viewHolder, item!!.messageStatus)
     }
 
     override fun setRecentChatStatus(viewHolder: ImageView?, status: MessageStatus?) {
@@ -1352,7 +1370,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         when (mediaStatus.status) {
             MediaDownloadStatus.MEDIA_DOWNLOADED, MediaUploadStatus.MEDIA_UPLOADED -> {
                 chatAdapterHelper!!.mediaUploadView(mediaStatus.progressBar!!, mediaStatus.cancelImageview!!, mediaStatus.viewProgress)
-                if (mediaStatus.item!!.getMessageType() == MessageType.VIDEO) mediaStatus.imgPlay!!.visibility = View.VISIBLE
+                if (mediaStatus.item!!.messageType == MessageType.VIDEO) mediaStatus.imgPlay!!.visibility = View.VISIBLE
                 mediaStatus.txtRetry!!.visibility = View.GONE
                 if (mediaStatus.download != null) mediaStatus.download!!.visibility = View.GONE
             }
@@ -1396,7 +1414,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     override fun setStatus(item: ChatMessage?, imgChatStatus: ImageView?) {
-        chatStarredMessageUtils!!.setChatStatus(imgChatStatus, item!!.getMessageStatus())
+        chatStarredMessageUtils!!.setChatStatus(imgChatStatus, item!!.messageStatus)
     }
 
     /**
@@ -1420,7 +1438,10 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         val formatter1 = SimpleDateFormat("MMM dd,yyyy", Locale.getDefault())
         var messageDate: String? = null
         try {
-            messageDate = formatter.format(formatter1.parse(ChatUserTimeUtils.getDateFromTimestamp(item.getMessageSentTime())))
+            messageDate = ChatUserTimeUtils.getDateFromTimestamp(item.messageSentTime)?.let { dateFromTimeStamp ->
+                formatter1.parse(dateFromTimeStamp)
+                    ?.let { formatter.format(it) }
+            }
         } catch (e: ParseException) {
             LogMessage.e(TAG, e)
         }
@@ -1428,7 +1449,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     private fun setListenersForSenderImageMessages(imgViewHolder: ImageSentViewHolder, item: ChatMessage, position: Int) {
-        imgViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        imgViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         imgViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1443,7 +1464,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position      The position of the item within the adapter's data set.
      */
     private fun setListenersForReceiverImageMessages(imgViewHolder: ImageReceivedViewHolder, item: ChatMessage, position: Int) {
-        imgViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        imgViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         imgViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1472,7 +1493,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     txtSize.visibility = View.VISIBLE
                     download.visibility = View.VISIBLE
                 }
-                cancelMediaUploadOrDownload(messageItem.getMessageId())
+                cancelMediaUploadOrDownload(messageItem.messageId)
                 listener!!.onCancelDownloadClicked(messageItem)
             }
         }
@@ -1493,7 +1514,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position              The position of the item within the adapter's data set.
      */
     private fun setListenersForSenderVideoMessages(videoSenderViewHolder: VideoSentViewHolder, item: ChatMessage, position: Int) {
-        videoSenderViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        videoSenderViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         videoSenderViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1513,7 +1534,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         carbonDownloadView.setOnClickListener { _: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
         cancelUpload.setOnClickListener { _: View? ->
             if (listener != null) {
-                cancelMediaUploadOrDownload(messageItem.getMessageId())
+                cancelMediaUploadOrDownload(messageItem.messageId)
                 listener!!.onCancelUploadClicked(messageItem)
             }
         }
@@ -1528,7 +1549,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position                The position of the item within the adapter's data set.
      */
     private fun setListenersForReceiverVideoMessages(videoReceiverViewHolder: VideoReceivedViewHolder, item: ChatMessage, position: Int) {
-        videoReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        videoReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         videoReceiverViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1543,7 +1564,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position       The position of the item within the adapter's data set.
      */
     private fun setListenersForReceiverLocationMessages(locationHolder: LocationReceivedViewHolder, item: ChatMessage, position: Int) {
-        locationHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        locationHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         locationHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1558,7 +1579,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position       The position of the item within the adapter's data set.
      */
     private fun setListenersForSenderLocationMessages(locationHolder: LocationSentViewHolder, item: ChatMessage, position: Int) {
-        locationHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        locationHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         locationHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1573,7 +1594,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position        The position of the item within the adapter's data set.
      */
     private fun setListenersForAudioMessages(audioViewHolder: AudioSentViewHolder, item: ChatMessage, position: Int) {
-        audioViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        audioViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         audioViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1592,7 +1613,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         carbonRetry?.setOnClickListener { _: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
         cancelUpload.setOnClickListener { _: View? ->
             if (listener != null) {
-                cancelMediaUploadOrDownload(messageItem.getMessageId())
+                cancelMediaUploadOrDownload(messageItem.messageId)
                 listener!!.onCancelUploadClicked(messageItem)
             }
         }
@@ -1606,7 +1627,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position                The position of the item within the adapter's data set.
      */
     private fun setListenersForReceiverAudioMessages(audioReceiverViewHolder: AudioReceivedViewHolder, item: ChatMessage, position: Int) {
-        audioReceiverViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        audioReceiverViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         audioReceiverViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1624,7 +1645,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         download.setOnClickListener { _: View? -> if (listener != null) listener!!.onDownloadClicked(messageItem) }
         cancelDownload.setOnClickListener { _: View? ->
             if (listener != null) {
-                cancelMediaUploadOrDownload(messageItem.getMessageId())
+                cancelMediaUploadOrDownload(messageItem.messageId)
                 listener!!.onCancelDownloadClicked(messageItem)
             }
         }
@@ -1639,16 +1660,16 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      */
     private fun setFileSenderView(fileViewHolder: FileSentViewHolder, item: ChatMessage, time: String) {
         fileItemView!!.fileSenderItemView(fileViewHolder, time, item)
-        val fileStatus = Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaUploadStatus().toString())
-        val fileDownloadStatus = Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaDownloadStatus().toString())
+        val fileStatus = Utils.returnEmptyStringIfNull(item.mediaChatMessage.getMediaUploadStatus().toString())
+        val fileDownloadStatus = Utils.returnEmptyStringIfNull(item.mediaChatMessage.getMediaDownloadStatus().toString())
         fileViewHolder.fileCarbonDownloadView?.gone()
         fileViewHolder.fileUploadViewLayout.gone()
         chatAdapterHelper!!.presentFileTypeView(fileViewHolder.fileUploadCancelLayout, fileViewHolder.fileUploadProgress,
-            fileViewHolder.fileUploadProgressBuffer, item.getMessageId(),  if (item.isItCarbonMessage()) fileDownloadStatus.toInt() else fileStatus.toInt(),
-            null, if (item.isItCarbonMessage()) fileViewHolder.fileCarbonDownloadView else fileViewHolder.fileUploadViewLayout)
-        if (item.isThisAReplyMessage()) {
+            fileViewHolder.fileUploadProgressBuffer, item.messageId,  if (item.isItCarbonMessage) fileDownloadStatus.toInt() else fileStatus.toInt(),
+            null, if (item.isItCarbonMessage) fileViewHolder.fileCarbonDownloadView else fileViewHolder.fileUploadViewLayout)
+        if (item.isThisAReplyMessage) {
             fileViewHolder.showSentReplyView()
-            ReplyMessageUtils().showReplyMessage(context, fileViewHolder, item.getReplyParentChatMessage(), item.isGroupMessage())
+            ReplyMessageUtils().showReplyMessage(context, fileViewHolder, item.replyParentChatMessage, item.isGroupMessage())
         } else fileViewHolder.hideSentReplyView()
     }
 
@@ -1660,7 +1681,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position       The position of the item within the adapter's data set.
      */
     private fun setListenersForSentFileMessages(fileViewHolder: FileSentViewHolder, item: ChatMessage, position: Int) {
-        fileViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        fileViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         fileViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
@@ -1675,7 +1696,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
      * @param position       The position of the item within the adapter's data set.
      */
     private fun setListenersForReceivedFileMessages(fileViewHolder: FileReceivedViewHolder, item: ChatMessage, position: Int) {
-        fileViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.getMessageId()) }
+        fileViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         fileViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false

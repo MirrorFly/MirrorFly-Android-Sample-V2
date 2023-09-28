@@ -10,6 +10,7 @@ import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.FlyCallback
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.R
+import com.contusfly.TAG
 import com.contusfly.activities.*
 import com.contusfly.fragments.ProfileDialogFragment
 import com.contusfly.showToast
@@ -18,8 +19,11 @@ import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.contusfly.views.CustomAlertDialog
+import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.views.CustomToast
 
 abstract class BaseContactActivity : BaseActivity() {
 
@@ -69,25 +73,32 @@ abstract class BaseContactActivity : BaseActivity() {
     protected fun listItemClicked(profileClicked : Boolean, profile: ProfileDetails) {
         ContactManager.insertProfile(profile)
         ProfileDetailsUtils.addContact(profile)
-        ContactManager.getUserProfile(profile.jid, true, false, FlyCallback { _, _, _ ->  })
-        if (multiSelection) {
-            handleMultiSelection(profile)
-        } else {
-            if(profileClicked) {
-                if (SystemClock.elapsedRealtime() - lastClickTime < 1000)
-                    return
-                lastClickTime = SystemClock.elapsedRealtime()
-                val dialogFragment = ProfileDialogFragment.newInstance(profile)
-                val ft = supportFragmentManager.beginTransaction()
-                val prev = supportFragmentManager.findFragmentByTag("dialog")
-                if (prev != null) {
-                    ft.remove(prev)
-                }
-                ft.addToBackStack(null)
-                dialogFragment.show(ft, "dialog")
+        try {
+            if (AppUtils.isNetConnected(ChatManager.applicationContext))
+                ContactManager.getUserProfile(profile.jid, true, false, FlyCallback { _, _, _ -> })
+            else
+                CustomToast.show(this, getString(R.string.error_check_internet))
+            if (multiSelection) {
+                handleMultiSelection(profile)
             } else {
-                privateChatUserChecking(profile)
+                if (profileClicked) {
+                    if (SystemClock.elapsedRealtime() - lastClickTime < 1000)
+                        return
+                    lastClickTime = SystemClock.elapsedRealtime()
+                    val dialogFragment = ProfileDialogFragment.newInstance(profile)
+                    val ft = supportFragmentManager.beginTransaction()
+                    val prev = supportFragmentManager.findFragmentByTag("dialog")
+                    if (prev != null) {
+                        ft.remove(prev)
+                    }
+                    ft.addToBackStack(null)
+                    dialogFragment.show(ft, "dialog")
+                } else {
+                    privateChatUserChecking(profile)
+                }
             }
+        }catch (e:Exception){
+            LogMessage.e(TAG,e.toString())
         }
     }
 

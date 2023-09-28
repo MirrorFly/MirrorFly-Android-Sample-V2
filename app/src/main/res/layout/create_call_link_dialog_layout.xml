@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_10">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/generate_meeting_link_txt_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:fontFamily="@font/sf_ui_display_semi_bold"
+        android:text="@string/generate_meeting_link"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/anyone_mirrorfly_can_join_txt_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:fontFamily="@font/sf_ui_display_regular"
+        android:text="@string/anyone_with_mirror_fly_can_join_call"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintStart_toStartOf="@id/generate_meeting_link_txt_view"
+        app:layout_constraintTop_toBottomOf="@id/generate_meeting_link_txt_view" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/copy_link_holder"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="@dimen/margin_10"
+        android:background="#F2F2F2"
+        app:layout_constraintBottom_toTopOf="@+id/join_meeting"
+        app:layout_constraintStart_toStartOf="@id/anyone_mirrorfly_can_join_txt_view"
+        app:layout_constraintTop_toBottomOf="@id/anyone_mirrorfly_can_join_txt_view">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/meet_link_text_view"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.85"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_8"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:text="@string/meet_link_will_be_generated_here"
+            android:textColor="#6580CB"
+            android:textSize="@dimen/text_size_12"
+            android:ellipsize="end"
+            android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/meet_link_copy"
+            android:layout_width="@dimen/margin_20"
+            android:layout_height="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_5"
+            android:contentDescription="@string/image_content_description"
+            app:layout_constraintStart_toEndOf="@+id/meet_link_text_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_copy_link_grey" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/join_meeting"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:background="@drawable/blue_rounded_corners"
+        android:fontFamily="@font/sf_ui_display_semi_bold"
+        android:text="@string/join_meeting"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintEnd_toEndOf="@+id/copy_link_holder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/copy_link_holder" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/share_meet_link"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:background="@drawable/blue_border_bg"
+        android:fontFamily="@font/sf_ui_display_regular"
+        android:text="@string/share_call_link"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/invite_contact_call_link"
+        app:layout_constraintHorizontal_weight="5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/join_meeting" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/invite_contact_call_link"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:background="@drawable/blue_border_bg"
+        android:fontFamily="@font/sf_ui_display_medium"
+        android:text="@string/invite_contacts_call_link"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="6"
+        app:layout_constraintStart_toEndOf="@+id/share_meet_link"
+        app:layout_constraintTop_toBottomOf="@+id/join_meeting" />
+</androidx.constraintlayout.widget.ConstraintLayout>
