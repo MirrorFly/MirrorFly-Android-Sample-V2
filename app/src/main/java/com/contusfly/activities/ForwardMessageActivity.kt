@@ -320,6 +320,16 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
         updateProfileDetails(jid)
     }
 
+    override fun userBlockedMe(jid: String) {
+        super.userBlockedMe(jid)
+        updateProfileDetails(jid)
+    }
+
+    override fun userUnBlockedMe(jid: String) {
+        super.userUnBlockedMe(jid)
+        updateProfileDetails(jid)
+    }
+
     /**
      * To handle callback of any user's profile deleted
      */

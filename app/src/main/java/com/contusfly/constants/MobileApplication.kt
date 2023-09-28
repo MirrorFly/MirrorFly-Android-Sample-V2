@@ -221,10 +221,6 @@ class MobileApplication : Application(), HasAndroidInjector {
                 } else
                     getNotificationMessage()
             }
-
-            override fun sendCallMessage(details: GroupCallDetails, users: List<String>, invitedUsers: List<String>) {
-                CallMessenger.sendCallMessage(details, users, invitedUsers)
-            }
         })
 
         CallManager.setCallNameHelper(object : CallNameHelper {
@@ -233,7 +229,7 @@ class MobileApplication : Application(), HasAndroidInjector {
             }
         })
 
-        CallManager.keepConnectionInForeground(true)
+        CallManager.keepConnectionInForeground(false)
 
     }
 

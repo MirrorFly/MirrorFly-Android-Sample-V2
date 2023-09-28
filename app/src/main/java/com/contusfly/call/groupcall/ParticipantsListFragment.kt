@@ -27,8 +27,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import androidx.viewpager2.widget.ViewPager2
+import com.contus.call.CallConstants
 import com.google.android.material.tabs.TabLayoutMediator
 import com.contusfly.call.groupcall.utils.CallUtils
+import com.mirrorflysdk.activities.FlyBaseActivity
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 
 
 class ParticipantsListFragment : Fragment(), CoroutineScope {
@@ -167,18 +170,18 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
     }
 
     fun refreshUsersList() {
-        LogMessage.d(TAG, "${com.contus.call.CallConstants.CALL_UI} refreshUsersList")
+        LogMessage.d(TAG, "${CallConstants.CALL_UI} refreshUsersList")
         addParticipantsListFragment.refreshUsersList()
     }
 
     fun refreshUser(jid: String) {
-        LogMessage.d(TAG, "${com.contus.call.CallConstants.CALL_UI} refreshUser == $jid")
+        LogMessage.d(TAG, "${CallConstants.CALL_UI} refreshUser == $jid")
         addParticipantsListFragment.refreshUser(jid)
         onGngCallParticipantsListFragment.refreshUser(jid)
     }
 
     fun removeUser(jid: String) {
-        LogMessage.d(TAG, "${com.contus.call.CallConstants.CALL_UI} removeUser == $jid")
+        LogMessage.d(TAG, "${CallConstants.CALL_UI} removeUser == $jid")
         addParticipantsListFragment.removeUser(jid)
     }
 
@@ -188,8 +191,11 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search_group_call, menu)
-        if (tabPosition == 0) hideMenu(menu!!.findItem(R.id.action_search))
-        else showMenu(menu!!.findItem(R.id.action_search))
+        if (tabPosition == 0) hideMenu(menu.findItem(R.id.action_search))
+        else showMenu(menu.findItem(R.id.action_search))
+        if(GroupCallUtils.isCallLinkBehaviourMeet()){
+            hideMenu(menu.findItem(R.id.action_search))
+        }
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -275,9 +281,10 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
         onGngCallParticipantsListFragment.handleMuteEvents(userJid)
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDetach() {
         CallUtils.setIsAddUsersToTheCall(false)
+        FlyBaseActivity.hideSoftKeyboard(requireActivity())
+        super.onDetach()
     }
 
 

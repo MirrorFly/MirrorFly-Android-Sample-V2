@@ -13,6 +13,7 @@ import com.contusfly.R
 import com.contusfly.activities.parent.ChatParent
 import com.contusfly.utils.AudioRecorder
 import com.contusfly.utils.Constants
+import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.views.CustomToast
 import java.text.SimpleDateFormat
@@ -117,10 +118,14 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
 
         chatParent.textAudioSlideToCancel.setOnTouchListener { _, motionEvent ->
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                LogMessage.e("RECORDING","START_RECORD")
                 onStartRecording(motionEvent)
             } else if (motionEvent.action == MotionEvent.ACTION_UP || motionEvent.action == MotionEvent.ACTION_CANCEL) {
+                LogMessage.e("RECORDING","STOP_MOVING")
                 onStopMoving()
+                visibleGoneRecordTimerDeleteIcon(false)
             } else if (motionEvent.action == MotionEvent.ACTION_MOVE) {
+                LogMessage.e("RECORDING","START_MOVING---$stopTrackingAction")
                 if (stopTrackingAction) {
                     true
                 }
@@ -172,6 +177,7 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         if (!canRecordVoice)
             return
         val direction: UserBehaviour = getDirection(motionEvent)
+        LogMessage.e("RECORDING","$direction")
         if (direction == UserBehaviour.CANCELING) {
             if (userBehaviour == UserBehaviour.NONE || motionEvent.rawY + chatParent.voiceAttachment.width / 2 > firstY) {
                 userBehaviour = UserBehaviour.CANCELING
@@ -207,20 +213,33 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
 
     private fun translateX(x: Float) {
         if (if (isLayoutDirectionRightToLeft) x > cancelOffset else x < -cancelOffset) {
+            LogMessage.e("RECORDING","CANCELLED")
             canceled()
             chatParent.imageViewAudio.translationX = 0f
             chatParent.textAudioSlideToCancel.translationX = 0f
             return
         }
         if (if (isLayoutDirectionRightToLeft) x > cancelIconOffset else x < -cancelIconOffset) {
+            LogMessage.e("RECORDING","SWIPE_VISIBLE_DELETE")
+            visibleGoneRecordTimerDeleteIcon(true)
+        } else {
+            LogMessage.e("RECORDING","SWIPE_GONE_DELETE")
+            visibleGoneRecordTimerDeleteIcon(false)
+        }
+        chatParent.textAudioSlideToCancel.translationX = x
+        chatParent.imageViewAudio.translationY = 0f
+    }
+
+    private fun visibleGoneRecordTimerDeleteIcon(isDeleteIconVisible:Boolean){
+        if(isDeleteIconVisible){
             chatParent.imageAudioRecordDelete.visibility = View.VISIBLE
             chatParent.textAudioRecordTimer.visibility = View.GONE
         } else {
             chatParent.imageAudioRecordDelete.visibility = View.GONE
+
+            if(chatParent.layoutViewAudio.visibility == View.VISIBLE)
             chatParent.textAudioRecordTimer.visibility = View.VISIBLE
         }
-        chatParent.textAudioSlideToCancel.translationX = x
-        chatParent.imageViewAudio.translationY = 0f
     }
 
     private fun startRecord() {

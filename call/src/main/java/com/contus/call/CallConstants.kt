@@ -4,6 +4,8 @@ object CallConstants {
 
     const val CALL_UI = "#avcall #callUI"
 
+    const val JOIN_CALL = "#joinCall"
+
     /**
      * Video call request code
      */

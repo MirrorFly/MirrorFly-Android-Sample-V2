@@ -6,7 +6,7 @@
     android:background="@color/group_pip_background"
     android:orientation="vertical"
     android:visibility="gone"
-    android:weightSum="1">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -71,6 +71,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/remote_users_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5">

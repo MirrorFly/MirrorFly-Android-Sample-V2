@@ -14,29 +14,42 @@ import androidx.core.graphics.BlendModeCompat
 import androidx.lifecycle.observe
 import com.contus.call.CallConstants
 import com.contus.call.CallConstants.CALL_UI
-import com.mirrorflysdk.flycall.call.joincall.JoinCallListener
-import com.mirrorflysdk.flycommons.Error
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
-import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.mirrorflysdk.flycall.webrtc.api.JoinCallActionListener
-import com.contusfly.*
+import com.contus.call.CallConstants.JOIN_CALL
+import com.contusfly.R
+import com.contusfly.TAG
 import com.contusfly.activities.BaseActivity
 import com.contusfly.activities.DashboardActivity
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.ActivityOnGoingCallPreviewScreenBinding
 import com.contusfly.network.NetworkConnection
-import com.contusfly.utils.*
-import com.contusfly.views.*
+import com.contusfly.showToast
+import com.contusfly.utils.Constants
+import com.contusfly.utils.MediaPermissions
+import com.contusfly.utils.MediaUtils
+import com.contusfly.utils.SharedPreferenceManager
+import com.contusfly.utils.UserInterfaceUtils
+import com.contusfly.views.CircularImageView
+import com.contusfly.views.CommonAlertDialog
+import com.contusfly.views.CustomTextView
+import com.contusfly.views.DoProgressDialog
+import com.contusfly.views.PermissionAlertDialog
+import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.AppUtils
+import com.mirrorflysdk.flycall.call.joincall.JoinCallListener
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
+import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycall.webrtc.api.JoinCallActionListener
+import com.mirrorflysdk.flycommons.Error
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import org.webrtc.RendererCommon
 import org.webrtc.VideoTrack
-import kotlin.collections.ArrayList
 
-class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonAlertDialog.CommonDialogClosedListener {
+class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
+    CommonAlertDialog.CommonDialogClosedListener {
 
     private lateinit var onGoingCallPreviewScreenBinding: ActivityOnGoingCallPreviewScreenBinding
 
@@ -72,8 +85,18 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
      */
     private var commonAlertDialog: CommonAlertDialog? = null
 
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (!permissions.containsValue(false)) {
+            LogMessage.d(TAG, "#OnGngCall $JOIN_CALL notificationPermissionLauncher!!")
+        }
+
+    }
+
     private val videoCallPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
         if (!permissions.containsValue(false)) {
             setAudioMuteUnMuteStatus()
             CallManager.startVideoCapture()
@@ -84,14 +107,15 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     private val audioCallPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
         if (!permissions.containsValue(false)) {
             setViewMuteAndUnMuteStatus(muteAudioImage, false)
             toggleMic()
         }
     }
 
-    private val permissionAlertDialog : PermissionAlertDialog by lazy { PermissionAlertDialog(this) }
+    private val permissionAlertDialog: PermissionAlertDialog by lazy { PermissionAlertDialog(this) }
 
     /**
      * This image view for  audio mute
@@ -121,10 +145,13 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
             return
         }
         isFromOnCreate = true
-        onGoingCallPreviewScreenBinding = ActivityOnGoingCallPreviewScreenBinding.inflate(layoutInflater)
+        onGoingCallPreviewScreenBinding =
+            ActivityOnGoingCallPreviewScreenBinding.inflate(layoutInflater)
         setContentView(onGoingCallPreviewScreenBinding.root)
-        onGoingCallPreviewScreenBinding.viewUsersProfileImage.layoutMembersImage.visibility = View.INVISIBLE
-        userName = Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME))
+        onGoingCallPreviewScreenBinding.viewUsersProfileImage.layoutMembersImage.visibility =
+            View.INVISIBLE
+        userName =
+            Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME))
         progressDialog = DoProgressDialog(this)
         progressDialog!!.showProgress()
         callEndedView = onGoingCallPreviewScreenBinding.layoutCallEndedView
@@ -141,7 +168,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
         userJid = intent.extras!!.getString(Constants.USER_JID, Constants.EMPTY_STRING)
 
         if (callLink.isNotEmpty()) {
-            LogMessage.d(TAG, "#OnGngCall Preview Started")
+            LogMessage.d(TAG, "#OnGngCall $JOIN_CALL Preview Started")
             validateAndStartJoinCallSetup(callLink)
         } else {
             CustomToast.show(this, "Call link can't be empty")
@@ -151,42 +178,46 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     private fun validateAndStartJoinCallSetup(callLink: String) {
+        LogMessage.d(TAG, "#OnGngCall $JOIN_CALL validateAndStartJoinCallSetup")
         val onGngCallLink = CallManager.getCallLink()
         if (CallManager.isOnGoingCall() && (onGngCallLink != callLink)) {
             hideProgressDialog()
             askCallSwitchPopup(callLink)
         } else if (CallManager.isOnTelephonyCall(this)) {
             hideProgressDialog()
-            commonAlertDialog!!.showAlertDialog(
-                this.getString(R.string.msg_telephony_call_alert),
-                this.getString(R.string.action_Ok),
-                this.getString(R.string.action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false
-            )
+            showAlertForTelephonyCall()
         } else {
             joinCallPreviewInitialization()
         }
     }
 
     private fun askCallSwitchPopup(url: String) {
-        commonAlertDialog!!.showCallSwitchAlertDialog(url,
+        commonAlertDialog!!.showCallSwitchAlertDialog(
+            url,
             this.getString(R.string.action_ok),
             this.getString(R.string.action_cancel),
-            CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL)
+            CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL
+        )
     }
 
-    private fun joinCallPreviewInitialization() {
-        CallManager.setupJoinCallViaLink()
+    private fun subscribeCallEvents() {
         CallManager.subscribeCallEvents(callLink, userName, object : JoinCallActionListener {
             override fun onFailure(error: Error) {
-                LogMessage.d(TAG, "Subscribe call failure")
+                LogMessage.d(TAG, "#OnGngCall $JOIN_CALL Subscribe call failure")
                 handleOnFailure(error)
             }
 
             override fun onSuccess() {
-                LogMessage.d(TAG, "Subscribe call success")
+                LogMessage.d(TAG, "#OnGngCall $JOIN_CALL Subscribe call success")
+                checkInternetConnection!!.visibility = View.GONE
                 checkCallPermissions()
             }
         })
+    }
+
+    private fun joinCallPreviewInitialization() {
+        LogMessage.d(TAG, "#OnGngCall $JOIN_CALL joinCallPreviewInitialization")
+        CallManager.setupJoinCallViaLink()
 
         initViews()
         initVideoLocalView()
@@ -196,7 +227,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     private fun handleOnFailure(error: Error) {
-        LogMessage.d(TAG, "$CALL_UI ${error.code}")
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL ${error.code}")
         var callEnded: String = Constants.EMPTY_STRING
         var callEndedMessage: String = Constants.EMPTY_STRING
         var isInvalidLink = false
@@ -206,18 +237,26 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
                 callEndedMessage = getString(R.string.return_to_chat)
                 isInvalidLink = true
             }
+
             Error.CALL_ENDED_ALREADY -> {
                 callEnded = getString(R.string.call_ended_text)
                 callEndedMessage = getString(R.string.call_ended_text_message)
                 isInvalidLink = false
             }
+
             Error.INTERNAL_SERVER_ERROR -> {
                 callEnded = getString(R.string.call_ended_text)
                 callEndedMessage = getString(R.string.something_went_wrong)
                 isInvalidLink = false
             }
+
             Error.MAX_USERS_REACHED -> {
-                showToast(String.format(getString(R.string.max_members_in_call), CallManager.getMaxCallUsersCount()))
+                showToast(
+                    String.format(
+                        getString(R.string.max_members_in_call),
+                        CallManager.getMaxCallUsersCount()
+                    )
+                )
                 finish()
                 return
             }
@@ -254,6 +293,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     private fun checkCallPermissions() {
         /* Video Permission */
         if (CallManager.isVideoCallPermissionsGranted(skipBlueToothPermission = false)) {
+            CallManager.startVideoCapture()
             CallManager.muteVideo(false)
             muteVideoImage.isActivated = true
             showLocalVideoView(true)
@@ -261,7 +301,11 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
             CallManager.muteVideo(true)
             muteVideoImage.isActivated = false
             showLocalVideoView(false)
-            MediaPermissions.requestVideoCallPermissions(this, permissionAlertDialog, videoCallPermissionLauncher)
+            MediaPermissions.requestVideoCallPermissions(
+                this,
+                permissionAlertDialog,
+                videoCallPermissionLauncher
+            )
         }
 
         /* Audio Permission */
@@ -271,7 +315,24 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
         } else {
             CallManager.muteAudio(true)
             muteAudioImage.isActivated = false
-            MediaPermissions.requestAudioCallPermissions(this, permissionAlertDialog, audioCallPermissionLauncher)
+            MediaPermissions.requestAudioCallPermissions(
+                this,
+                permissionAlertDialog,
+                audioCallPermissionLauncher
+            )
+        }
+
+        if (CallManager.isNotificationPermissionsGranted()) {
+            LogMessage.d(
+                TAG,
+                "#OnGngCall $JOIN_CALL joinCallPreviewInitialization isNotificationPermissionsGranted"
+            )
+        } else {
+            MediaPermissions.requestNotificationPermission(
+                this,
+                permissionAlertDialog,
+                notificationPermissionLauncher, true
+            )
         }
     }
 
@@ -279,8 +340,17 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
         setSupportActionBar(onGoingCallPreviewScreenBinding.toolbar.root)
         supportActionBar?.title = Constants.EMPTY_STRING
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        UserInterfaceUtils.initializeCustomToolbar(this, onGoingCallPreviewScreenBinding.toolbar.root)
-        onGoingCallPreviewScreenBinding.toolbar.root.navigationIcon?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(ContextCompat.getColor(this, R.color.color_white), BlendModeCompat.SRC_ATOP)
+        UserInterfaceUtils.initializeCustomToolbar(
+            this,
+            onGoingCallPreviewScreenBinding.toolbar.root
+        )
+        onGoingCallPreviewScreenBinding.toolbar.root.navigationIcon?.colorFilter =
+            BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                ContextCompat.getColor(
+                    this,
+                    R.color.color_white
+                ), BlendModeCompat.SRC_ATOP
+            )
     }
 
     private fun initVideoLocalView() {
@@ -301,54 +371,74 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     private fun observeNetworkListener() {
         val networkConnection = NetworkConnection(applicationContext)
         networkConnection.observe(this) { isConnected ->
+            LogMessage.d(TAG, "networkConnection : networkConnection $networkConnection ")
             checkUserCallSubscribeDetails(isConnected)
         }
     }
 
     private fun checkUserCallSubscribeDetails(subscribeStatus: Boolean) {
+        LogMessage.d(TAG, "checkUserCallSubscribeDetails : subscribeStatus $subscribeStatus ")
         if (subscribeStatus) {
             if (!isFromOnCreate) {
-                CallManager.subscribeCallEvents(callLink, userName, object : JoinCallActionListener {
-                    override fun onFailure(error: Error) {
-                        LogMessage.d(TAG, "Subscribe call failure")
-                        handleOnFailure(error)
-                    }
-
-                    override fun onSuccess() {
-                        LogMessage.d(TAG, "Subscribe call success")
-                        checkInternetConnection!!.visibility = View.GONE
-                        handleJoinNowButton(true)
-                    }
-                })
+                subscribeCallEvents()
             }
         } else {
             handleJoinNowButton(false)
             groupUsersList.clear()
             isFromOnCreate = false
             checkInternetConnection!!.visibility = View.VISIBLE
+            LogMessage.d(TAG, "checkUserCallSubscribeDetails : checkInternetConnection  ")
+        }
+    }
+
+    private fun handleLocalTrackAdded(videoTrack: VideoTrack?){
+        try{
+            videoTrack?.let {
+                LogMessage.d(TAG, "handleLocalTrackAdded videoTrack not empty!!")
+                it.addSink(CallManager.getLocalProxyVideoSink())
+            }
+        }catch(exception:Exception){
+            exception.printStackTrace()
         }
     }
 
     private fun observingCallEvents() {
         CallManager.setJoinCallEventsListener(object : JoinCallListener {
             override fun onError(error: Error) {
+                LogMessage.d(TAG, "#OnGngCall $JOIN_CALL  setJoinCallEventsListener onError  ")
                 handleOnFailure(error)
             }
 
+            override fun onConnectedToSignalServer() {
+                LogMessage.d(
+                    TAG,
+                    "#OnGngCall $JOIN_CALL  setJoinCallEventsListener onConnectedToSignalServer  "
+                )
+                subscribeCallEvents()
+            }
+
             override fun onLocalTrack(videoTrack: VideoTrack?) {
-                videoTrack?.addSink(CallManager.getLocalProxyVideoSink())
+                LogMessage.d(TAG, "#OnGngCall $JOIN_CALL setJoinCallEventsListener onLocalTrack  ")
+                handleLocalTrackAdded(videoTrack)
             }
 
             override fun onSubscribeSuccess() {
+                LogMessage.d(
+                    TAG,
+                    "#OnGngCall $JOIN_CALL setJoinCallEventsListener onSubscribeSuccess  "
+                )
                 handleJoinNowButton(true)
             }
 
             override fun onUsersUpdated(usersList: List<String>) {
+                LogMessage.d(
+                    TAG,
+                    "#OnGngCall $JOIN_CALL setJoinCallEventsListener onUsersUpdated  $usersList"
+                )
                 hideProgressDialog()
                 showJoinCallOrCallEndedView(usersList)
             }
         })
-        CallManager.startVideoCapture()
     }
 
     private fun hideProgressDialog() {
@@ -363,11 +453,22 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     ) {
         hideProgressDialog()
         if (isInvalidLink) {
-            onGoingCallPreviewScreenBinding.callEndedIcon.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_invalid_link))
+            onGoingCallPreviewScreenBinding.callEndedIcon.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    this,
+                    R.drawable.ic_invalid_link
+                )
+            )
             callEndedTextMessage!!.visibility = View.GONE
-            onGoingCallPreviewScreenBinding.returnToChat.visibility = if (isFromSplashScreen) View.GONE else View.VISIBLE
+            onGoingCallPreviewScreenBinding.returnToChat.visibility =
+                if (isFromSplashScreen) View.GONE else View.VISIBLE
         } else {
-            onGoingCallPreviewScreenBinding.callEndedIcon.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_join_call_ended))
+            onGoingCallPreviewScreenBinding.callEndedIcon.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    this,
+                    R.drawable.ic_join_call_ended
+                )
+            )
             callEndedTextMessage!!.visibility = View.VISIBLE
             onGoingCallPreviewScreenBinding.returnToChat.visibility = View.GONE
         }
@@ -379,7 +480,12 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     private fun showJoinCallOrCallEndedView(usersList: List<String>) {
-        if (usersList.isEmpty() || usersList.size == 1) {
+        LogMessage.d(
+            TAG,
+            "#OnGngCall $JOIN_CALL  showJoinCallOrCallEndedView  isCallLinkBehaviourMeet: ${GroupCallUtils.isCallLinkBehaviourMeet()}"
+        )
+
+        if (!GroupCallUtils.isCallLinkBehaviourMeet() && ((usersList.isEmpty()) || usersList.size == 1)) {
             onGoingCallPreviewScreenBinding.toolbar.toolbarTitle.text = Constants.EMPTY_STRING
             callEndedView!!.visibility = View.VISIBLE
             joinCallView!!.visibility = View.GONE
@@ -390,7 +496,13 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
         }
         groupUsersList = usersList as java.util.ArrayList<String>
         val usersNotExceeded = groupUsersList.size < CallManager.getMaxCallUsersCount()
-        if (!usersNotExceeded) CustomToast.show(this@OnGoingCallPreviewActivity, String.format(getString(R.string.max_members_in_call), CallManager.getMaxCallUsersCount()))
+        if (!usersNotExceeded) CustomToast.show(
+            this@OnGoingCallPreviewActivity,
+            String.format(
+                getString(R.string.max_members_in_call),
+                CallManager.getMaxCallUsersCount()
+            )
+        )
         handleJoinNowButton(usersNotExceeded)
         updateGroupMemberDetails(groupUsersList)
     }
@@ -417,9 +529,15 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     private fun setLocalViewProfilePic() {
-        val userImgUrl = Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE))
+        val userImgUrl =
+            Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE))
         if (userImgUrl.isNotEmpty())
-            MediaUtils.loadImage(this, userImgUrl, imgProfilePicture!!, AppCompatResources.getDrawable(applicationContext, R.drawable.profile_img))
+            MediaUtils.loadImage(
+                this,
+                userImgUrl,
+                imgProfilePicture!!,
+                AppCompatResources.getDrawable(applicationContext, R.drawable.profile_img)
+            )
         else imgProfilePicture?.setImageDrawable(setDrawable!!.setDrawableForProfile(userName))
     }
 
@@ -434,42 +552,77 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     override fun onClick(v: View) {
-        when(v.id) {
+        when (v.id) {
             R.id.image_mute_audio -> {
                 isAudioMuteClicked = true
                 if (CallManager.isAudioCallPermissionsGranted(skipBlueToothPermission = false)) toggleMic()
-                else MediaPermissions.requestAudioCallPermissions(this, permissionAlertDialog, audioCallPermissionLauncher)
+                else MediaPermissions.requestAudioCallPermissions(
+                    this,
+                    permissionAlertDialog,
+                    audioCallPermissionLauncher
+                )
             }
+
             R.id.image_mute_video -> {
                 if (CallManager.isVideoCallPermissionsGranted(skipBlueToothPermission = false)) toggleVideoMute()
-                else MediaPermissions.requestVideoCallPermissions(this, permissionAlertDialog, videoCallPermissionLauncher)
+                else MediaPermissions.requestVideoCallPermissions(
+                    this,
+                    permissionAlertDialog,
+                    videoCallPermissionLauncher
+                )
             }
+
             R.id.text_join -> checkAndAllowToOnGngCall()
             R.id.return_to_chat -> finish()
         }
     }
 
+    private fun showAlertForTelephonyCall() {
+        if (CallManager.isOnTelephonyCall(this)) {
+            commonAlertDialog!!.showAlertDialog(
+                this.getString(R.string.msg_telephony_call_alert),
+                this.getString(R.string.action_Ok),
+                this.getString(R.string.action_cancel),
+                CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE,
+                false
+            )
+        }
+    }
+
     private fun checkAndAllowToOnGngCall() {
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL checkAndAllowToOnGngCall")
         if (AppUtils.isNetConnected(this)) {
             if (!CallManager.isAudioCallPermissionsGranted(skipBlueToothPermission = false)) MediaPermissions.requestAudioCallPermissions(
                 this,
-                permissionAlertDialog, audioCallPermissionLauncher)
-            else if (muteVideoImage.isActivated && !CallManager.isVideoCallPermissionsGranted(skipBlueToothPermission = false)) MediaPermissions.requestVideoCallPermissions(
+                permissionAlertDialog, audioCallPermissionLauncher
+            )
+            else if (muteVideoImage.isActivated && !CallManager.isVideoCallPermissionsGranted(
+                    skipBlueToothPermission = false
+                )
+            ) MediaPermissions.requestVideoCallPermissions(
                 this,
-                permissionAlertDialog, videoCallPermissionLauncher)
-            else {
+                permissionAlertDialog, videoCallPermissionLauncher
+            ) else if (CallManager.isOnTelephonyCall(this)) {
+                showAlertForTelephonyCall()
+            } else if (!CallManager.isNotificationPermissionsGranted()) {
+                MediaPermissions.requestNotificationPermission(
+                    this,
+                    permissionAlertDialog, notificationPermissionLauncher, true
+                )
+            } else {
                 handleJoinNowButton(false)
                 checkInternetConnection!!.visibility = View.VISIBLE
                 checkInternetConnection!!.text = getString(R.string.connecting_label)
                 CallManager.joinCall(object : JoinCallActionListener {
                     override fun onFailure(error: Error) {
-                        LogMessage.d(TAG, "$CALL_UI #joinCall onFailure()")
+                        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL onFailure()")
                         checkInternetConnection!!.visibility = View.GONE
                         handleOnFailure(error)
                     }
 
                     override fun onSuccess() {
-                        LogMessage.d(TAG, "$CALL_UI #joinCall onSuccess()")
+                        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL joinCall onSuccess()")
+                        CallManager.cleanUpJoinCallViaLink()
                         finish()
                     }
 
@@ -479,13 +632,13 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     private fun toggleVideoMute() {
-        LogMessage.d(TAG, "$CALL_UI toggleVideoMute()")
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL toggleVideoMute()")
         muteVideoImage.isActivated = !muteVideoImage.isActivated
         val isVideoMuted = !muteVideoImage.isActivated
         if (!isVideoMuted) CallManager.startVideoCapture()
-        CallManager.muteVideo(isVideoMuted,  object : CallActionListener {
+        CallManager.muteVideo(isVideoMuted, object : CallActionListener {
             override fun onResponse(isSuccess: Boolean, message: String) {
-                LogMessage.d(TAG, "$CALL_UI muteVideo onResponse()")
+                LogMessage.d(TAG, "$CALL_UI $JOIN_CALL muteVideo onResponse()")
                 if (isVideoMuted) showUserProfilePic()
                 else {
                     videoLocalView!!.visibility = View.VISIBLE
@@ -496,7 +649,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     private fun toggleMic() {
-        LogMessage.d(TAG, "$CALL_UI toggleMic()")
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL toggleMic()")
         muteAudioImage.isActivated = !muteAudioImage.isActivated
         CallManager.muteAudio(!muteAudioImage.isActivated)
     }
@@ -515,9 +668,11 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
     }
 
     private fun updateGroupMemberDetails(callUsers: java.util.ArrayList<String>) {
-        if (callUsers.size > 1) {
+        LogMessage.d(TAG, "#OnGngCall $JOIN_CALL updateGroupMemberDetails : ${callUsers.size}")
+        if ((GroupCallUtils.isCallLinkBehaviourMeet() && callUsers.size == 1) || callUsers.size > 1) {
             onGoingCallPreviewScreenBinding.viewUsersProfileImage.layoutMembersImage.visibility =
                 View.VISIBLE
+            onGoingCallPreviewScreenBinding.noOneAvailable.visibility = View.GONE
             val membersName = CallUtils.setGroupMemberProfile(
                 this, callUsers,
                 onGoingCallPreviewScreenBinding.viewUsersProfileImage.imageCallMember1,
@@ -526,7 +681,12 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener, CommonA
                 onGoingCallPreviewScreenBinding.viewUsersProfileImage.imageCallMember4
             )
             onGoingCallPreviewScreenBinding.toolbar.toolbarTitle.text =
-                if (callUsers.size > 1) membersName.toString() else Constants.EMPTY_STRING
+                if ((GroupCallUtils.isCallLinkBehaviourMeet() && callUsers.size == 1) || callUsers.size > 1) membersName.toString() else Constants.EMPTY_STRING
+        } else {
+            onGoingCallPreviewScreenBinding.viewUsersProfileImage.layoutMembersImage.visibility =
+                View.GONE
+            onGoingCallPreviewScreenBinding.noOneAvailable.visibility = View.VISIBLE
+            onGoingCallPreviewScreenBinding.toolbar.toolbarTitle.text = Constants.EMPTY_STRING
         }
     }
 

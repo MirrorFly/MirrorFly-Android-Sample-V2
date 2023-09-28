@@ -295,6 +295,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".call.groupcall.OnGoingCallPreviewActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

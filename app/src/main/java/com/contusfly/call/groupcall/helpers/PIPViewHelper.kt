@@ -1,6 +1,7 @@
 package com.contusfly.call.groupcall.helpers
 
 import android.content.Context
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import com.contus.call.CallConstants.CALL_UI
@@ -15,6 +16,7 @@ import com.contusfly.databinding.LayoutPipModeBinding
 import com.contusfly.utils.*
 import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
 import org.webrtc.RendererCommon
@@ -59,6 +61,7 @@ class PIPViewHelper(private val context: Context, private val binding: LayoutPip
             binding.participantsCount.gone()
 
         if (callConnectedUserList.isNotEmpty()) setRemoteUserView(callConnectedUserList[0])
+        if(GroupCallUtils.isSingleUserInCall()) binding.remoteUsersLayout.visibility = View.GONE
     }
 
     /*
@@ -99,6 +102,8 @@ class PIPViewHelper(private val context: Context, private val binding: LayoutPip
     }
 
     private fun setRemoteUserView(userJid: String) {
+        LogMessage.d(TAG, "$CALL_UI setRemoteUserView: $userJid")
+        binding.remoteUsersLayout.visibility = View.VISIBLE
         if (lastUserJid != userJid)
             CallManager.getRemoteProxyVideoSink(lastUserJid)?.setTarget(null)
         lastUserJid = userJid
@@ -110,7 +115,7 @@ class PIPViewHelper(private val context: Context, private val binding: LayoutPip
         if (CallManager.isRemoteVideoMuted(userJid)
             || CallManager.isRemoteVideoPaused(userJid)
             || CallManager.getRemoteProxyVideoSink(userJid).isNull()) {
-            setRemoteVideoMuted(profileDetails)
+            setRemoteVideoMuted(profileDetails,userJid)
         } else {
             binding.userVideoSurface1.show()
             binding.userProfilePic1.gone()
@@ -138,7 +143,7 @@ class PIPViewHelper(private val context: Context, private val binding: LayoutPip
     /*
      * Set User Profile Pic
      */
-    private fun setRemoteVideoMuted(profileDetails: ProfileDetails?) {
+    private fun setRemoteVideoMuted(profileDetails: ProfileDetails?,userJid: String? = null) {
         binding.userProfilePic1.show()
         binding.userVideoSurface1.gone()
         var drawable = ContextCompat.getDrawable(context, R.drawable.ic_pip_default_profile)
@@ -151,8 +156,18 @@ class PIPViewHelper(private val context: Context, private val binding: LayoutPip
                 imageUrl = Constants.EMPTY_STRING
 
             MediaUtils.loadImage(context, imageUrl, binding.userProfilePic1, drawable)
-        } else
+        } else{
             binding.userProfilePic1.setImageDrawable(drawable)
+            if(BuildConfig.CONTACT_SYNC_ENABLED)
+                binding.userProfilePic1.setImageResource(R.drawable.ic_profile)
+            else{
+                val setDrawable = SetDrawable(context)
+                val icon = setDrawable.setDrawableForProfile(ChatUtils.getUserFromJid(userJid!!))
+                binding.userProfilePic1.setImageDrawable(icon)
+            }
+
+        }
+
     }
 
     fun onUserSpeaking(userJid: String, audioLevel: Int) {

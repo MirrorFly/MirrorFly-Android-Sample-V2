@@ -22,8 +22,10 @@ import com.contusfly.views.CustomTextView
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
+import java.util.Locale
 import kotlin.collections.ArrayList
 
 class UserSelectionAdapter(val context: Context, private val isAddUserInCall: Boolean, private val commonAlertDialog: CommonAlertDialog, private val onItemClickListener: RecyclerViewUserItemClick) : RecyclerView.Adapter<RecyclerView.ViewHolder >() {
@@ -194,7 +196,7 @@ class UserSelectionAdapter(val context: Context, private val isAddUserInCall: Bo
      * @param profileDetails   Roster of the user
      */
     private fun setUserInfo(holder: UserSelectionAdapter.UserViewHolder, profileDetails: ProfileDetails) {
-        holder.txtName.text = profileDetails.getDisplayName()
+        setUserName(holder, profileDetails)
         holder.txtStatus.visibility = View.GONE
         holder.contactLayout.alpha = if (profileDetails.isBlocked) 0.5f else 1.0f
         holder.imgRoster.loadUserProfileImage(context, profileDetails)
@@ -208,6 +210,21 @@ class UserSelectionAdapter(val context: Context, private val isAddUserInCall: Bo
 
             // Show user status
             EmojiUtils.setEmojiText(holder.txtStatus, status)
+        }
+    }
+
+    private fun setUserName(holder: UserSelectionAdapter.UserViewHolder, profileDetails: ProfileDetails) {
+        if(searchKey.isNotBlank()) {
+            val startIndex = profileDetails.getDisplayName()!!.toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(
+                Locale.getDefault()))
+            if (startIndex.isValidIndex()) {
+                val stopIndex = startIndex + searchKey.length
+                EmojiUtils.setEmojiTextAndHighLightSearchContact(context, holder.txtName, profileDetails.getDisplayName(), startIndex, stopIndex)
+            } else
+                holder.txtName.text = profileDetails.getDisplayName()
+        } else {
+            LogMessage.d(TAG, "Ongoing call contact list profileDetails: ${profileDetails.name}, ${profileDetails.nickName}, ${profileDetails.getDisplayName()}")
+            holder.txtName.text = profileDetails.getDisplayName()
         }
     }
 

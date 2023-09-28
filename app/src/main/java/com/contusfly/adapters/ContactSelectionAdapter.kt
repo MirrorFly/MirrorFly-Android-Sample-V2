@@ -46,7 +46,6 @@ class ContactSelectionAdapter(private val context: Context, private val contactL
                     false
                 } else {
                     if (selectedList.size >= Constants.MAX_CONTACT_SELECTION_COUNT) {
-                        onContactMaxLimitReached(true)
                         false
                     } else {
                         holder.contactListItemBinding.selectContactIcon.show()
@@ -78,10 +77,6 @@ class ContactSelectionAdapter(private val context: Context, private val contactL
         onContactItemClicked = fn
     }
 
-    fun onContactMaxLimitReached(fn: (Boolean) -> Unit) {
-        onContactMaxLimitReached = fn
-    }
-
     fun onContactRemoved(item: DeviceContactModel) {
         val index = contactList.indexOfFirst { it.contactId == item.contactId }
         if (index.isValidIndex()) {
@@ -95,7 +90,6 @@ class ContactSelectionAdapter(private val context: Context, private val contactL
 
     companion object {
         lateinit var onContactItemClicked: (DeviceContactModel, Boolean) -> Unit
-        lateinit var onContactMaxLimitReached: (Boolean) -> Unit
     }
 
     override fun hasSearchKey(item: DeviceContactModel, filterKey: String): Boolean {

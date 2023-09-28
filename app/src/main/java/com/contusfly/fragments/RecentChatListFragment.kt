@@ -971,7 +971,6 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         } else {
             recentChatBinding.noSearchMessageView.root.visibility=View.GONE
         }
-
     }
 
     private fun observeFilteredContactsList(list: List<ProfileDetailsShareModel>) {

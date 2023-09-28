@@ -56,51 +56,56 @@ class SetDrawable : BaseDrawable {
         return icon
     }
 
-    @Synchronized
-    fun setDrawableForGroupCall(nameString: String?, drawableSize: Float, isProfile: Boolean): Drawable? {
+    private fun getDrawableBasedOnUserName(nameString: String?, isProfile: Boolean, icon: CustomDrawable):Drawable?{
         var name = nameString ?: return null
-        if (profileDetails?.getChatType() == ChatType.TYPE_CHAT) {
-            val icon = CustomDrawable(context!!, drawableSize)
+        name = name.trim { it <= ' ' }
+        val initialName = name.split("\\s+".toRegex()).toTypedArray()
+        return if (initialName.size == 1) {
+            val username = initialName[0].trim { it <= ' ' }
+            when {
+                username.isEmpty() -> {
+                    setDrawableProfileColour(icon, isProfile)
+                    icon.setText("")
+                    icon
+                }
+                username.length == 1 -> {
+                    icon.setText(username.toUpperCase())
+                    setDrawableProfileColour(icon, isProfile)
+                    icon
+                }
+                else -> {
+                    icon.setText(getProfileNameIcon(username))
+                    setDrawableProfileColour(icon, isProfile)
+                    icon
+                }
+            }
+        } else {
+            var firstletter = ""
+            if (initialName[0].trim { it <= ' ' }.isNotEmpty()) {
+                firstletter = String(Character.toChars(initialName[0].trim { it <= ' ' }.codePointAt(0)))
+            }
+            var secondletter = ""
+            if (initialName[1].trim { it <= ' ' }.isNotEmpty()) {
+                secondletter = String(Character.toChars(initialName[1].trim { it <= ' ' }.codePointAt(0)))
+            }
+            icon.setText(firstletter.toUpperCase() + secondletter.toUpperCase())
+            setDrawableProfileColour(icon, isProfile)
+            icon
+        }
+    }
+
+    @Synchronized
+    fun setDrawableForGroupCall(nameString: String?, drawableSize: Float, isProfile: Boolean,isUnknownContact:Boolean = false): Drawable? {
+        var name = nameString ?: return null
+        if (profileDetails?.getChatType() == ChatType.TYPE_CHAT || isUnknownContact) {
+            var icon = CustomDrawable(context!!, drawableSize)
             if (name.isNullOrBlank()) {
                 //default
                 setDrawableProfileColour(icon, isProfile)
                 icon.setText("")
                 return icon
             }
-            name = name.trim { it <= ' ' }
-            val initialName = name.split("\\s+".toRegex()).toTypedArray()
-            return if (initialName.size == 1) {
-                val username = initialName[0].trim { it <= ' ' }
-                when {
-                    username.isEmpty() -> {
-                        setDrawableProfileColour(icon, isProfile)
-                        icon.setText("")
-                        icon
-                    }
-                    username.length == 1 -> {
-                        icon.setText(username.toUpperCase())
-                        setDrawableProfileColour(icon, isProfile)
-                        icon
-                    }
-                    else -> {
-                        icon.setText(getProfileNameIcon(username))
-                        setDrawableProfileColour(icon, isProfile)
-                        icon
-                    }
-                }
-            } else {
-                var firstletter = ""
-                if (initialName[0].trim { it <= ' ' }.isNotEmpty()) {
-                    firstletter = String(Character.toChars(initialName[0].trim { it <= ' ' }.codePointAt(0)))
-                }
-                var secondletter = ""
-                if (initialName[1].trim { it <= ' ' }.isNotEmpty()) {
-                    secondletter = String(Character.toChars(initialName[1].trim { it <= ' ' }.codePointAt(0)))
-                }
-                icon.setText(firstletter.toUpperCase() + secondletter.toUpperCase())
-                setDrawableProfileColour(icon, isProfile)
-                icon
-            }
+            return getDrawableBasedOnUserName(nameString,isProfile,icon)
         }
         return null
     }
