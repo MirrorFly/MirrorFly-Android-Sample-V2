@@ -373,26 +373,18 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
         callHistoryBinding.viewCreateCallLink.root.setOnClickListener(1000) {
             requireContext().checkInternetAndExecute {
                 try {
-                    ChatManager.createMeetLink { isSuccess, _, createMeetLinkData ->
+                    CallManager.createMeetLink { isSuccess, _, createMeetLinkData ->
                         if (isSuccess) {
-                            val meetLinkDetailsData =
-                                createMeetLinkData[Constants.MEET_LINK] as MeetLinkDetailsData
-                            LogMessage.d(
-                                "TAG",
-                                "initView meetLinkDetailsData: ${meetLinkDetailsData.roomLink}"
-                            )
-                            LogMessage.d(
-                                "TAG",
-                                "initView meetLinkDetailsData: $meetLinkDetailsData"
-                            )
-                            showCreateMeetLinkDialog(meetLink = meetLinkDetailsData.roomLink)
+                            val meetLink = createMeetLinkData["data"] as String
+                            LogMessage.d(TAG, "Create Meet Link :$meetLink")
+                            showCreateMeetLinkDialog(meetLink = meetLink)
                         } else {
 
                             val errorMessage = createMeetLinkData.getMessage()
                             runOnUiThread {
                                 CustomToast.show(requireContext(), errorMessage)
                             }
-                            LogMessage.d(TAG, "Create Call Link Failed with Message $errorMessage")
+                            LogMessage.d(TAG, "Create Meet Link Failed with Message $errorMessage")
                         }
                     }
                 } catch (exception: Exception) {

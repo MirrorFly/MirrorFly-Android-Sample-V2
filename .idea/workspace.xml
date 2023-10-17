@@ -9,15 +9,155 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce9a4a80-ef34-4227-9508-1dafe40c2fd9" name="Changes" comment="SDK new version V7.7.3 updated">
+    <list default="true" id="ce9a4a80-ef34-4227-9508-1dafe40c2fd9" name="Changes" comment="Release 7.8.2">
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/privatechat_swipe_animation.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/holders/PrivateChatViewHolder.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/interfaces/PrivateChatReleaseListener.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/models/PrivateChatAuthenticationModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/privateChat/PrivateChatEnableDisableActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/privateChat/PrivateChatListActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/AdapterUtils.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/BounceEdgeEffectFactory.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/SafeClickListener.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circular_shape_opacity.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/corner_radius_bg.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/down_arrow_round_icon.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_meet_link.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/private_chat_enable_pull_refresh_image.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/private_chat_icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_private_chat_enable_disable.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_private_chat_list.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/create_call_link_dialog_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/private_chat_empty_view_recent_screen_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/private_chat_enable_dialog_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/private_chat_list_item_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/private_chat_toggle_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/pull_refresh_private_chat_view_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/view_create_call_link.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/view_no_search_message_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/menu/menu_private_chat.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/raw/privatechat_swipe_animation.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/call/src/main/res/drawable/ic_copy_link_grey.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/libs/appbase.aar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/libs/flycommons.aar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/libs/flydatabase.aar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/libs/flynetwork.aar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/libs/flywebrtc.aar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/libs/videocompression.aar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/libs/xmpp.aar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/AppExtensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/AppExtensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/AppLifecycleListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/AppLifecycleListener.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/EmailContactSyncService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/EmailContactSyncService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ArchivedChatsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ArchivedChatsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/BaseActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/BaseActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/BiometricActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/BiometricActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ChatActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ChatActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ContactSelectionActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ContactSelectionActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/DashboardActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/DashboardActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ForwardMessageActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ForwardMessageActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/GroupInfoActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/GroupInfoActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/MediaPreviewActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/MediaPreviewActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/MediaSlideActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/MediaSlideActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/MessageInfoActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/MessageInfoActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/NewContactsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/NewContactsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/PinActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/PinActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/PinEntryChange.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/PinEntryChange.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/PinSetting.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/PinSetting.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/PreviewSendContactActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/PreviewSendContactActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/QrCodeScannerActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/QrCodeScannerActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/SelectMapViewActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/SelectMapViewActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/StarredMessageActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/StarredMessageActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/StartActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/StartActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/UserInfoActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/UserInfoActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/UserListActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/UserListActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ViewAllMediaActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ViewAllMediaActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/parent/BaseContactActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/parent/BaseContactActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/parent/ChatParent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/parent/ChatParent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/ChatAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/ChatAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/ContactSelectionAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/ContactSelectionAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/RecentChatListAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/RecentChatListAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/holders/ArchiveChatViewHolder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/adapters/holders/ArchiveChatViewHolder.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/CallPermissionUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/CallPermissionUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/OnGngCallParticipantsList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/OnGngCallParticipantsList.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/ParticipantsListAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/ParticipantsListAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/SetDrawable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/SetDrawable.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/calllog/CallHistoryFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/calllog/CallHistoryFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/AddParticipantFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/AddParticipantFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/CallExtention.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/CallExtention.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/GroupCallActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/GroupCallActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/GroupCallGridAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/GroupCallGridAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/GroupCallListAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/GroupCallListAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/OnGoingCallPreviewActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/OnGoingCallPreviewActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/ParticipantsListFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/ParticipantsListFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/UserSelectionAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/UserSelectionAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/BaseCallViewHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/BaseCallViewHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/CallConnectedViewHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/CallConnectedViewHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/CallNotConnectedViewHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/CallNotConnectedViewHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/CallOptionsViewHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/CallOptionsViewHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/PIPViewHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/PIPViewHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/utils/CallUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/utils/CallUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/chatTag/activities/AddPeopleActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/chatTag/activities/AddPeopleActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/chatTag/activities/ItemTouchHelperCallback.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/chatTag/activities/ItemTouchHelperCallback.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/chatTag/viewmodel/ChatTagViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/chatTag/viewmodel/ChatTagViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/constants/MobileApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/constants/MobileApplication.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/di/modules/ActivityModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/di/modules/ActivityModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/diffCallBacks/ProfileDiffCallback.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/diffCallBacks/ProfileDiffCallback.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/diffCallBacks/RecentChatDiffCallback.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/diffCallBacks/RecentChatDiffCallback.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/BottomSheetOtpFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/BottomSheetOtpFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/ProfileDialogFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/ProfileDialogFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/RecentChatListFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/RecentChatListFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/helpers/RecentChatPaginationScrollListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/helpers/RecentChatPaginationScrollListener.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/notification/AppNotificationManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/notification/AppNotificationManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/notification/NotificationBuilder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/notification/NotificationBuilder.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/quickShare/QuickShareActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/quickShare/QuickShareActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/starredMessages/adapter/StarredMessagesAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/starredMessages/adapter/StarredMessagesAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/AppChatShortCuts.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/AppChatShortCuts.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ChatUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ChatUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/Constants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/Constants.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ContusContactUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ContusContactUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/EmojiUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/EmojiUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/FirebaseUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/FirebaseUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/MediaUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/MediaUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ModifiedlinkMovementMethod.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ModifiedlinkMovementMethod.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ProfileDetailsUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ProfileDetailsUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/ChatParentViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/ChatParentViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/ContactViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/ContactViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/DashboardViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/DashboardViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/ForwardMessageViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/ForwardMessageViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/AudioRecordView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/AudioRecordView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/CommonAlertDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/CommonAlertDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/CustomRecyclerView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/CustomRecyclerView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/KeyboardHeightProvider.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/KeyboardHeightProvider.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/SetDrawable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/views/SetDrawable.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/circular_shape.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circular_shape.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_archived_chats.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_archived_chats.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_group_info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_group_info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_on_going_call_preview_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_on_going_call_preview_screen.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_user_info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_user_info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_add_participant.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_add_participant.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_call_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_call_history.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_on_gng_call_participants_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_on_gng_call_participants_list.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_recent_chat.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_recent_chat.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_call_connected.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_call_connected.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_pip_mode.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_pip_mode.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/call/src/main/java/com/contus/call/CallConstants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/call/src/main/java/com/contus/call/CallConstants.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/call/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/call/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/releasesourcechecklist.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[RZCR807B50P]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/userone/.android/avd/Pixel_XL_API_31.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -38,21 +178,10 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="release/v7.6.1" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitSEFilterConfiguration">
-    <file-type-list>
-      <filtered-out-file-type name="LOCAL_BRANCH" />
-      <filtered-out-file-type name="REMOTE_BRANCH" />
-      <filtered-out-file-type name="TAG" />
-      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
-    </file-type-list>
-  </component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="6875eefc-3c9e-49d9-a52c-9e57e897a74e" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -62,17 +191,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Git.Branch.Popup.ShowAllRemotes": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "cidr.known.project.marker": "true",
-    "last_opened_file_path": "/home/userone/Jeeva/AndroidRepo/DemoAppTesting/UI-Kit Dev/p078-contus-instantmessenger-uikit-android",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Git.Branch.Popup.ShowAllRemotes&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.intellij.openapi.externalSystem.service.settings.ExternalSystemGroupConfigurable&quot;: &quot;ALL&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/userone/Jeeva/AndroidRepo/GithubMirrorfly/GitHub-MirrorFly-Android-Sample-V2&quot;,
+    &quot;recommended.upgrade.do.not.ask.for.project&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Android Projects\gihub\app" />
@@ -160,9 +292,6 @@
     </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="SvnConfiguration">
-    <configuration>$USER_HOME$/.subversion</configuration>
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="ce9a4a80-ef34-4227-9508-1dafe40c2fd9" name="Changes" comment="" />
@@ -178,28 +307,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684747363486</updated>
     </task>
-    <task id="LOCAL-00002" summary="release V7.7.3 sdk version updated">
-      <created>1693214483783</created>
+    <task id="LOCAL-00002" summary="Release 7.8.2">
+      <created>1697530833721</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1693214483783</updated>
+      <updated>1697530833721</updated>
     </task>
-    <task id="LOCAL-00003" summary="release V7.7.3 sdk version updated">
-      <created>1693214629753</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1693214629753</updated>
-    </task>
-    <task id="LOCAL-00004" summary="SDK new version V7.7.3 updated">
-      <created>1693218274347</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1693218274347</updated>
-    </task>
-    <option name="localTasksCounter" value="5" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -215,24 +330,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Release 7.3.2" />
-    <MESSAGE value="release V7.7.3 sdk version updated" />
-    <MESSAGE value="SDK new version V7.7.3 updated" />
-    <option name="LAST_COMMIT_MESSAGE" value="SDK new version V7.7.3 updated" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/contusfly/call/calllog/CallHistoryFragment.kt</url>
-          <line>600</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/contusfly/call/calllog/CallHistoryFragment.kt</url>
-          <line>601</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Release 7.8.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Release 7.8.2" />
   </component>
 </project>

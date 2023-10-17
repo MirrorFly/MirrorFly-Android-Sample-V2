@@ -30,14 +30,12 @@ android {
         abortOnError false
     }
 
-    compileSdkVersion 33
-    buildToolsVersion "30.0.2"
-
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 33
+        compileSdk 33
         versionCode 16
-        versionName "7.8.0"
+        versionName "7.8.1"
         multiDexEnabled true
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         vectorDrawables.useSupportLibrary = true
@@ -47,6 +45,7 @@ android {
 
     buildTypes {
         debug {
+            initWith debug
             buildConfigField 'Boolean', 'IS_QA_BUILD', 'true'
             buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
@@ -204,7 +203,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.8.0'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.8.2'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
