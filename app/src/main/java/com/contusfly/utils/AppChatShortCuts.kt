@@ -24,6 +24,7 @@ import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.PendingIntentHelper
 import com.contusfly.*
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.media.MediaUploadHelper
 
@@ -86,13 +87,24 @@ object AppChatShortCuts {
                 .setShortLabel(contactName)
                 .setLongLabel(contactName)
                 .setIcon(IconCompat.createWithAdaptiveBitmap(contactBitmap))
-                .setIntent(Intent(context.applicationContext, StartActivity::class.java)
-                        .setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .putExtra(Constants.IS_FROM_CHAT_SHORTCUT, chatType).putExtra(LibConstants.JID, toUser))
+                .setIntent(getIntent(context,toUser,chatType) )
                 .build()
 
         pinShortCut(context, shortcut, getPendingIntent(context).intentSender)
+    }
+
+    private fun getIntent(context: Context, toUser: String, chatType: String): Intent{
+        var isPrivateChatUser = ChatManager.isPrivateChat(toUser)
+        var intent=Intent(context.applicationContext, StartActivity::class.java)
+        intent.setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra(Constants.IS_FROM_CHAT_SHORTCUT, chatType)
+        intent.putExtra(LibConstants.JID, toUser)
+        if(isPrivateChatUser) {
+            intent.putExtra(Constants.PRIVATE_CHAT, true)
+            intent.putExtra(Constants.AUTHENTICATION_NEED, true)
+        }
+        return intent
     }
 
     private fun getPendingIntent(context: Context): PendingIntent {

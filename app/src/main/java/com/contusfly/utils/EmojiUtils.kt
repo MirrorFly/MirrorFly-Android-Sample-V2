@@ -15,7 +15,6 @@ import com.contusfly.views.CustomTextView
 import com.contusfly.views.MessageTextView
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
-import io.github.rockerhieu.emojicon.EmojiconTextView
 import java.text.BreakIterator
 
 /**
@@ -112,6 +111,23 @@ object EmojiUtils {
             if (startIndex != -1 && stopIndex != -1) textToHighlight.setSpan(BackgroundColorSpan(ContextCompat.getColor(context!!, R.color.search_highlight)),
                 startIndex, stopIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             textView.text = SpannableStringBuilder.valueOf(textToHighlight)
+        } catch (e: java.lang.Exception) {
+            LogMessage.e(e)
+        }
+    }
+
+    fun setEmojiTextAndHighLightSearchContact(context: Context?, textView: TextView,
+                                              text: String?, startIndex: Int, stopIndex: Int) {
+        try {
+            var profileName:String? = try {
+                Utils.getUtfDecodedText(text)
+            }catch (e: java.lang.Exception){
+                text
+            }
+            val textToHighlight: Spannable = SpannableString(profileName)
+            if (startIndex != -1 && stopIndex != -1)
+                textToHighlight.setSpan(ForegroundColorSpan(ContextCompat.getColor(context!!, R.color.blue)), startIndex, stopIndex, Spannable.SPAN_INTERMEDIATE)
+            textView.text = textToHighlight
         } catch (e: java.lang.Exception) {
             LogMessage.e(e)
         }

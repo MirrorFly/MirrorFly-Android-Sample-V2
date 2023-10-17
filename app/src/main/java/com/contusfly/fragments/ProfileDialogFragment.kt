@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.mirrorflysdk.flycommons.ChatType
@@ -21,10 +22,7 @@ import com.mirrorflysdk.flycall.webrtc.CallType
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.*
-import com.contusfly.activities.ChatActivity
-import com.contusfly.activities.GroupInfoActivity
-import com.contusfly.activities.UserInfoActivity
-import com.contusfly.activities.UserProfileImageViewActivity
+import com.contusfly.activities.*
 import com.contusfly.call.CallPermissionUtils
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.FragmentProfileDialogBinding
@@ -88,11 +86,11 @@ class ProfileDialogFragment : DialogFragment() {
     }
 
     private fun setListeners() {
-        profileDialogBinding.openChatView.setOnClickListener { navigateToChatViewScreen() }
-        profileDialogBinding.openUserProfile.setOnClickListener { navigateToProfileInfoScreen() }
+        profileDialogBinding.openChatView.setOnClickListener { privateChatAuthenticationChecking() }
+        profileDialogBinding.openUserProfile.setOnClickListener { privateProfileAuthenticationChecking() }
         profileDialogBinding.userProfileImageViewer.setOnClickListener { navigateToProfileImageScreen() }
-        profileDialogBinding.audioCall.setOnClickListener { makeAudioCall() }
-        profileDialogBinding.videoCall.setOnClickListener { makeVideoCall() }
+        profileDialogBinding.audioCall.setOnClickListener { callAutheticationChecking(CallType.AUDIO_CALL) }
+        profileDialogBinding.videoCall.setOnClickListener { callAutheticationChecking(CallType.VIDEO_CALL) }
     }
 
     private fun checkUserBlocked() {
@@ -180,6 +178,14 @@ class ProfileDialogFragment : DialogFragment() {
         }
     }
 
+    private fun privateChatAuthenticationChecking(){
+        if(ChatManager.isPrivateChat(profileDetails.jid) && !AppLifecycleListener.isPresentPrivateChat){
+            launchAutheticationChatActivity()
+        } else {
+            navigateToChatViewScreen()
+        }
+    }
+
     private fun navigateToChatViewScreen() {
         startActivity(
             Intent(context, ChatActivity::class.java)
@@ -188,6 +194,60 @@ class ProfileDialogFragment : DialogFragment() {
             .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         dismissDialog()
     }
+
+
+    private fun launchAutheticationChatActivity() {
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            chatResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            chatResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var chatResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                navigateToChatViewScreen()
+            }
+        }
+
+    private fun privateProfileAuthenticationChecking(){
+        if(ChatManager.isPrivateChat(profileDetails.jid) && !AppLifecycleListener.isPresentPrivateChat){
+            launchAutheticationProfileActivity()
+        } else {
+            navigateToProfileInfoScreen()
+        }
+    }
+
+    private fun launchAutheticationProfileActivity() {
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            profileResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            profileResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var profileResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                navigateToProfileInfoScreen()
+            }
+        }
+
 
     private fun navigateToProfileInfoScreen() {
         if (profileDetails.getChatType() == ChatType.TYPE_GROUP_CHAT) {
@@ -207,11 +267,55 @@ class ProfileDialogFragment : DialogFragment() {
         if (title == null || title.isEmpty())
             title = resources.getString(R.string.action_delete)
 
+        if(profile.image.isNullOrEmpty())
+            return
         startActivity(Intent(context, UserProfileImageViewActivity::class.java)
             .putExtra(Constants.GROUP_OR_USER_NAME, title)
             .putExtra("PROFILE", if (!profile.isAdminBlocked) rosterImage else ""))
         dismissDialog()
     }
+
+    private fun callAutheticationChecking(callType:String){
+        lastCallAction=callType
+        if(ChatManager.isPrivateChat(profileDetails.jid) && !AppLifecycleListener.isPresentPrivateChat){
+            launchAutheticationCallActivity()
+        } else {
+            launchCall()
+        }
+    }
+
+
+    private fun launchAutheticationCallActivity() {
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            callResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            callResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var callResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                launchCall()
+            }
+        }
+
+
+    private fun launchCall(){
+        if(lastCallAction == CallType.AUDIO_CALL){
+            makeAudioCall()
+        } else {
+            makeVideoCall()
+        }
+    }
+
 
     private fun makeAudioCall() {
         CallUtils.setIsCallStarted(CallType.AUDIO_CALL)

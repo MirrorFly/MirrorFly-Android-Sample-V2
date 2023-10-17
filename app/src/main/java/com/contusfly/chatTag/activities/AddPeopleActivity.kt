@@ -24,6 +24,7 @@ import com.contusfly.utils.LogMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.mirrorflysdk.api.ChatManager
 import java.lang.reflect.Type
 
 class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
@@ -122,8 +123,13 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
                 }
             }
             recentChatList = finalRecentChatList
+            recentChatList.addAll(getPrivateChatList())
             getIntentvalues()
         })
+    }
+
+    private fun getPrivateChatList(): ArrayList<RecentChat>{
+        return ChatManager.getPrivateChatList()
     }
 
     private fun onclickListener() {

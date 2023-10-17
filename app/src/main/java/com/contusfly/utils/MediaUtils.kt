@@ -189,7 +189,6 @@ object MediaUtils {
     fun loadImageWithGlideAnimate(context: Context?, imgUrl: String?, imgView: ImageView, errorImg: Int) {
         if (imgUrl != null && imgUrl.isNotEmpty()) {
             val options = RequestOptions().frame(1000)
-                .placeholder(errorImg)
                 .error(errorImg)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH)

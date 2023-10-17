@@ -89,21 +89,9 @@ class MobileApplication : Application(), HasAndroidInjector {
             com.mirrorflysdk.flycommons.LogMessage.e(e)
         }
 
-        try{
-            ChatManager.initializeSDK(BuildConfig.LICENSE){ isSuccess, _, data ->
-                if (isSuccess) {
-                    LogMessage.d(TAG,"Config Details Fetched")
-                } else {
-                    LogMessage.d(TAG,data.getMessage())
-                }
-            }
-        }catch(exception:Exception){
-            LogMessage.e(TAG,"Exception while trying to initialize sdk!!")
-        }
-
         ChatManager.enableMobileNumberLogin(true)
         ChatManager.setMediaFolderName(Constants.LOCAL_PATH)
-        ChatManager.enableChatHistory(false)
+        ChatManager.enableChatHistory(true)
 
         //activity to open when use clicked from notification
         //activity to open when a user logout from the app.
@@ -233,10 +221,6 @@ class MobileApplication : Application(), HasAndroidInjector {
                 } else
                     getNotificationMessage()
             }
-
-            override fun sendCallMessage(details: GroupCallDetails, users: List<String>, invitedUsers: List<String>) {
-                CallMessenger.sendCallMessage(details, users, invitedUsers)
-            }
         })
 
         CallManager.setCallNameHelper(object : CallNameHelper {
@@ -245,7 +229,7 @@ class MobileApplication : Application(), HasAndroidInjector {
             }
         })
 
-        CallManager.keepConnectionInForeground(true)
+        CallManager.keepConnectionInForeground(false)
 
     }
 
@@ -286,7 +270,7 @@ class MobileApplication : Application(), HasAndroidInjector {
     }
 
     fun getNotificationMessage() : String {
-        return if (CallManager.isOneToOneCall() && CallManager.getGroupID().isEmpty()) {
+        return if (CallManager.isOneToOneCall() && CallManager.getGroupID().isEmpty() && CallManager.getCallUsersList().isNotEmpty()) {
             ProfileDetailsUtils.getDisplayName(CallManager.getCallUsersList().first())
         } else {
             if (CallManager.getGroupID().isNotBlank()) {

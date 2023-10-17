@@ -4,19 +4,27 @@ import android.app.Activity
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.contus.call.CallConstants
-import com.mirrorflysdk.flycall.webrtc.Logger
-import com.mirrorflysdk.flycall.webrtc.ProxyVideoSink
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.contusfly.*
+import com.contus.call.CallConstants.JOIN_CALL
+import com.contusfly.R
+import com.contusfly.TAG
 import com.contusfly.call.groupcall.isUserVideoMuted
+import com.contusfly.getDisplayName
+import com.contusfly.isDeletedContact
+import com.contusfly.loadUserProfileImage
+import com.contusfly.makeViewsGone
+import com.contusfly.show
 import com.contusfly.utils.Constants
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.views.CircularImageView
 import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycall.webrtc.Logger
+import com.mirrorflysdk.flycall.webrtc.ProxyVideoSink
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
-import java.util.ArrayList
+import kotlin.collections.set
 
 object CallUtils {
 
@@ -81,7 +89,7 @@ object CallUtils {
         isVideoViewInitialized = enabled
     }
 
-    fun getIsVideoViewInitialized() : Boolean {
+    fun getIsVideoViewInitialized(): Boolean {
         return isVideoViewInitialized
     }
 
@@ -89,7 +97,7 @@ object CallUtils {
         isGridViewEnabled = enabled
     }
 
-    fun getIsGridViewEnabled() : Boolean {
+    fun getIsGridViewEnabled(): Boolean {
         return isGridViewEnabled
     }
 
@@ -97,7 +105,7 @@ object CallUtils {
         isViewUpdatesCompleted = boolean
     }
 
-    fun getIsViewUpdatesCompleted() : Boolean {
+    fun getIsViewUpdatesCompleted(): Boolean {
         return isViewUpdatesCompleted
     }
 
@@ -105,15 +113,16 @@ object CallUtils {
         isListViewAnimated = animated
     }
 
-    fun getIsListViewAnimated() : Boolean {
+    fun getIsListViewAnimated(): Boolean {
         return isListViewAnimated
     }
 
     fun setPinnedUserJid(userJid: String) {
+        LogMessage.d(TAG, "${CallConstants.CALL_UI} $JOIN_CALL setPinnedUserJid userJid:$userJid")
         pinnedUserJid = userJid
     }
 
-    fun getPinnedUserJid() : String {
+    fun getPinnedUserJid(): String {
         return pinnedUserJid
     }
 
@@ -121,7 +130,7 @@ object CallUtils {
         isUserTilePinned = pinned
     }
 
-    fun getIsUserTilePinned() : Boolean {
+    fun getIsUserTilePinned(): Boolean {
         return isUserTilePinned
     }
 
@@ -129,7 +138,7 @@ object CallUtils {
         isBackCameraCapturing = isBackCamera
     }
 
-    fun getIsBackCameraCapturing() : Boolean {
+    fun getIsBackCameraCapturing(): Boolean {
         return isBackCameraCapturing
     }
 
@@ -137,7 +146,7 @@ object CallUtils {
         peakSpeakingUser = SpeakingUser(userJid, audioLevel)
     }
 
-    private fun getPeakSpeakingUser() : SpeakingUser {
+    private fun getPeakSpeakingUser(): SpeakingUser {
         return peakSpeakingUser
     }
 
@@ -169,7 +178,7 @@ object CallUtils {
         }
     }
 
-    fun onUserSpeaking(userJid: String, audioLevel:Int){
+    fun onUserSpeaking(userJid: String, audioLevel: Int) {
         speakingLevelMap[userJid] = audioLevel
     }
 
@@ -181,7 +190,7 @@ object CallUtils {
         return speakingLevelMap[userJid] ?: 0
     }
 
-    fun clearSpeakingLevels(){
+    fun clearSpeakingLevels() {
         speakingLevelMap.clear()
         setPeakSpeakingUser(Constants.EMPTY_STRING, 0)
     }
@@ -247,15 +256,21 @@ object CallUtils {
         val profileDetails = ProfileDetailsUtils.getProfileDetails(jid)
         val name = if (profileDetails != null) {
             com.contusfly.utils.Utils.returnEmptyStringIfNull(profileDetails.getDisplayName())
-        } else Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(jid)) ?: Constants.EMPTY_STRING
+        } else Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(jid))
+            ?: Constants.EMPTY_STRING
         return Pair(name, profileDetails)
     }
 
 
-   private fun getActualMemberName(stringBuilder: java.lang.StringBuilder): Pair<StringBuilder, Boolean> {
+    private fun getActualMemberName(stringBuilder: java.lang.StringBuilder): Pair<StringBuilder, Boolean> {
         return if (stringBuilder.length > CallConstants.MAX_NAME_LENGTH)
             Pair(
-                StringBuilder(stringBuilder.substring(0, CallConstants.MAX_NAME_LENGTH)).append("..."),
+                StringBuilder(
+                    stringBuilder.substring(
+                        0,
+                        CallConstants.MAX_NAME_LENGTH
+                    )
+                ).append("..."),
                 false
             )
         else
@@ -310,17 +325,25 @@ object CallUtils {
     /**
      * this method return the user jid for the call
      */
-    fun getCallLogUserJidList(toUser: String?, callUsers: List<String>? = null, withDeletedUser: Boolean = true): List<String> {
+    fun getCallLogUserJidList(
+        toUser: String?,
+        callUsers: List<String>? = null,
+        withDeletedUser: Boolean = true
+    ): List<String> {
         val userList = mutableListOf<String>()
         if (toUser != null
             && toUser != CallManager.getCurrentUserId()
-            && (withDeletedUser || ProfileDetailsUtils.getProfileDetails(toUser)?.isDeletedContact() != true))
+            && (withDeletedUser || ProfileDetailsUtils.getProfileDetails(toUser)
+                ?.isDeletedContact() != true)
+        )
             userList.add(toUser)
         if (callUsers != null) {
             for (jid in callUsers) {
                 if (jid != CallManager.getCurrentUserId()
                     && !userList.contains(jid)
-                    && (withDeletedUser || ProfileDetailsUtils.getProfileDetails(jid)?.isDeletedContact() != true))
+                    && (withDeletedUser || ProfileDetailsUtils.getProfileDetails(jid)
+                        ?.isDeletedContact() != true)
+                )
                     userList.add(jid)
             }
         }
@@ -336,7 +359,8 @@ object CallUtils {
             for (jid in callUsers) {
                 if (jid.isNotEmpty()
                     && jid != CallManager.getCurrentUserId()
-                    && !userNames.contains(ProfileDetailsUtils.getDisplayName(jid)))
+                    && !userNames.contains(ProfileDetailsUtils.getDisplayName(jid))
+                )
                     userNames.add(ProfileDetailsUtils.getDisplayName(jid))
             }
         }
@@ -357,7 +381,7 @@ object CallUtils {
             CallManager.getRemoteProxyVideoSink(userJid)
     }
 
-    fun isLocalUserPinned() : Boolean {
+    fun isLocalUserPinned(): Boolean {
         return getPinnedUserJid() == CallManager.getCurrentUserId()
     }
 
@@ -444,7 +468,7 @@ object CallUtils {
 data class SpeakingUser(
     val userJid: String,
     var audioLevel: Int,
-    var count:Int
+    var count: Int
 ) {
     constructor(userJid: String, audioLevel: Int) : this(userJid, audioLevel, 1)
 }

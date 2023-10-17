@@ -44,10 +44,7 @@ import com.contusfly.groupmention.TextUIConfig
 import com.contusfly.groupmention.UserMentionConfig
 import com.contusfly.interfaces.MessageListener
 import com.contusfly.mediapicker.model.Image
-import com.contusfly.models.Chat
-import com.contusfly.models.FileObject
-import com.contusfly.models.MediaPreviewModel
-import com.contusfly.models.MessageObject
+import com.contusfly.models.*
 import com.contusfly.utils.*
 import com.contusfly.viewmodels.MediaPreviewViewModel
 import com.contusfly.viewmodels.MentionsViewModel
@@ -74,6 +71,9 @@ import io.github.rockerhieu.emojicon.EmojiconGridFragment
 import io.github.rockerhieu.emojicon.EmojiconsFragment
 import io.github.rockerhieu.emojicon.emoji.Emojicon
 import kotlinx.coroutines.Dispatchers
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -1309,5 +1309,23 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             emojiEditText!!.text.toString().trim { it <= ' ' }
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(messageEvent: PrivateChatAuthenticationModel?) {
+        if(messageEvent!!.isAutheticationShow) {
+            launchAuthPinActivity()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+
 
 }

@@ -22,6 +22,7 @@
     <string name="call_you">You</string>
     <string name="group_call">Group Call</string>
     <string name="call_link">Call Link</string>
+    <string name="meet_link">Meet Link</string>
     <string name="link_copied_clipboard">Link copied to clipboard</string>
     <string name="msg_add_participant">Add participant to the call</string>
     <string name="msg_selected_user_call">Call Now (%d)</string>

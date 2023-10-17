@@ -91,6 +91,19 @@
             android:layout_centerHorizontal="true" />
 
         <com.contusfly.views.CustomTextView
+            android:id="@+id/no_one_available"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/call_ended_text_message"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_size_13"
+            android:layout_marginTop="@dimen/margin_5"
+            android:fontFamily="@font/sf_ui_display_medium"
+            android:visibility="visible"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/view_users_profile_image"/>
+
+        <com.contusfly.views.CustomTextView
             android:id="@+id/internet_connection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -100,7 +113,7 @@
             android:textColor="@color/color_white"
             android:textSize="@dimen/text_size_14"
             android:layout_above="@+id/profile_view"
-            android:layout_below="@+id/view_users_profile_image"
+            android:layout_below="@+id/no_one_available"
             android:fontFamily="@font/sf_ui_display_semi_bold"
             android:visibility="gone"/>
 

@@ -156,4 +156,5 @@
     <color name="mention_tag_bg_color">#D2E3FC</color>
     <color name="mention_tag_text_color">#174EA5</color>
     <color name="blue_color_notification_button">#EFF4FD</color>
+    <color name="private_chat_info_color">#515151</color>
 </resources>

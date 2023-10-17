@@ -43,8 +43,8 @@ import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CustomTextView
 import com.contusfly.views.MirrorFlySeekBar
-import com.location.googletranslation.GoogleTranslation
 import com.contusfly.views.SetDrawable
+import com.location.googletranslation.GoogleTranslation
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.MessageStatus
@@ -55,15 +55,8 @@ import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.mirrorflysdk.utils.Utils
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.hashMapOf
-import kotlin.collections.indexOfFirst
-import kotlin.collections.indices
-import kotlin.collections.isNotEmpty
-import kotlin.collections.reversed
 import kotlin.collections.set
+import kotlin.text.isNotEmpty
 
 
 /**
@@ -74,14 +67,14 @@ import kotlin.collections.set
  */
 
 class ChatAdapter(
-    private val mainlist: ArrayList<ChatMessage>,
+    private val mainList: ArrayList<ChatMessage>,
     private var selectedMessages: ArrayList<String>,
     private val chatType: String,
     val activity: Context,
-    val userJid: String)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>(), MessageItemListener {
+    val userJid: String
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), MessageItemListener {
 
-    var isLinkLongclick: Boolean = false
+    var isLinkLongClick: Boolean = false
 
 
     /**
@@ -191,7 +184,7 @@ class ChatAdapter(
         if (payloads.isEmpty() || payloads[0] !is Bundle)
             onBindViewHolder(holder, position)
         else {
-            val item = mainlist[position]
+            val item = mainList[position]
             val bundle = payloads[0] as Bundle
             handlePayloads(bundle, holder, item, position)
         }
@@ -209,42 +202,55 @@ class ChatAdapter(
                     is TextSentViewHolder -> {
                         handlePayloadsTextSender(key, this, item, position)
                     }
+
                     is TextReceivedViewHolder -> {
                         handlePayloadsTextReceived(key, this, item, position)
                     }
+
                     is LocationSentViewHolder -> {
                         handlePayloadsLocationSent(key, this, item, position)
                     }
+
                     is LocationReceivedViewHolder -> {
                         handlePayloadsLocationReceived(key, this, item, position)
                     }
+
                     is FileSentViewHolder -> {
                         handlePayloadsFileSent(key, this, item, position)
                     }
+
                     is FileReceivedViewHolder -> {
                         handlePayloadsFileReceived(key, this, item, position)
                     }
+
                     is AudioSentViewHolder -> {
                         handlePayloadsAudioSent(key, this, item, position)
                     }
+
                     is AudioReceivedViewHolder -> {
                         handlePayloadsAudioReceived(key, this, item, position)
                     }
+
                     is ImageSentViewHolder -> {
                         handlePayloadsImageSent(key, this, item, position)
                     }
+
                     is ImageReceivedViewHolder -> {
                         handlePayloadsImageReceived(key, this, item, position)
                     }
+
                     is VideoSentViewHolder -> {
                         handlePayloadsVideoSent(key, this, item, position)
                     }
+
                     is VideoReceivedViewHolder -> {
                         handlePayloadsVideoReceived(key, this, item, position)
                     }
+
                     is ContactSentViewHolder -> {
                         handlePayloadsContactSent(key, this, item, position)
                     }
+
                     is ContactReceivedViewHolder -> {
                         handlePayloadsContactReceived(key, this, item, position)
                     }
@@ -269,10 +275,10 @@ class ChatAdapter(
                     context
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     bindSenderTextView(this, item, position)
                 else {
-                    isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, imgChatStatus)
                     replyViewUtils.markFavoriteItem(this, item)
                 }
@@ -296,7 +302,7 @@ class ChatAdapter(
                     context
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     bindReceiverTextView(this, item, position)
                 else {
                     replyViewUtils.markFavoriteItem(this, item)
@@ -321,15 +327,20 @@ class ChatAdapter(
                     context
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     bindSenderLocationView(this, item, position)
                 else {
-                    isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, imgSenderStatus)
                     replyViewUtils.showSenderReplyWindow(this, item, context)
-                    if(item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
+                    if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
                         imgForwardLocation?.show()
-                    imgForwardLocation?.setOnClickListener { listener?.onSenderMediaForward(item, layoutPosition) }
+                    imgForwardLocation?.setOnClickListener {
+                        listener?.onSenderMediaForward(
+                            item,
+                            layoutPosition
+                        )
+                    }
                 }
             }
         }
@@ -351,7 +362,7 @@ class ChatAdapter(
                     context
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     bindReceiverLocationView(this, item, position)
                 else {
                     replyViewUtils.showReceiverReplyWindow(this, item, context)
@@ -380,12 +391,12 @@ class ChatAdapter(
             else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED)
                 setFileMediaStatusSenderView(this, item)
             else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     getFileView(this, item, position)
                 else {
-                    isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, fileStatusImage)
-                    setStaredStatus(item.isMessageStarred(), fileFavoriteImage)
+                    setStaredStatus(item.isMessageStarred, fileFavoriteImage)
                 }
             }
         }
@@ -411,7 +422,7 @@ class ChatAdapter(
             else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED)
                 setFileMediaStatusReceiverView(this, item)
             else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     getFileView(this, item, position)
                 else {
                     replyViewUtils.markFavoriteItem(this, item)
@@ -449,10 +460,10 @@ class ChatAdapter(
                         true
                     )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     getAudioView(this, item, position)
                 else {
-                    isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, imgSenderStatus)
                     replyViewUtils.showSenderReplyWindow(this, item, context)
                 }
@@ -489,10 +500,10 @@ class ChatAdapter(
                         false
                     )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     getAudioView(this, item, position)
                 else {
-                    setStaredStatus(item.isMessageStarred(), audRevStarred)
+                    setStaredStatus(item.isMessageStarred, audRevStarred)
                 }
             }
         }
@@ -518,13 +529,13 @@ class ChatAdapter(
             else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
                 handleImageMediaStatusChanged(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     bindSenderImageView(this, item, position)
                 else {
-                    isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
                     setStaredStatus(
-                        item.isMessageStarred(),
+                        item.isMessageStarred,
                         getStarIcon(item, imgSentStarred, imgSentCaptionStar)
                     )
                 }
@@ -541,9 +552,9 @@ class ChatAdapter(
                 imageItemViewHelper.handleImageLoading(
                     this,
                     Utils.returnEmptyStringIfNull(
-                        item.getMediaChatMessage().getMediaLocalStoragePath()
+                        item.mediaChatMessage.mediaLocalStoragePath
                     ),
-                    Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaThumbImage())
+                    Utils.returnEmptyStringIfNull(item.mediaChatMessage.mediaThumbImage)
                 )
             imageItemViewHelper.setImageSenderMediaStatus(this, item)
         }
@@ -571,19 +582,19 @@ class ChatAdapter(
                     imageItemViewHelper.handleReceiverImageLoading(
                         this,
                         Utils.returnEmptyStringIfNull(
-                            item.getMediaChatMessage().getMediaLocalStoragePath()
+                            item.mediaChatMessage.mediaLocalStoragePath
                         ),
                         Utils.returnEmptyStringIfNull(
-                            item.getMediaChatMessage().getMediaThumbImage()
+                            item.mediaChatMessage.mediaThumbImage
                         )
                     )
                 imageItemViewHelper.setImageReceiverMediaStatus(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     bindReceiverImageView(this, item, position)
                 else {
                     setStaredStatus(
-                        item.isMessageStarred(),
+                        item.isMessageStarred,
                         getStarIcon(item, imgStarred, txtRevCaptionStar)
                     )
                 }
@@ -611,13 +622,13 @@ class ChatAdapter(
             else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
                 handleVideoMediaStatusChanged(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     bindSenderVideoView(this, item, position)
                 else {
-                    isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
                     setStaredStatus(
-                        item.isMessageStarred(),
+                        item.isMessageStarred,
                         getStarIcon(item, imgSentStarred, imgSentCaptionStar)
                     )
                 }
@@ -635,12 +646,12 @@ class ChatAdapter(
                     item,
                     this,
                     Utils.returnEmptyStringIfNull(
-                        item.getMediaChatMessage().getMediaUploadStatus().toString()
+                        item.mediaChatMessage.getMediaUploadStatus().toString()
                     ),
                     Utils.returnEmptyStringIfNull(
-                        item.getMediaChatMessage().getMediaLocalStoragePath()
+                        item.mediaChatMessage.mediaLocalStoragePath
                     ),
-                    Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaThumbImage())
+                    Utils.returnEmptyStringIfNull(item.mediaChatMessage.mediaThumbImage)
                 )
             videoItemViewHelper.setVideoSenderMediaStatus(this, item)
         }
@@ -671,19 +682,19 @@ class ChatAdapter(
                     videoItemViewHelper.handleReceiverVideoLoading(
                         this,
                         Utils.returnEmptyStringIfNull(
-                            item.getMediaChatMessage().getMediaLocalStoragePath()
+                            item.mediaChatMessage.mediaLocalStoragePath
                         ),
                         Utils.returnEmptyStringIfNull(
-                            item.getMediaChatMessage().getMediaThumbImage()
+                            item.mediaChatMessage.mediaThumbImage
                         )
                     )
                 videoItemViewHelper.setVideoReceiverMediaStatus(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     bindReceiverVideoView(this, item, position)
                 else {
                     setStaredStatus(
-                        item.isMessageStarred(),
+                        item.isMessageStarred,
                         getStarIcon(item, imgStarred, txtRevCaptionStar)
                     )
                 }
@@ -708,12 +719,12 @@ class ChatAdapter(
                     context
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     getContactView(this, item, position)
                 else {
-                    isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, imgSenderStatus)
-                    setStaredStatus(item.isMessageStarred(), starredSentImage)
+                    setStaredStatus(item.isMessageStarred, starredSentImage)
                 }
             }
         }
@@ -735,10 +746,10 @@ class ChatAdapter(
                     context
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled())
+                if (item.isMessageRecalled)
                     getContactView(this, item, position)
                 else {
-                    setStaredStatus(item.isMessageStarred(), starredSentImage)
+                    setStaredStatus(item.isMessageStarred, starredSentImage)
                 }
             }
         }
@@ -749,7 +760,7 @@ class ChatAdapter(
         imgStatus: ImageView,
         imgStatusCaption: ImageView
     ): ImageView {
-        return if (Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaCaptionText())
+        return if (Utils.returnEmptyStringIfNull(item.mediaChatMessage.mediaCaptionText)
                 .isNotEmpty()
         ) {
             imgStatus.gone()
@@ -766,7 +777,7 @@ class ChatAdapter(
         imgStarred: ImageView,
         imgStarredCaption: ImageView
     ): ImageView {
-        return if (Utils.returnEmptyStringIfNull(item.getMediaChatMessage().getMediaCaptionText())
+        return if (Utils.returnEmptyStringIfNull(item.mediaChatMessage.mediaCaptionText)
                 .isNotEmpty()
         ) {
             imgStarred.gone()
@@ -789,31 +800,35 @@ class ChatAdapter(
         try {
             Log.d(
                 "$TAG onBindViewHolder ",
-                "${mainlist[position].messageId} ${mainlist[position].messageType}"
+                "${mainList[position].messageId} ${mainList[position].messageType}"
             )
             chatAdapterHelper.showHideDateHeader(holder as DateViewHolder)
-            val item = mainlist[position]
+            val item = mainList[position]
             when (holder.getItemViewType()) {
                 TYPE_TEXT_SENDER -> bindSenderTextView(holder, item, position)
                 TYPE_TEXT_RECEIVER -> {
                     showSenderNameIfGroupChat(holder, item, position)
                     bindReceiverTextView(holder, item, position)
                 }
+
                 TYPE_LOCATION_SENDER -> bindSenderLocationView(holder, item, position)
                 TYPE_LOCATION_RECEIVER -> {
                     showSenderNameIfGroupChat(holder, item, position)
                     bindReceiverLocationView(holder, item, position)
                 }
+
                 TYPE_FILE_SENDER -> getFileView(holder, item, position)
                 TYPE_FILE_RECEIVER -> {
                     showSenderNameIfGroupChat(holder, item, position)
                     getFileView(holder, item, position)
                 }
+
                 TYPE_CONTACT_SENDER -> getContactView(holder, item, position)
                 TYPE_CONTACT_RECEIVER -> {
                     showSenderNameIfGroupChat(holder, item, position)
                     getContactView(holder, item, position)
                 }
+
                 TYPE_MSG_NOTIFICATION -> getNotificationView(holder, item)
                 else -> bindMediaViews(holder, item, position)
             }
@@ -837,7 +852,7 @@ class ChatAdapter(
      * `position`. Type codes need not be contiguous.
      */
     override fun getItemViewType(position: Int): Int {
-        return chatAdapterHelper.getItemViewType(mainlist[position])
+        return chatAdapterHelper.getItemViewType(mainList[position])
     }
 
     /**
@@ -849,7 +864,7 @@ class ChatAdapter(
      * @return the stable ID of the item at position
      */
     override fun getItemId(position: Int): Long {
-        return mainlist[position].getMessageId().hashCode().toLong()
+        return mainList[position].messageId.hashCode().toLong()
     }
 
     /**
@@ -858,7 +873,7 @@ class ChatAdapter(
      *
      * @return The total number of items in this adapter.
      */
-    override fun getItemCount() = mainlist.size
+    override fun getItemCount() = mainList.size
 
     /**
      * Show/Hides sender name if the chat is group chat
@@ -893,8 +908,8 @@ class ChatAdapter(
         with(txtSenderViewHolder) {
             val time: String?
             try {
-                adjustPadding(space, position, mainlist)
-                time = chatMsgTime.getDaySentMsg(context, item.getMessageSentTime())
+                adjustPadding(space, position, mainList)
+                time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
                 with(txtChatTime) {
                     text = time
                     setTextColor(ContextCompat.getColor(context, R.color.color_sent_message_time))
@@ -918,7 +933,7 @@ class ChatAdapter(
                     joinLinkView.gone()
                     setStatus(item, imgChatStatus)
                     replyViewUtils.showSenderReplyWindow(this, item, context)
-                    setSenderText(item, txtChatSender,txtSenderViewHolder)
+                    setSenderText(item, txtChatSender, txtSenderViewHolder)
                 }
                 replyViewUtils.markFavoriteItem(this, item)
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
@@ -929,7 +944,11 @@ class ChatAdapter(
         }
     }
 
-    private fun setSenderText(item: ChatMessage,txtChatSender:TextView,holder: TextSentViewHolder){
+    private fun setSenderText(
+        item: ChatMessage,
+        txtChatSender: TextView,
+        holder: TextSentViewHolder
+    ) {
         val msg = item.messageTextContent
         with(txtChatSender) {
             setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
@@ -946,36 +965,57 @@ class ChatAdapter(
                     item.chatUserJid,
                     txtChatSender,
                     holder.joinLinkView,
-                    holder.joinLinkLogo
+                    holder.joinLinkLogo,
+                    msg
                 )
-            var movelink = ModifiedlinkMovementMethod(
+            val moveLink = ModifiedlinkMovementMethod(
                 context,
                 item.chatUserJid,
                 selectedMessages,
-                isLinkLongclick
+                isLinkLongClick
             )
-            movelink.setOnclicklistener(
+            moveLink.setOnclicklistener(
                 txtChatSender,
                 longClickListener,
                 item,
                 linkClickListener,
-                linkbuttonclickstatusListener
+                linkButtonClickStatusListener
             )
-            movementMethod = movelink
+            movementMethod = moveLink
             isClickable = false
             isLongClickable = false
         }
     }
 
+
     private fun setJoinLinkView(
         userJid: String,
         txtChat: TextView,
         joinLinkView: LinearLayout,
-        joinLinkLogo: ImageView
+        joinLinkLogo: ImageView,
+        originalMsg: String
     ) {
         val screenWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
-        txtChat.setTextColor(ContextCompat.getColor(context, R.color.light_blue))
-        txtChat.setLinkTextColor(ContextCompat.getColor(context, R.color.light_blue))
+
+        //https://webchat-uikit-qa.contus.us/mnf-qjtf-fbr
+        val sampleLink = "https://webchat-uikit-qa.contus.us/mnf-qjtf-fbr"
+        val meetLinkText = txtChat.text
+        LogMessage.d(TAG, "Join Call via Link length sampleLink: ${sampleLink.length}")
+        LogMessage.d(TAG, "Join Call via Link length userPastedLink: $meetLinkText")
+        LogMessage.d(TAG, "Join Call via Link length userPastedLink: ${meetLinkText.length}")
+
+        val indexOfNewMessageAfterLink = AdapterUtils.checkIndexOfNewMessageAfterLink(originalMsg)
+        LogMessage.d(
+            TAG,
+            "Join Call via Link  indexOfNewMessageAfterLink: $indexOfNewMessageAfterLink"
+        )
+        if (indexOfNewMessageAfterLink != -1) {
+            AdapterUtils.setTextForCallLink(txtChat, indexOfNewMessageAfterLink, context)
+        } else {
+            txtChat.setTextColor(ContextCompat.getColor(context, R.color.light_blue))
+            txtChat.setLinkTextColor(ContextCompat.getColor(context, R.color.light_blue))
+        }
+
         joinLinkView.show()
         joinLinkView.setOnClickListener {
             ChatUtils.navigateToOnGoingCallPreviewScreen(
@@ -1012,7 +1052,11 @@ class ChatAdapter(
         }
     }
 
-    private fun handleSenderTextSearchMention(htmlText: CharSequence, holder: TextSentViewHolder, mentionedUserName:SpannableStringBuilder) {
+    private fun handleSenderTextSearchMention(
+        htmlText: CharSequence,
+        holder: TextSentViewHolder,
+        mentionedUserName: SpannableStringBuilder
+    ) {
         if (searchEnabled && searchKey.isNotEmpty()) {
             val startIndex = htmlText.toString().checkIndexes(searchKey)
             val stopIndex = startIndex + searchKey.length
@@ -1021,7 +1065,8 @@ class ChatAdapter(
                 holder.txtChatSender,
                 htmlText.toString(),
                 startIndex,
-                stopIndex,mentionedUserName)
+                stopIndex, mentionedUserName
+            )
         } else {
             holder.txtChatSender.setBackgroundColor(context.color(android.R.color.transparent))
             holder.txtChatSender.setTextKeepState(htmlText)
@@ -1084,8 +1129,8 @@ class ChatAdapter(
             viewReceiver.contentDescription = "Receiver_Text"
             val time: String?
             try {
-                adjustPadding(txtReceiverViewHolder.space, position, mainlist)
-                time = chatMsgTime.getDaySentMsg(context, item.getMessageSentTime())
+                adjustPadding(txtReceiverViewHolder.space, position, mainList)
+                time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
                 txtChatRevTime.text = time
                 txtChatRevTime.setTextColor(
                     ContextCompat.getColor(
@@ -1097,20 +1142,20 @@ class ChatAdapter(
                 txtChatReceiver.setTextColor(ContextCompat.getColor(context, R.color.color_black))
                 receiverTextTranslated?.maxWidth =
                     SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
-                if (isTranslationChecked && mainlist[position].messageCustomField != null && mainlist[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] != null
-                    && mainlist[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
+                if (isTranslationChecked && mainList[position].messageCustomField != null && mainList[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] != null
+                    && mainList[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
                         "true"
                     ) && ChatManager.getAvailableFeatures().isTranslationEnabled
                 ) {
                     translatedlinearlayout?.show()
                     receiverTextTranslated?.show()
                     receiverTextTranslated?.text =
-                        mainlist[position].messageCustomField[Constants.TRANSLATED_MESSAGE_CONTENT]
+                        mainList[position].messageCustomField[Constants.TRANSLATED_MESSAGE_CONTENT]
                 } else {
                     receiverTextTranslated?.gone()
                     translatedlinearlayout?.gone()
                 }
-                receiverTextTranslation(mainlist, txtReceiverViewHolder)
+                receiverTextTranslation(mainList, txtReceiverViewHolder)
                 handleRecallForReceivedTextMessage(item, this)
                 replyViewUtils.markFavoriteItem(this, item)
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
@@ -1122,7 +1167,7 @@ class ChatAdapter(
     }
 
     private fun receiverTextTranslation(
-        mainlist: ArrayList<ChatMessage>,
+        mainChatList: ArrayList<ChatMessage>,
         txtReceiverViewHolder: TextReceivedViewHolder
     ) {
         with(txtReceiverViewHolder) {
@@ -1136,7 +1181,7 @@ class ChatAdapter(
             }
 
             receiverTextView?.setOnLongClickListener {
-                listener?.onSenderItemLongClick(mainlist[layoutPosition], layoutPosition)
+                listener?.onSenderItemLongClick(mainChatList[layoutPosition], layoutPosition)
                 true
             }
         }
@@ -1146,9 +1191,9 @@ class ChatAdapter(
         item: ChatMessage,
         textViewHolder: TextReceivedViewHolder
     ) {
-        val msg = item.getMessageTextContent()
+        val msg = item.messageTextContent
         with(textViewHolder) {
-            if (item.isMessageRecalled()) {
+            if (item.isMessageRecalled) {
                 textViewHolder.isRecallMessage = true
                 displayRecallInfoForReceiver(this)
                 receiverItemClick(this, viewReceiver, item)
@@ -1160,10 +1205,14 @@ class ChatAdapter(
                 replyViewUtils.showReceiverReplyWindow(this, item, context)
                 with(txtChatReceiver) {
                     setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
-                    if(item.mentionedUsersIds != null && item.mentionedUsersIds.size > 0) {
-                        val mentionText = MentionUtils.formatMentionText(context, item,false)
-                        val mentionUserNames=MentionUtils.getMentionedUserId(context,item,false)
-                        handleReceiverTextSearchMention(mentionText,textViewHolder,mentionUserNames)
+                    if (item.mentionedUsersIds != null && item.mentionedUsersIds.size > 0) {
+                        val mentionText = MentionUtils.formatMentionText(context, item, false)
+                        val mentionUserNames = MentionUtils.getMentionedUserId(context, item, false)
+                        handleReceiverTextSearchMention(
+                            mentionText,
+                            textViewHolder,
+                            mentionUserNames
+                        )
                     } else {
                         setTextKeepState(getSpannedText(msg))
                         handleReceiverTextSearch(getSpannedText(msg), textViewHolder)
@@ -1174,22 +1223,22 @@ class ChatAdapter(
                             item.chatUserJid,
                             txtChatReceiver,
                             receiverJoinLinkView,
-                            receiverJoinLinkLogo
+                            receiverJoinLinkLogo, msg
                         )
-                    var movelink = ModifiedlinkMovementMethod(
+                    val moveLink = ModifiedlinkMovementMethod(
                         context,
                         item.chatUserJid,
                         selectedMessages,
-                        isLinkLongclick
+                        isLinkLongClick
                     )
-                    movelink.setOnclicklistener(
+                    moveLink.setOnclicklistener(
                         txtChatReceiver,
                         longClickListener,
                         item,
                         linkClickListener,
-                        linkbuttonclickstatusListener
+                        linkButtonClickStatusListener
                     )
-                    movementMethod = movelink
+                    movementMethod = moveLink
                     isClickable = false
                     isLongClickable = false
                 }
@@ -1197,7 +1246,11 @@ class ChatAdapter(
         }
     }
 
-    private fun handleReceiverTextSearchMention(htmlText: CharSequence, holder: TextReceivedViewHolder, mentionedUserName:SpannableStringBuilder) {
+    private fun handleReceiverTextSearchMention(
+        htmlText: CharSequence,
+        holder: TextReceivedViewHolder,
+        mentionedUserName: SpannableStringBuilder
+    ) {
         if (searchEnabled && searchKey.isNotEmpty()) {
             val startIndex = htmlText.toString().checkIndexes(searchKey)
             val stopIndex = startIndex + searchKey.length
@@ -1206,7 +1259,8 @@ class ChatAdapter(
                 holder.txtChatReceiver,
                 htmlText.toString(),
                 startIndex,
-                stopIndex,mentionedUserName)
+                stopIndex, mentionedUserName
+            )
         } else {
             holder.txtChatReceiver.setBackgroundColor(context.color(android.R.color.transparent))
             holder.txtChatReceiver.setTextKeepState(htmlText)
@@ -1300,20 +1354,28 @@ class ChatAdapter(
             with(imgViewHolder) {
                 imageItemViewHelper.setImageWidthAndHeight(this, messageItem)
                 imgViewHolder.isSentMessage =
-                    messageItem.isMessageSentByMe() && !messageItem.isMessageSent()
+                    messageItem.isMessageSentByMe && !messageItem.isMessageSent()
                 viewSender.contentDescription = "Sender_Image"
-                adjustPadding(space, position, mainlist)
-                val time = chatMsgTime.getDaySentMsg(context, messageItem.getMessageSentTime())
+                adjustPadding(space, position, mainList)
+                val time = chatMsgTime.getDaySentMsg(context, messageItem.messageSentTime)
                 val base64Img = Utils.returnEmptyStringIfNull(
-                    messageItem.getMediaChatMessage().getMediaThumbImage()
+                    messageItem.mediaChatMessage.mediaThumbImage
                 )
                 val filePath = Utils.returnEmptyStringIfNull(
-                    messageItem.getMediaChatMessage().getMediaLocalStoragePath()
+                    messageItem.mediaChatMessage.mediaLocalStoragePath
                 )
-                val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
+                val chatItemRowModel = ChatItemRowModel(
+                    messageItem,
+                    filePath,
+                    time,
+                    base64Img,
+                    searchEnabled,
+                    searchKey
+                )
                 imageItemViewHelper.senderImageItemView(
                     this,
-                    rowmodel)
+                    chatItemRowModel
+                )
                 replyViewUtils.showSenderReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForSenderImageMessages(this, messageItem)
@@ -1349,27 +1411,35 @@ class ChatAdapter(
             with(imgViewHolder) {
                 imageItemViewHelper.setImageWidthAndHeight(this, messageItem)
                 viewReceiver.contentDescription = "Receiver_Image"
-                adjustPadding(space, position, mainlist)
-                val time = chatMsgTime.getDaySentMsg(context, messageItem.getMessageSentTime())
-                if (isTranslationChecked && mainlist[position].messageCustomField != null
-                    && mainlist[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] != null
-                    && mainlist[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
+                adjustPadding(space, position, mainList)
+                val time = chatMsgTime.getDaySentMsg(context, messageItem.messageSentTime)
+                if (isTranslationChecked && mainList[position].messageCustomField != null
+                    && mainList[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] != null
+                    && mainList[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
                         "true"
                     )
                 ) {
                     txtTranslatedText.show()
                     txtTranslatedText.text =
-                        mainlist[position].messageCustomField[Constants.TRANSLATED_MESSAGE_CONTENT]
+                        mainList[position].messageCustomField[Constants.TRANSLATED_MESSAGE_CONTENT]
                 }
                 val base64Img = Utils.returnEmptyStringIfNull(
-                    messageItem.getMediaChatMessage().getMediaThumbImage()
+                    messageItem.mediaChatMessage.mediaThumbImage
                 )
                 val filePath = Utils.returnEmptyStringIfNull(
-                    messageItem.getMediaChatMessage().getMediaLocalStoragePath()
+                    messageItem.mediaChatMessage.mediaLocalStoragePath
                 )
-                val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
+                val chatItemRowModel = ChatItemRowModel(
+                    messageItem,
+                    filePath,
+                    time,
+                    base64Img,
+                    searchEnabled,
+                    searchKey
+                )
                 imageItemViewHelper.receiverImageViewItem(
-                     this, rowmodel)
+                    this, chatItemRowModel
+                )
                 replyViewUtils.showReceiverReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForReceiverImageMessages(this, messageItem)
@@ -1381,7 +1451,7 @@ class ChatAdapter(
                 }
                 receiverItemClick(this, imgRevImage, messageItem)
                 receiverDownloadClick(viewDownload, txtRetryView, cancelDownload, messageItem)
-                receiverItemTranslate(mainlist, position, imgViewHolder)
+                receiverItemTranslate(mainList, position, imgViewHolder)
             }
         } catch (e: Exception) {
             LogMessage.e(Constants.TAG, e)
@@ -1406,19 +1476,27 @@ class ChatAdapter(
             with(videoSenderViewHolder) {
                 videoItemViewHelper.setImageWidthAndHeight(this, messageItem)
                 videoSenderViewHolder.isSentMessage =
-                    messageItem.isMessageSentByMe() && !messageItem.isMessageSent()
+                    messageItem.isMessageSentByMe && !messageItem.isMessageSent()
                 viewSender.contentDescription = "Sender_Video"
-                adjustPadding(space, position, mainlist)
-                val time = chatMsgTime.getDaySentMsg(context, messageItem.getMessageSentTime())
+                adjustPadding(space, position, mainList)
+                val time = chatMsgTime.getDaySentMsg(context, messageItem.messageSentTime)
                 val base64Img = Utils.returnEmptyStringIfNull(
-                    messageItem.getMediaChatMessage().getMediaThumbImage()
+                    messageItem.mediaChatMessage.mediaThumbImage
                 )
                 val filePath = Utils.returnEmptyStringIfNull(
-                    messageItem.getMediaChatMessage().getMediaLocalStoragePath()
+                    messageItem.mediaChatMessage.mediaLocalStoragePath
                 )
-                val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
+                val chatItemRowModel = ChatItemRowModel(
+                    messageItem,
+                    filePath,
+                    time,
+                    base64Img,
+                    searchEnabled,
+                    searchKey
+                )
                 videoItemViewHelper.senderVideoItemView(
-                   this, rowmodel)
+                    this, chatItemRowModel
+                )
                 replyViewUtils.showSenderReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForSenderVideoMessages(this, messageItem)
@@ -1455,17 +1533,25 @@ class ChatAdapter(
             with(videoReceiverViewHolder) {
                 videoItemViewHelper.setImageWidthAndHeight(this, messageItem)
                 viewReceiver.contentDescription = "Receiver_Video"
-                adjustPadding(space, position, mainlist)
-                val time = chatMsgTime.getDaySentMsg(context, messageItem.getMessageSentTime())
+                adjustPadding(space, position, mainList)
+                val time = chatMsgTime.getDaySentMsg(context, messageItem.messageSentTime)
                 val base64Img = Utils.returnEmptyStringIfNull(
-                    messageItem.getMediaChatMessage().getMediaThumbImage()
+                    messageItem.mediaChatMessage.mediaThumbImage
                 )
                 val filePath = Utils.returnEmptyStringIfNull(
-                    messageItem.getMediaChatMessage().getMediaLocalStoragePath()
+                    messageItem.mediaChatMessage.mediaLocalStoragePath
                 )
-                val rowmodel=ChatItemRowModel(messageItem,filePath,time,base64Img,searchEnabled,searchKey)
+                val chatItemRowModel = ChatItemRowModel(
+                    messageItem,
+                    filePath,
+                    time,
+                    base64Img,
+                    searchEnabled,
+                    searchKey
+                )
                 videoItemViewHelper.receiverVideoViewItem(
-                   this, rowmodel)
+                    this, chatItemRowModel
+                )
                 replyViewUtils.showReceiverReplyWindow(this, messageItem, context)
                 ChatUtils.setSelectedChatItem(viewRowItem, messageItem, selectedMessages, context)
                 setListenersForReceiverVideoMessages(this, messageItem)
@@ -1477,7 +1563,7 @@ class ChatAdapter(
                         position
                     )
                 }
-                receiverItemTranslate(mainlist, position, videoReceiverViewHolder)
+                receiverItemTranslate(mainList, position, videoReceiverViewHolder)
             }
         } catch (e: Exception) {
             LogMessage.e(com.mirrorflysdk.flycommons.Constants.TAG, e)
@@ -1486,19 +1572,21 @@ class ChatAdapter(
 
 
     private fun receiverItemTranslate(
-        mainlist: ArrayList<ChatMessage>,
+        mainChatList: ArrayList<ChatMessage>,
         position: Int,
         receiverViewHolder: BaseReceivedViewHolder
     ) {
         with(receiverViewHolder) {
-            if (isTranslationChecked && mainlist[position].messageCustomField != null
-                && mainlist[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] != null
-                && mainlist[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals("true")
+            if (isTranslationChecked && mainChatList[position].messageCustomField != null
+                && mainChatList[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] != null
+                && mainChatList[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
+                    "true"
+                )
             ) {
                 txtTranslatedText.show()
                 translatedlinearlayout?.show()
                 txtTranslatedText.text =
-                    mainlist[position].messageCustomField[Constants.TRANSLATED_MESSAGE_CONTENT]
+                    mainChatList[position].messageCustomField[Constants.TRANSLATED_MESSAGE_CONTENT]
             } else {
                 translatedlinearlayout?.gone()
             }
@@ -1512,7 +1600,7 @@ class ChatAdapter(
             }
 
             layoutTranslatedText.setOnLongClickListener {
-                listener?.onSenderItemLongClick(mainlist[layoutPosition], layoutPosition)
+                listener?.onSenderItemLongClick(mainChatList[layoutPosition], layoutPosition)
                 true
             }
         }
@@ -1525,17 +1613,17 @@ class ChatAdapter(
         translatedLinearLayout: LinearLayout?
     ) {
         with(holder) {
-            if (!mainlist[layoutPosition].isMessageRecalled)
+            if (!mainList[layoutPosition].isMessageRecalled)
                 if (selectedMessages.isNotEmpty()) {
-                    listener?.onSenderItemClicked(mainlist[layoutPosition], layoutPosition)
+                    listener?.onSenderItemClicked(mainList[layoutPosition], layoutPosition)
                 } else if (!ChatManager.getAvailableFeatures().isTranslationEnabled) {
                     return
-                } else if (isTranslationChecked && (mainlist[layoutPosition].messageCustomField == null
-                            || mainlist[layoutPosition].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] == null
-                            || mainlist[layoutPosition].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
+                } else if (isTranslationChecked && (mainList[layoutPosition].messageCustomField == null
+                            || mainList[layoutPosition].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] == null
+                            || mainList[layoutPosition].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
                         "false"
                     )
-                            || !mainlist[layoutPosition].messageCustomField[Constants.TRANSLATED_LANGUAGE].equals(
+                            || !mainList[layoutPosition].messageCustomField[Constants.TRANSLATED_LANGUAGE].equals(
                         selectedLanguage
                     ))
                 ) {
@@ -1552,17 +1640,17 @@ class ChatAdapter(
                                     override fun onSuccess(s: String) {
                                         com.contusfly.utils.LogMessage.d(TAG, "#translate Success")
                                         FlyMessenger.setCustomValue(
-                                            mainlist[layoutPosition].messageId,
+                                            mainList[layoutPosition].messageId,
                                             Constants.TRANSLATED_MESSAGE_CONTENT,
                                             s
                                         )
                                         FlyMessenger.setCustomValue(
-                                            mainlist[layoutPosition].messageId,
+                                            mainList[layoutPosition].messageId,
                                             Constants.IS_MESSAGE_TRANSLATED,
                                             "true"
                                         )
                                         FlyMessenger.setCustomValue(
-                                            mainlist[layoutPosition].messageId,
+                                            mainList[layoutPosition].messageId,
                                             Constants.TRANSLATED_LANGUAGE,
                                             selectedLanguage
                                         )
@@ -1573,7 +1661,7 @@ class ChatAdapter(
                                         hashMap[Constants.TRANSLATED_MESSAGE_CONTENT] = s
                                         hashMap[Constants.IS_MESSAGE_TRANSLATED] = "true"
                                         hashMap[Constants.TRANSLATED_LANGUAGE] = selectedLanguage
-                                        mainlist[layoutPosition].messageCustomField = hashMap
+                                        mainList[layoutPosition].messageCustomField = hashMap
                                     }
 
                                     override fun onFailed(s: String) {
@@ -1582,7 +1670,7 @@ class ChatAdapter(
                                         translatedLinearLayout?.gone()
                                         Toast.makeText(context, s, Toast.LENGTH_SHORT).show()
                                         FlyMessenger.setCustomValue(
-                                            mainlist[layoutPosition].messageId,
+                                            mainList[layoutPosition].messageId,
                                             Constants.IS_MESSAGE_TRANSLATED,
                                             "false"
                                         )
@@ -1603,13 +1691,13 @@ class ChatAdapter(
      * @param position List item position
      */
     private fun getAudioView(holder: RecyclerView.ViewHolder, item: ChatMessage, position: Int) {
-        val time = chatMsgTime.getDaySentMsg(context, item.getMessageSentTime())
-        if (item.isMessageSentByMe()) {
+        val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+        if (item.isMessageSentByMe) {
             val audioViewHolder = holder as AudioSentViewHolder
             with(audioViewHolder) {
-                audioViewHolder.isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                audioViewHolder.isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                 viewRowItem.contentDescription = "Sender_Audio"
-                adjustPadding(space, position, mainlist)
+                adjustPadding(space, position, mainList)
                 audioItemView.disableSenderAudioViews(this)
                 audioItemView.audioSenderItemView(this, time, item)
                 audioPlayClick(
@@ -1648,7 +1736,7 @@ class ChatAdapter(
             val audioReceiverViewHolder = holder as AudioReceivedViewHolder
             with(audioReceiverViewHolder) {
                 viewRowItem.contentDescription = "Receiver_Audio"
-                adjustPadding(space, position, mainlist)
+                adjustPadding(space, position, mainList)
                 audioItemView.disableReceiverAudioViews(this)
                 audioItemView.audioReceiverItemView(this, time, item)
                 audioPlayClick(
@@ -1665,7 +1753,7 @@ class ChatAdapter(
                     txtAudioDuration,
                     layoutPosition
                 )
-                audRevStarred.visibility = if (item.isMessageStarred()) View.VISIBLE else View.GONE
+                audRevStarred.visibility = if (item.isMessageStarred) View.VISIBLE else View.GONE
                 replyViewUtils.showReceiverReplyWindow(this, item, context)
                 /*new AudioReplyViewUtils().showReceiverReplyWindow(audioReceiverViewHolder, item, context);*/
                 setSelectedChatItem(viewRowItem, item)
@@ -1703,11 +1791,11 @@ class ChatAdapter(
             val locationSenderViewHolder = holder as LocationSentViewHolder
             with(locationSenderViewHolder) {
                 locationSenderViewHolder.isSentMessage =
-                    item.isMessageSentByMe() && !item.isMessageSent()
+                    item.isMessageSentByMe && !item.isMessageSent()
                 imageSendLocation.contentDescription = "Sender_Location"
-                adjustPadding(space, position, mainlist)
-                val time = chatMsgTime.getDaySentMsg(context, item.getMessageSentTime())
-                val locationMessage = item.getLocationChatMessage()
+                adjustPadding(space, position, mainList)
+                val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+                val locationMessage = item.locationChatMessage
                 val url =
                     MapUtils.getMapImageUri(locationMessage.latitude, locationMessage.longitude)
                 txtSendTime.text = time
@@ -1753,12 +1841,12 @@ class ChatAdapter(
             val locationReceiverViewHolder = holder as LocationReceivedViewHolder
             with(locationReceiverViewHolder) {
                 imageReceiveLocation.contentDescription = "Receiver_Location"
-                adjustPadding(space, position, mainlist)
-                val time = chatMsgTime.getDaySentMsg(context, item.getMessageSentTime())
-                val locationMessage = item.getLocationChatMessage()
+                adjustPadding(space, position, mainList)
+                val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+                val locationMessage = item.locationChatMessage
                 val url = MapUtils.getMapImageUri(
-                    locationMessage.getLatitude(),
-                    locationMessage.getLongitude()
+                    locationMessage.latitude,
+                    locationMessage.longitude
                 )
                 ImageUtils.loadMapWithGlide(
                     context,
@@ -1792,7 +1880,7 @@ class ChatAdapter(
      * @param message          ChatMessage instance
      */
     private fun setSelectedChatItem(view: View, message: ChatMessage) {
-        if (selectedMessages.contains(message.getMessageId()))
+        if (selectedMessages.contains(message.messageId))
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.color_selected_item))
         else
             view.background = null
@@ -1843,13 +1931,13 @@ class ChatAdapter(
      */
     private fun getFileView(holder: RecyclerView.ViewHolder, item: ChatMessage, position: Int) {
         try {
-            val time = chatMsgTime.getDaySentMsg(context, item.getMessageSentTime())
-            if (item.isMessageSentByMe()) {
+            val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+            if (item.isMessageSentByMe) {
                 val fileViewHolder = holder as FileSentViewHolder
                 with(fileViewHolder) {
-                    fileViewHolder.isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+                    fileViewHolder.isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     fileSentViewLayout.contentDescription = "Sender_File"
-                    adjustPadding(spaceView, position, mainlist)
+                    adjustPadding(spaceView, position, mainList)
                     setFileSenderView(this, item, time)
                     handleFileTextSearch(
                         item.mediaChatMessage.mediaFileName,
@@ -1875,7 +1963,7 @@ class ChatAdapter(
                 val viewHolder = holder as FileReceivedViewHolder
                 with(viewHolder) {
                     fileReceivedViewLayout.contentDescription = "Receiver_File"
-                    adjustPadding(spaceView, position, mainlist)
+                    adjustPadding(spaceView, position, mainList)
                     fileItemView.fileReceiverItemView(this, time, item)
                     setFileMediaStatusReceiverView(this, item)
                     replyViewUtils.markFavoriteItem(this, item)
@@ -1912,17 +2000,17 @@ class ChatAdapter(
     ) {
         with(viewHolder) {
             val fileStatus = Utils.returnEmptyStringIfNull(
-                item.getMediaChatMessage().getMediaDownloadStatus().toString()
+                item.mediaChatMessage.getMediaDownloadStatus().toString()
             )
             if (fileStatus.isNotEmpty()) {
                 val filePath = Utils.returnEmptyStringIfNull(
-                    item.getMediaChatMessage().getMediaLocalStoragePath()
+                    item.mediaChatMessage.mediaLocalStoragePath
                 )
                 chatAdapterHelper.presentFileTypeView(
                     fileCancelLayout,
                     fileDownloadProgress,
                     fileDownloadProgressBuffer,
-                    item.getMessageId(),
+                    item.messageId,
                     MessageUtils.getMediaStatus(fileStatus, filePath, false),
                     imgFileForward,
                     fileDownloadLayout
@@ -1956,19 +2044,19 @@ class ChatAdapter(
     ) {
         with(fileViewHolder) {
             val fileUploadStatus = Utils.returnEmptyStringIfNull(
-                item.getMediaChatMessage().getMediaUploadStatus().toString()
+                item.mediaChatMessage.getMediaUploadStatus().toString()
             )
             val fileDownloadStatus = Utils.returnEmptyStringIfNull(
-                item.getMediaChatMessage().getMediaDownloadStatus().toString()
+                item.mediaChatMessage.getMediaDownloadStatus().toString()
             )
-            val fileStatus = if (item.isItCarbonMessage()) fileDownloadStatus else fileUploadStatus
+            val fileStatus = if (item.isItCarbonMessage) fileDownloadStatus else fileUploadStatus
             fileStatus.isNotEmpty().let {
                 fileCarbonDownloadView?.gone()
                 fileUploadViewLayout.gone()
                 chatAdapterHelper.presentFileTypeView(
                     fileUploadCancelLayout, fileUploadProgress, fileUploadProgressBuffer,
-                    item.getMessageId(), fileStatus.toInt(), imgFileForward,
-                    if (item.isItCarbonMessage()) fileCarbonDownloadView else fileUploadViewLayout
+                    item.messageId, fileStatus.toInt(), imgFileForward,
+                    if (item.isItCarbonMessage) fileCarbonDownloadView else fileUploadViewLayout
                 )
             }
         }
@@ -1983,22 +2071,22 @@ class ChatAdapter(
      * @param position      List item position
      */
     private fun getContactView(holder: RecyclerView.ViewHolder, item: ChatMessage, position: Int) {
-        val contactMessage = item.getContactChatMessage()
-        val contactName = contactMessage.getContactName()
+        val contactMessage = item.contactChatMessage
+        val contactName = contactMessage.contactName
         val registeredJid = getJidFromSharedContact(contactMessage)
-        val time = chatMsgTime.getDaySentMsg(context, item.getMessageSentTime())
-        if (item.isMessageSentByMe()) {
+        val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+        if (item.isMessageSentByMe) {
             contactSentView(holder, item, position, contactName, registeredJid, time)
         } else {
             val contactReceiverViewHolder = holder as ContactReceivedViewHolder
             with(contactReceiverViewHolder) {
                 viewRowItem.contentDescription = "Receiver_Contact"
-                adjustPadding(space, position, mainlist)
+                adjustPadding(space, position, mainList)
                 txtSendTime.text = time
                 txtSendName.text = contactName
                 checkUserFromReceiver(holder, item)
                 starredSentImage.visibility =
-                    if (item.isMessageStarred()) View.VISIBLE else View.GONE
+                    if (item.isMessageStarred) View.VISIBLE else View.GONE
                 replyViewUtils.showReceiverReplyWindow(this, item, context)
                 setSelectedChatItem(viewRowItem, item)
                 setSearchContactText(txtSendName, SpannableStringBuilder(contactName))
@@ -2022,17 +2110,17 @@ class ChatAdapter(
     ) {
         val contactHolder = holder as ContactSentViewHolder
         with(contactHolder) {
-            contactHolder.isSentMessage = item.isMessageSentByMe() && !item.isMessageSent()
+            contactHolder.isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
             viewRowItem.contentDescription = "Sender_Contact"
-            adjustPadding(space, position, mainlist)
+            adjustPadding(space, position, mainList)
             txtSendName.text = contactName
             txtSendTime.text = time
-            checkUserFromSender(holder,item)
+            checkUserFromSender(holder, item)
             setStatus(item, imgSenderStatus)
             if (registeredJid == item.chatUserJid) {
                 contactActionText.gone()
             }
-            starredSentImage.visibility = if (item.isMessageStarred()) View.VISIBLE else View.GONE
+            starredSentImage.visibility = if (item.isMessageStarred) View.VISIBLE else View.GONE
             replyViewUtils.showSenderReplyWindow(this, item, context)
             setSearchContactText(txtSendName, SpannableStringBuilder(contactName))
             setSelectedChatItem(viewRowItem, item)
@@ -2059,9 +2147,11 @@ class ChatAdapter(
         val contactReceiverViewHolder = holder as ContactReceivedViewHolder
         with(contactReceiverViewHolder) {
             if (BuildConfig.CONTACT_SYNC_ENABLED) {
-                val chatUserNumber = Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(SharedPreferenceManager.getCurrentUserJid())).replace(" ".toRegex(), "")
+                val chatUserNumber =
+                    Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(SharedPreferenceManager.getCurrentUserJid()))
+                        .replace(" ".toRegex(), "")
                 val number = chatUserNumber.replace(" ".toRegex(), "")
-                val contactMessage = item.getContactChatMessage()
+                val contactMessage = item.contactChatMessage
                 val registeredJid = getJidFromSharedContact(contactMessage)
                 if (registeredJid != null)
                     handleContactView(this, registeredJid)
@@ -2070,13 +2160,18 @@ class ChatAdapter(
                     contactActionText.show()
                     txtSendImg.setImageResource(R.drawable.ic_contact_img)
                 }
-                for (num in contactMessage.getContactPhoneNumbers()) {
+                for (num in contactMessage.contactPhoneNumbers) {
                     val receivedNumber = num.replace(" ".toRegex(), "")
                     if (number.contains(receivedNumber)) {
                         contactActionText.gone()
                         viewSeperator.hide()
                     } else {
-                        viewContactSaveMessageItem(item.senderUserJid, receivedNumber, viewSeperator, contactActionText)
+                        viewContactSaveMessageItem(
+                            item.senderUserJid,
+                            receivedNumber,
+                            viewSeperator,
+                            contactActionText
+                        )
                     }
                 }
             } else {
@@ -2086,13 +2181,16 @@ class ChatAdapter(
         }
     }
 
-    private fun handleContactView(contactReceiverViewHolder: ContactReceivedViewHolder, jID: String) {
+    private fun handleContactView(
+        contactReceiverViewHolder: ContactReceivedViewHolder,
+        jID: String
+    ) {
         with(contactReceiverViewHolder) {
             if (jID == SharedPreferenceManager.getCurrentUserJid()) {
                 contactActionText.gone()
                 viewSeperator.hide()
                 contactActionText.text = Constants.EMPTY_STRING
-                setLoginUserContactProfilePicture(txtSendImg,false)
+                setLoginUserContactProfilePicture(txtSendImg, false)
             } else {
                 contactActionText.text = context.getString(R.string.message)
                 contactActionText.show()
@@ -2103,13 +2201,22 @@ class ChatAdapter(
         }
     }
 
-    private fun viewContactSaveMessageItem(senderUserJid: String?, receivedNumber: String, viewSeparator: View, contactActionText: CustomTextView) {
+    private fun viewContactSaveMessageItem(
+        senderUserJid: String?,
+        receivedNumber: String,
+        viewSeparator: View,
+        contactActionText: CustomTextView
+    ) {
         viewSeparator.show()
         val countryCode = SharedPreferenceManager.getString(Constants.COUNTRY_CODE)
-        val userJid = Utils.getJidFromPhoneNumber(context, receivedNumber, if (countryCode.isEmpty()) "IN" else countryCode) ?: Constants.EMPTY_STRING
+        val userJid = Utils.getJidFromPhoneNumber(
+            context,
+            receivedNumber,
+            if (countryCode.isEmpty()) "IN" else countryCode
+        ) ?: Constants.EMPTY_STRING
         val contactJid = if (senderUserJid!!.contains(userJid)) senderUserJid else userJid
         val profileDetail = ProfileDetailsUtils.getProfileDetails(contactJid)
-        if (profileDetail == null || !profileDetail.isItSavedContact() || profileDetail.isEmailContact()) {
+        if (profileDetail == null || !profileDetail.isItSavedContact || profileDetail.isEmailContact()) {
             if (contactActionText.text.toString() == context.getString(R.string.message))
                 contactActionText.text = context.getString(R.string.message_or_save_contact)
             else if (contactActionText.text.toString() == context.getString(R.string.invite))
@@ -2117,10 +2224,10 @@ class ChatAdapter(
         }
     }
 
-    private fun setLoginUserContactProfilePicture(txtSendImg: ImageView,isSender: Boolean){
+    private fun setLoginUserContactProfilePicture(txtSendImg: ImageView, isSender: Boolean) {
 
-        if(SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE).isNotEmpty()) {
-            if(isSender) {
+        if (SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE).isNotEmpty()) {
+            if (isSender) {
                 MediaUtils.loadImageWithGlideSecure(
                     context, SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE),
                     txtSendImg, ContextCompat.getDrawable(context, R.drawable.ic_profile)
@@ -2132,7 +2239,13 @@ class ChatAdapter(
                 )
             }
         } else {
-            txtSendImg.setImageDrawable(setDrawable?.setDrawableForProfile(SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME)))
+            txtSendImg.setImageDrawable(
+                setDrawable?.setDrawableForProfile(
+                    SharedPreferenceManager.getString(
+                        Constants.USER_PROFILE_NAME
+                    )
+                )
+            )
         }
     }
 
@@ -2155,8 +2268,11 @@ class ChatAdapter(
                         contactActionText.gone()
                         contactSeparator?.gone()
                         MediaUtils.loadImageWithGlideSecure(
-                            context, SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE),
-                            txtSendImg, ContextCompat.getDrawable(context, R.drawable.ic_profile))
+                            context,
+                            SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE),
+                            txtSendImg,
+                            ContextCompat.getDrawable(context, R.drawable.ic_profile)
+                        )
                     } else {
                         contactActionText.text = context.getString(R.string.message)
                         ProfileDetailsUtils.getProfileDetails(registeredJid)?.let {
@@ -2182,12 +2298,12 @@ class ChatAdapter(
      */
     private fun getJidFromSharedContact(contactMessage: ContactChatMessage): String? {
         var registeredJid: String? = null
-        for (i in contactMessage.getIsChatAppUser().indices)
-            if (contactMessage.getIsChatAppUser()[i].isTrue()) {
+        for (i in contactMessage.isChatAppUser.indices)
+            if (contactMessage.isChatAppUser[i].isTrue()) {
                 val countryCode = SharedPreferenceManager.getString(Constants.COUNTRY_CODE)
                 registeredJid = Utils.getJidFromPhoneNumber(
                     context,
-                    contactMessage.getContactPhoneNumbers()[i],
+                    contactMessage.contactPhoneNumbers[i],
                     if (countryCode.isEmpty()) "IN" else countryCode
                 )
                 break
@@ -2208,11 +2324,13 @@ class ChatAdapter(
                 showSenderNameIfGroupChat(holder, item, position)
                 bindReceiverImageView(holder, item, position)
             }
+
             TYPE_VIDEO_SENDER -> bindSenderVideoView(holder, item, position)
             TYPE_VIDEO_RECEIVER -> {
                 showSenderNameIfGroupChat(holder, item, position)
                 bindReceiverVideoView(holder, item, position)
             }
+
             TYPE_AUDIO_SENDER -> getAudioView(holder, item, position)
             TYPE_AUDIO_RECEIVER -> {
                 showSenderNameIfGroupChat(holder, item, position)
@@ -2235,7 +2353,7 @@ class ChatAdapter(
     ) {
         val senderNameHolder = holder as SenderNameHolder
         if (!item.isMessageSentByMe)
-            chatAdapterHelper.showHideSenderName(senderNameHolder, mainlist, position)
+            chatAdapterHelper.showHideSenderName(senderNameHolder, mainList, position)
     }
 
     /**
@@ -2550,7 +2668,7 @@ class ChatAdapter(
         doesSentMessage: Boolean
     ) {
         with(holder) {
-            val media = item.getMediaChatMessage()
+            val media = item.mediaChatMessage
             playImage.setOnClickListener {
                 if (ChatUtils.checkWritePermission(
                         context,
@@ -2561,8 +2679,8 @@ class ChatAdapter(
                         if (currentAudioPosition != -1 && layoutPosition != currentAudioPosition)
                             resetAudioPlayer(false)
                         setMediaResource(
-                            media.getMediaLocalStoragePath(),
-                            media.getMediaDuration(),
+                            media.mediaLocalStoragePath,
+                            media.mediaDuration,
                             playImage,
                             doesSentMessage
                         )
@@ -2588,7 +2706,7 @@ class ChatAdapter(
      * @param holder          View holder of current view in adapter
      * @param playImage       Play button of the audio view
      * @param mirrorFlySeekBar         Seek bar of the audio
-     * @param doesSentMessage Boolean to identify whether the audio message is posted in the
+     * @param durationView duration view text view
      * chat activity.
      */
     private fun setAudioSeekBarListener(
@@ -2599,7 +2717,7 @@ class ChatAdapter(
         durationView: TextView
     ) {
         with(holder) {
-            val media = item.getMediaChatMessage()
+            val media = item.mediaChatMessage
             mirrorFlySeekBar.setOnSeekBarChangeListener((object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
@@ -2610,7 +2728,7 @@ class ChatAdapter(
 
                         mediaController.updateSeekbarChanges(
                             progress, layoutPosition,
-                            media.getMediaLocalStoragePath(), fromUser, durationView,
+                            media.mediaLocalStoragePath, fromUser, durationView,
                             mirrorFlySeekBar, playImage
                         )
 
@@ -2625,7 +2743,7 @@ class ChatAdapter(
                 }
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    mediaController.onStopTrackingTouch(seekBar, media.getMediaLocalStoragePath())
+                    mediaController.onStopTrackingTouch(seekBar, media.mediaLocalStoragePath)
                 }
             }))
 
@@ -2740,7 +2858,7 @@ class ChatAdapter(
         // During Multi-select, when user click reply msg view (in both sender & receiver side),
         // should not navigate to corresponding msg, instead it should behave like item click.
         listener?.let {
-            listener!!.onReplyMessageClick(item.getMessageId())
+            listener!!.onReplyMessageClick(item.messageId)
             LogMessage.e("TAG", position.toString())
         }
     }
@@ -2763,8 +2881,8 @@ class ChatAdapter(
                 true
             }
             contactActionText.setOnClickListener {
-                if (!item.isMessageRecalled())
-                    listener?.onContactClick(item, layoutPosition, registeredJid,true)
+                if (!item.isMessageRecalled)
+                    listener?.onContactClick(item, layoutPosition, registeredJid, true)
             }
         }
     }
@@ -2792,7 +2910,7 @@ class ChatAdapter(
                 listener!!.onContactClick(
                     item,
                     layoutPosition,
-                    registeredJid,!contactActionText.text.toString().contains("Save Contact")
+                    registeredJid, !contactActionText.text.toString().contains("Save Contact")
                 )
             }
         }
@@ -2806,7 +2924,7 @@ class ChatAdapter(
      */
     private fun getNotificationView(holder: RecyclerView.ViewHolder, message: ChatMessage?) {
         val notificationViewHolder = holder as NotificationViewHolder
-        notificationViewHolder.notificationView.text = message?.getMessageTextContent()
+        notificationViewHolder.notificationView.text = message?.messageTextContent
     }
 
     /**
@@ -2825,7 +2943,7 @@ class ChatAdapter(
      *
      * @return List<ChatMessage> List of messages
     </ChatMessage> */
-    val messages: List<ChatMessage> get() = mainlist
+    val messages: List<ChatMessage> get() = mainList
 
     /**
      * Stop the player of the Media player.
@@ -2848,8 +2966,8 @@ class ChatAdapter(
     }
 
     fun refreshMessageAtPosition(position: Int, message: ChatMessage) {
-        if (message.isMessageDeleted() && mainlist.size > position) {
-            mainlist.removeAt(position)
+        if (message.isMessageDeleted && mainList.size > position) {
+            mainList.removeAt(position)
             notifyItemRemoved(position)
         } else {
             notifyItemChanged(validateMessagePosition(position, message, true))
@@ -2861,8 +2979,8 @@ class ChatAdapter(
         message: ChatMessage,
         findAgain: Boolean
     ): Int {
-        if (mainlist.size > position && mainlist[position].getMessageId() == message.getMessageId()) {
-            mainlist[position] = message
+        if (mainList.size > position && mainList[position].messageId == message.messageId) {
+            mainList[position] = message
             return position
         } else if (findAgain) {
             val messagePosition = getMessagePosition(message.messageId)
@@ -2881,10 +2999,10 @@ class ChatAdapter(
         messageId: String,
         findAgain: Boolean
     ): Int {
-        if (mainlist.size > position && mainlist[position].getMessageId() == messageId) {
+        if (mainList.size > position && mainList[position].messageId == messageId) {
             val message = FlyMessenger.getMessageOfId(messageId)
             message?.let {
-                mainlist[position] = it
+                mainList[position] = it
             }
             return position
         } else if (findAgain) {
@@ -2896,7 +3014,7 @@ class ChatAdapter(
     }
 
     override fun setChatStatus(item: ChatMessage?, viewHolder: ImageView?) {
-        ChatMessageUtils.setChatStatus(viewHolder!!, item!!.getMessageStatus())
+        ChatMessageUtils.setChatStatus(viewHolder!!, item!!.messageStatus)
     }
 
     override fun setRecentChatStatus(viewHolder: ImageView?, status: MessageStatus?) {
@@ -2931,6 +3049,7 @@ class ChatAdapter(
                 hideMediaOption(mediaStatus.txtRetry, mediaStatus.download)
                 mediaStatus.forwardImageview?.show()
             }
+
             MediaDownloadStatus.MEDIA_DOWNLOADING, MediaUploadStatus.MEDIA_UPLOADING -> {
                 mediaStatus.progressBar?.show()
                 mediaStatus.cancelImageview?.show()
@@ -2938,6 +3057,7 @@ class ChatAdapter(
                 mediaStatus.forwardImageview?.hide()
                 hideMediaOption(mediaStatus.txtRetry, mediaStatus.download)
             }
+
             MediaDownloadStatus.MEDIA_NOT_DOWNLOADED -> {
                 chatAdapterHelper.mediaUploadView(
                     mediaStatus.progressBar,
@@ -2949,6 +3069,7 @@ class ChatAdapter(
                 mediaStatus.forwardImageview?.hide()
 
             }
+
             MediaUploadStatus.MEDIA_NOT_UPLOADED -> {
                 mediaStatus.txtRetry?.show()
                 mediaStatus.download?.hide()
@@ -2959,6 +3080,7 @@ class ChatAdapter(
                     mediaStatus.viewProgress
                 )
             }
+
             MediaDownloadStatus.MEDIA_DOWNLOADED_NOT_AVAILABLE -> {
                 chatAdapterHelper.mediaUploadView(
                     mediaStatus.progressBar,
@@ -2969,6 +3091,7 @@ class ChatAdapter(
                 mediaStatus.download?.show()
                 mediaStatus.txtRetry?.hide()
             }
+
             MediaUploadStatus.MEDIA_UPLOADED_NOT_AVAILABLE -> {
                 chatAdapterHelper.mediaUploadView(
                     mediaStatus.progressBar,
@@ -2985,31 +3108,37 @@ class ChatAdapter(
             if (mediStatus.searchEnabled && mediStatus.searchKey.isNotEmpty()) {
                 val startIndex = mediStatus.htmlText.toString().checkIndexes(mediStatus.searchKey)
                 val stopIndex = startIndex + mediStatus.searchKey.length
-                EmojiUtils.setMediaTextHighLightSearchedForMention(context, mediStatus.captionView,
-                    mediStatus.htmlText.toString(), startIndex, stopIndex, mediStatus.mentionedUserName)
+                EmojiUtils.setMediaTextHighLightSearchedForMention(
+                    context,
+                    mediStatus.captionView,
+                    mediStatus.htmlText.toString(),
+                    startIndex,
+                    stopIndex,
+                    mediStatus.mentionedUserName
+                )
             } else {
                 mediStatus.captionView.setBackgroundColor(context.color(android.R.color.transparent))
                 mediStatus.captionView.setTextKeepState(mediStatus.htmlText)
             }
-            var movelink = ModifiedlinkMovementMethod(
+            val moveLink = ModifiedlinkMovementMethod(
                 context,
                 mediStatus.messageItem.chatUserJid,
                 selectedMessages,
-                isLinkLongclick
+                isLinkLongClick
             )
-            movelink.setOnclicklistener(
+            moveLink.setOnclicklistener(
                 mediStatus.captionView,
                 longClickListener,
                 mediStatus.messageItem,
                 linkClickListener,
-                linkbuttonclickstatusListener
+                linkButtonClickStatusListener
             )
-            mediStatus.captionView.movementMethod = movelink
+            mediStatus.captionView.movementMethod = moveLink
             mediStatus.captionView.isClickable = false
             mediStatus.captionView.isLongClickable = false
 
-        } catch(e:Exception){
-            com.contusfly.utils.LogMessage.e("Error",e.toString())
+        } catch (e: Exception) {
+            com.contusfly.utils.LogMessage.e("Error", e.toString())
         }
     }
 
@@ -3064,11 +3193,11 @@ class ChatAdapter(
      */
     override fun setStatus(item: ChatMessage?, imgChatStatus: ImageView?) {
         imgChatStatus?.show()
-        ChatMessageUtils.setChatStatus(imgChatStatus!!, item!!.getMessageStatus())
+        ChatMessageUtils.setChatStatus(imgChatStatus!!, item!!.messageStatus)
     }
 
     private fun getMessagePosition(messageId: String) =
-        mainlist.reversed().indexOfFirst { it.messageId == messageId }
+        mainList.reversed().indexOfFirst { it.messageId == messageId }
 
     companion object {
         /**
@@ -3162,9 +3291,10 @@ class ChatAdapter(
                 view: ChatMessage,
                 onclickLinkStatus: Boolean
             ): Boolean {
-                var clickedposition=mainlist.indexOf(view)
-                isLinkLongclick = onclickLinkStatus
-                listener?.onSenderItemLongClick(view, clickedposition)
+                var clickedPosition = mainList.indexOf(view)
+                if (clickedPosition == -1) clickedPosition = mainList.size - 1
+                isLinkLongClick = onclickLinkStatus
+                listener?.onSenderItemLongClick(view, clickedPosition)
                 return true
             }
         }
@@ -3177,16 +3307,17 @@ class ChatAdapter(
                 url: String?,
                 view: ChatMessage
             ): Boolean {
-                var clickedposition=mainlist.indexOf(view)
-                listener?.onSenderItemClicked(view, clickedposition)
+                var clickedPosition = mainList.indexOf(view)
+                if (clickedPosition == -1) clickedPosition = mainList.size - 1
+                listener?.onSenderItemClicked(view, clickedPosition)
                 return true
             }
         }
 
-    private val linkbuttonclickstatusListener: ModifiedlinkMovementMethod.OnLinkClickStatusListener =
+    private val linkButtonClickStatusListener: ModifiedlinkMovementMethod.OnLinkClickStatusListener =
         object : ModifiedlinkMovementMethod.OnLinkClickStatusListener {
             override fun onLinkClickStatus(onclickLinkStatus: Boolean): Boolean {
-                isLinkLongclick = onclickLinkStatus
+                isLinkLongClick = onclickLinkStatus
                 return true
             }
         }

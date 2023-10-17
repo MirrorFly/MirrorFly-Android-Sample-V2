@@ -6,6 +6,7 @@ import com.contusfly.call.calllog.CallHistoryDetailActivity
 import com.contusfly.chatTag.activities.ChatTagActivity
 import com.contusfly.chatTag.activities.EditTagActivity
 import com.contusfly.fragments.BottomSheetOtpFragment
+import com.contusfly.privateChat.PrivateChatListActivity
 import com.contusfly.quickShare.QuickShareActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -90,4 +91,7 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributeSynchronizeContactActivity(): SynchronizeContactActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun contributeSynchronizePrivateChatListActivity(): PrivateChatListActivity
 }

@@ -1,15 +1,21 @@
 package com.contusfly.call
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.contusfly.R
+import com.contus.call.CallConstants.CALL_UI
+import com.contusfly.TAG
 import com.contusfly.call.groupcall.AddParticipantFragment
 import com.contusfly.databinding.FragmentOnGngCallParticipantsListBinding
 import com.contusfly.utils.SharedPreferenceManager
+import com.mirrorflysdk.flycommons.LogMessage
 import java.util.ArrayList
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 
 
 class OnGngCallParticipantsList : Fragment() {
@@ -24,7 +30,8 @@ class OnGngCallParticipantsList : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         arguments?.let {
-            callConnectedUserList = it.getStringArrayList(AddParticipantFragment.CONNECTED_USER_LIST)
+            callConnectedUserList =
+                it.getStringArrayList(AddParticipantFragment.CONNECTED_USER_LIST)
             callConnectedUserList?.let { list ->
                 if (list.contains(SharedPreferenceManager.getCurrentUserJid()))
                     list.remove(SharedPreferenceManager.getCurrentUserJid())
@@ -32,9 +39,14 @@ class OnGngCallParticipantsList : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
-        onGngCallParticipantsListBinding = FragmentOnGngCallParticipantsListBinding.inflate(inflater, container, false)
+        onGngCallParticipantsListBinding =
+            FragmentOnGngCallParticipantsListBinding.inflate(inflater, container, false)
         return onGngCallParticipantsListBinding.root
     }
 
@@ -49,9 +61,20 @@ class OnGngCallParticipantsList : Fragment() {
         onGngCallParticipantsListBinding.viewParticipantsList.apply {
             layoutManager = LinearLayoutManager(context)
             itemAnimator = null
+            if (GroupCallUtils.isCallLinkBehaviourMeet()) {
+                onGngCallParticipantsListBinding.viewParticipantsList.setEmptyView(
+                    onGngCallParticipantsListBinding.viewParticipantsListEmptyView.textEmptyView
+                )
+                onGngCallParticipantsListBinding.viewParticipantsListEmptyView.textEmptyView.text =
+                    "No one else is here"
+                onGngCallParticipantsListBinding.viewParticipantsListEmptyView.textEmptyView.setTextColor(
+                    ResourcesCompat.getColor(resources, R.color.color_text_grey, null)
+                )
+            }
+            mAdapter.setParticipantsProfiles(callConnectedUserList)
             adapter = mAdapter
         }
-        mAdapter.setParticipantsProfiles(callConnectedUserList)
+
         mAdapter.notifyDataSetChanged()
     }
 
@@ -67,16 +90,20 @@ class OnGngCallParticipantsList : Fragment() {
 
     fun updateUserJoined(userJid: String) {
         callConnectedUserList?.let { list ->
-            if (!list.contains(userJid))
+            if (!list.contains(userJid)) {
+                LogMessage.e(TAG, "$CALL_UI update user joined::$userJid")
                 list.add(userJid)
+            }
         }
         callConnectedAndDisconnected(callConnectedUserList)
     }
 
     fun updateUserLeft(userJid: String) {
         callConnectedUserList?.let { list ->
-            if (list.contains(userJid))
+            if (list.contains(userJid)) {
+                LogMessage.e(TAG, "$CALL_UI update user left::$userJid")
                 list.remove(userJid)
+            }
         }
         callConnectedAndDisconnected(callConnectedUserList)
     }

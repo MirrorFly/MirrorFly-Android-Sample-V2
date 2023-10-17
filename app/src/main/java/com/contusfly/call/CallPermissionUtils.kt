@@ -291,6 +291,11 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
         if (isCloseScreen) (activity as Activity).finish()
     }
 
+    fun getJidList() : ArrayList<String>{
+
+        return jidList
+    }
+
     /**
      * Calling this method to check the permission status
      *

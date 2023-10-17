@@ -18,8 +18,8 @@ import androidx.fragment.app.FragmentTransaction
 import com.contus.call.CallActions
 import com.contus.call.CallConstants
 import com.contus.call.CallConstants.CALL_UI
+import com.contus.call.CallConstants.JOIN_CALL
 import com.contusfly.*
-import com.contusfly.R
 import com.contusfly.activities.BaseActivity
 import com.contusfly.call.groupcall.helpers.BaseCallViewHelper
 import com.contusfly.call.groupcall.helpers.DialogViewHelper
@@ -62,17 +62,17 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     private var durationHandler: Handler = Handler(Looper.getMainLooper())
 
     private val callViewHelper by lazy {
-                BaseCallViewHelper(
-                    this,
-                    activityBinding,
-                    callUsersListAdapter,
-                    callUserGridAdapter,
-                    durationHandler,
-                    this
-                )
-            }
+        BaseCallViewHelper(
+            this,
+            activityBinding,
+            callUsersListAdapter,
+            callUserGridAdapter,
+            durationHandler,
+            this
+        )
+    }
 
-    private val permissionAlertDialog : PermissionAlertDialog by lazy { PermissionAlertDialog(this) }
+    private val permissionAlertDialog: PermissionAlertDialog by lazy { PermissionAlertDialog(this) }
 
     private val dialogViewHelper by lazy { DialogViewHelper(this, durationHandler, this) }
 
@@ -106,21 +106,30 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
     private val requestSwitchCameraPermission =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val cameraPermissionGranted = permissions[Manifest.permission.CAMERA] ?: MediaPermissions.isPermissionAllowed(activity, Manifest.permission.CAMERA)
+            val cameraPermissionGranted =
+                permissions[Manifest.permission.CAMERA] ?: MediaPermissions.isPermissionAllowed(
+                    activity,
+                    Manifest.permission.CAMERA
+                )
             if (cameraPermissionGranted)
                 callViewHelper.toggleVideoMute()
         }
 
     private val requestCallSwitchCameraPermission =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val cameraPermissionGranted = permissions[Manifest.permission.CAMERA] ?: MediaPermissions.isPermissionAllowed(activity, Manifest.permission.CAMERA)
+            val cameraPermissionGranted =
+                permissions[Manifest.permission.CAMERA] ?: MediaPermissions.isPermissionAllowed(
+                    activity,
+                    Manifest.permission.CAMERA
+                )
             if (cameraPermissionGranted)
                 acceptVideoCallSwitch()
         }
 
     private val requestAudioCallPermission =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val recordPermissionGranted = permissions[Manifest.permission.RECORD_AUDIO] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.RECORD_AUDIO)
+            val recordPermissionGranted = permissions[Manifest.permission.RECORD_AUDIO]
+                ?: ChatUtils.checkMediaPermission(this, Manifest.permission.RECORD_AUDIO)
 
             if (!recordPermissionGranted)
                 CallManager.sendCallPermissionDenied()
@@ -128,8 +137,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
     private val requestVideoCallPermission =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val cameraPermissionGranted = permissions[Manifest.permission.CAMERA] ?: MediaPermissions.isPermissionAllowed(activity, Manifest.permission.CAMERA)
-            val recordPermissionGranted = permissions[Manifest.permission.RECORD_AUDIO] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.RECORD_AUDIO)
+            val cameraPermissionGranted =
+                permissions[Manifest.permission.CAMERA] ?: MediaPermissions.isPermissionAllowed(
+                    activity,
+                    Manifest.permission.CAMERA
+                )
+            val recordPermissionGranted = permissions[Manifest.permission.RECORD_AUDIO]
+                ?: ChatUtils.checkMediaPermission(this, Manifest.permission.RECORD_AUDIO)
 
             if (!cameraPermissionGranted || !recordPermissionGranted)
                 CallManager.sendCallPermissionDenied()
@@ -138,8 +152,9 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
 
     private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { _ ->
-        if(!ChatUtils.checkMediaPermission(this, Manifest.permission.POST_NOTIFICATIONS)){
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { _ ->
+        if (!ChatUtils.checkMediaPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
             CallManager.sendCallPermissionDenied()
         }
     }
@@ -159,6 +174,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
         LogMessage.d(TAG, "$CALL_UI onStart()")
+
         super.onStart()
         CallManager.bindCallService()
         setUpCallUI()
@@ -182,7 +198,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         MediaPermissions.requestNotificationPermission(
             this,
             permissionAlertDialog,
-            notificationPermissionLauncher, true)
+            notificationPermissionLauncher, true
+        )
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -203,15 +220,19 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         //register for call events
         CallManager.setCallEventsListener(customCallEventsListener)
 
-        initViews()
+        initClickListeners()
         setUpCallDataAndUI()
         groupCallViewModel.checkInternetConnection()
     }
 
     private fun setUpCallDataAndUI() {
         if (intent.extras != null) {
-            groupId = intent.getStringExtra(com.mirrorflysdk.flycall.call.utils.CallConstants.EXTRA_GROUP_ID)
-            val acceptCall = intent.getBooleanExtra(com.mirrorflysdk.flycall.call.utils.CallConstants.ACCEPT_CALL, false)
+            groupId =
+                intent.getStringExtra(com.mirrorflysdk.flycall.call.utils.CallConstants.EXTRA_GROUP_ID)
+            val acceptCall = intent.getBooleanExtra(
+                com.mirrorflysdk.flycall.call.utils.CallConstants.ACCEPT_CALL,
+                false
+            )
             LogMessage.d(TAG, "$CALL_UI setUpCallDataAndUI acceptCall: $acceptCall")
             if (acceptCall)
                 answer()
@@ -227,13 +248,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
     private fun setObservers() {
 
-        groupCallViewModel.internetConnectionNotAvailable.observe(this, {
+        groupCallViewModel.internetConnectionNotAvailable.observe(this) {
             showToast(getString(R.string.fly_error_msg_no_internet))
-        })
+        }
 
-        groupCallViewModel.remoteAudioMuteStatus.observe(this, { userJid ->
+        groupCallViewModel.remoteAudioMuteStatus.observe(this) { userJid ->
             callViewHelper.updateRemoteAudioMuteStatus(userJid)
-        })
+        }
 
         AppLifecycleListener.adminBlockedOtherUser.observe(this) {
             updateAdminBlockedStatus(it.first, it.second, it.third)
@@ -242,7 +263,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
     private fun acceptVideoCallSwitch() {
         val isRequestAvailable = CallManager.isCallConversionRequestAvailable()
-        LogMessage.d(TAG, "$CALL_UI showCallSwitchAlert Accept: $isRequestAvailable")
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL showCallSwitchAlert Accept: $isRequestAvailable")
         if (isRequestAvailable) {
             dialogViewHelper.dismissCallSwitchDialog()
             activityBinding.layoutCallOptions.imageMuteVideo.isActivated = true
@@ -272,9 +293,17 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         bundle.putInt(CallActions.NOTIFY_VIEW_VIDEO_MUTE_UPDATED, 1)
         bundle.putInt(CallActions.NOTIFY_VIEW_MUTE_UPDATED, 1)
         if (CallUtils.getIsGridViewEnabled())
-            callUserGridAdapter.notifyItemRangeChanged(0, callUserGridAdapter.gridCallUserList.size, bundle)
+            callUserGridAdapter.notifyItemRangeChanged(
+                0,
+                callUserGridAdapter.gridCallUserList.size,
+                bundle
+            )
         else
-            callUsersListAdapter.notifyItemRangeChanged(0, callUsersListAdapter.callUserList.size, bundle)
+            callUsersListAdapter.notifyItemRangeChanged(
+                0,
+                callUsersListAdapter.callUserList.size,
+                bundle
+            )
     }
 
     /**
@@ -302,7 +331,10 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     }
 
     public override fun onUserLeaveHint() {
-        LogMessage.d(TAG, "$CALL_UI onUserLeaveHint() CallManager.isCallAgain:${CallManager.isCallAgain()}")
+        LogMessage.d(
+            TAG,
+            "$CALL_UI onUserLeaveHint() CallManager.isCallAgain:${CallManager.isCallAgain()}"
+        )
         callViewHelper.gotoPIPMode()
         if (CallManager.isCallAgain()) {
             cancelCallAgain()
@@ -341,7 +373,10 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     }
 
     override fun finish() {
-        LogMessage.d(TAG, "$CALL_UI finish()")
+        LogMessage.d(
+            TAG,
+            "$CALL_UI finish() CallManager.isCallConnected(): ${CallManager.isCallConnected()}"
+        )
         if (SystemClock.elapsedRealtime() - lastClickTime > 2000) {
             if (!CallManager.isCallConnected()) {
                 super.finish()
@@ -360,8 +395,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     /**
      * initialize views here
      */
-    private fun initViews() {
-        LogMessage.d(TAG, "$CALL_UI initViews()")
+    private fun initClickListeners() {
+        LogMessage.d(TAG, "$CALL_UI initViews() setOnClickListener")
         activityBinding.callOptionsUpArrow.setOnClickListener(this)
         activityBinding.rootLayout.setOnClickListener(this)
         activityBinding.viewOverlay.setOnClickListener(this)
@@ -371,7 +406,11 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         callUserGridAdapter = GroupCallGridAdapter(this)
 
         callUsersListAdapter.onPinnedListView { userJid ->
-            callViewHelper.pinnedUserChanged(userJid)
+            if (SystemClock.elapsedRealtime() - lastClickTime > 1000){
+                callViewHelper.pinnedUserChanged(userJid)
+                lastClickTime = SystemClock.elapsedRealtime()
+            }
+
         }
 
         callUsersListAdapter.onTapOnRecyclerView {
@@ -379,10 +418,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
 
         callUserGridAdapter.onUserPinnedGridView { userJid ->
-            if (CallUtils.getIsUserTilePinned() && userJid == CallUtils.getPinnedUserJid())
-                callViewHelper.pinnedUserRemoved()
-            else
-                callViewHelper.pinnedUserChanged(userJid)
+            if (SystemClock.elapsedRealtime() - lastClickTime > 1000){
+                if ( userJid == CallUtils.getPinnedUserJid())
+                    callViewHelper.pinnedUserRemoved()
+                else
+                    callViewHelper.pinnedUserChanged(userJid)
+                lastClickTime = SystemClock.elapsedRealtime()
+            }
         }
 
         callUserGridAdapter.onTapOnRecyclerView {
@@ -400,7 +442,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             return
         }
 
-        if (CallManager.isOneToOneCall() && CallManager.isVideoCall()) {
+        if (CallManager.isOneToOneCall() && CallManager.isVideoCall() || GroupCallUtils.isCallLinkBehaviourMeet()) {
+            LogMessage.d(TAG, "$CALL_UI setVideoMuteStatus() isOneToOneCall isVideoCall")
             setUpCallUI()
         }
         LogMessage.d(TAG, "$CALL_UI setVideoMuteStatus() userJid:${userJid}")
@@ -418,6 +461,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             else {
                 val index = callUsersListAdapter.callUserList.indexOf(userJid)
                 if (index.isValidIndex()) {
+                    LogMessage.d(TAG, "$CALL_UI setVideoMuteStatus() isValidIndex ")
                     callUsersListAdapter.notifyItemChanged(index, bundle)
                 }
             }
@@ -457,7 +501,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             CallManager.answerCall(object : CallActionListener {
                 override fun onResponse(isSuccess: Boolean, message: String) {
                     LogMessage.d(TAG, "$CALL_UI answer() success: $isSuccess")
-                     setUpCallUI()
+                    setUpCallUI()
                 }
             })
         }
@@ -467,7 +511,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
      * update call view
      */
     private fun setUpCallUI() {
-        LogMessage.d(TAG, "$CALL_UI setUpCallUI()")
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL setUpCallUI() isInPIPMode(): ${isInPIPMode()}")
         if (isInPIPMode()) {
             callViewHelper.showPIPLayout()
         } else {
@@ -475,11 +519,17 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
     }
 
-    private fun disconnectCall(isNotFromRetry: Boolean, callStatus: String = CallStatus.DISCONNECTED) {
-        LogMessage.d(TAG, "$CALL_UI disconnectCall()")
+    private fun disconnectCall(
+        isNotFromRetry: Boolean,
+        callStatus: String = CallStatus.DISCONNECTED
+    ) {
+        LogMessage.d(
+            TAG,
+            "$CALL_UI $JOIN_CALL disconnectCall IN UI isDisconnectCalled: $isDisconnectCalled isNotFromRetry:$isNotFromRetry"
+        )
         if (isDisconnectCalled.compareAndSet(false, true)) {
             // The below code execution is guaranteed to be called only once
-                setResult(if (CallManager.isAudioCall()) CallConstants.AUDIO_CALL_REQUEST_CODE else CallConstants.VIDEO_CALL_REQUEST_CODE)
+            setResult(if (CallManager.isAudioCall()) CallConstants.AUDIO_CALL_REQUEST_CODE else CallConstants.VIDEO_CALL_REQUEST_CODE)
             dialogViewHelper.disconnectCall()
             callViewHelper.disconnectCall()
             CallUtils.resetValues()
@@ -507,6 +557,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             R.id.root_layout, R.id.call_options_up_arrow, R.id.view_overlay -> if (CallManager.isCallConnected()) {
                 callViewHelper.animateCallOptionsView()
             }
+
             R.id.image_minimize_call -> onBackPressed()
         }
     }
@@ -530,11 +581,27 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
     override fun userUpdatedHisProfile(jid: String) {
         super.userUpdatedHisProfile(jid)
+        LogMessage.d(TAG, "userUpdatedHisProfile: jid:$jid ")
+        LogMessage.d(TAG, "getCallUsersList: userList:${CallManager.getCallUsersList().size} ")
         if (::participantListFragment.isInitialized && CallUtils.isAddUsersToTheCall()) {
             participantListFragment.refreshUser(jid)
         }
-        if (jid == CallManager.getEndCallerJid())
+        updateUserDetailsUpdatedInCall(jid)
+    }
+
+    private fun updateUserDetailsUpdatedInCall(jid: String) {
+        val isUserPresent = CallManager.getCallUsersList().contains(jid)
+        LogMessage.d(TAG, "userUpdatedHisProfile getCallUsersList: isUserPresent:${isUserPresent} ")
+        if (CallManager.isOneToOneCall() && jid == CallManager.getEndCallerJid())
             callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
+        else if (isUserPresent) {
+            callViewHelper.setUpProfileDetails(CallManager.getCallUsersList(), jid)
+        } else if (CallManager.getGroupID().isNotBlank() && CallManager.getGroupID()
+                .equals(jid, false)
+        ) {
+            LogMessage.d(TAG, "userUpdatedHisProfile Group ProfileDetails updated!! ")
+            callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
+        }
     }
 
     override fun userDeletedHisProfile(jid: String) {
@@ -604,7 +671,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         if (userJid != null) {
             val bundle = Bundle()
             bundle.putInt(CallActions.NOTIFY_VIEW_STATUS_UPDATED, 1)
-            if (CallUtils.getIsGridViewEnabled()){
+            if (CallUtils.getIsGridViewEnabled()) {
                 val gridIndex = callUserGridAdapter.gridCallUserList.indexOf(userJid)
                 if (gridIndex.isValidIndex()) {
                     callUserGridAdapter.notifyItemChanged(gridIndex, bundle)
@@ -628,6 +695,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                     callViewHelper.showPIPLayout()
                 else setVideoMuteStatus(userJid)
             }
+
             else -> handleCallConversionMessages(callAction)
         }
     }
@@ -645,12 +713,14 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                     setUpCallUI()
                 }
             }
+
             CallAction.ACTION_VIDEO_CALL_CONVERSION_REJECTED -> {
                 activityBinding.layoutCallOptions.imageMuteVideo.isActivated = false
                 setUpCallUI()
                 dialogViewHelper.dismissVideoCallRequestingDialog()
                 Toast.makeText(this, "Request declined", Toast.LENGTH_SHORT).show()
             }
+
             CallAction.ACTION_VIDEO_CALL_CANCEL_CONVERSION -> {
                 dialogViewHelper.isIncomingRequestAvailable()
                 if (!dialogViewHelper.isVideoCallSwitchRequestedFromBothSides()) {
@@ -702,7 +772,11 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                         callViewHelper.showPIPLayout()
                     else setVideoMuteStatus(userJid)
                 }
-                MuteEvent.ACTION_REMOTE_AUDIO_MUTE, MuteEvent.ACTION_REMOTE_AUDIO_UN_MUTE -> groupCallViewModel.setAudioMuteStatus(userJid)
+
+                MuteEvent.ACTION_REMOTE_AUDIO_MUTE, MuteEvent.ACTION_REMOTE_AUDIO_UN_MUTE -> groupCallViewModel.setAudioMuteStatus(
+                    userJid
+                )
+
                 else -> LogMessage.e(TAG, "$CALL_UI unknown mute event")
             }
             if (::participantListFragment.isInitialized && CallUtils.isAddUsersToTheCall()) {
@@ -711,7 +785,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
 
         private fun handleCallStatusMessages(@CallStatus callEvent: String, userJid: String) {
-            LogMessage.d(TAG, "$CALL_UI received call status: $callEvent")
+            LogMessage.d(TAG, "$CALL_UI $JOIN_CALL received call status: $callEvent")
             when (callEvent) {
                 CallStatus.CONNECTED -> handleCallStatusConnected(userJid)
                 CallStatus.DISCONNECTED -> disconnectCall(true, callEvent)
@@ -723,6 +797,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                         callViewHelper.showCallAgainView()
                     }
                 }
+
                 CallStatus.INVITE_CALL_TIME_OUT -> checkAndUpdateTimeoutInviteUsers()
                 CallStatus.INCOMING_CALL_TIME_OUT -> disconnectCall(true, CallStatus.DISCONNECTED)
                 else -> handleOtherCallStatusMessages(callEvent, userJid)
@@ -737,10 +812,12 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                     if ((CallManager.isOneToOneCall() || CallUtils.getPinnedUserJid() == userJid) && !CallUtils.getIsGridViewEnabled()) callViewHelper.updateCallStatus()
                     else callViewHelper.updateStatusAdapter(userJid)
                 }
+
                 CallStatus.RINGING, CallStatus.CALLING_AFTER_10S -> {
                     if (CallManager.isCallNotConnected()) callViewHelper.updateCallStatus()
                     else callViewHelper.updateStatusAdapter(userJid)
                 }
+
                 CallStatus.RECONNECTED -> handleCallStatusReconnected(userJid)
                 CallStatus.USER_JOINED -> updateUserJoined(userJid)
                 CallStatus.USER_LEFT -> updateUserLeft(userJid, true)
@@ -754,8 +831,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                     callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
                     updateStatusAndRemove(userJid)
                 }
+
                 CallAction.ACTION_REMOTE_HANGUP, CallAction.ACTION_PERMISSION_DENIED,
-                CallAction.ACTION_DENY_CALL, CallAction.ACTION_LOCAL_HANGUP -> disconnectCall(true, CallStatus.DISCONNECTED)
+                CallAction.ACTION_DENY_CALL, CallAction.ACTION_LOCAL_HANGUP -> disconnectCall(
+                    true,
+                    CallStatus.DISCONNECTED
+                )
+
                 CallAction.ACTION_REMOTE_BUSY -> disconnectCall(true, "User Busy")
                 CallAction.ACTION_REMOTE_ENGAGED -> disconnectCall(true, "Call Engaged")
                 CallAction.ACTION_AUDIO_DEVICE_CHANGED -> callViewHelper.setSelectedAudioDeviceIcon()
@@ -764,35 +846,61 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                     dialogViewHelper.videoCallSwitchRequestCancelled()
                     setUpCallUI()
                 }
+
                 CallAction.ACTION_INVITE_USERS -> {
                     for (inviteUserJid in CallManager.getInvitedUsersList()) {
                         if (CallManager.getCallStatus(inviteUserJid) != CallStatus.DISCONNECTED) {
                             callUsersListAdapter.addUser(inviteUserJid)
                             callUserGridAdapter.addUser(inviteUserJid)
+                            if (::participantListFragment.isInitialized) {
+                                LogMessage.d(
+                                    TAG,
+                                    "$CALL_UI invite user added in participant fragment::$inviteUserJid"
+                                )
+                                participantListFragment.updateUserJoined(inviteUserJid)
+                            }
                         }
                     }
                     CallUtils.setIsAddUsersToTheCall(false)
                     setUpCallUI()
                     callViewHelper.showListView()
                 }
+
                 CallAction.ACTION_CAMERA_SWITCH_SUCCESS -> callViewHelper.setMirrorLocalView()
                 CallAction.ACTION_CAMERA_SWITCH_FAILURE -> {
                     LogMessage.e(TAG, "$CALL_UI Camera switch error occurred")
                 }
+
                 else -> handleCallVideoMessages(callAction, userJid)
             }
         }
     }
 
     private fun handleCallStatusReconnected(userJid: String?) {
+        LogMessage.d(TAG, "$CALL_UI handleCallStatusReconnected userJid:$userJid ")
         if (isInPIPMode()) {
             callViewHelper.showPIPLayout()
-        } else if ((CallManager.isOneToOneCall() || CallUtils.getPinnedUserJid() == userJid) && !CallUtils.getIsGridViewEnabled()){
+        } else if ((CallManager.isOneToOneCall() || CallUtils.getPinnedUserJid() == userJid) && !CallUtils.getIsGridViewEnabled()) {
+            LogMessage.d(
+                TAG,
+                "$CALL_UI handleCallStatusReconnected seems like isOneToOneCall just update status"
+            )
             callViewHelper.updateCallStatus()
         } else {
-            if(!callUsersListAdapter.callUserList.contains(userJid)){
+            LogMessage.d(
+                TAG,
+                "$CALL_UI handleCallStatusReconnected more than 2 users lets update list/grid adapters!!"
+            )
+            if (!callUsersListAdapter.callUserList.contains(userJid)) {
+                LogMessage.d(
+                    TAG,
+                    "$CALL_UI handleCallStatusReconnected new user connected for list id: $userJid"
+                )
                 callUsersListAdapter.addUser(userJid!!)
                 setUpCallUI()
+            }
+            if (userJid != null) {
+                checkAndAddUserJoinedForGridLayout(userJid)
             }
             callViewHelper.updateStatusAdapter(userJid)
         }
@@ -809,6 +917,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     }
 
     private fun handleCallStatusConnected(userJid: String?) {
+        LogMessage.d(TAG, "$CALL_UI handleCallStatusConnected: userJid:$userJid")
         setUpCallUI()
         callViewHelper.updateStatusAdapter(userJid)
         callViewHelper.updatedRejoinedUsers(userJid)
@@ -821,8 +930,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             callUserGridAdapter.removeUser(userJid)
             CallManager.removeTimeoutUser(userJid)
         }
-        if (CallManager.isPinnedUserLeft()) callViewHelper.pinnedUserLeft()
+        checkAndRemoveIfPinnedUserLeft()
         setUpCallUI()
+    }
+
+    private fun checkAndRemoveIfPinnedUserLeft(){
+        LogMessage.d(TAG, "$CALL_UI checkAndRemoveIfPinnedUserLeft() pinnedUser: ${CallUtils.getPinnedUserJid()}")
+        if (CallManager.isPinnedUserLeft()) callViewHelper.pinnedUserLeft(CallUtils.getPinnedUserJid())
     }
 
     private fun checkAndUpdateTimeoutInviteUsers() {
@@ -831,31 +945,55 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             callUsersListAdapter.removeUser(userJid)
             callUserGridAdapter.removeUser(userJid)
             CallManager.removeTimeoutUser(userJid)
+            if (::participantListFragment.isInitialized) {
+                LogMessage.e(TAG, "$CALL_UI invite user left::$userJid")
+                participantListFragment.updateUserLeft(userJid)
+            }
         }
-        if (CallManager.isPinnedUserLeft()) callViewHelper.pinnedUserLeft()
+        checkAndRemoveIfPinnedUserLeft()
         setUpCallUI()
     }
 
     override fun addLocalUserToAdapter() {
-        if (CallUtils.getPinnedUserJid() != CallManager.getCurrentUserId() && !callUsersListAdapter.callUserList.contains(CallManager.getCurrentUserId())) {
+        if (CallUtils.getPinnedUserJid() != CallManager.getCurrentUserId() && !callUsersListAdapter.callUserList.contains(
+                CallManager.getCurrentUserId()
+            )
+        ) {
             callUsersListAdapter.addUser(CallManager.getCurrentUserId())
             durationHandler.removeCallbacks(gridResizeRunnable)
             durationHandler.postDelayed(gridResizeRunnable, 500)
         }
     }
 
-    fun updateUserJoined(userJid: String) {
-        LogMessage.d(TAG, "$CALL_UI updateUserJoined: $userJid")
-        dialogViewHelper.videoCallSwitchRequestAccepted()
-        if (CallUtils.getPinnedUserJid() != userJid)
-            callUsersListAdapter.addUser(userJid)
+    private fun checkAndAddUserJoinedForGridLayout(userJid: String) {
+        LogMessage.d(TAG, "$CALL_UI #joinCall checkAndAddUserJoinedForGridLayout: user: $userJid")
         if (!callUserGridAdapter.gridCallUserList.contains(userJid)) {
+            LogMessage.d(TAG, "$CALL_UI #joinCall new UserJoined: $userJid")
             callUserGridAdapter.addUser(userJid)
             if (!isInPIPMode())
-                callsUsersToast(String.format(getString(R.string.call_member_joined), ProfileDetailsUtils.getDisplayName(userJid)))
+                callsUsersToast(
+                    String.format(
+                        getString(R.string.call_member_joined),
+                        ProfileDetailsUtils.getDisplayNameFromJid(userJid)
+                    )
+                )
         }
+    }
+
+    fun updateUserJoined(userJid: String) {
+        LogMessage.d(TAG, "$CALL_UI #joinCall updateUserJoined: $userJid")
+        dialogViewHelper.videoCallSwitchRequestAccepted()
+        if (CallUtils.getPinnedUserJid().isBlank() && userJid != CallManager.getCurrentUserId()){
+            CallUtils.setIsUserTilePinned(true)
+            CallUtils.setPinnedUserJid(userJid)
+        }
+        if (CallUtils.getPinnedUserJid() != userJid)
+            callUsersListAdapter.addUser(userJid)
+        checkAndAddUserJoinedForGridLayout(userJid)
         setUpCallUI()
         showOrHideSurfaceViews()
+        LogMessage.d(TAG, "$CALL_UI #joinCall isInitialized: ${::participantListFragment.isInitialized }")
+        LogMessage.d(TAG, "$CALL_UI #joinCall isAddUsersToTheCall: ${CallUtils.isAddUsersToTheCall()}")
         if (::participantListFragment.isInitialized && CallUtils.isAddUsersToTheCall()) {
             participantListFragment.updateUserJoined(userJid)
         }
@@ -863,17 +1001,30 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     }
 
     fun updateUserLeft(userJid: String, leftStatus: Boolean) {
-        LogMessage.d(TAG, "$CALL_UI updateUserLeft: $userJid")
+        LogMessage.d(
+            TAG,
+            "$CALL_UI $JOIN_CALL updateUserLeft: $userJid isDisconnectCalled: $isDisconnectCalled getPinnedUserJid: ${CallUtils.getPinnedUserJid()}"
+        )
         if (!isDisconnectCalled.get()) {
             if (CallManager.isPinnedUserLeft(userJid))
-                callViewHelper.pinnedUserLeft()
+                callViewHelper.pinnedUserLeft(userJid)
             else
                 callUsersListAdapter.removeUser(userJid)
 
             if (callUserGridAdapter.gridCallUserList.contains(userJid)) {
                 callUserGridAdapter.removeUser(userJid)
                 if (!isInPIPMode() && leftStatus)
-                    callsUsersToast(String.format(getString(R.string.call_member_left), ProfileDetailsUtils.getDisplayName(userJid)))
+                    callsUsersToast(
+                        String.format(
+                            getString(R.string.call_member_left),
+                            ProfileDetailsUtils.getDisplayNameFromJid(userJid)
+                        )
+                    )
+            }
+
+            if (GroupCallUtils.isSingleUserInCall()) {
+                //resetting grid view enabled
+                CallUtils.setIsGridViewEnabled(false)
             }
 
             setUpCallUI()
@@ -906,9 +1057,17 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         bundle.putInt(CallActions.NOTIFY_VIEW_VIDEO_MUTE_UPDATED, 1)
         bundle.putInt(CallActions.NOTIFY_VIEW_STATUS_UPDATED, 1)
         if (CallUtils.getIsGridViewEnabled())
-            callUserGridAdapter.notifyItemRangeChanged(0, callUserGridAdapter.gridCallUserList.size, bundle)
+            callUserGridAdapter.notifyItemRangeChanged(
+                0,
+                callUserGridAdapter.gridCallUserList.size,
+                bundle
+            )
         else
-            callUsersListAdapter.notifyItemRangeChanged(0, callUsersListAdapter.callUserList.size, bundle)
+            callUsersListAdapter.notifyItemRangeChanged(
+                0,
+                callUsersListAdapter.callUserList.size,
+                bundle
+            )
     }
 
     override fun requestCameraPermission() {
@@ -916,6 +1075,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     }
 
     override fun onCallSwitchConfirmationDialog() {
+        LogMessage.d(TAG, "$CALL_UI onCallSwitchConfirmationDialog removeUser")
         callViewHelper.animateCallOptionsView()
         callUsersListAdapter.removeUser(CallManager.getCurrentUserId())
         resizeGridView()
@@ -932,7 +1092,10 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             if (MediaPermissions.isPermissionAllowed(context, Manifest.permission.CAMERA)) {
                 acceptVideoCallSwitch()
             } else {
-                MediaPermissions.requestVideoCallPermissions(this, requestCallSwitchCameraPermission)
+                MediaPermissions.requestVideoCallPermissions(
+                    this,
+                    requestCallSwitchCameraPermission
+                )
             }
         } else {
             callViewHelper.checkAndUpdateCameraView()
@@ -961,7 +1124,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
     override fun onAdminBlockedOtherUser(jid: String, type: String, status: Boolean) {
         super.onAdminBlockedOtherUser(jid, type, status)
-        LogMessage.d(TAG, "${CALL_UI} updated Admin Block status")
+        LogMessage.d(TAG, "$CALL_UI updated Admin Block status")
         updateAdminBlockedStatus(jid, type, status)
     }
 
@@ -973,5 +1136,11 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
     override fun updateFeatureActions(features: Features) {
         callViewHelper.updateFeatureActions()
+    }
+
+    override fun onGroupProfileUpdated(groupJid: String) {
+        super.onGroupProfileUpdated(groupJid)
+        LogMessage.d(TAG, "$CALL_UI onGroupProfileUpdated groupJid:$groupJid")
+        updateUserDetailsUpdatedInCall(groupJid)
     }
 }

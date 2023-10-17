@@ -2,6 +2,8 @@ package com.contusfly.call.groupcall.helpers
 
 import android.Manifest
 import android.content.DialogInterface
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
@@ -9,13 +11,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.contus.call.CallConstants.CALL_UI
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycall.webrtc.AudioDevice
-import com.mirrorflysdk.flycall.webrtc.CallAudioManager
-import com.mirrorflysdk.flycall.webrtc.CallType
-import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.contus.call.CallConstants.JOIN_CALL
 import com.contusfly.R
 import com.contusfly.TAG
 import com.contusfly.call.groupcall.isInPIPMode
@@ -28,6 +24,13 @@ import com.contusfly.databinding.LayoutCallOptionsBinding
 import com.contusfly.gone
 import com.contusfly.show
 import com.contusfly.utils.MediaPermissions
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.mirrorflysdk.flycall.webrtc.AudioDevice
+import com.mirrorflysdk.flycall.webrtc.CallAudioManager
+import com.mirrorflysdk.flycall.webrtc.CallType
+import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycommons.LogMessage
 
 class CallOptionsViewHelper(
     private val activity: AppCompatActivity,
@@ -35,6 +38,7 @@ class CallOptionsViewHelper(
     private val activityOnClickListener: ActivityOnClickListener,
     private val baseViewOnClickListener: BaseViewOnClickListener
 ) : View.OnClickListener {
+    var isCameraButtonClick: Boolean = false
 
     init {
         binding.imageMuteAudio.setOnClickListener(this)
@@ -50,10 +54,14 @@ class CallOptionsViewHelper(
             R.id.image_switch_camera -> {
                 if (CallManager.isCallOnHold())
                     return
-                v.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.alpha))
-                swapCamera()
+                switchCamera(v)
             }
+
             R.id.image_mute_video -> {
+                LogMessage.d(
+                    TAG,
+                    "$CALL_UI $JOIN_CALL CallOptionsViewHelper toggleVideoMute() clicked"
+                )
                 if (CallManager.isCallOnHold())
                     return
                 if (MediaPermissions.isPermissionAllowed(activity, Manifest.permission.CAMERA)) {
@@ -62,9 +70,10 @@ class CallOptionsViewHelper(
                     activityOnClickListener.requestCameraPermission()
                 }
             }
+
             R.id.img_speaker -> showSelection()
             R.id.image_end_call -> {
-                LogMessage.d(TAG, "$CALL_UI toggleEnd()")
+                LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CallOptionsViewHelper toggleEnd()")
                 enableOrDisableSwitchCamera(false)
                 CallManager.disconnectCall()
             }
@@ -75,7 +84,7 @@ class CallOptionsViewHelper(
      * This method is used to set the Audio mute icons and also send a mute message
      */
     private fun toggleMic() {
-        LogMessage.d(TAG, "$CALL_UI toggleMic()")
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper toggleMic()")
         if (CallManager.isCallOnHold())
             return
         binding.imageMuteAudio.isActivated =
@@ -88,8 +97,26 @@ class CallOptionsViewHelper(
      * handles the swap camera functionality and animations
      *
      */
+    private fun switchCamera(v: View) {
+        if (!isCameraButtonClick) {
+            isCameraButtonClick = true
+            v.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.alpha))
+            swapCamera()
+            Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
+                override fun run() {
+                    isCameraButtonClick = false
+                }
+            }, 1000)
+        }
+
+    }
+
+    /**
+     * handles the swap camera functionality and animations
+     *
+     */
     private fun swapCamera() {
-        LogMessage.d(TAG, "$CALL_UI swapCamera()")
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper swapCamera()")
         CallManager.switchCamera()
         baseViewOnClickListener.onSwapVideo()
         binding.imageSwitchCamera.isActivated = !binding.imageSwitchCamera.isActivated
@@ -99,8 +126,8 @@ class CallOptionsViewHelper(
      * This method is used to set the video mute icons and also send a mute message
      */
     fun toggleVideoMute() {
-        LogMessage.d(TAG, "$CALL_UI toggleVideoMute()")
-        if (CallManager.isOneToOneCall()) {
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper toggleVideoMute()")
+        if (!GroupCallUtils.isCallLinkBehaviourMeet() && CallManager.isOneToOneCall()) {
             muteVideoForOneToOneCall()
         } else {
             muteVideoForGroupCall()
@@ -111,9 +138,12 @@ class CallOptionsViewHelper(
      * This method shows the audio device selection UI
      */
     private fun showSelection() {
-        LogMessage.d(TAG, "$CALL_UI toggleSpeaker()")
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper toggleSpeaker()")
         val audioDevices = CallManager.getAudioDevices()
-        LogMessage.i(TAG, "$CALL_UI handleSpeaker#audioDevices:$audioDevices")
+        LogMessage.i(
+            TAG,
+            "$CALL_UI  CallOptionsViewHelper handleSpeaker#audioDevices:$audioDevices"
+        )
         val devices = audioDevices.toTypedArray()
         if (devices.size <= 2) {
             if (devices.size <= 1) {
@@ -124,7 +154,10 @@ class CallOptionsViewHelper(
             setAudioDeviceIcon(
                 selectedDevice
             )
-            LogMessage.d(TAG, "$CALL_UI handleSpeaker#choosendevice:$selectedDevice")
+            LogMessage.d(
+                TAG,
+                "$CALL_UI CallOptionsViewHelper handleSpeaker#choosendevice:$selectedDevice"
+            )
             CallAudioManager.getInstance(activity).selectAudioDevice(selectedDevice)
             return
         }
@@ -133,7 +166,7 @@ class CallOptionsViewHelper(
         builder.setItems(devices) { _: DialogInterface?, which: Int ->
             @AudioDevice val device = devices[which]
             setAudioDeviceIcon(device)
-            LogMessage.d(TAG, "$CALL_UI handleSpeaker#choosendevice:$device")
+            LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper handleSpeaker#choosendevice:$device")
             CallManager.setAudioDevice(device)
         }
         val audioDevicesDialog = builder.create()
@@ -142,6 +175,7 @@ class CallOptionsViewHelper(
     }
 
     fun setUpCallUI() {
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper setUpCallUI")
         setAudioDeviceIcon(CallAudioManager.getInstance(activity).selectedAudioDevice)
 
         checkAndUpdateCameraView()
@@ -154,11 +188,13 @@ class CallOptionsViewHelper(
     }
 
     fun showCallOptions() {
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper showCallOptions")
         binding.layoutCallOptions.show()
         binding.imageMuteAudio.isActivated = CallManager.isAudioMuted()
     }
 
     fun hideCallOptions() {
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper hideCallOptions")
         binding.layoutCallOptions.gone()
     }
 
@@ -174,24 +210,31 @@ class CallOptionsViewHelper(
                 binding.imgSpeaker.setImageResource(R.drawable.ic_speaker_inactive)
                 binding.imgSpeaker.isActivated = false
             }
+
             AudioDevice.SPEAKER_PHONE -> {
                 binding.imgSpeaker.setImageResource(R.drawable.ic_speaker_active)
                 binding.imgSpeaker.isActivated = true
             }
+
             AudioDevice.WIRED_HEADSET -> binding.imgSpeaker.setImageResource(R.drawable.ic_device_headset)
         }
     }
 
     fun checkAndUpdateCameraView() {
+        LogMessage.d(
+            TAG,
+            "$CALL_UI CallOptionsViewHelper checkAndUpdateCameraView isVideoMuted:${CallManager.isVideoMuted()}"
+        )
         if (CallManager.isVideoMuted()) {
             binding.imageSwitchCamera.gone()
             binding.imageSwitchCamera.isActivated = false
             binding.imageSwitchCamera.isEnabled = false
             binding.imageMuteVideo.isActivated = false
-            binding.imageMuteVideo.isEnabled = CallManager.isCallConnected()
+            binding.imageMuteVideo.isEnabled =
+                CallManager.isCallConnected() || GroupCallUtils.isCallLinkBehaviourMeet()
         } else {
             binding.imageSwitchCamera.show()
-            binding.imageSwitchCamera.isActivated = true
+            binding.imageSwitchCamera.isActivated = !CallUtils.getIsBackCameraCapturing()
             binding.imageSwitchCamera.isEnabled = true
             binding.imageMuteVideo.isActivated = true
             binding.imageMuteVideo.isEnabled = true
@@ -208,7 +251,7 @@ class CallOptionsViewHelper(
     fun animateCallOptions(animation: Int, callOptionsVisibility: Int, arrowVisibility: Int) {
         LogMessage.d(
             TAG,
-            "animateCallOptions callOptionsVisibility: $callOptionsVisibility"
+            "CallOptionsViewHelper animateCallOptions callOptionsVisibility: $callOptionsVisibility"
         )
         if (activity.isInPIPMode() || !CallManager.isCallConnected() || CallUtils.isAddUsersToTheCall())
             return
@@ -241,6 +284,10 @@ class CallOptionsViewHelper(
     }
 
     fun showOrHideSwitchCamera(showCamera: Boolean) {
+        LogMessage.d(
+            TAG,
+            "$CALL_UI CallOptionsViewHelper showOrHideSwitchCamera showCamera:$showCamera"
+        )
         if (showCamera)
             binding.imageSwitchCamera.show()
         else
@@ -252,8 +299,10 @@ class CallOptionsViewHelper(
     }
 
     private fun muteVideoForOneToOneCall() {
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper muteVideoForOneToOneCall ")
         if (CallManager.isCallConnected() && CallManager.getCallType() == CallType.AUDIO_CALL) {
             if (GroupCallUtils.isOnVideoCall()) {
+                LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper AUDIO_CALL ")
                 binding.imageMuteVideo.isActivated =
                     !binding.imageMuteVideo.isActivated
                 enableOrDisableSwitchCamera(binding.imageMuteVideo.isActivated)
@@ -261,9 +310,11 @@ class CallOptionsViewHelper(
                 CallManager.muteVideo(!binding.imageMuteVideo.isActivated)
                 baseViewOnClickListener.ownVideoMuteStatusUpdated()
             } else {
+                LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper hangVideoCall ")
                 activityOnClickListener.hangVideoCall()
             }
         } else {
+            LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper video call ")
             binding.imageMuteVideo.isActivated =
                 !binding.imageMuteVideo.isActivated
             enableOrDisableSwitchCamera(binding.imageMuteVideo.isActivated)
@@ -274,18 +325,32 @@ class CallOptionsViewHelper(
     }
 
     private fun muteVideoForGroupCall() {
+        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper muteVideoForGroupCall ")
         binding.imageMuteVideo.isActivated = !binding.imageMuteVideo.isActivated
+        if (GroupCallUtils.isSingleUserInCall() || GroupCallUtils.isCallLinkBehaviourMeet()) {
+            LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper isSingleUserInCall setVideoMuted ")
+            GroupCallUtils.setVideoMuted(!binding.imageMuteVideo.isActivated)
+        }
         CallManager.muteVideo(!binding.imageMuteVideo.isActivated,
             object : CallActionListener {
                 override fun onResponse(isSuccess: Boolean, message: String) {
-                    LogMessage.d(TAG, "$CALL_UI muteVideo onResponse()")
+
+                    LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper muteVideo onResponse()")
                     if (binding.imageMuteVideo.isActivated) {
+                        LogMessage.d(
+                            TAG,
+                            "$CALL_UI CallOptionsViewHelper imageMuteVideo isActivated"
+                        )
                         showOrHideSwitchCamera(true)
                         enableOrDisableSwitchCamera(true)
+                        binding.imageSwitchCamera.isActivated =
+                            !CallUtils.getIsBackCameraCapturing()
                         baseViewOnClickListener.ownVideoMuteStatusUpdated()
                     } else {
+                        LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper imageMuteVideo ")
                         showOrHideSwitchCamera(false)
                         enableOrDisableSwitchCamera(false)
+                        binding.imageSwitchCamera.isActivated = false
                         baseViewOnClickListener.ownVideoMuteStatusUpdated()
                     }
                 }

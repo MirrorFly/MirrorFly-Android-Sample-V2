@@ -24,6 +24,7 @@ import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.views.CustomToast
 import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -44,6 +45,7 @@ class EmailContactSyncService : LifecycleService(), LifecycleObserver, Coroutine
     private var mChangingConfiguration = false
     private var isEmailContactSyncFailed = false
     private var isEmailContactSyncApiFailed = false
+    private var isEmailSyncInProgress = AtomicBoolean(false)
 
     override fun onCreate() {
         super.onCreate()
@@ -178,6 +180,7 @@ class EmailContactSyncService : LifecycleService(), LifecycleObserver, Coroutine
     }
 
     private fun stopEmailContactService(){
+        isEmailSyncInProgress.set(false)
         stopForeground(true)
         stopSelf()
     }
@@ -213,19 +216,21 @@ class EmailContactSyncService : LifecycleService(), LifecycleObserver, Coroutine
 
 
     private fun prepareMailContacts() {
+        LogMessage.d(TAG, "#contact #NewContacts  prepareMailContacts ")
         launch(exceptionHandler) {
             isEmailContactSyncApiFailed = false
-            if (AppUtils.isNetConnected(ChatManager.applicationContext)) {
+            if (AppUtils.isNetConnected(ChatManager.applicationContext) && isEmailSyncInProgress.compareAndSet(false,true)) {
                 val response =
                     RetrofitClientNetwork.retrofit.getMailContactSync(ContusContactSyncTime(null))
                 when (response.status) {
                     200 -> {
-                        LogMessage.e(TAG, "getMailContacts success ${response.message}")
+                        LogMessage.d(TAG, "#contact #NewContacts getMailContacts success ${response.message}")
                         ContusContactUtils.processContusContactResponse(response.data, object :
                             ProcessContusContactCallback {
                             override fun onProcessContusContactCompleted() {
                                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(Constants.EMAIL_CONTACT_SYNC_COMPLETE))
                                 isEmailContactSyncFailed = false
+                                isEmailSyncInProgress.set(false)
                                 mNotificationManager.cancel(NOTIFICATION_ID)
                                 stopEmailContactService()
                             }
@@ -234,19 +239,24 @@ class EmailContactSyncService : LifecycleService(), LifecycleObserver, Coroutine
                     204 -> {
                         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(Constants.EMAIL_CONTACT_SYNC_COMPLETE))
                         isEmailContactSyncFailed = false
+                        isEmailSyncInProgress.set(false)
                         mNotificationManager.cancel(NOTIFICATION_ID)
                         stopEmailContactService()
                     }
                     else -> {
                         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(Constants.EMAIL_CONTACT_SYNC_COMPLETE))
                         isEmailContactSyncApiFailed = true
+                        isEmailSyncInProgress.set(false)
                         stopEmailContactService()
                     }
                 }
             } else {
-                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(Constants.EMAIL_CONTACT_SYNC_COMPLETE))
-                isEmailContactSyncApiFailed = true
-                showRetryNotification()
+                if(!isEmailSyncInProgress.get()){
+                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(Constants.EMAIL_CONTACT_SYNC_COMPLETE))
+                    isEmailContactSyncApiFailed = true
+                    isEmailSyncInProgress.set(false)
+                    showRetryNotification()
+                }
             }
         }
     }
@@ -262,6 +272,7 @@ class EmailContactSyncService : LifecycleService(), LifecycleObserver, Coroutine
     companion object {
         fun start() {
             try {
+                LogMessage.d(TAG, "#contact #NewContacts  EmailContactSyncService ")
                 val serviceIntent = Intent(ChatManager.applicationContext, EmailContactSyncService::class.java)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !appInForeground) {
                     ChatManager.applicationContext.startForegroundService(serviceIntent)

@@ -35,6 +35,7 @@ import com.contusfly.views.CustomRecyclerView
 import com.mirrorflysdk.activities.FlyBaseActivity
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 import com.mirrorflysdk.views.CustomToast
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.CoroutineScope
@@ -83,6 +84,8 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
     private lateinit var groupId: String
 
     private var callConnectedUserList: ArrayList<String>? = null
+
+    private lateinit var callLinkTitleTextView: AppCompatTextView
 
     /**
      * The handler to delay the search
@@ -193,6 +196,10 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
         CallUtils.setIsAddUsersToTheCall(true)
         isRefreshing = false
         super.onResume()
+        if(GroupCallUtils.isCallLinkBehaviourMeet()){
+            LogMessage.d("tag","Meet disabled")
+            listContact.visibility = View.GONE
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -305,6 +312,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
         mHandler = Handler(Looper.getMainLooper())
         onGoingCallLink = CallManager.getCallLink()
 
+        callLinkTitleTextView = view.findViewById(R.id.call_link_title_view)
         callLinkView = view.findViewById(R.id.call_link_view)
         callLink = view.findViewById(R.id.call_link)
         callLinkCopyIcon = view.findViewById(R.id.call_link_copy)
@@ -327,6 +335,11 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
 
         addParticipantsLayout = view.findViewById(R.id.add_participants_layout)
         addParticipantsTextView = view.findViewById(R.id.add_participants_text_view)
+        if(GroupCallUtils.isCallLinkBehaviourMeet()){
+            emptyView.text = ""
+            listContact.visibility = View.GONE
+            callLinkTitleTextView.text = getString(R.string.meet_link)
+        }
     }
 
     private fun setContactAdapter() {
@@ -337,7 +350,8 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
             setEmptyView(emptyView)
             itemAnimator = null
             adapter = mAdapter
-            if (isAddUsersToOneToOneCall){
+
+            if (!GroupCallUtils.isCallLinkBehaviourMeet() && isAddUsersToOneToOneCall){
                 if (BuildConfig.CONTACT_SYNC_ENABLED) {
                     viewModel.getInviteUserList(callConnectedUserList)
                 } else {

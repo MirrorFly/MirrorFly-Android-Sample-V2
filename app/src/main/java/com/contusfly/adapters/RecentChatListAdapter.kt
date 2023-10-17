@@ -15,6 +15,8 @@ import com.contusfly.*
 import androidx.recyclerview.widget.RecyclerView
 import com.contusfly.adapters.holders.ArchiveChatViewHolder
 import com.contusfly.adapters.holders.PaginationLoaderViewHolder
+import com.contusfly.adapters.holders.PrivateChatViewHolder
+import com.contusfly.databinding.PrivateChatListItemLayoutBinding
 import com.contusfly.databinding.RowLayoutArchivedBinding
 import com.contusfly.databinding.RowLayoutLoaderBinding
 import com.contusfly.databinding.RowRecentChatItemBinding
@@ -47,6 +49,8 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     private var archiveChatStatus: Triple<Boolean, Boolean, Int>? = null
 
+    private var privateChatStatus:Boolean=false
+
     private var isLoading:Boolean=false
 
 
@@ -72,6 +76,10 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
+            TYPE_PRIVATE_CHAT -> {
+                val binding = PrivateChatListItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                PrivateChatViewHolder(binding, parent.context)
+            }
             TYPE_HEADER, TYPE_FOOTER  -> {
                 val binding = RowLayoutArchivedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 ArchiveChatViewHolder(binding, parent.context)
@@ -89,7 +97,8 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     override fun getItemViewType(position: Int): Int {
         return when (position) {
-            0 -> TYPE_HEADER
+            0 -> TYPE_PRIVATE_CHAT
+            1 -> TYPE_HEADER
             mainlist.size - 2 -> TYPE_FOOTER
             mainlist.size - 1 -> TYPE_LOADER
             else -> TYPE_ITEM
@@ -97,13 +106,15 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-          if (holder is ArchiveChatViewHolder) {
+        if (holder is PrivateChatViewHolder) {
+            holder.bindValues(privateChatStatus)
+        } else if (holder is ArchiveChatViewHolder) {
             if (archiveChatStatus == null) {
                 holder.hideView()
             } else {
                 holder.bindValues(archiveChatStatus!!, position)
             }
-        } else if(holder is PaginationLoaderViewHolder){
+        } else if(holder is PaginationLoaderViewHolder) {
             holder.bindValues(isLoading)
         } else {
               val binding = holder as RecentChatViewHolder
@@ -148,8 +159,18 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     fun setArchiveStatus(archiveChatStatus: Triple<Boolean, Boolean, Int>){
         this.archiveChatStatus = archiveChatStatus
-        notifyItemChanged(0)
+        notifyItemChanged(1)
         notifyItemChanged(mainlist.size - 2)
+    }
+
+    fun setPrivateChatStatus(privateChatShowStatus: Boolean){
+        privateChatStatus = privateChatShowStatus
+        notifyItemChanged(0)
+    }
+
+    fun getPrivateChatStatus() : Boolean{
+
+        return privateChatStatus
     }
 
     fun setLoader(isLoading:Boolean){
@@ -193,7 +214,8 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     override fun getItemId(position: Int): Long {
         return when (position) {
-            0 -> "header".hashCode().toLong()
+            0 -> "privatechat".hashCode().toLong()
+            1 -> "header".hashCode().toLong()
             mainlist.size - 2 -> "footer".hashCode().toLong()
             mainlist.size - 1 -> "loader".hashCode().toLong()
             else -> mainlist[position].jid.hashCode().toLong()
@@ -505,10 +527,11 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
     }
 
     companion object{
-        private const val TYPE_HEADER = 0
-        private const val TYPE_FOOTER = 1
-        private const val TYPE_ITEM = 2
-        private const val TYPE_LOADER = 3
+        private const val TYPE_PRIVATE_CHAT = 0
+        private const val TYPE_HEADER = 1
+        private const val TYPE_FOOTER = 2
+        private const val TYPE_ITEM = 3
+        private const val TYPE_LOADER = 4
 
     }
 }

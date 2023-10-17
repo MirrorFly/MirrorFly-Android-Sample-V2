@@ -210,6 +210,23 @@
         <item name="android:textColor">?attr/error_message_gray</item>
     </style>
 
+    <style name="private_chat_lock_title_style">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+        <item name="android:layout_marginTop">@dimen/margin_15</item>
+        <item name="android:textColor">?attr/error_message_black</item>
+    </style>
+
+    <style name="private_chat_lock_style">
+        <item name="android:fontFamily">@font/sf_ui_display_light</item>
+        <item name="font_name">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+        <item name="android:layout_marginTop">@dimen/margin_10</item>
+        <item name="android:padding">@dimen/margin_10</item>
+        <item name="android:textColor">?attr/colorAccent</item>
+    </style>
+
     <style name="TextLightSmallGrayStyle" parent="TextAppearance.AppCompat">
         <item name="android:includeFontPadding">false</item>
         <item name="font_name">@font/sf_ui_display_light</item>
