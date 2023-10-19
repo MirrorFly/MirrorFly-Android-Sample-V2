@@ -76,6 +76,7 @@ abstract class BaseChatAdapterHelper {
                 MessageType.LOCATION -> getType(messageItem, ChatAdapter.TYPE_LOCATION_SENDER, ChatAdapter.TYPE_LOCATION_RECEIVER)
                 MessageType.CONTACT -> getType(messageItem, ChatAdapter.TYPE_CONTACT_SENDER, ChatAdapter.TYPE_CONTACT_RECEIVER)
                 MessageType.NOTIFICATION -> ChatAdapter.TYPE_MSG_NOTIFICATION
+                MessageType.MEET ->getType(messageItem,ChatAdapter.TYPE_MEET_SENDER, ChatAdapter.TYPE_MEET_RECEIVER)
                 else -> getType(messageItem, getMediaItemTypeSender(msgType), getMediaItemTypeReceiver(msgType))
             }
         }

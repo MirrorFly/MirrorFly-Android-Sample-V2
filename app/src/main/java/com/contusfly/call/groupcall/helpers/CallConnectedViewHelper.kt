@@ -336,6 +336,7 @@ class CallConnectedViewHelper(
             } else {
                 LogMessage.i(TAG, "$CALL_UI CallConnectedViewHelper user list more than 2")
                 binding.layoutOneToOneAudioCall.gone()
+                binding.singleUserViewSpeakingIndicatorHelper.gone()
                 updatePinnedUserIcon(CallUtils.getPinnedUserJid())
                 showViews(binding.callUsersRecyclerview)
                 callUsersListAdapter.notifyItemRangeChanged(
@@ -396,6 +397,7 @@ class CallConnectedViewHelper(
         binding.layoutProfile.hide()
         binding.textCallStatus.gone()
         binding.viewVideoPinned.hide()
+        binding.singleUserViewSpeakingIndicatorHelper.show()
         if (GroupCallUtils.isVideoMuted()) {
             LogMessage.d(TAG, "$CALL_UI $JOIN_CALL videoMuted in single user call")
             binding.viewVideoLocal.hide()
@@ -408,6 +410,7 @@ class CallConnectedViewHelper(
     private fun setUpOneToOneCallView() {
         LogMessage.d(TAG, "$CALL_UI $JOIN_CALL setUpOneToOneCallView:")
         showViewsForOneToOneCall()
+        binding.singleUserViewSpeakingIndicatorHelper.gone()
         val endCallerJid = CallManager.getEndCallerJid()
         LogMessage.d(TAG, "$CALL_UI $JOIN_CALL setUpOneToOneCallView: endCallerJid:$endCallerJid ")
         if (endCallerJid.isNotEmpty() && !CallManager.isRemoteVideoMuted(endCallerJid)) {
@@ -415,6 +418,7 @@ class CallConnectedViewHelper(
             binding.layoutProfile.hide()
             binding.textCallStatus.gone()
             binding.viewVideoPinned.show()
+
             if (!CallManager.getUserAvailableForReconnection(endCallerJid)) {
                 LogMessage.d(TAG, "$CALL_UI $JOIN_CALL setUpOneToOneCallView:  status update")
                 updateCallStatus()

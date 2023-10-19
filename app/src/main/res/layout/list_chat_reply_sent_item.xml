@@ -79,8 +79,35 @@
         android:src="@drawable/ic_image_placeholder"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/msg_meet_rl"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/roundedReplyImageView" />
+
+    <RelativeLayout
+        android:id="@+id/msg_meet_rl"
+        android:layout_width="@dimen/margin_50"
+        android:layout_height="0dp"
+        android:background="@color/meet_sent_reply_logo_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/msg_image_meet"
+            android:layout_width="@dimen/margin_31"
+            android:layout_height="@dimen/margin_31"
+            android:contentDescription="@null"
+            android:minHeight="@dimen/margin_50"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="visible"
+            app:shapeAppearanceOverlay="@style/roundedReplyImageView" />
+
+    </RelativeLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

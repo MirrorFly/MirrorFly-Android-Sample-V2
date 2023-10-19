@@ -208,18 +208,21 @@ constructor() : ViewModel() {
     /*
    * Get Recent Chats list */
     fun getRecentChats() {
-        LogMessage.d(TAG, "#recent getRecentChats() called to update the UI")
+        LogMessage.d(TAG, "#dashboard #recent getRecentChats() called to update the UI")
         viewModelScope.launch(Dispatchers.Main.immediate) {
             if (recentChatList.value == null && !SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.PIN_SCREEN)) {
+                LogMessage.d(TAG, "#dashboard #recent getRecentChats initial")
                 recentChatList.value = LinkedList(FlyCore.getRecentChatList())
                 recentChatList.value!!.add(0, RecentChat()) // Private Chat Header
                 recentChatList.value!!.add(1, RecentChat()) // Recent Chat Header
                 recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Footer
                 recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Pagination Loader
                 recentChatAdapter.clear()
+                LogMessage.d(TAG, "#dashboard #recent getRecentChats() size:${recentChatList.value!!.size}")
                 recentChatAdapter.addAll(recentChatList.value!!)
                 recentChatDiffResult.value = null
             } else {
+                LogMessage.d(TAG, "#dashboard #recent getRecentChats data present!!")
                 FlyCore.getRecentChatList { isSuccess, _, data ->
                     if (isSuccess) {
                         recentChatList.value = LinkedList(data[SDK_DATA] as MutableList<RecentChat>)
@@ -265,54 +268,69 @@ constructor() : ViewModel() {
     }
 
 
-   fun getInitialChatList(recentChatLimit: Int = Constants.RECENT_CHAT_LIST_LIMIT) {
-       LogMessage.d(TAG, "#recent getInitialChatList() called to update the UI")
+    fun getInitialChatList(recentChatLimit: Int = Constants.RECENT_CHAT_LIST_LIMIT) {
+        LogMessage.d(TAG, "#dashboard #recent getInitialChatList() called to update the UI")
         setSwipeLoader(true)
         setRecentChatListFetching(true)
-       var isChatHistoryEnabled =
-           ChatManager.getAvailableFeatures().isChatHistoryEnabled && ChatManager.chatHistoryEnabled()
-        var fetchedPageNumber=
-            com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.getInt(RECENT_CHAT_FETCHED_PAGE_NUMBER)
-       viewModelScope.launch(if(isChatHistoryEnabled && fetchedPageNumber == 0) IO else Main.immediate) {
+        val isChatHistoryEnabled = ChatManager.getAvailableFeatures().isChatHistoryEnabled && ChatManager.chatHistoryEnabled()
+        val fetchedPageNumber = com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.getInt(RECENT_CHAT_FETCHED_PAGE_NUMBER)
+        viewModelScope.launch(if (isChatHistoryEnabled && fetchedPageNumber == 0) IO else Main.immediate) {
             try {
                 recentChatListParams = RecentChatListParams().apply { limit = recentChatLimit }
                 recentChatListBuilder = RecentChatListBuilder(recentChatListParams)
                 recentChatListBuilder.loadRecentChatList { isSuccess, _, data ->
                     if (isSuccess) {
-                        LogMessage.d(TAG, "#recent loadRecentChatList success ")
+                        LogMessage.d(TAG, "#recent #dashboard getInitialChatList loadRecentChatList success ")
                         if (recentChatList.value == null && !SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.PIN_SCREEN)) {
-                            recentChatList.value = LinkedList(data[SDK_DATA] as MutableList<RecentChat>)
+                            LogMessage.d(TAG, "#recent #dashboard getInitialChatList PIN_SCREEN not enabled ")
+                            recentChatList.value =
+                                LinkedList(data[SDK_DATA] as MutableList<RecentChat>)
                             recentChatList.value!!.add(0, RecentChat()) // Private Chat Header
                             recentChatList.value!!.add(1, RecentChat()) // Recent Chat Header
-                            recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Footer
-                            recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Pagination Loader
+                            recentChatList.value!!.add(
+                                recentChatList.value!!.size,
+                                RecentChat()
+                            ) // Recent Chat Footer
+                            recentChatList.value!!.add(
+                                recentChatList.value!!.size,
+                                RecentChat()
+                            ) // Recent Chat Pagination Loader
                             recentChatAdapter.clear()
                             recentChatAdapter.addAll(recentChatList.value!!)
                             recentChatDiffResult.value = null
                         } else {
-                            LogMessage.d(TAG, "#recent loadRecentChatList failed ")
-                            recentChatList.value = LinkedList(data[SDK_DATA] as MutableList<RecentChat>)
+                            LogMessage.d(TAG, "#recent #dashboard loadRecentChatList failed ")
+                            recentChatList.value =
+                                LinkedList(data[SDK_DATA] as MutableList<RecentChat>)
                             recentChatList.value!!.add(0, RecentChat()) // Private Chat Header
                             recentChatList.value!!.add(1, RecentChat()) // Recent Chat Header
-                            recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Footer
-                            recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Pagination Loader
+                            recentChatList.value!!.add(
+                                recentChatList.value!!.size,
+                                RecentChat()
+                            ) // Recent Chat Footer
+                            recentChatList.value!!.add(
+                                recentChatList.value!!.size,
+                                RecentChat()
+                            ) // Recent Chat Pagination Loader
                             getRecentChatDiffResult()
                         }
                         checkArchiveChatStatus()
                     } else {
+                        LogMessage.d(TAG, "#recent #dashboard getInitialChatList loadRecentChatList failed!!")
                         failureDataHandle(data)
                     }
                     setRecentChatListFetching(false)
                     setSwipeLoader(false)
                 }
-
-            } catch(e:Exception) {
-                LogMessage.e(TAG, "Recent Chat List loading issue in nextSetOfRecentChatList() ==> Exception: ${e.message}")
+            } catch (e: Exception) {
+                LogMessage.e(
+                    TAG,
+                    "#dashboard #reccent Recent Chat List loading issue in nextSetOfRecentChatList() ==> Exception: ${e.message}"
+                )
                 setRecentChatListFetching(false)
                 setSwipeLoader(false)
             }
         }
-
     }
 
     private fun failureDataHandle(data: HashMap<String, Any>) {
@@ -334,7 +352,7 @@ constructor() : ViewModel() {
     }
 
     fun refreshFetchedRecentChat() {
-        LogMessage.d(TAG, "#recent refreshFetchedRecentChat() called to update the UI")
+        LogMessage.d(TAG, "#dashboard #recent refreshFetchedRecentChat() called to update the UI")
         var prefetchedRecentChats = recentChatAdapter.size - 4 // calculate recent chat has prefetched data by skipping header and footer and loader
         if (prefetchedRecentChats < Constants.RECENT_CHAT_LIST_LIMIT)
             prefetchedRecentChats = Constants.RECENT_CHAT_LIST_LIMIT
@@ -381,7 +399,7 @@ constructor() : ViewModel() {
 
 
     fun nextSetOfRecentChatList() {
-        LogMessage.d(TAG, "nextSetOfRecentChatList() called to update the UI with next set of list---${getRecentChatListFetching()}")
+        LogMessage.d(TAG, "#recent nextSetOfRecentChatList() called to update the UI with next set of list---${getRecentChatListFetching()}")
         paginationLoaderShowHide(true)
         setRecentChatListFetching(true)
         var isChatHistoryEnabled=ChatManager.getAvailableFeatures().isChatHistoryEnabled
@@ -390,11 +408,13 @@ constructor() : ViewModel() {
                 recentChatListBuilder.nextSetOfData { isSuccess, _, data ->
                     if (isSuccess) {
                         try {
+                            LogMessage.d(TAG, "#recent nextSetOfData isSuccess")
                             updateRecentChats(data)
                         } catch (e: Exception) {
-                            LogMessage.e(TAG, "Recent Chat List loading issue in nextSetOfRecentChatList() ==> Exception: ${e.message}")
+                            LogMessage.e(TAG, "#recent Recent Chat List loading issue in nextSetOfRecentChatList() ==> Exception: ${e.message}")
                         }
                     } else {
+                        LogMessage.d(TAG, "#recent nextSetOfData failureDataHandle")
                         failureDataHandle(data)
                     }
                     setRecentChatListFetching(false)
@@ -410,8 +430,11 @@ constructor() : ViewModel() {
     }
 
     private fun updateRecentChats(data: HashMap<String, Any>) {
+        LogMessage.d(TAG, "#recent updateRecentChats")
         val recentChats = data[SDK_DATA] as MutableList<RecentChat>
         if(recentChats.size > 0){
+            LogMessage.d(TAG, "#recent recentChats not empty!! ${recentChats.size}")
+            LogMessage.d(TAG, "#recent recentChatAdapter  ${recentChatAdapter.size}")
             val recentChatSize = recentChatAdapter.size
             recentChatList.value!!.removeAt(recentChatList.value!!.size - 1) // Recent Chat Footer item removed
             recentChatAdapter.removeAt(recentChatAdapter.size - 1) // Recent Chat Footer item removed
@@ -466,7 +489,7 @@ constructor() : ViewModel() {
     }
 
     private fun getRecentChatDiffResult() {
-        LogMessage.d(TAG, "#recent  getRecentChatDiffResult: ")
+        LogMessage.d(TAG, "#dashboard #recent  getRecentChatDiffResult: ")
         viewModelScope.launch {
             val diffResult = DiffUtil.calculateDiff(RecentChatDiffCallback(recentChatAdapter, recentChatList.value!!))
             recentChatAdapter.clear()
@@ -584,17 +607,23 @@ constructor() : ViewModel() {
     fun getRecentChatOfUser(jid: String, @RecentChatEvent event: String) {
         viewModelScope.launch {
             try {
+                LogMessage.d(TAG, "#dashboard #recent  getRecentChatOfUser: $jid")
                 val recent = FlyCore.getRecentChatOf(jid)
                 if (recent != null && !recent.isChatArchived && !recent.isChatLocked && recent.lastMessageTime>0) {
                     //update view model list
                     val index = recentChatAdapter.indexOfFirst { it.jid == recent.jid }
                     val positionToAdd = getRecentPosition(recent.jid, recent, event)
+                    LogMessage.d(TAG, "#dashboard #recent  getRecentChatOfUser: isChatArchived  isChatLocked not")
+                    LogMessage.d(TAG, "#dashboard #recent  index: $index")
+                    LogMessage.d(TAG, "#dashboard #recent  positionToAdd: $positionToAdd")
                     if (index.isValidIndex()) {
+                        LogMessage.d(TAG, "#dashboard #recent  validIndex!!")
                         recentChatList.value!!.removeAt(index)
                         recentChatList.value!!.add(positionToAdd, recent)
                         recentChatAdapter.removeAt(index)
                         recentChatAdapter.add(positionToAdd, recent)
                     } else {
+                        LogMessage.d(TAG, "#dashboard #recent  notValid positionToAdd:$positionToAdd")
                         recentChatList.value!!.add(positionToAdd, recent)
                         recentChatAdapter.add(positionToAdd, recent)
                     }
@@ -602,10 +631,12 @@ constructor() : ViewModel() {
                 } else {
                     //update view model list
                     val index = recentChatAdapter.indexOfFirst { it.jid == jid }
+                    LogMessage.d(TAG, "#dashboard #recent  getRecentChatOfUser: else index: $index")
                     if (index.isValidIndex()) {
                         recentChatList.value!!.removeAt(index)
                         recentChatAdapter.removeAt(index)
                         recentDeleteChatPosition.value = index
+                        LogMessage.d(TAG, "#dashboard #recent  getRecentChatOfUser: removed!!")
                     }
                 }
 
@@ -711,7 +742,7 @@ constructor() : ViewModel() {
         }
         var validPositions = 0 //selected non pinned items
         for (position in pinnedListPosition) {
-            if (position >= recentPinnedCount) // check, is non pinned item
+            if (position - 2 >= recentPinnedCount) // check, is non pinned item
                 validPositions++
         }
         if ((recentPinnedCount + validPositions) <= 3) {
@@ -854,13 +885,15 @@ constructor() : ViewModel() {
     }
 
     fun updateUnReadChatCount() {
+        LogMessage.d(TAG, "#dashboard #recent  updateUnReadChatCount")
         viewModelScope.launch {
             unreadChatCountLiveData.value = FlyMessenger.getUnreadMessagesCount()
         }
     }
 
     fun setReceivedMsg(msg: ChatMessage?) {
-        getRecentChatOfUser(msg!!.getChatUserJid(), RecentChatEvent.MESSAGE_RECEIVED)
+        LogMessage.d(TAG, "#dashboard #recent  onMessageReceived: $msg")
+        getRecentChatOfUser(msg!!.chatUserJid, RecentChatEvent.MESSAGE_RECEIVED)
         updateUnReadChatCount()
         getArchivedChatStatus()
     }
@@ -931,7 +964,7 @@ constructor() : ViewModel() {
     }
 
     fun getArchivedChats() {
-        LogMessage.d(TAG, "getAllChats() called to update the UI")
+        LogMessage.d(TAG, "#dashboard getAllChats() called to update the UI")
         viewModelScope.launch(Main.immediate) {
             FlyCore.getArchivedChatList(FlyCallback { isSuccess, _, data ->
                 if (isSuccess) {
@@ -940,6 +973,7 @@ constructor() : ViewModel() {
                     chatList.value!!.add(1, RecentChat()) // Recent Chat Header
                     chatList.value!!.add(chatList.value!!.size, RecentChat()) // Recent Chat Footer
                     chatList.value!!.add(chatList.value!!.size, RecentChat()) // Recent Chat Pagination Loader
+                    LogMessage.v(TAG, "#dashboard #chat #group getArchivedChatList ${chatList.value!!.size}")
                     getChatDiffResult()
                 }
             })
@@ -1075,6 +1109,7 @@ constructor() : ViewModel() {
 
 
     fun getArchivedChatStatus() {
+        LogMessage.d(TAG, "#dashboard #recent  getArchivedChatStatus!!")
         viewModelScope.launch(IO) {
             FlyCore.getArchivedChatList { isSuccess, _, data ->
                 if (isSuccess) {
@@ -1095,6 +1130,7 @@ constructor() : ViewModel() {
             ChatManager.getPrivateChatList { isSuccess, _, data ->
                 if (isSuccess) {
                     val privateChats = data["data"] as MutableList<RecentChat>
+                    LogMessage.d(TAG, "#dashboard #privateChat  getPrivateChatList isSuccess ${privateChats.size}")
                     if (privateChats.isNotEmpty()) {
                         privateChatStatus.postValue(true)
                     } else {

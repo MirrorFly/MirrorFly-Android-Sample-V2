@@ -22,10 +22,8 @@ import androidx.lifecycle.LiveData
 import androidx.work.Data
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.mirrorflysdk.flycommons.Constants
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
-import com.contusfly.*
+import com.contusfly.R
+import com.contusfly.TAG
 import com.contusfly.backup.BackupConstants
 import com.contusfly.backup.BackupConstants.ACCOUNT_PERMS_REQUEST_CODE
 import com.contusfly.backup.BackupConstants.REQUEST_CODE_CHOOSE_ACCOUNT
@@ -36,23 +34,50 @@ import com.contusfly.backup.WorkManagerController
 import com.contusfly.backup.workers.BackUpDataWorker
 import com.contusfly.backup.workers.RestoreDataWorker
 import com.contusfly.chat.RealPathUtil
+import com.contusfly.checkInternetAndExecute
 import com.contusfly.databinding.ActivityBackUpBinding
-import com.contusfly.utils.*
+import com.contusfly.emptyString
+import com.contusfly.getFileSizeInStringFormat
+import com.contusfly.gone
+import com.contusfly.hasActiveInternet
+import com.contusfly.isPermissionsAllowed
+import com.contusfly.show
+import com.contusfly.showToast
+import com.contusfly.utils.ChatUtils
+import com.contusfly.utils.MediaPermissions
+import com.contusfly.utils.PickFileUtils
+import com.contusfly.utils.RequestCode
+import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.PermissionAlertDialog
+import com.google.api.client.googleapis.media.MediaHttpUploader
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.models.RecentChat
 import com.mirrorflysdk.backup.BackupManager
 import com.mirrorflysdk.backup.RestoreManager
+import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
+import com.mirrorflysdk.flycommons.Constants
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
-import com.google.api.client.googleapis.media.MediaHttpUploader
-import kotlinx.android.synthetic.main.activity_back_up.*
 import kotlinx.android.synthetic.main.activity_back_up.driveEmail
-import kotlinx.android.synthetic.main.activity_restore.*
-import kotlinx.android.synthetic.main.backup_dialog.view.*
-import kotlinx.android.synthetic.main.connectivity_dialog.view.*
-import kotlinx.coroutines.*
+import kotlinx.android.synthetic.main.activity_back_up.localProgressText
+import kotlinx.android.synthetic.main.activity_back_up.localWorkProgress
+import kotlinx.android.synthetic.main.backup_dialog.view.back_up_progress
+import kotlinx.android.synthetic.main.backup_dialog.view.back_up_text
+import kotlinx.android.synthetic.main.backup_dialog.view.dialog_title
+import kotlinx.android.synthetic.main.connectivity_dialog.view.cancel
+import kotlinx.android.synthetic.main.connectivity_dialog.view.cellImage
+import kotlinx.android.synthetic.main.connectivity_dialog.view.cellularBox
+import kotlinx.android.synthetic.main.connectivity_dialog.view.wifiImage
+import kotlinx.android.synthetic.main.connectivity_dialog.view.wifiOnlyBox
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
+import java.util.LinkedList
+import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
 
@@ -122,7 +147,8 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         setContentView(activityBackUpBinding.root)
         setLastBackupInfo()
         SharedPreferenceManager.setString(BackupConstants.BACKUP_TYPE, Constants.DRIVE_BACKUP)
-        isDriveBackup = SharedPreferenceManager.getString(BackupConstants.BACKUP_TYPE) == Constants.DRIVE_BACKUP
+        isDriveBackup =
+            SharedPreferenceManager.getString(BackupConstants.BACKUP_TYPE) == Constants.DRIVE_BACKUP
         setCommonBackupDialogListener(this)
         if (isDriveBackup) {
             activityBackUpBinding.backupInfoText.text = getString(R.string.backup_info_text)
@@ -136,7 +162,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     private fun setDriveEmailUI() {
         val myEmail = SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL)
         activityBackUpBinding.driveEmail.text =
-            if (myEmail.isNullOrEmpty()) getString(R.string.select_gmail_account) else myEmail
+            if (myEmail.isEmpty()) getString(R.string.select_gmail_account) else myEmail
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -226,6 +252,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         ) {
+            LogMessage.d(TAG, "#backup startBackup")
             onlyBackUpInit()
         } else
             MediaPermissions.requestContactStorageAccess(
@@ -236,7 +263,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     }
 
     private fun onRestoreClicked() {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             if (MediaPermissions.isReadFilePermissionAllowed(this)
                 && MediaPermissions.isWriteFilePermissionAllowed(this)
             )
@@ -271,7 +298,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     }
 
     private fun startBackUp() {
-        if (SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL).isNullOrEmpty())
+        if (SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL).isEmpty())
             showToast(getString(R.string.select_google_account))
         else {
             launch {
@@ -333,7 +360,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
             WorkManagerController.runBackupOnly()
         LogMessage.e(
             TAG,
-            "activityBackUpBinding.backup only backupWorkerID"
+            "#backup activityBackUpBinding.backup only backupWorkerID"
         )
         initBackupWorker(backupWorkerID)
     }
@@ -341,7 +368,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     /**
      * Updates the UI when downloading backup file is in downloading state
      *
-     * @param uploadInfoText String either no internet or progress status string
+     * @param infoText String either no internet or progress status string
      */
     private fun showDownloadUI(infoText: String) {
         activityBackUpBinding.localProgressText.text = infoText
@@ -353,12 +380,12 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
 
     private fun onAutoSwitchClicked(isChecked: Boolean) {
         SharedPreferenceManager.setBoolean(BackupConstants.AUTO_BACKUP, isChecked)
-        if(!isChecked){
+        if (!isChecked) {
             WorkManagerController.cancelAutoBackupWorkers()
-        }else{
+        } else {
             WorkManagerController.cancelBackupWorkers()
         }
-        if (SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL).isNullOrEmpty()) {
+        if (SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL).isEmpty()) {
             activityBackUpBinding.autoSwitch.isChecked = false
             showToast(getString(R.string.select_google_account))
         } else {
@@ -390,10 +417,10 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     }
 
     private fun genericWorkerObserver() {
-        uploadWorkerGeneric.observe(this, androidx.lifecycle.Observer {
+        uploadWorkerGeneric.observe(this) {
             if (it!!.isNotEmpty()) {
                 val workerInfo = it.first()
-                LogMessage.e(TAG, "uploadWorkerGeneric::"+workerInfo.state)
+                LogMessage.e(TAG, "uploadWorkerGeneric::" + workerInfo.state)
                 when (workerInfo.state) {
                     WorkInfo.State.ENQUEUED, WorkInfo.State.BLOCKED -> setFilePathIfEmpty()
                     WorkInfo.State.RUNNING -> onUploadWorkerGenericRunning(workerInfo!!)
@@ -401,9 +428,9 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                     else -> Log.d(TAG, "${workerInfo.state}")
                 }
             }
-        })
+        }
 
-        backupWorkerGeneric.observe(this, androidx.lifecycle.Observer {
+        backupWorkerGeneric.observe(this) {
             if (it!!.isNotEmpty()) {
                 val workerInfo = it.first()
                 when (workerInfo.state) {
@@ -411,7 +438,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                     else -> Log.d(TAG, "${workerInfo.state}")
                 }
             }
-        })
+        }
 
     }
 
@@ -440,7 +467,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         if (filePath.isEmpty() && !SharedPreferenceManager.getString(BackupConstants.BACKUP_FILE_PATH)
                 .isNullOrEmpty()
         ) {
-            setFileInfo(SharedPreferenceManager.getString(BackupConstants.BACKUP_FILE_PATH)!!)
+            setFileInfo(SharedPreferenceManager.getString(BackupConstants.BACKUP_FILE_PATH))
             activityBackUpBinding.uploadingProgressText.text =
                 "Uploading : 0 KB  of $fileSizeString (0%)"
         }
@@ -453,7 +480,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
             fileSize = File(filePath).length()
             fileSizeString = getFileSizeInStringFormat(fileSize)!!
             LogMessage.e(TAG, "file size--->$fileSize file size string--->$fileSizeString")
-            Log.d("BACKUP_BACKUP", "${filePath} $fileSize")
+            Log.d("BACKUP_BACKUP", "$filePath $fileSize")
         }
     }
 
@@ -465,11 +492,11 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
      */
     private fun initDriveWorker(id: UUID) {
 
-        var workerInfo: WorkInfo?=null
-        val context=this
+        var workerInfo: WorkInfo?
+        val context = this
         driveUploadWorker = workManager.getWorkInfoByIdLiveData(id)
         launch(Dispatchers.Main.immediate) {
-            driveUploadWorker.observe(context, androidx.lifecycle.Observer {
+            driveUploadWorker.observe(context) {
 
                 it?.let {
 
@@ -495,10 +522,12 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                                 resetBackupUI()
                                 LogMessage.d(TAG, "Backup Worker is ${it.state}")
                             }
+
                             WorkInfo.State.SUCCEEDED -> {
                                 onDriveWorkerSucceeded()
                                 LogMessage.i(TAG, "initBackupWorker SUCCEEDED")
                             }
+
                             else -> Log.d("BACKUP_DRIVE_OBSERVER", "${workerInfo!!.state}")
                         }
 
@@ -507,7 +536,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                     }
                 }
 
-            })
+            }
         }
 
 
@@ -517,7 +546,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         val progressData = workerInfo.progress
         genericDialog?.dismiss()
         val filePath =
-            progressData.getString(BackupConstants.BACKUP_FILE_PATH)?: emptyString()
+            progressData.getString(BackupConstants.BACKUP_FILE_PATH) ?: emptyString()
         setFileInfo(filePath)
 
         val reason = progressData.getString(BackupConstants.REASON)
@@ -537,18 +566,19 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     private fun updateDriveReasonUI(reason: String, progressData: Data) {
         when (reason) {
             MediaHttpUploader.UploadState.MEDIA_IN_PROGRESS.name -> {
-                LogMessage.e(TAG,"UploadState.MEDIA_IN_PROGRESS.name")
+                LogMessage.e(TAG, "UploadState.MEDIA_IN_PROGRESS.name")
                 val progressValue =
                     progressData.getInt(BackupConstants.PROGRESS, 0)
                 if (progressValue > 0) {
-                    LogMessage.e(TAG,"workprogress to drive upload--->"+progressValue)
+                    LogMessage.e(TAG, "work progress to drive upload--->$progressValue")
                     activityBackUpBinding.workProgress.progress = progressValue
                     activityBackUpBinding.uploadingProgressText.text =
-                        "Uploading : ${getFileSizeInStringFormat((fileSize / 100) * progressValue)}  of ${fileSizeString} (${progressValue}%)"
+                        "Uploading : ${getFileSizeInStringFormat((fileSize / 100) * progressValue)}  of $fileSizeString (${progressValue}%)"
                 }
             }
+
             MediaHttpUploader.UploadState.MEDIA_COMPLETE.name -> {
-                LogMessage.e(TAG,"UploadState.MEDIA_COMPLETE.name")
+                LogMessage.e(TAG, "UploadState.MEDIA_COMPLETE.name")
 
                 activityBackUpBinding.workProgress.progress = 100
                 activityBackUpBinding.uploadingProgressText.text =
@@ -568,6 +598,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                 setDriveEmailUI()
                 showToast(progressData.getString(BackupConstants.MESSAGE))
             }
+
             "100" -> showToast(progressData.getString(BackupConstants.MESSAGE))
             else -> Log.d(
                 "BACKUP_DRIVE_OBSERVER",
@@ -609,39 +640,41 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
      * @param id UUID of the worker
      */
     private fun initBackupWorker(id: UUID) {
-        LogMessage.e(TAG,"init initBackupWorker worker----->")
+        LogMessage.e(TAG, "#backup init initBackupWorker worker----->")
 
         backupWorker = workManager.getWorkInfoByIdLiveData(id)
 
-        backupWorker.observe(this, androidx.lifecycle.Observer {
+        backupWorker.observe(this) {
 
             it?.let {
 
                 val workerInfo = it
                 val progressData = workerInfo.progress
                 val progressValue = progressData.getInt(BackupConstants.PROGRESS, 0)
-                LogMessage.e(TAG, "progressValue $progressValue")
+                LogMessage.e(TAG, "#backup progressValue $progressValue")
                 when (workerInfo.state) {
 
                     WorkInfo.State.RUNNING -> {
-                        LogMessage.e(TAG,"init backup worker running--->")
+                        LogMessage.e(TAG, "#backup init backup worker running--->")
                     }
+
                     WorkInfo.State.SUCCEEDED -> {
-                        LogMessage.e(TAG,"init backup worker succeed--->")
+                        LogMessage.e(TAG, "#backup init backup worker succeed--->")
 
                         setFileInfo(it.outputData.getString(BackupConstants.BACKUP_FILE_PATH)!!)
                         LogMessage.i(
                             TAG,
-                            "Success ${it.outputData.getString(BackupConstants.BACKUP_FILE_PATH)!!}"
+                            "#backup Success ${it.outputData.getString(BackupConstants.BACKUP_FILE_PATH)!!}"
                         )
-                        Log.d("DRIVE_T", " Backup WorkInfo.State.SUCCEEDED")
+                        Log.d("DRIVE_T", "#backup Backup WorkInfo.State.SUCCEEDED")
                     }
+
                     WorkInfo.State.FAILED, WorkInfo.State.CANCELLED -> resetBackupUI()
-                    else -> LogMessage.d(TAG, " WORK Manager State ${workerInfo.state}")
+                    else -> LogMessage.d(TAG, "#backup WORK Manager State ${workerInfo.state}")
                 }
             }
 
-        })
+        }
 
         BackUpDataWorker.setBackupCallBack(object : WorkerProgress {
             override fun onProgressChanged(percentage: Int) {
@@ -652,21 +685,21 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                         "${getString(R.string.please_wait_msg)} ($percentage%)"
                     localWorkProgress?.progress = percentage
                     updateProgress("${getString(R.string.please_wait_msg)} ($percentage%)")
-                    LogMessage.e(TAG, "new method backup on progress:::$percentage")
+                    LogMessage.e(TAG, "#backup new method backup on progress:::$percentage")
 
                 }
             }
 
             override fun onFailure(reason: String?) {
                 Handler(Looper.getMainLooper()).post {
-                    LogMessage.e(TAG, "Backup failure::$reason")
+                    LogMessage.e(TAG, "#backup Backup failure::$reason")
                     resetBackupUI()
                 }
             }
 
             override fun onSuccess() {
                 launch(Dispatchers.Main.immediate) {
-                  LogMessage.e(TAG,"init backup worker success")
+                    LogMessage.e(TAG, "#backup init backup worker success")
                     onBackupWorkerSucceeded()
                 }
             }
@@ -694,7 +727,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                         driveUploadWorkerID = WorkManagerController.runDriveUpload()
                         LogMessage.e(
                             TAG,
-                            "backupWorker.observe driveUploadWorkerID initDriveWorker"
+                            "#backup backupWorker.observe driveUploadWorkerID initDriveWorker"
                         )
                         initDriveWorker(driveUploadWorkerID)
                     }
@@ -708,7 +741,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         }
     }
 
-    private fun driveWorkerIfNotInitialized(){
+    private fun driveWorkerIfNotInitialized() {
         if (!::driveUploadWorkerID.isInitialized)
             driveUploadWorkerID = WorkManagerController.runDriveUpload()
     }
@@ -719,6 +752,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         activityBackUpBinding.restoreData.show()
         activityBackUpBinding.localProgressBox.gone()
     }
+
     private fun resetUI() {
         activityBackUpBinding.downloadBackup.show()
         activityBackUpBinding.restoreData.show()
@@ -747,6 +781,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                 }
 
             }
+
             isRoamingLogic -> {
 
                 alertDialogBuilder.setMessage(getString(R.string.roaming_info))
@@ -757,6 +792,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                 }
 
             }
+
             else -> {
                 alertDialogBuilder.setMessage(getString(R.string.wifi_alert))
 
@@ -975,17 +1011,26 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
             REQUEST_CODE_SIGN_IN -> {
                 if (resultCode == Activity.RESULT_OK && data != null)
                     handleSignInResult(data, driveEmail)
-                else if (SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL).isNotEmpty())
-                    clientLogin(SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL), true)
+                else if (SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL)
+                        .isNotEmpty()
+                )
+                    clientLogin(
+                        SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL),
+                        true
+                    )
                 setDriveEmailUI()
                 genericDialog?.dismiss()
             }
+
             ACCOUNT_PERMS_REQUEST_CODE -> if (resultCode == RESULT_OK) getAllGoogleAccounts()
 
             REQUEST_CODE_CHOOSE_ACCOUNT -> {
                 if (resultCode == RESULT_OK) {
                     val accountName = data?.extras?.get(AccountManager.KEY_ACCOUNT_NAME) ?: ""
-                    SharedPreferenceManager.setString(BackupConstants.DRIVE_EMAIL, accountName.toString())
+                    SharedPreferenceManager.setString(
+                        BackupConstants.DRIVE_EMAIL,
+                        accountName.toString()
+                    )
                     SharedPreferenceManager.setBoolean(BackupConstants.NEED_RELOGIN, false)
                     driveEmail.text = accountName.toString()
                     checkAndLoginMail(accountName.toString())
@@ -1005,7 +1050,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         filePathUri.let {
             try {
                 val fileRealPath = RealPathUtil.getRealPath(this, filePathUri)
-                if (fileRealPath != null && fileRealPath.isNotEmpty())
+                if (!fileRealPath.isNullOrEmpty())
                     startRestore(fileRealPath)
                 else
                     showFileValidation()
@@ -1024,7 +1069,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
 
     private fun initRestoreWorker(id: UUID) {
         restoreDataWorker = workManager.getWorkInfoByIdLiveData(id)
-        restoreDataWorker.observe(this, androidx.lifecycle.Observer {
+        restoreDataWorker.observe(this) {
 
             it?.let {
 
@@ -1036,13 +1081,16 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                         val progressValue = progressData.getInt(BackupConstants.PROGRESS, 0)
                         LogMessage.i(TAG, "initRestoreWorker RUNNING progressValue$progressValue")
                     }
+
                     WorkInfo.State.SUCCEEDED -> {
                         LogMessage.i(TAG, "initRestoreWorker SUCCEEDED")
                     }
+
                     WorkInfo.State.FAILED, WorkInfo.State.CANCELLED -> {
                         LogMessage.d(TAG, "Restore Worker is ${it.state}")
                         showToast(getString(R.string.restore_failed_info))
                     }
+
                     else -> {
                         Log.d("RESTORE_ACTIVITY_REST", "${workerInfo.state}")
                     }
@@ -1050,13 +1098,13 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
 
             }
 
-        })
-        RestoreDataWorker.setRestoreCallBack(object:WorkerProgress{
+        }
+        RestoreDataWorker.setRestoreCallBack(object : WorkerProgress {
             override fun onProgressChanged(percentage: Int) {
                 LogMessage.i(TAG, "RestoreWorker RUNNING progressValue$percentage")
                 Handler(Looper.getMainLooper()).post {
                     updateProgress("${getString(R.string.restoring_msg)} ($percentage%)")
-                    localWorkProgress.progress=percentage
+                    localWorkProgress.progress = percentage
                 }
             }
 
@@ -1081,8 +1129,8 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         localProgressText?.text = info
     }
 
-    interface WorkerProgress{
-        fun onProgressChanged(percentage:Int)
+    interface WorkerProgress {
+        fun onProgressChanged(percentage: Int)
 
         fun onFailure(reason: String?)
 

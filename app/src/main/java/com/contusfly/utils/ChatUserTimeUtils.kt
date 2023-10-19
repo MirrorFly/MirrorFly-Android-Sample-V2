@@ -14,23 +14,6 @@ import java.util.*
 object ChatUserTimeUtils {
 
     /**
-     * Sets the formatted duration in the text view with the chat format
-     *
-     * @param totalDuration Total duration for formatter
-     * @param textTimer     View to display
-     */
-    fun setFormattedTimeTextView(totalDuration: Int, textTimer: TextView) {
-        val formatted: String = if (totalDuration < 60) {
-            if (totalDuration < 10) "00:0$totalDuration" else "00:$totalDuration"
-        } else {
-            val sec = totalDuration % 60
-            val min = totalDuration / 60
-            if (min < 10 && sec < 10) "0$min:0$sec" else if (min < 10 && sec >= 10) "0$min:$sec" else if (min >= 10 && sec < 10) "$min:0$sec" else "$min:$sec"
-        }
-        textTimer.text = formatted
-    }
-
-    /**
      * Gets the formatted time.
      *
      * @param timeConsume Timestamp
@@ -87,5 +70,12 @@ object ChatUserTimeUtils {
             LogMessage.e(e)
         }
         return false
+    }
+
+    fun scheduledDateTimeFormat(timestamp: Long): String {
+        val sdf = SimpleDateFormat("MMM dd, yyyy h:mm a", Locale.getDefault())
+        val date = Date(timestamp)
+        val formattedDateTime = sdf.format(date)
+        return formattedDateTime.replace("AM", "am").replace("PM", "pm")
     }
 }

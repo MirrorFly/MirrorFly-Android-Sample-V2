@@ -163,6 +163,7 @@ class Constants {
         const val MSG_TYPE_FILE = "document"
         const val MSG_TYPE_NOTIFICATION = "notification"
         const val MSG_TYPE_VIDEO = "video"
+        const val MSG_TYPE_MEET = "meet"
         const val MESSAGE = "message"
         const val IMAGE_RESULTS = "image_results"
         const val MULTI_SELECTION = "multi_selection"
@@ -212,6 +213,7 @@ class Constants {
         const val RECALL = "recall"
         const val YOU = "You"
         const val TAG = "Contus Fly"
+        const val MEET_SCHEDULED_ON="Meet scheduled on"
         const val IS_FROM_NOTIFICATION = "is_from_notification"
         const val JID = "jid"
         const val NOTIFICATION_CHANNEL_ID = (BuildConfig.APPLICATION_ID + ".notification")

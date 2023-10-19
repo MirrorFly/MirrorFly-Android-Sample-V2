@@ -82,6 +82,8 @@
 
     <string name="join_link_meeting_lable">%1$s video call</string>
     <string name="join_video_meeting_lable">Join video call</string>
+    <string name="join_video_meeting_txt">Join video meeting</string>
+    <string name="scheduled_on_txt">Scheduled on</string>
     <string name="join_now_lable">Join Now</string>
     <string name="already_in_call">You\'re already in a call</string>
     <string name="already_in_call_msg">Do you want to leave your call to join this one?</string>

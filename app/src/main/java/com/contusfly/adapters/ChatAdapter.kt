@@ -254,6 +254,13 @@ class ChatAdapter(
                     is ContactReceivedViewHolder -> {
                         handlePayloadsContactReceived(key, this, item, position)
                     }
+
+                    is MeetSentViewHolder -> {
+                        handlePayloadsScheduleMeetSent(key, this, item, position)
+                    }
+                    is MeetReceivedViewHolder -> {
+                        handlePayloadsScheduleMeetReceived(key, this, item, position)
+                    }
                 }
             }
         }
@@ -370,6 +377,68 @@ class ChatAdapter(
             }
         }
     }
+
+    private fun handlePayloadsScheduleMeetSent(
+        key: String,
+        meetSentViewHolder: MeetSentViewHolder,
+        item: ChatMessage,
+        position: Int
+    ) {
+        with(meetSentViewHolder) {
+            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
+                val isHighLighted =
+                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                ChatUtils.setSelectedChatItem(
+                    viewRowItem,
+                    isHighLighted,
+                    context
+                )
+            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
+                if (item.isMessageRecalled)
+                    bindSenderMeetView(this, item, position)
+                else {
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
+                    setStatus(item, imgChatStatus)
+                    replyViewUtils.showSenderReplyWindow(this, item, context)
+                    if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
+                        imgForwardMeet?.show()
+                    imgForwardMeet?.setOnClickListener {
+                        listener?.onSenderMediaForward(
+                            item,
+                            layoutPosition
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handlePayloadsScheduleMeetReceived(
+        key: String,
+        meetReceivedViewHolder: MeetReceivedViewHolder,
+        item: ChatMessage,
+        position: Int
+    ) {
+        with(meetReceivedViewHolder) {
+            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
+                val isHighLighted =
+                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                ChatUtils.setSelectedChatItem(
+                    viewRowItem,
+                    isHighLighted,
+                    context
+                )
+            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
+                if (item.isMessageRecalled)
+                    bindReceiverMeetView(this, item, position)
+                else {
+                    replyViewUtils.showReceiverReplyWindow(this, item, context)
+                }
+            }
+        }
+    }
+
+
 
     private fun handlePayloadsFileSent(
         key: String,
@@ -828,6 +897,12 @@ class ChatAdapter(
                     showSenderNameIfGroupChat(holder, item, position)
                     getContactView(holder, item, position)
                 }
+                TYPE_MEET_SENDER -> bindSenderMeetView(holder, item, position)
+
+                TYPE_MEET_RECEIVER ->{
+                    showSenderNameIfGroupChat(holder, item, position)
+                    bindReceiverMeetView(holder, item, position)
+                }
 
                 TYPE_MSG_NOTIFICATION -> getNotificationView(holder, item)
                 else -> bindMediaViews(holder, item, position)
@@ -987,6 +1062,71 @@ class ChatAdapter(
         }
     }
 
+    private fun setSenderMeetText(
+        item: ChatMessage,
+        txtChatSender: TextView,
+        holder: MeetSentViewHolder
+    ) {
+        val msg = item.meetingChatMessage.link
+        with(txtChatSender) {
+            setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
+            setTextKeepState(getSpannedText(msg))
+            handleSenderTextSearch(getSpannedText(msg), holder)
+            setDeviceFontSizeChangesEffectOnTextView(txtChatSender,holder)
+            holder.scheduleDateAndTime.text = ChatUserTimeUtils.scheduledDateTimeFormat(item.meetingChatMessage.scheduledDateTime.toLong())
+            setMeetLinkView(
+                item.chatUserJid,
+                txtChatSender,
+                holder.scheduleMeetLinkView,
+                holder.scheduleMeetLinkLogo,
+            )
+            val moveLink = ModifiedlinkMovementMethod(
+                context,
+                item.chatUserJid,
+                selectedMessages,
+                isLinkLongClick
+            )
+            moveLink.setOnclicklistener(
+                txtChatSender,
+                longClickListener,
+                item,
+                linkClickListener,
+                linkButtonClickStatusListener
+            )
+            movementMethod = moveLink
+            isClickable = false
+            isLongClickable = false
+        }
+    }
+
+    private fun setMeetLinkView(
+        userJid: String,
+        txtChat: TextView,
+        scheduledMeetLinkView: LinearLayout,
+        scheduledMeetLinkLogo: ImageView
+    ) {
+        val screenWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
+        val meetLinkText = txtChat.text
+        LogMessage.d(TAG, "Scheduled Meet Link : $meetLinkText")
+        txtChat.setTextColor(ContextCompat.getColor(context, R.color.light_blue))
+        txtChat.setLinkTextColor(ContextCompat.getColor(context, R.color.light_blue))
+
+        scheduledMeetLinkView.show()
+        scheduledMeetLinkView.setOnClickListener {
+            ChatUtils.navigateToOnGoingCallPreviewScreen(
+                context,
+                userJid,
+                txtChat.text.toString().trim()
+            )
+            com.contusfly.utils.LogMessage.d(TAG, "Scheduled Meet Link Clicked")
+        }
+        val lp = LinearLayout.LayoutParams(
+            (screenWidth + 20),
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ) //20 is nothing but text message margin Start and End value in XML
+        scheduledMeetLinkView.layoutParams = lp
+        scheduledMeetLinkLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.mirrorfly_icon)!!)
+    }
 
     private fun setJoinLinkView(
         userJid: String,
@@ -1030,10 +1170,70 @@ class ChatAdapter(
             LinearLayout.LayoutParams.WRAP_CONTENT
         ) //20 is nothing but text message margin Start and End value in XML
         joinLinkView.layoutParams = lp
-        joinLinkLogo.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.ic_launcher)!!)
+        joinLinkLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.mirrorfly_icon)!!)
+    }
+
+    private fun setDeviceFontSizeChangesEffectOnTextView(txtChatSender: TextView, meetSentViewHolder: MeetSentViewHolder){
+        with(txtChatSender) {
+            val configuration = resources.configuration
+            val fontScale = configuration.fontScale
+            val smallFontSizeThreshold = 0.85f // Adjust as needed
+            var lineSpacingMultiplier = 1.2f
+            var marginBottomInPixels = resources.getDimensionPixelSize(R.dimen.margin_9)
+            if (fontScale <= smallFontSizeThreshold ) {
+                lineSpacingMultiplier = 0.8f
+                marginBottomInPixels = resources.getDimensionPixelSize(R.dimen.margin_5)
+            }
+            meetSentViewHolder.txtChatSender.setLineSpacing(0f, lineSpacingMultiplier)
+            val layoutParams =
+                meetSentViewHolder.meetLinkTextLayout.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.bottomMargin = marginBottomInPixels
+            meetSentViewHolder.meetLinkTextLayout.layoutParams = layoutParams
+        }
+
+    }
+
+
+
+    private fun setDeviceFontSizeChangesEffectOnTextView(txtChatSender: TextView, meetReceivedViewHolder: MeetReceivedViewHolder){
+        with(txtChatSender) {
+            val configuration = resources.configuration
+            val fontScale = configuration.fontScale
+            val smallFontSizeThreshold = 0.85f // Adjust as needed
+            var lineSpacingMultiplier = 1.2f
+            var marginBottomInPixels = resources.getDimensionPixelSize(R.dimen.margin_9)
+            if (fontScale <= smallFontSizeThreshold) {
+                lineSpacingMultiplier = 0.8f
+                marginBottomInPixels = resources.getDimensionPixelSize(R.dimen.margin_5)
+            }
+            meetReceivedViewHolder.txtChatReceiver.setLineSpacing(0f, lineSpacingMultiplier)
+            val layoutParams =
+                meetReceivedViewHolder.meetLinkTextLayout.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.bottomMargin = marginBottomInPixels
+            meetReceivedViewHolder.meetLinkTextLayout.layoutParams = layoutParams
+        }
     }
 
     private fun handleSenderTextSearch(htmlText: CharSequence, holder: TextSentViewHolder) {
+        if (searchEnabled && searchKey.isNotEmpty() && htmlText.toString()
+                .startsWithTextInWords(searchKey)
+        ) {
+            val startIndex = htmlText.toString().checkIndexes(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            EmojiUtils.setEmojiTextAndHighLightSearchText(
+                context,
+                holder.txtChatSender,
+                htmlText.toString(),
+                startIndex,
+                stopIndex
+            )
+        } else {
+            holder.txtChatSender.setBackgroundColor(context.color(android.R.color.transparent))
+            holder.txtChatSender.setTextKeepState(htmlText)
+        }
+    }
+
+    private fun handleSenderTextSearch(htmlText: CharSequence, holder: MeetSentViewHolder) {
         if (searchEnabled && searchKey.isNotEmpty() && htmlText.toString()
                 .startsWithTextInWords(searchKey)
         ) {
@@ -1246,6 +1446,62 @@ class ChatAdapter(
         }
     }
 
+    private fun handleRecallForReceivedMeetMessage(
+        item: ChatMessage,
+        meetReceivedViewHolder: MeetReceivedViewHolder
+    ) {
+        val msg = item.meetingChatMessage.link
+        with(meetReceivedViewHolder) {
+            if (item.isMessageRecalled) {
+                meetReceivedViewHolder.isRecallMessage = true
+                displayRecallInfoForReceiver(this)
+                receiverItemClick(this, viewReceiver, item)
+            } else {
+                meetReceivedViewHolder.isRecallMessage = false
+                receiverItemClick(this, viewReceiver, item)
+                receivedRecallImage.gone()
+                replyViewUtils.showReceiverReplyWindow(this, item, context)
+                with(txtChatReceiver) {
+                    setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
+                    setTextKeepState(getSpannedText(msg))
+                    handleReceiverTextSearch(getSpannedText(msg), meetReceivedViewHolder)
+                    setDeviceFontSizeChangesEffectOnTextView(txtChatReceiver,meetReceivedViewHolder)
+                    meetReceivedViewHolder.scheduleDateAndTime.text = ChatUserTimeUtils.scheduledDateTimeFormat(item.meetingChatMessage.scheduledDateTime.toLong())
+                    setMeetLinkView(
+                        item.chatUserJid,
+                        txtChatReceiver,
+                        scheduleMeetLinkView,
+                        scheduleMeetLinkLogo
+                    )
+                    val moveLink = ModifiedlinkMovementMethod(
+                        context,
+                        item.chatUserJid,
+                        selectedMessages,
+                        isLinkLongClick
+                    )
+                    moveLink.setOnclicklistener(
+                        txtChatReceiver,
+                        longClickListener,
+                        item,
+                        linkClickListener,
+                        linkButtonClickStatusListener
+                    )
+                    movementMethod = moveLink
+                    isClickable = false
+                    isLongClickable = false
+                    imgForwardMeet?.show()
+                    imgForwardMeet?.setOnClickListener {
+                        listener?.onSenderMediaForward(
+                            item,
+                            layoutPosition
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+
     private fun handleReceiverTextSearchMention(
         htmlText: CharSequence,
         holder: TextReceivedViewHolder,
@@ -1260,6 +1516,25 @@ class ChatAdapter(
                 htmlText.toString(),
                 startIndex,
                 stopIndex, mentionedUserName
+            )
+        } else {
+            holder.txtChatReceiver.setBackgroundColor(context.color(android.R.color.transparent))
+            holder.txtChatReceiver.setTextKeepState(htmlText)
+        }
+    }
+
+    private fun handleReceiverTextSearch(htmlText: CharSequence, holder: MeetReceivedViewHolder) {
+        if (searchEnabled && searchKey.isNotEmpty() && htmlText.toString()
+                .startsWithTextInWords(searchKey)
+        ) {
+            val startIndex = htmlText.toString().checkIndexes(searchKey)
+            val stopIndex = startIndex + searchKey.length
+            EmojiUtils.setEmojiTextAndHighLightSearchText(
+                context,
+                holder.txtChatReceiver,
+                htmlText.toString(),
+                startIndex,
+                stopIndex
             )
         } else {
             holder.txtChatReceiver.setBackgroundColor(context.color(android.R.color.transparent))
@@ -1334,6 +1609,37 @@ class ChatAdapter(
             txtChatSender.setTextColor(ContextCompat.getColor(context, R.color.color_black))
             txtChatSender.setTypeface(Typeface.SANS_SERIF, Typeface.ITALIC)
             txtChatSender.setTextKeepState(Html.fromHtml(getHtmlChatMessageText(context.getString(R.string.single_chat_sender_recall))))
+        }
+    }
+
+    private fun displayRecallInfoForSender(meetSentViewHolder: MeetSentViewHolder) {
+        with(meetSentViewHolder) {
+            imgChatStatus.gone()
+            replyMessageSentView?.gone()
+            sentRecallImage.show()
+            scheduleMeetLinkView.gone()
+            txtChatSender.setTextColor(ContextCompat.getColor(context, R.color.color_black))
+            txtChatSender.setTypeface(Typeface.SANS_SERIF, Typeface.ITALIC)
+            txtChatSender.setTextKeepState(Html.fromHtml(getHtmlChatMessageText(context.getString(R.string.single_chat_sender_recall))))
+        }
+    }
+
+    private fun displayRecallInfoForReceiver(meetReceivedViewHolder: MeetReceivedViewHolder) {
+        with(meetReceivedViewHolder) {
+            replyMessageReceivedView?.gone()
+            receivedRecallImage.show()
+            scheduleMeetLinkView.gone()
+            txtChatReceiver.setTextColor(ContextCompat.getColor(context, R.color.color_dark_gray))
+            txtChatReceiver.setTypeface(Typeface.SANS_SERIF, Typeface.ITALIC)
+            txtChatReceiver.setTextKeepState(
+                Html.fromHtml(
+                    getHtmlChatMessageText(
+                        context.getString(
+                            R.string.single_chat_receiver_recall
+                        )
+                    )
+                )
+            )
         }
     }
 
@@ -1872,6 +2178,121 @@ class ChatAdapter(
         }
     }
 
+    /**
+     * This method will bind the data to the sender text view.
+     *
+     * @param holder   Holder of the text view
+     * @param item     Instance of the Message
+     * @param position Position of the list item
+     */
+    private fun bindSenderMeetView(
+        holder: RecyclerView.ViewHolder,
+        item: ChatMessage,
+        position: Int
+    ) {
+        /* View holder for the text view */
+        val meetSenderViewHolder = holder as MeetSentViewHolder
+        with(meetSenderViewHolder) {
+            val time: String?
+            try {
+                adjustPadding(space, position, mainList)
+                time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+                with(txtChatTime) {
+                    text = time
+                    setTextColor(ContextCompat.getColor(context, R.color.color_sent_message_time))
+                    show()
+                }
+                txtChatSender.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
+                txtChatSender.setTextColor(ContextCompat.getColor(context, R.color.color_black))
+                meetSenderViewHolder.isSentMessage =
+                    item.isMessageSentByMe && !item.isMessageSent()
+                if (item.isMessageRecalled) {
+                    meetSenderViewHolder.isRecallMessage = true
+                    displayRecallInfoForSender(meetSenderViewHolder)
+                    viewSender.isEnabled = true
+                    senderItemClick(this, meetSenderViewHolder.viewSender, item)
+                } else {
+                    meetSenderViewHolder.isRecallMessage = false
+                    viewSender.isEnabled = true
+                    senderItemClick(this, viewSender, item)
+                    imgChatStatus.show()
+                    sentRecallImage.gone()
+                    setStatus(item, imgChatStatus)
+                    replyViewUtils.showSenderReplyWindow(this, item, context)
+                    setSenderMeetText(item, txtChatSender, meetSenderViewHolder)
+                }
+                replyViewUtils.markFavoriteItem(this, item)
+                ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
+                setListenersForSenderMeetMessages(this, item)
+                if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
+                    imgForwardMeet?.show()
+                imgForwardMeet?.setOnClickListener {
+                    listener?.onSenderMediaForward(
+                        item,
+                        layoutPosition
+                    )
+                }
+            } catch (e: Exception) {
+                LogMessage.e(e)
+            }
+        }
+    }
+
+
+    /**
+     * This method will bind the data to the receiver scheduledMeet text view.
+     *
+     * @param holder        Holder of the recycler view
+     * @param item          Message item contains message data
+     * @param position      List item position
+     */
+    private fun bindReceiverMeetView(
+        holder: RecyclerView.ViewHolder,
+        item: ChatMessage,
+        position: Int
+    ) {
+        /* View holder for the text view */
+        val meetReceivedViewHolder = holder as MeetReceivedViewHolder
+        with(meetReceivedViewHolder) {
+            viewReceiver.contentDescription = "Receiver_Text"
+            val time: String?
+            try {
+                adjustPadding(meetReceivedViewHolder.space, position, mainList)
+                time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+                txtChatRevTime.text = time
+                txtChatRevTime.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.color_chat_msg_received_time
+                    )
+                )
+                txtChatReceiver.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
+                txtChatReceiver.setTextColor(ContextCompat.getColor(context, R.color.color_black))
+                receiverTextTranslated?.maxWidth =
+                    SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
+                if (isTranslationChecked && mainList[position].messageCustomField != null && mainList[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] != null
+                    && mainList[position].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
+                        "true"
+                    ) && ChatManager.getAvailableFeatures().isTranslationEnabled
+                ) {
+                    translatedlinearlayout?.show()
+                    receiverTextTranslated?.show()
+                    receiverTextTranslated?.text =
+                        mainList[position].messageCustomField[Constants.TRANSLATED_MESSAGE_CONTENT]
+                } else {
+                    receiverTextTranslated?.gone()
+                    translatedlinearlayout?.gone()
+                }
+                handleRecallForReceivedMeetMessage(item, this)
+                replyViewUtils.markFavoriteItem(this, item)
+                ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
+                setListenersForReceiverMeetMessages(meetReceivedViewHolder, item)
+            } catch (e: Exception) {
+                LogMessage.e(e)
+            }
+        }
+    }
+
 
     /**
      * Sets the background color for the selected message from the multi select in chat window
@@ -2397,6 +2818,18 @@ class ChatAdapter(
         }
     }
 
+    private fun setListenersForSenderMeetMessages(meetSentViewHolder: MeetSentViewHolder,
+        item: ChatMessage
+    ) {
+        with(meetSentViewHolder) {
+            replyMessageSentView?.setOnClickListener { onReplyViewClicked(item, layoutPosition) }
+            replyMessageSentView?.setOnLongClickListener {
+                listener?.onSenderItemLongClick(item, layoutPosition)
+                true
+            }
+        }
+    }
+
     /**
      * Sets the listener to the child views present in the parent view.
      *
@@ -2408,6 +2841,24 @@ class ChatAdapter(
         item: ChatMessage
     ) {
         with(txtReceiverViewHolder) {
+            replyMessageReceivedView?.setOnClickListener {
+                onReplyViewClicked(
+                    item,
+                    layoutPosition
+                )
+            }
+            replyMessageReceivedView?.setOnLongClickListener {
+                listener?.onSenderItemLongClick(item, layoutPosition)
+                true
+            }
+        }
+    }
+
+    private fun setListenersForReceiverMeetMessages(
+        meetReceivedViewHolder: MeetReceivedViewHolder,
+        item: ChatMessage
+    ) {
+        with(meetReceivedViewHolder) {
             replyMessageReceivedView?.setOnClickListener {
                 onReplyViewClicked(
                     item,
@@ -3274,6 +3725,17 @@ class ChatAdapter(
          * Type of the message date
          */
         const val TYPE_MSG_NOTIFICATION = 8
+
+        /**
+         * type of the meet chat sender
+         */
+        const val TYPE_MEET_SENDER = 9
+
+
+        /**
+         * type of the meet chat receiver
+         */
+        const val TYPE_MEET_RECEIVER = 80
 
     }
 

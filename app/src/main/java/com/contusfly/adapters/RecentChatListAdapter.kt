@@ -502,6 +502,10 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
                 holder.imageMediaType.setImageResource(R.drawable.ls_ic_file)
                 holder.textChatMessage.text = context.getString(R.string.title_document)
             }
+            Constants.MSG_TYPE_MEET ->{
+                holder.imageMediaType.setImageResource(R.drawable.ic_meet_recent)
+                holder.textChatMessage.text = getString(R.string.scheduled_on_txt)+" "+ ChatUserTimeUtils.scheduledDateTimeFormat(chatMessage?.meetingChatMessage!!.scheduledDateTime.toLong())
+            }
             else -> holder.imageMediaType.gone()
         }
     }

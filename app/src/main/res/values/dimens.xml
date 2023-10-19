@@ -61,6 +61,7 @@
     <dimen name="margin_3.5">3.5dp</dimen>
     <dimen name="margin_4">4dp</dimen>
     <dimen name="margin_4.5">4.5dp</dimen>
+    <dimen name="margin_6">6dp</dimen>
     <dimen name="margin_5">5dp</dimen>
     <dimen name="margin_7">7dp</dimen>
     <dimen name="margin_8">8dp</dimen>
@@ -98,6 +99,7 @@
     <dimen name="margin_48">48dp</dimen>
     <dimen name="margin_50">50dp</dimen>
     <dimen name="margin_55">55dp</dimen>
+    <dimen name="margin_56">56dp</dimen>
     <dimen name="margin_60">60dp</dimen>
     <dimen name="margin_65">65dp</dimen>
     <dimen name="margin_70">70dp</dimen>

@@ -7,6 +7,7 @@ package com.contusfly.adapters.holders
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.contusfly.R
@@ -38,6 +39,10 @@ open class ReplyMessageViewHolder internal constructor(view: View) : RecyclerVie
      * Text message of the chat
      */
     val txtChatReply: MessageTextView? = view.findViewById(R.id.text_reply_chat)
+
+    val msgMeetReplyLayout: RelativeLayout?=view.findViewById(R.id.msg_meet_rl)
+
+    val msgImageMeet: ImageView?=view.findViewById(R.id.msg_image_meet)
 
     /**
      * Text message of the chat

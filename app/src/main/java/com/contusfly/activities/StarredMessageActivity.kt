@@ -308,30 +308,36 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     private fun addSearchedMessagesToList(filterKey: String) {
         viewModelStarredMessage.searchedStarredMessageList.clear()
         for (message in viewModelStarredMessage.starredMessagesList) {
-            if (isTextMessageContainsFilterKey(message, filterKey)) {
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            } else if (isImageCaptionContainsFilterKey(message, filterKey))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (isVideoCaptionContainsFilterKey(message, filterKey))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (MessageType.DOCUMENT == message.messageType && message.mediaChatMessage.mediaFileName.isNotEmpty()
-                && message.mediaChatMessage.mediaFileName.lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (MessageType.CONTACT == message.messageType && message.contactChatMessage.contactName.isNotEmpty()
-                && message.contactChatMessage.contactName.lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (message.senderUserName.isNotEmpty()
-                && message.senderUserName.lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (message.isMessageSentByMe && "You".lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if(message.isGroupMessage() && ProfileDetailsUtils.getDisplayName(message.chatUserJid)
-                    .lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
+            addMessageToListIfMatches(message, filterKey)
         }
         starredMessageAdapter!!.setSearch(searchEnabled, searchedText)
         starredMessageAdapter!!.setStarredMessages(viewModelStarredMessage.searchedStarredMessageList)
         starredMessageAdapter!!.notifyDataSetChanged()
+    }
+
+    private fun addMessageToListIfMatches(
+        message: ChatMessage,
+        filterKey: String
+    ) {
+        if (isTextMessageContainsFilterKey(message, filterKey) ||
+            isImageCaptionContainsFilterKey(message, filterKey) ||
+            isVideoCaptionContainsFilterKey(message, filterKey) ||
+            isMeetMessageContainsFilterKey(message, filterKey) ||
+            (message.messageType == MessageType.DOCUMENT &&
+                    message.mediaChatMessage.mediaFileName.isNotEmpty() &&
+                    message.mediaChatMessage.mediaFileName.lowercase().contains(filterKey.lowercase())) ||
+            (message.messageType == MessageType.CONTACT &&
+                    message.contactChatMessage.contactName.isNotEmpty() &&
+                    message.contactChatMessage.contactName.lowercase().contains(filterKey.lowercase())) ||
+            (message.senderUserName.isNotEmpty() &&
+                    message.senderUserName.lowercase().contains(filterKey.lowercase())) ||
+            (message.isMessageSentByMe &&
+                    "You".lowercase().contains(filterKey.lowercase())) ||
+            (message.isGroupMessage() &&
+                    ProfileDetailsUtils.getDisplayName(message.chatUserJid).lowercase().contains(filterKey.lowercase()))
+        ) {
+            viewModelStarredMessage.searchedStarredMessageList.add(message)
+        }
     }
 
     private fun isVideoCaptionContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
@@ -347,6 +353,13 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     private fun isTextMessageContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
         return MessageType.TEXT == message.messageType &&
                 isMentionUserIdAvailableInMessage(message, filterKey)
+    }
+    private fun isMeetMessageContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
+        return MessageType.MEET == message.messageType &&
+                isMeetMessageAvailable(message, filterKey)
+    }
+    private fun isMeetMessageAvailable(message: ChatMessage, filterKey: String): Boolean {
+        return message.meetingChatMessage.link.lowercase().contains(filterKey.lowercase())
     }
 
     private fun isMentionUserIdAvailableInMediaMessage(message: ChatMessage, filterKey: String): Boolean {
