@@ -78,6 +78,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout="@layout/chat_info_file_item" />
+            <ViewStub
+                android:id="@+id/meet_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_meet_item" />
         </FrameLayout>
 
         <View

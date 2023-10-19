@@ -16,4 +16,5 @@ interface MessageListener {
      * @param message          Message item contains message data
      */
     fun onSendMessageSuccess(message: ChatMessage)
+
 }

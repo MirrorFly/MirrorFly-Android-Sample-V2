@@ -125,6 +125,14 @@ class ChatAdapterHelper internal constructor(private var inflater: LayoutInflate
                 view = inflater!!.inflate(R.layout.row_chat_notification_item, parent, false)
                 holder = NotificationViewHolder(view)
             }
+            ChatAdapter.TYPE_MEET_SENDER ->{
+                view = inflater!!.inflate(R.layout.row_chat_schedule_meet_sender_item, parent, false)
+                holder = MeetSentViewHolder(view)
+            }
+            ChatAdapter.TYPE_MEET_RECEIVER ->{
+                view = inflater!!.inflate(R.layout.row_chat_schedule_meet_receiver_item, parent, false)
+                holder = MeetReceivedViewHolder(view)
+            }
             else -> holder = getMediaItemViewHolder(parent, viewType)
         }
         return holder

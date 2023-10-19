@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -179,6 +180,23 @@
         </RelativeLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_schedule_meet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/margin_80"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:background="?android:attr/selectableItemBackground"
+        android:backgroundTint="@null"
+        android:contentDescription="@null"
+        app:fabCustomSize="@dimen/fab_normal_size"
+        app:iconSize="@dimen/fab_normal_icon_size"
+        app:pressedTranslationZ="@dimen/elevation_extra_small"
+        app:elevation="0dp"
+        app:srcCompat="@drawable/ic_schedule_fab"
+        />
 
 </RelativeLayout>
 

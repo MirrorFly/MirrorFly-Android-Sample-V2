@@ -260,6 +260,13 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
         }
     }
 
+    private fun msgContentMeetAndTextMessage(message: ChatMessage): String {
+        return if (MessageType.MEET == message.messageType)
+            Utils.getUtfDecodedText(message.meetingChatMessage.link)
+        else
+            Utils.getUtfDecodedText(message.messageTextContent)
+    }
+
     /**
      * Set the message data from the message view
      *
@@ -271,12 +278,17 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
         val time = chatTimeOperations.getRecentChatTime(context, message.getMessageSentTime())
         viewBinding.searchTextRecentchatTime.show()
         viewBinding.searchTextRecentchatTime.text = time
-        val msgType = message.getMessageType()
+        val msgType = message.messageType
         try {
             when {
-                MessageType.TEXT == msgType -> {
-                    val messageContent = if (message.isMessageRecalled()) setRecalledMessageText(viewBinding, message.isMessageSentByMe())
-                    else Utils.getUtfDecodedText(message.getMessageTextContent())
+                MessageType.TEXT == msgType || MessageType.MEET == msgType -> {
+                    val messageContent = if (message.isMessageRecalled) setRecalledMessageText(
+                        viewBinding,
+                        message.isMessageSentByMe
+                    )
+                    else {
+                        msgContentMeetAndTextMessage(message)
+                    }
                     if(message.mentionedUsersIds!=null && message.mentionedUsersIds.size>0){
                         val mentionText = MentionUtils.formatMentionText(context, message,false)
                         val mentionUserNames= MentionUtils.getMentionedUserId(context,message,false)

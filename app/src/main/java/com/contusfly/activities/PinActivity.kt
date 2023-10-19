@@ -410,6 +410,8 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
             })
         } else if ("DASHBOARD" == goTo || !SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.RESET_PIN)) {
             if (isFromSettings) finish()
+            else if (goTo == "")
+                finish()
             else {
                 startActivity(Intent(this, DashboardActivity::class.java))
                 finish()

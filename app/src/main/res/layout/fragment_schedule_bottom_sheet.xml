@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/margin_12"
+    android:paddingBottom="@dimen/margin_36">
+
+    <View
+        android:id="@+id/slider_top_view"
+        android:layout_width="@dimen/margin_40"
+        android:layout_height="@dimen/margin_5"
+        android:background="@drawable/bg_slider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/instant_meet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_30"
+        android:layout_marginEnd="@dimen/margin_30"
+        android:layout_marginTop="@dimen/margin_10"
+        android:paddingBottom="@dimen/margin_10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/slider_top_view">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/instant_meet_txt_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_10"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:text="@string/instant_meet"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/copy_link_txt_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_15"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:text="@string/copy_the_link"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintStart_toStartOf="@id/instant_meet_txt_view"
+            app:layout_constraintTop_toBottomOf="@id/instant_meet_txt_view" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/copy_link_holder"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_14"
+            android:layout_marginEnd="@dimen/margin_5"
+            android:background="@drawable/copy_link_bg"
+            app:layout_constraintBottom_toTopOf="@+id/join_meeting"
+            app:layout_constraintStart_toStartOf="@id/copy_link_txt_view"
+            app:layout_constraintTop_toBottomOf="@id/copy_link_txt_view">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/meet_link_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_8"
+                android:ellipsize="end"
+                android:fontFamily="@font/sf_ui_display_regular"
+                android:singleLine="true"
+                android:text="@string/schedule_meet_link_generate_preview_loader"
+                android:textColor="#6580CB"
+                android:textSize="@dimen/text_size_12"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.85" />
+
+            <ImageView
+                android:id="@+id/meet_link_copy"
+                android:layout_width="@dimen/margin_20"
+                android:layout_height="@dimen/margin_20"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:contentDescription="@string/image_content_description"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/meet_link_text_view"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_copy_link_grey" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/join_meeting"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/margin_36"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginEnd="@dimen/margin_25"
+            android:background="@drawable/schedule_button_enable_disable_view"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:text="@string/join_meeting"
+            android:enabled="false"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintEnd_toEndOf="@+id/copy_link_holder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/copy_link_holder" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/schedule_meet_switch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_30"
+        android:layout_marginTop="@dimen/margin_6"
+        android:layout_marginEnd="@dimen/margin_25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instant_meet_layout">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/schedule_meeting_txt_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_10"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:text="@string/schedule_meeting"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_enable_schedule_meet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/margin_10"
+            android:contentDescription="@null"
+            android:enabled="false"
+            android:thumb="@drawable/thumb_selector"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:track="@drawable/track_selector" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_schedule_meet_time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_40"
+        android:layout_marginStart="@dimen/margin_40"
+        android:layout_marginTop="@dimen/margin_12"
+        android:layout_marginEnd="@dimen/margin_36"
+        android:background="@drawable/date_time_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/schedule_meet_switch_layout">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/date_txt_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_10"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:text="12/08/2023"
+            android:textColor="@color/color_date_text"
+            android:textSize="@dimen/text_size_12" />
+
+        <View
+            android:id="@+id/view_line_date"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_10"
+            android:layout_toEndOf="@+id/date_txt_view"
+            android:background="@color/color_date_view_line" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/time_txt_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_10"
+            android:layout_toEndOf="@+id/view_line_date"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:text="09:30 am"
+            android:textColor="@color/color_date_text"
+            android:textSize="@dimen/text_size_12" />
+
+        <ImageView
+            android:id="@+id/date_picker"
+            android:layout_width="@dimen/margin_20"
+            android:layout_height="@dimen/margin_20"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/margin_10"
+            android:contentDescription="@string/image_content_description"
+            app:srcCompat="@drawable/ic_date_picker" />
+
+
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/schedule_meeting_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_36"
+        android:layout_marginStart="@dimen/margin_40"
+        android:layout_marginTop="@dimen/margin_30"
+        android:layout_marginEnd="@dimen/margin_36"
+        android:background="@drawable/blue_rounded_corners_meet_link_dialog"
+        android:fontFamily="@font/sf_ui_display_semi_bold"
+        android:text="@string/schedule_meeting"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_schedule_meet_time" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

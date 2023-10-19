@@ -57,6 +57,9 @@ object GetMsgNotificationUtils {
             }
         else if (message.isMessageRecalled())
             deleted_message
+        else if (MessageType.MEET == message.messageType) {
+            return  Constants.MEET_SCHEDULED_ON +" "+ChatUserTimeUtils.scheduledDateTimeFormat(message.meetingChatMessage.scheduledDateTime.toLong())
+        }
         else getMediaMessageContent(context, message)
 
     }

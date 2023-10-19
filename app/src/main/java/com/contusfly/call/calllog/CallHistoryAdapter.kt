@@ -2,6 +2,7 @@ package com.contusfly.call.calllog
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -216,11 +217,16 @@ class CallHistoryAdapter(val context: Context, private val callLogsList: ArrayLi
      * @return list position
      */
     fun getCallLogAtPosition(position: Int): CallLog? {
-        return if(callLogsList.size > position) {
-            callLogsList[position]
-        } else{
-            null
+        try {
+            return if(callLogsList.size > position) {
+                callLogsList[position]
+            } else {
+                null
+            }
+        } catch(e:Exception){
+           Log.e(TAG,e.toString())
         }
+       return null
     }
 
     /**

@@ -10,6 +10,8 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.contusfly.R
+import com.contusfly.activities.parent.ChatParent
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.rockerhieu.emojicon.EmojiconsFragment
 
 /**
@@ -42,7 +44,10 @@ class EmojiHandler(context: AppCompatActivity) {
     /**
      * Instance of the emoji fragment view
      */
-    private val fragmentCView: View
+     val fragmentCView: View
+
+    private var scheduleMeetFabIcon : FloatingActionButton?=null
+
 
     /**
      * Icon for getting Emoji keypad
@@ -100,6 +105,7 @@ class EmojiHandler(context: AppCompatActivity) {
             handler.postDelayed({ viewEmoji() }, 100)
             icon!!.setImageResource(R.drawable.ic_input_keypad)
         } else {
+            scheduleFabIconPosMaintain(false)
             hideEmoji()
             emojiconEditText.requestFocus()
             inputManager.showSoftInput(emojiconEditText, 0)
@@ -119,7 +125,30 @@ class EmojiHandler(context: AppCompatActivity) {
         isEmojiShowing = true
         mEmojiKeyBoardListener?.onKeyBoardStateChanged(isEmojiShowing)
         fragmentCView.visibility = View.VISIBLE
+        scheduleFabIconPosMaintain(true)
+
     }
+
+    private fun scheduleFabIconPosMaintain(emojiShowStatus: Boolean) {
+        if(scheduleMeetFabIcon!=null) {
+            val targetX = scheduleMeetFabIcon!!.x
+
+            var targetY =
+                if (emojiShowStatus) (scheduleMeetFabIcon!!.y - 700) else (scheduleMeetFabIcon!!.y + 700)
+
+            if(targetY<= 0 ){
+                targetY = ChatParent.meetFabIconRetainPosition
+            }
+
+            scheduleMeetFabIcon!!.animate()
+                .x(targetX)
+                .y(targetY)
+                .setDuration(0)
+                .start()
+        }
+    }
+
+
 
     /**
      * View the emoji keypad
@@ -142,6 +171,7 @@ class EmojiHandler(context: AppCompatActivity) {
     fun attachKeyboardListeners(yourEditText: EditText) {
         yourEditText.setOnClickListener { _: View? ->
             if (isEmojiShowing) {
+                scheduleFabIconPosMaintain(false)
                 fragmentCView.visibility = View.GONE
                 if (isBlackTheme)
                     icon!!.setImageResource(R.drawable.ic_emoji_black)
@@ -186,6 +216,7 @@ class EmojiHandler(context: AppCompatActivity) {
      * @param context Instance of the Activity
      */
     init {
+        scheduleMeetFabIcon = context.findViewById(R.id.fab_add_schedule_meet)
         fragmentCView = context.findViewById(R.id.emojicons)
         fragmentManager = context.supportFragmentManager
     }

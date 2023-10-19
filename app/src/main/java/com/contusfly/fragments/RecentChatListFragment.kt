@@ -141,6 +141,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        LogMessage.d(TAG, "#dashboard #recent onViewCreated")
         recentChatBinding.itemsSwipeToRefresh.isEnabled=false
         recentChatBinding.itemsSwipeToRefresh.isRefreshing=false
         chatTagAdapterinitialize()
@@ -149,12 +150,11 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     fun getChatTagData() {
-
         viewModel.getChatTagData()
     }
 
     fun getRecentChatData() {
-
+        LogMessage.d(TAG, "#dashboard #recent getRecentChatData getInitialChatList")
         viewModel.getInitialChatList()
     }
 
@@ -323,11 +323,11 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         })
 
         viewModel.recentChatList.observe(viewLifecycleOwner, Observer {
-            LogMessage.i(TAG, "updateRecentChatList observed")
+            LogMessage.i(TAG, "#recent recentChatList observed")
         })
 
         viewModel.recentChatDiffResult.observe(viewLifecycleOwner, Observer {
-            LogMessage.i(TAG, "recentChatDiffResult observed")
+            LogMessage.i(TAG, "#dashboard #recent recentChatDiffResult observed")
             initRecentChatAdapter(it)
         })
 
@@ -337,6 +337,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         }
 
         viewModel.notifyRecentChatInserted.observe(viewLifecycleOwner) {
+            LogMessage.d(TAG, "#recent notifyRecentChatInserted")
             mAdapter.notifyItemRangeInserted(it.first, it.second)
         }
 
@@ -345,7 +346,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         })
 
         viewModel.recentChat.observe(viewLifecycleOwner, Observer { recentPair ->
-            LogMessage.i(TAG, "recentChat observed")
+            LogMessage.i(TAG, "#recent recentChat recentPair observed")
             /**
              * Here we're passing pinned chat count (viewModel.recentPinnedCount) as index value
              * because if new message is received it should placed under pinned chat list
@@ -356,6 +357,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
             }
             if (recentPair.second.isValidIndex()) {
                 val bundle = Bundle()
+                LogMessage.i(TAG, "#recent recentPair isValidIndex")
                 when (recentPair.first) {
                     RecentChatEvent.MESSAGE_RECEIVED, RecentChatEvent.MESSAGE_UPDATED, RecentChatEvent.ARCHIVE_EVENT -> {
                         bundle.putInt(Constants.NOTIFY_MESSAGE, 1)
@@ -410,7 +412,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         viewModel.showMessage.observe(viewLifecycleOwner, Observer { showMessage(it) })
 
         viewModel.archiveChatStatus.observe(viewLifecycleOwner) {
-            LogMessage.i(TAG, "archiveChatStatus observed")
+            LogMessage.i(TAG, "#recent archiveChatStatus observed")
             mAdapter.setArchiveStatus(it)
         }
 
@@ -561,6 +563,8 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         requireContext().launchActivity<ChatActivity> {
             putExtra(LibConstants.JID, mRecentSearchList[(activity as DashboardActivity).searchItemClickedPosition].jid.returnEmptyIfNull())
             putExtra(Constants.CHAT_TYPE, mRecentSearchList[(activity as DashboardActivity).searchItemClickedPosition].chatType)
+            putExtra(Constants.MESSAGE_ID, mRecentSearchList[(activity as DashboardActivity).searchItemClickedPosition].mid)
+
         }
     }
 
@@ -593,6 +597,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     private fun updateRecentChatAdapter(jid: String, payloads: Bundle? = null) {
+        LogMessage.v(TAG, "#chat #group #recent updateRecentChatAdapter jid:$jid")
         val index =
             viewModel.recentChatList.value?.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == jid }
         if (index?.isValidIndex() == true && jid.isNotEmpty()) {
@@ -607,6 +612,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
 
 
     private fun updateArchiveChatsStatus(jid: String, archiveStatus: Boolean) {
+        LogMessage.v(TAG, "#chat #group #recent updateArchiveChatsStatus jid:$jid")
         if (isListTypeRecentChat()) {
             if (archiveStatus) {
                 val index =
@@ -680,6 +686,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     private fun getRecentChatFor(jId: String, @RecentChatEvent event: String) {
+        LogMessage.v(TAG, "#chat #group #recent getRecentChatOf jId:$jId event:$event")
         viewModel.getRecentChatOfUser(jId, event)
     }
 
@@ -727,6 +734,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     fun onTypingAndGoneStatusUpdate(singleOrGroupJid: String) {
+        LogMessage.v(TAG, "#chat #group #recent onTypingAndGoneStatusUpdate jid:$singleOrGroupJid")
         val bundle = Bundle()
         bundle.putInt(Constants.NOTIFY_MSG_TYPING, 3)
         updateRecentChatAdapter(singleOrGroupJid, bundle)
@@ -739,10 +747,12 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
 
     private fun onProfileUpdated(groupId: String) =
         if (isListTypeRecentChat()) {
+            LogMessage.v(TAG, "#chat #group #recent onProfileUpdated groupId:$groupId")
             val bundle = Bundle()
             bundle.putInt(Constants.NOTIFY_PROFILE_ICON, 2)
             updateRecentChatAdapter(groupId, bundle)
         } else {
+            LogMessage.v(TAG, "#chat #group #recent onProfileUpdated search")
             updateSearchAdapter(groupId)
             updateRecentChatAdapter(groupId)
         }
@@ -769,6 +779,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     private fun initRecentChatAdapter(diffUtilResult: DiffUtil.DiffResult?) {
+        LogMessage.i(TAG, "#recent  initRecentChatAdapter diffUtilResult:$diffUtilResult")
         if (diffUtilResult == null) {
             mAdapter.notifyDataSetChanged()
         } else {
@@ -865,6 +876,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         recyclerView.addOnScrollListener(object :
             RecentChatPaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
+                LogMessage.d(TAG, "#recent RecentChatPaginationScrollListener loadMoreItems")
                 if (searchKey.isNotBlank()) {
                     viewModel.filterContactsList(searchKey, chatJidList)
                 } else {

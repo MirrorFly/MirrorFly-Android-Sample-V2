@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewStub
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
@@ -143,6 +144,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
             MessageType.TEXT -> loadTextItem(message)
             MessageType.LOCATION -> loadLocation(message)
             MessageType.CONTACT -> loadContactItem(message)
+            MessageType.MEET -> loadMeetItem(message)
             else -> loadMediaMessageView(message, messageType)
         }
     }
@@ -178,6 +180,44 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         } else {
             txtMessage.text = getSpannedText(message.getMessageTextContent())
         }
+
+    }
+
+    private fun loadMeetItem(message: ChatMessage?) {
+        val stub = findViewById<ViewStub>(R.id.meet_item)
+        val view = stub.inflate()
+        val txtTime = view.findViewById<TextView>(R.id.txt_send_txt_time)
+        imgChatStatus = view.findViewById(R.id.img_txt_status)
+        imgFav = view.findViewById(R.id.ic_star)
+        val scheduleLinkView = view.findViewById<LinearLayout>(R.id.schedule_meet_link_view)
+        val scheduleMeetLogo = view.findViewById<ImageView>(R.id.schedule_meet_link_logo)
+        val scheduledDateTextView = view.findViewById<AppCompatTextView>(R.id.scheduled_date_time_txt_view)
+        val meetTxtMessage = view.findViewById<TextView>(R.id.txt_send_chat)
+        val meetReplyLayout = view.findViewById<View>(R.id.view_text_sent_reply)
+        val txtUsername: CustomTextView = meetReplyLayout.findViewById(R.id.text_reply_user_name)
+        val imgIcon: AppCompatImageView = meetReplyLayout.findViewById(R.id.msg_item_icon)
+        val txtChat: MessageTextView = meetReplyLayout.findViewById(R.id.text_reply_chat)
+        val imgImageVideo: AppCompatImageView = meetReplyLayout.findViewById(R.id.msg_image_video)
+        ChatMessageUtils.setFavouriteStatus(imgFav, message!!.isMessageStarred)
+        if (message.isThisAReplyMessage)
+            replyView(meetReplyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
+        else
+            meetReplyLayout.gone()
+        loadMessageTime(message, txtTime)
+        ChatMessageUtils.setChatStatus(imgChatStatus, message.messageStatus)
+        meetTxtMessage.maxWidth =
+            SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
+        meetTxtMessage.text = getSpannedText(message.meetingChatMessage.link)
+        meetTxtMessage.setTextColor(ContextCompat.getColor(this, R.color.light_blue))
+        meetTxtMessage.setLinkTextColor(ContextCompat.getColor(this, R.color.light_blue))
+        scheduledDateTextView.text = ChatUserTimeUtils.scheduledDateTimeFormat(message.meetingChatMessage.scheduledDateTime.toLong())
+        val screenWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
+        val lp = LinearLayout.LayoutParams(
+            (screenWidth + 20),
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ) //20 is nothing but text message margin Start and End value in XML
+        scheduleLinkView.layoutParams = lp
+        scheduleMeetLogo.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.mirrorfly_icon)!!)
 
     }
 

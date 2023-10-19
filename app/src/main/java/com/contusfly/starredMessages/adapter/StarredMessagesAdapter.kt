@@ -32,6 +32,8 @@ import com.contusfly.adapters.ChatAdapter.Companion.TYPE_IMAGE_RECEIVER
 import com.contusfly.adapters.ChatAdapter.Companion.TYPE_IMAGE_SENDER
 import com.contusfly.adapters.ChatAdapter.Companion.TYPE_LOCATION_RECEIVER
 import com.contusfly.adapters.ChatAdapter.Companion.TYPE_LOCATION_SENDER
+import com.contusfly.adapters.ChatAdapter.Companion.TYPE_MEET_RECEIVER
+import com.contusfly.adapters.ChatAdapter.Companion.TYPE_MEET_SENDER
 import com.contusfly.adapters.ChatAdapter.Companion.TYPE_TEXT_RECEIVER
 import com.contusfly.adapters.ChatAdapter.Companion.TYPE_TEXT_SENDER
 import com.contusfly.adapters.ChatAdapter.Companion.TYPE_VIDEO_RECEIVER
@@ -219,6 +221,18 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     showSenderNameIfGroupChat(holder, position)
                     getStarredTextViewReceiver(holder, item, position)
                 }
+
+                TYPE_MEET_SENDER->{
+                    showSenderNameIfGroupChat(holder, position)
+                    getStarredMeetViewSender(holder, item, position)
+
+                }
+                TYPE_MEET_RECEIVER->{
+                    showSenderNameIfGroupChat(holder, position)
+                    getStarredMeetViewReceiver(holder, item, position)
+
+                }
+
                 TYPE_IMAGE_SENDER -> {
                     showSenderNameIfGroupChat(holder, position)
                     getStarredImageViewSender(holder, item, position)
@@ -375,6 +389,69 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         }
     }
 
+    private fun getStarredMeetViewSender(holder: RecyclerView.ViewHolder, item: ChatMessage, position: Int) {
+        try {
+            val starredMeetSentViewHolder: MeetSentViewHolder = holder as MeetSentViewHolder
+            setHeader(holder, SENDER_HEADER, item)
+            val time: String = getChatMsgTime(item)!!
+            starredMeetSentViewHolder.txtChatTime.text = time
+            starredMeetSentViewHolder.txtChatTime
+                .setTextColor(ContextCompat.getColor(context!!, R.color.color_sent_message_time))
+            starredMeetSentViewHolder.txtChatTime.visibility = View.VISIBLE
+            val msg = item.meetingChatMessage.link
+            Linkify.addLinks(starredMeetSentViewHolder.txtChatSender, Linkify.ALL)
+            starredMeetSentViewHolder.txtChatSender.setTextColor(ContextCompat.getColor(context!!, R.color.color_black))
+            starredMeetSentViewHolder.txtChatSender.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
+            setStatus(item, starredMeetSentViewHolder.imgChatStatus)
+            starredItemClick(starredMeetSentViewHolder.viewRowItem, item, position)
+            setListenersForSenderTextMessages(starredMeetSentViewHolder, item, position)
+            senderItemClick(starredMeetSentViewHolder.viewRowItem, item, position)
+            replyViewUtils!!.showSenderReplyWindow(starredMeetSentViewHolder, item, context!!)
+            setSelectedChatItem(starredMeetSentViewHolder.itemView, item, starredMessageMessages, context)
+            with(starredMeetSentViewHolder.txtChatSender) {
+                setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
+                setTextKeepState(getSpannedText(msg))
+                setMeetLinkView(
+                    starredMeetSentViewHolder.txtChatSender,
+                    starredMeetSentViewHolder.scheduleMeetLinkView,
+                    starredMeetSentViewHolder.scheduleMeetLinkLogo,
+                )
+                isClickable = false
+                isLongClickable = false
+                setSearchTextHighlight(starredMeetSentViewHolder.txtChatSender, getSpannedText(msg))
+                holder.scheduleDateAndTime.text = ChatUserTimeUtils.scheduledDateTimeFormat(item.meetingChatMessage.scheduledDateTime.toLong())
+
+            }
+            starredMeetSentViewHolder.imageStar.visibility = View.VISIBLE
+            if (position == starredMessageData.size - 1) {
+                starredMeetSentViewHolder.viewDiver?.visibility = View.GONE
+            }else{
+                starredMeetSentViewHolder.viewDiver?.visibility = View.VISIBLE
+            }
+        } catch (e: java.lang.Exception) {
+            LogMessage.e(TAG, e)
+        }
+    }
+
+    private fun setMeetLinkView(txtChat: TextView, scheduledMeetLinkView: LinearLayout, scheduledMeetLinkLogo: ImageView) {
+        txtChat.autoLinkMask = Linkify.ALL
+        txtChat.linksClickable = false
+        val screenWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
+        val meetLinkText = txtChat.text
+        LogMessage.d(TAG, "Scheduled meet Link length sampleLink: $meetLinkText")
+
+        txtChat.setTextColor(ContextCompat.getColor(context!!, R.color.light_blue))
+        txtChat.setLinkTextColor(ContextCompat.getColor(context!!, R.color.light_blue))
+        scheduledMeetLinkView.show()
+        val lp = LinearLayout.LayoutParams(
+            (screenWidth + 20),
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ) //20 is nothing but text message margin Start and End value in XML
+        scheduledMeetLinkView.layoutParams = lp
+        scheduledMeetLinkLogo.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.mirrorfly_icon)!!)
+    }
+
+
     private fun setJoinLinkView(txtChat: TextView, joinLinkView: LinearLayout, joinLinkLogo: ImageView,originalMsg: String) {
         txtChat.autoLinkMask = Linkify.ALL
         txtChat.linksClickable = false
@@ -401,7 +478,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             LinearLayout.LayoutParams.WRAP_CONTENT
         ) //20 is nothing but text message margin Start and End value in XML
         joinLinkView.layoutParams = lp
-        joinLinkLogo.setImageDrawable(ContextCompat.getDrawable(context!!, R.mipmap.ic_launcher)!!)
+        joinLinkLogo.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.mirrorfly_icon)!!)
     }
 
     /**
@@ -457,6 +534,46 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             starredTxtReceiverViewHolder.viewDiver?.visibility = View.GONE
         }else{
             starredTxtReceiverViewHolder.viewDiver?.visibility = View.VISIBLE
+        }
+    }
+
+
+    private fun getStarredMeetViewReceiver(holder: RecyclerView.ViewHolder, item: ChatMessage, position: Int) {
+        val meetReceiverViewHolder = holder as MeetReceivedViewHolder
+        setHeader(holder, RECEIVER_HEADER, item)
+        val time: String = getChatMsgTime(item)!!
+        meetReceiverViewHolder.txtChatRevTime.text = time
+        meetReceiverViewHolder.txtChatRevTime
+            .setTextColor(ContextCompat.getColor(context!!, R.color.color_chat_msg_received_time))
+        val msg = item.meetingChatMessage.link
+        meetReceiverViewHolder.txtChatReceiver.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
+        meetReceiverViewHolder.txtChatReceiver.setTextColor(ContextCompat.getColor(context!!, R.color.color_black))
+        Linkify.addLinks(meetReceiverViewHolder.txtChatReceiver, Linkify.ALL)
+        replyViewUtils!!.showReceiverReplyWindow(meetReceiverViewHolder, item, context!!)
+        starredItemClick(meetReceiverViewHolder.txtChatReceiver, item, position)
+        setListenersForReceiverTextMessages(meetReceiverViewHolder, item, position)
+        receiverItemClick(meetReceiverViewHolder.viewRowItem, item, position)
+        setSelectedChatItem(meetReceiverViewHolder.itemView, item, starredMessageMessages, context)
+        with(meetReceiverViewHolder.txtChatReceiver) {
+            setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
+            setTextKeepState(getSpannedText(msg))
+            setMeetLinkView(
+                meetReceiverViewHolder.txtChatReceiver,
+                meetReceiverViewHolder.scheduleMeetLinkView,
+                meetReceiverViewHolder.scheduleMeetLinkLogo,
+            )
+            isClickable = false
+            isLongClickable = false
+            setSearchTextHighlight(meetReceiverViewHolder.txtChatReceiver, getSpannedText(msg))
+            holder.scheduleDateAndTime.text = ChatUserTimeUtils.scheduledDateTimeFormat(item.meetingChatMessage.scheduledDateTime.toLong())
+        }
+        meetReceiverViewHolder.imgReceivedStar.visibility = View.VISIBLE
+        meetReceiverViewHolder.imgForwardMeet?.visibility=View.GONE
+
+        if (position == starredMessageData.size - 1) {
+            meetReceiverViewHolder.viewDiver?.visibility = View.GONE
+        }else{
+            meetReceiverViewHolder.viewDiver?.visibility = View.VISIBLE
         }
     }
 
@@ -1231,6 +1348,13 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             false
         }
     }
+    private fun setListenersForSenderTextMessages(meetSendViewHolder: MeetSentViewHolder, item: ChatMessage, position: Int) {
+        meetSendViewHolder.replyMessageSentView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
+        meetSendViewHolder.replyMessageSentView?.setOnLongClickListener { _ ->
+            if (listener != null) listener!!.onSenderItemLongClick(item, position)
+            false
+        }
+    }
 
     /**
      * set single & long click Listeners For Sender Side conversation
@@ -1269,6 +1393,13 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     private fun setListenersForReceiverTextMessages(txtReceiverViewHolder: TextReceivedViewHolder, item: ChatMessage, position: Int) {
         txtReceiverViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
         txtReceiverViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
+            if (listener != null) listener!!.onSenderItemLongClick(item, position)
+            false
+        }
+    }
+    private fun setListenersForReceiverTextMessages(meetReceivedViewHolder: MeetReceivedViewHolder, item: ChatMessage, position: Int) {
+        meetReceivedViewHolder.replyMessageReceivedView?.setOnClickListener { _ -> if (listener != null) listener!!.onReplyMessageClick(item.messageId) }
+        meetReceivedViewHolder.replyMessageReceivedView?.setOnLongClickListener { _ ->
             if (listener != null) listener!!.onSenderItemLongClick(item, position)
             false
         }
@@ -1392,7 +1523,26 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     override fun setMediaCaption(mediStatus: MediaCaption) {
-        //Not implement
+        try {
+            if (mediStatus.searchEnabled && mediStatus.searchKey.isNotEmpty()) {
+                val startIndex = mediStatus.htmlText.toString().checkIndexes(mediStatus.searchKey)
+                val stopIndex = startIndex + mediStatus.searchKey.length
+                EmojiUtils.setMediaTextHighLightSearchedForMention(
+                    context,
+                    mediStatus.captionView,
+                    mediStatus.htmlText.toString(),
+                    startIndex,
+                    stopIndex,
+                    mediStatus.mentionedUserName
+                )
+            } else {
+                mediStatus.captionView.setBackgroundColor(context!!.color(android.R.color.transparent))
+                mediStatus.captionView.setTextKeepState(mediStatus.htmlText)
+            }
+
+        } catch (e: Exception) {
+            LogMessage.e("Error", e.toString())
+        }
     }
 
     override fun setMediaDuration(txtSendDuration: TextView?, fileStatus: Int, starredMessageItem: ChatMessage?, imgChatType: ImageView?) {

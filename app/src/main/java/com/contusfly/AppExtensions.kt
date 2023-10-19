@@ -401,6 +401,7 @@ fun ChatMessage.getSenderJid(): String =
     if (isGroupMessage()) chatUserJid else senderUserJid
 
 fun ChatMessage.isTextMessage() = messageType == com.mirrorflysdk.flycommons.models.MessageType.TEXT
+fun ChatMessage.isMeetMessage() = messageType == com.mirrorflysdk.flycommons.models.MessageType.MEET
 fun ChatMessage.isAudioMessage() =
     messageType == com.mirrorflysdk.flycommons.models.MessageType.AUDIO
 

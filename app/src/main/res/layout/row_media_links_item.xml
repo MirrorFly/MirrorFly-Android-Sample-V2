@@ -99,6 +99,18 @@
             android:background="?attr/selectableItemBackground"
             app:layout_constraintTop_toBottomOf="@+id/layout_link">
 
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_meet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_schedule_link_tab" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/text_link_content"
                 android:layout_width="0dp"
@@ -116,7 +128,7 @@
                 android:textSize="@dimen/text_size_13"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/image_link_navigation"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_meet"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="iPhone 12 extreme water test" />
 

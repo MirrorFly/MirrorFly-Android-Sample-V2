@@ -24,7 +24,8 @@
         android:layout_width="@dimen/margin_180"
         android:layout_height="@dimen/margin_180"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_90">
+        android:layout_marginTop="@dimen/margin_90"
+        android:visibility="gone">
 
         <com.contus.call.RippleBackgroundView
             android:id="@+id/ripple_bg"
@@ -92,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignWithParentIfMissing="true"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -142,16 +143,25 @@
                     android:textColor="@color/color_white"
                     android:textSize="@dimen/text_size_14" />
 
-
+                <View
+                    android:id="@+id/single_user_view_speaking_indicator_helper"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_10"
+                    android:padding="@dimen/margin_8"
+                    android:visibility="gone" />
 
                 <com.contus.call.SpeakingIndicatorView
                     android:id="@+id/view_speaking_indicator"
                     android:layout_width="@dimen/margin_41"
                     android:layout_height="@dimen/margin_41"
-                    android:layout_alignParentTop="true"
+                    android:layout_below="@+id/single_user_view_speaking_indicator_helper"
                     android:layout_alignParentEnd="true"
                     android:padding="@dimen/margin_8"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
@@ -241,8 +251,8 @@
         android:layout_marginEnd="@dimen/margin_8"
         android:layout_marginBottom="@dimen/margin_8"
         android:overScrollMode="never"
-        android:visibility="gone"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/call_users_recyclerview"

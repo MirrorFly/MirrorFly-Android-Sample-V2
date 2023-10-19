@@ -1,10 +1,7 @@
 package com.contusfly.chat.reply
 
 import android.content.Context
-import android.os.Build
-import android.text.Html
-import android.text.SpannableStringBuilder
-import android.text.Spanned
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.*
@@ -14,7 +11,7 @@ import com.contusfly.chat.MapUtils
 import com.contusfly.utils.*
 import com.contusfly.utils.ChatUtils.setReplyViewMessageFormat
 import com.contusfly.views.CustomTextView
-import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.api.*
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ReplyParentChatMessage
 
@@ -33,6 +30,7 @@ class ReplyView {
         with(replyMessageViewHolder) {
             showViews(imgSenderMessageType!!)
             makeViewsGone(imgSenderImageVideoPreview!!)
+            msgMeetReplyLayout?.visibility = View.GONE
             if (replyMessage == null)
                 makeViewsGone(txtChatReplyUserName!!)
             else {
@@ -41,7 +39,9 @@ class ReplyView {
                 txtChatReplyUserName?.text = replyMessage.getSenderName()
             }
         }
-        val replyMsg = if (replyMessage == null) null else FlyMessenger.getMessageOfId(replyMessage.messageId)
+
+         val replyMsg = if (replyMessage == null) null else FlyMessenger.getMessageOfId(replyMessage.messageId)
+
         if (replyMessage == null || replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted() || replyMsg?.isMessageRecalled == true || replyMsg?.isMessageDeleted == true)
             with(replyMessageViewHolder) {
                 txtChatReply?.text = context.getString(R.string.recalled_message_not_available)
@@ -102,6 +102,17 @@ class ReplyView {
                         }
                     }
                 }
+                MessageType.MEET -> {
+                    with(replyMessageViewHolder) {
+                        val meetMessage = ChatUserTimeUtils.scheduledDateTimeFormat(replyMessage.meetingChatMessage.scheduledDateTime.toLong())
+                        txtChatReply?.text = meetMessage
+                        imgSenderMessageType?.setImageResource(R.drawable.ic_reply_meet)
+                        imgSenderImageVideoPreview?.gone()
+                        msgMeetReplyLayout?.show()
+                        msgImageMeet?.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.mirrorfly_icon)!!)
+
+                    }
+                }
                 else -> {
                 /*No Implementation needed*/
                 }
@@ -133,6 +144,7 @@ class ReplyView {
         with(replyMessageViewHolder) {
             showViews(imgReceivedReplyMessageType!!)
             makeViewsGone(imgReceivedReplyImageVideoPreview!!)
+            msgMeetReplyLayout?.visibility = View.GONE
             if (replyMessage == null)
                 makeViewsGone(txtChatReceivedReplyUserName!!)
             else {
@@ -200,6 +212,19 @@ class ReplyView {
                             imgReceivedReplyImageVideoPreview.show()
                             ImageFileUtils.setReceiverFileImage(imgReceivedReplyImageVideoPreview, replyMessage.getMediaFileName(context))
                         }
+                    }
+                }
+                MessageType.MEET -> {
+                    with(replyMessageViewHolder) {
+                        val meetMessage = ChatUserTimeUtils.scheduledDateTimeFormat(replyMessage.meetingChatMessage.scheduledDateTime.toLong())
+                        txtChatReceivedReply?.text = meetMessage
+                        imgReceivedReplyMessageType?.setImageResource(R.drawable.ic_reply_meet)
+                        val tintColor = ContextCompat.getColor(context, R.color.meet_reply_receiver_tint_color)
+                        imgReceivedReplyMessageType?.setColorFilter(tintColor)
+                        imgReceivedReplyImageVideoPreview?.gone()
+                        msgMeetReplyLayout?.show()
+                        msgImageMeet?.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.mirrorfly_icon)!!)
+
                     }
                 }
                 else -> {

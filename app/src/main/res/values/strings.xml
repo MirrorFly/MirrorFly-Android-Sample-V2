@@ -993,6 +993,11 @@
     <string name="generate_meeting_link">Generate Meeting Link</string>
     <string name="anyone_with_mirror_fly_can_join_call">Anyone with Mirrorfly can use this link to join this meet. Only share it with people you trust</string>
     <string name="meet_link_will_be_generated_here">meet link will be generated here</string>
+    <string name="instant_meet">Instant Meet</string>
+    <string name="copy_the_link">Copy the link or click to join the meeting</string>
+    <string name="schedule_meeting">Schedule Meeting</string>
+    <string name="schedule_validation_text">Please check your selected date and time</string>
+    <string name="schedule_meet_link_generate_preview_loader">Loading…</string>
     <string name="join_meeting">Join Meeting</string>
     <string name="share_call_link">Share</string>
     <string name="invite_contacts_call_link">Invite Contacts</string>

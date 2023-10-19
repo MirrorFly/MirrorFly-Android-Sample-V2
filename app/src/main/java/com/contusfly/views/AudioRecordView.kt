@@ -10,6 +10,7 @@ import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
 import com.contusfly.R
+import com.contusfly.TAG
 import com.contusfly.activities.parent.ChatParent
 import com.contusfly.utils.AudioRecorder
 import com.contusfly.utils.Constants
@@ -85,6 +86,8 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
 
     private lateinit var focusChangeListener: AudioManager.OnAudioFocusChangeListener
 
+    private var isPausedByHiddenAction = false
+
     fun setRecordingListener(recordingListener: RecordingListener?) {
         this.recordingListener = recordingListener
     }
@@ -102,7 +105,10 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
 
         chatParent.voiceAttachment.setOnClickListener {
             chatParent.chatMessageEditText.text?.clear()
-            startRecordClickListener()
+            chatParent.hideKeyboard()
+            Handler(Looper.getMainLooper()).postDelayed(
+                {startRecordClickListener()},100
+            )
         }
 
         chatParent.imageViewAudio.setOnClickListener {
@@ -242,10 +248,8 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         }
     }
 
-    private fun startRecord() {
-        isRecordingStarted = true
-        recordingListener?.onRecordingStarted()
-        stopTrackingAction = false
+    private fun hideViewForRecording(){
+        LogMessage.d(TAG,"#record hideViewForRecording  ")
         chatParent.smiley.visibility = View.GONE
         chatParent.imgSend.visibility = View.GONE
         chatParent.chatMessageEditText.visibility = View.GONE
@@ -253,6 +257,13 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         chatParent.voiceAttachment.visibility = View.GONE
         chatParent.layoutViewAudio.visibility = View.VISIBLE
         chatParent.viewAudioRecordSpace.visibility = View.VISIBLE
+    }
+
+    private fun startRecord() {
+        isRecordingStarted = true
+        recordingListener?.onRecordingStarted()
+        stopTrackingAction = false
+        hideViewForRecording()
         chatParent.textAudioRecordTimer.visibility = View.VISIBLE
         chatParent.textAudioSlideToCancel.visibility = View.VISIBLE
         if (!::audioTimer.isInitialized) {
@@ -373,8 +384,7 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         }
     }
 
-    private fun locked() {
-        stopTrackingAction = true
+    private fun showViewsToSend(){
         chatParent.textAudioRecordCancel.visibility = View.VISIBLE
         chatParent.textAudioSlideToCancel.visibility = View.GONE
         chatParent.imageAudioRecord.visibility = View.VISIBLE
@@ -382,6 +392,12 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         chatParent.imgSend.visibility = View.VISIBLE
         chatParent.imgSend.setImageResource(R.drawable.ic_send_active)
         chatParent.imgSend.isEnabled = true
+    }
+
+    private fun locked() {
+        LogMessage.d(TAG,"#record locked: ")
+        stopTrackingAction = true
+        showViewsToSend()
         stopRecording(RecordingBehaviour.PAUSED)
         isLocked = true
     }
@@ -400,18 +416,37 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
     fun sendRecording(){
         isLocked = false
         stopRecording(RecordingBehaviour.LOCK_DONE)
+        isPausedByHiddenAction = false
     }
 
-    fun pauseOngoingRecording(){
+    fun pauseOngoingRecording(activityHidden:Boolean = false):Boolean{
         if (!isLocked && !isAudioRecordingStopped) {
             locked()
             chatParent.imageViewAudio.translationY = 0f
+            if(activityHidden)
+                isPausedByHiddenAction = true
+            return  true
+        }
+        if(isLocked && isAudioRecordingStopped){
+            //case when user does not send the file first time and goes to background and comes online again
+            return  true
+        }
+        return false
+    }
+
+    fun showPausedOngoingRecording(){
+        LogMessage.d(TAG,"#record showPausedOngoingRecording isPausedByHiddenAction:$isPausedByHiddenAction isAudioRecordingStopped:$isAudioRecordingStopped")
+        LogMessage.d(TAG,"#record showPausedOngoingRecording isLocked:$isLocked ")
+        if(isPausedByHiddenAction && isAudioRecordingStopped) {
+            LogMessage.d(TAG, "#record show below views ")
+            locked()
         }
     }
 
     fun cancelRecording(){
         isLocked = false
         stopRecording(RecordingBehaviour.CANCELED)
+        isPausedByHiddenAction = false
     }
 
     fun toPauseMediaPlayer() {

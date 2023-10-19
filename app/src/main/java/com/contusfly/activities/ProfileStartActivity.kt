@@ -515,7 +515,7 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
         isUpdateClickedOnStart = true
         if (profileStartBinding.editProfileName.text.toString().trim().isEmpty())
             CustomToast.show(this, getString(R.string.error_enter_user_name))
-        else if (!profileNameCharValidation(profileStartBinding.editProfileName.text.toString()))
+        else if (!profileNameCharValidation(profileStartBinding.editProfileName.text.toString().trim()))
             CustomToast.show(this, getString(R.string.error_username_too_short))
         else if (profileStartBinding.textEmail.text.toString().trim().isEmpty())
             CustomToast.show(this, getString(R.string.msg_enter_mail))
@@ -659,7 +659,6 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
     }
 
     private fun updateProfilePic(mFileTemp: File) {
-
         updateMyProfileImage(mFileTemp, FlyCallback { isSuccess: Boolean, _: Throwable?, data: HashMap<String?, Any?>? ->
             if (isSuccess) {
                 val profile = data?.get("data") as Profile
@@ -713,7 +712,7 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
     }
 
     private fun updateUserName() {
-        profileName = profileStartBinding.editProfileName.text.toString()
+        profileName = profileStartBinding.editProfileName.text.toString().trim()
         if (Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME)) != profileName) {
             UserProfileUtils().changeUpdateStatus(intent, profileStartBinding.textSync, this)
             showProfilePicInitials()
@@ -786,7 +785,7 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
                  */
                 if (profileStartBinding.editProfileName.text.toString().isNotEmpty() && mobileNumber!!.isNotEmpty() && mStatus!!.isNotEmpty() &&
                         profileStartBinding.textEmail.text.toString().isNotEmpty()) {
-                    profileName = profileStartBinding.editProfileName.text.toString()
+                    profileName = profileStartBinding.editProfileName.text.toString().trim()
                     setUserProfileName(profileName!!)
                     updateProfile()
                 } else {
@@ -842,7 +841,7 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
 
     private fun showProfilePicInitials() {
         if (userImgUrl.isEmpty()) {
-            profilePicture!!.setImageDrawable(setDrawable!!.setDrawableForProfile(profileName))
+            profilePicture!!.setImageDrawable(setDrawable!!.setDrawableForProfile(profileName?.trim()))
         }
     }
 
