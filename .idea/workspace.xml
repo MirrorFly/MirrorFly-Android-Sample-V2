@@ -82,7 +82,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[13676498490006B]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/user/.android/avd/Pixel_5_API_29.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -224,7 +224,14 @@
       <option name="project" value="LOCAL" />
       <updated>1697530833721</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="SDK new version V7.10.0 updated">
+      <created>1703251814031</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1703251814031</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -242,6 +249,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Release 7.3.2" />
     <MESSAGE value="Release 7.8.2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Release 7.8.2" />
+    <MESSAGE value="SDK new version V7.10.0 updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="SDK new version V7.10.0 updated" />
   </component>
 </project>
