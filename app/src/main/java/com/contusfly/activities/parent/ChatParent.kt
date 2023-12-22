@@ -24,6 +24,7 @@ import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.*
+import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.BackgroundColorSpan
 import android.text.style.ClickableSpan
@@ -61,11 +62,9 @@ import com.contusfly.chat.ReplyViewHandler
 import com.contusfly.constants.MobileApplication
 import com.contusfly.databinding.ActivityChatBinding
 import com.contusfly.di.factory.AppViewModelFactory
-import com.contusfly.groupmention.MentionEditGroupText
+import com.contusfly.fragments.ScheduleBottomSheetFragment
+import com.contusfly.groupmention.*
 import com.contusfly.groupmention.MentionUtils
-import com.contusfly.groupmention.OnMentionEventListener
-import com.contusfly.groupmention.TextUIConfig
-import com.contusfly.groupmention.UserMentionConfig
 import com.contusfly.helpers.MessagePaginationScrollListener
 import com.contusfly.interfaces.ChatAttachmentLister
 import com.contusfly.interfaces.MessageListener
@@ -83,6 +82,7 @@ import com.contusfly.viewmodels.MentionsViewModel
 import com.contusfly.views.*
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jakewharton.rxbinding3.view.clicks
@@ -159,11 +159,16 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private var enableEdt = true
     var isFromQuickShare = false
 
+    var isFileChooser: Boolean = false
+
     protected var supportedFormats = listOf(*AppConstants.supportedFormats)
 
     protected var selectedOptionName: String? = null
 
     protected var msg: ChatMessage? = null
+
+    var scheduleBottomSheetFragment: ScheduleBottomSheetFragment? = null
+
 
     /**
      * Store onclick time to avoid double click
@@ -333,6 +338,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     val userMentionConfig: UserMentionConfig = UserMentionConfig.Builder().build()
 
+    /**
+     * Used to store boolean value indicating that audio recording is paused due to activity going to background.
+     */
+    var isAudioRecordingPausedByLifeCycle = false
+
     private val editTextWatcher = object : TextWatcher {
         override fun afterTextChanged(p0: Editable?) {
             if (p0.toString().trim().isNotEmpty()) {
@@ -341,15 +351,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 imgSend.setImageResource(R.drawable.ic_send_active)
                 suggestionLayout.gone()
             } else {
-                imgSend.isEnabled = false
-                imgSend.gone()
-                imgSend.setImageResource(R.drawable.ic_send_inactive)
-                if (isReplyTagged)
-                    parentViewModel.addMessage(
-                        parentViewModel.getMessageForId(
-                            selectedMessageIdForReply
-                        ), chat.toUser
-                    )
+                hideSendView(true)
             }
         }
 
@@ -364,6 +366,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     companion object {
         val TAG = ChatParent::class.java.simpleName
+        var meetFabIconRetainPosition = 0f
+        var meetFabIconMoved = false
 
         /**
          * Starts activity for user/group
@@ -437,9 +441,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         val readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
         if(readPermissionGranted) {
-            PickFileUtils.pickFile(this)
+            fileUpload()
         } else if(ChatUtils.checkMediaPermission(this, Manifest.permission.POST_NOTIFICATIONS)){
-            PickFileUtils.pickFile(this)
+            fileUpload()
         }
     }
 
@@ -525,6 +529,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     protected val replySuggestionsRecycler by bindView<RecyclerView>(R.id.suggestion_recycler)
     protected val toolbar by bindView<Toolbar>(R.id.chat_toolbar)
     val imgSend by bindView<AppCompatImageView>(R.id.image_chat_send)
+    val sendScheduleMeet by bindView<FloatingActionButton>(R.id.fab_add_schedule_meet)
     protected val transparentView by bindView<View>(R.id.view_overlay)
     val attachment by bindView<ImageView>(R.id.action_attachment)
     val voiceAttachment by bindView<ImageView>(R.id.image_action_attach_voice)
@@ -566,7 +571,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private val rootParentLayout by bindView<RelativeLayout>(R.id.root_view)
 
-    private val parentContent by bindView<ContentFrameLayout>(android.R.id.content)
+    val parentContent by bindView<ContentFrameLayout>(android.R.id.content)
 
     private val emojiLayout by bindView<FrameLayout>(R.id.emojicons)
 
@@ -577,6 +582,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     var isSoftKeyboardShown: Boolean = false
 
     var isGroupMemberListShowing: Boolean = false
+
+    var isMentionTriggered = false
 
     var softKeyboardHeight: Int = 0
 
@@ -714,17 +721,51 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
             if (!isSoftKeyboardShown) {
                 isSoftKeyboardShown = true
+                scheduleFabIconDefaultPositionMaintain(true)
                 Log.d(TAG, " keyboard is opened")
                 if(emojiHandler.isEmojiShowing)
                     emojiHandler.hideEmoji()
             }
         } else {
             if (isSoftKeyboardShown) {
+                scheduleFabIconDefaultPositionMaintain(false)
                 isSoftKeyboardShown = false
                 Log.d(TAG, " keyboard is closed")
             }
         }
     }
+
+    /**
+     * Method used to prevent the fab icon from disappearing at the top when the keyboard is opened or closed.
+     */
+    private fun scheduleFabIconDefaultPositionMaintain(keypadShown: Boolean) {
+        if (sendScheduleMeet.y <= 0 || !keypadShown) {
+            val targetX = sendScheduleMeet.x
+            val targetY =
+                if (!meetFabIconMoved) sendScheduleMeet.y else meetFabIconRetainPosition
+            sendScheduleMeet.animate()
+                .x(targetX)
+                .y(targetY)
+                .setDuration(0)
+                .start()
+        }
+    }
+
+     fun scheduleFabIconPosMaintainInEmojiView(emojiShowStatus: Boolean) {
+         val targetX = sendScheduleMeet.x
+         var targetY =
+             if (emojiShowStatus) (sendScheduleMeet.y - 700) else (sendScheduleMeet.y + 700)
+
+         if (sendScheduleMeet.y <= 200) {
+             targetY = meetFabIconRetainPosition
+         }
+
+         sendScheduleMeet.animate()
+             .x(targetX)
+             .y(targetY)
+             .setDuration(0)
+             .start()
+     }
 
     private fun observeMessageRefreshListener() {
         launch {
@@ -827,7 +868,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
     }
 
-    fun setScrollListener(
+    private fun setScrollListener(
         layoutManager: LinearLayoutManager) {
 
         listChats.addOnScrollListener(object : MessagePaginationScrollListener(layoutManager) {
@@ -1157,9 +1198,12 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 imgSend.show()
             } else {
                 try {
-                    binding.viewChatFooter.editChatMsg.setText(Constants.EMPTY_STRING)
-                    imgSend.gone()
-                    imgSend.setImageResource(R.drawable.ic_send_inactive)
+                    if(!isAudioRecordingPausedByLifeCycle){
+                        binding.viewChatFooter.editChatMsg.setText(Constants.EMPTY_STRING)
+                        imgSend.gone()
+                        imgSend.setImageResource(R.drawable.ic_send_inactive)
+                        LogMessage.d(TAG,"#record locked: imgSend hide!!")
+                    }
                 } catch (e: Exception) {
                     LogMessage.e("Exception", e.message)
                 }
@@ -1275,7 +1319,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     /**
      * Hide the soft keyboard if opened while user interact with chat screen
      */
-    protected fun hideKeyboard() {
+    fun hideKeyboard() {
         val view: View? = currentFocus
         view?.let {
             Utils.hideSoftInput(this, view)
@@ -1367,9 +1411,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
 
     private fun updateCopyMessageMenu(menu: Menu) {
-        if (clickedMessages.size > 0) {
-            val chat = getMessagebyID(clickedMessages[0])
-            menu.get(R.id.action_copy).isVisible = chat != null && chat.messageType == MessageType.TEXT || (null != chat && chat.mediaChatMessage.mediaCaptionText != null && !chat.mediaChatMessage.mediaCaptionText.equals(""))
+        try {
+            if (clickedMessages.size > 0) {
+                val chat = getMessagebyID(clickedMessages[0])
+                menu.get(R.id.action_copy).isVisible = chat != null && chat.messageType == MessageType.TEXT || (null != chat && chat.mediaChatMessage.mediaCaptionText != null && !chat.mediaChatMessage.mediaCaptionText.equals(""))
+            }
+        } catch(e:Exception){
+            LogMessage.e(TAG,e.toString())
         }
     }
 
@@ -1467,8 +1515,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     /**
      * Dialog action to show whether the busy status to be enabled or disabled...
      */
-    protected fun showBusyAlert() {
-        commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.STATUS_BUSY
+    protected fun showBusyAlert(isScheduleFabClicked:Boolean = false) {
+        commonAlertDialog.dialogAction =
+            if (isScheduleFabClicked) CommonAlertDialog.DialogAction.STATUS_BUSY_SCHEDULE else CommonAlertDialog.DialogAction.STATUS_BUSY
         commonAlertDialog.showAlertDialog(
             getString(R.string.msg_disable_busy_status), getString(R.string.action_yes),
             getString(R.string.action_no), CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false
@@ -1544,9 +1593,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     protected fun showBlockUserDialog(isBlock: Boolean) {
-        if(!ChatManager.getAvailableFeatures().isBlockEnabled){
+        if (!ChatManager.getAvailableFeatures().isBlockEnabled) {
             context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
-            isBlockUnblockCalled=false
+            isBlockUnblockCalled = false
             return
         }
         if (isBlock) commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.BLOCK
@@ -1560,7 +1609,10 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 else getString(R.string.action_block), getString(R.string.action_cancel),
                 CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false
             )
-        }, { showErrorMessage() })
+        }, {
+            showErrorMessage()
+            isBlockUnblockCalled = false
+        })
     }
 
     protected fun getUserNickname(): String {
@@ -1751,6 +1803,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             listChats.scrollToPosition(mainList.size - 1) }, 100)
     }
 
+
     /**
      * check the camera permission
      */
@@ -1811,7 +1864,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             if (MediaPermissions.isReadFilePermissionAllowed(this)
                 && MediaPermissions.isWriteFilePermissionAllowed(this)
             )
-                PickFileUtils.pickFile(this)
+                fileUpload()
             else
                 MediaPermissions.requestStorageAccess(
                     this,
@@ -1821,7 +1874,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             closeControls()
         } else {
             if (ChatUtils.checkMediaPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
-                PickFileUtils.pickFile(this)
+                fileUpload()
             } else {
                 MediaPermissions.requestNotificationPermission(
                     this,
@@ -1830,6 +1883,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 closeControls()
             }
         }
+    }
+
+    private fun fileUpload() {
+        isFileChooser=true
+        PickFileUtils.pickFile(this)
     }
 
     /**
@@ -1885,8 +1943,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     private fun selectAudioFileFromStorage() {
+        isFileChooser = true
         val manufacturer = Build.MANUFACTURER.toUpperCase(Locale.getDefault())
-
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
         val audioListIntent = Intent(Intent.ACTION_GET_CONTENT)
         audioListIntent.type = Constants.AUDIO_FILE
@@ -1927,8 +1985,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 }
 
             }
-            else -> showToast("No suitable app found!")
+            else -> noAudioFound()
         }
+    }
+
+    private fun noAudioFound(){
+        isFileChooser = false
+        showToast("No suitable app found!")
     }
 
     private fun openCustomOSAudioSelection() {
@@ -2106,6 +2169,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             if (position != -1) {
                 isUnreadSeparatorIsAvailable = true
                 message = mainList[position].messageTextContent
+                unReadMessageScrollPosition(position)
             }
             if (position != -1 && lastCompletelyVisibleItemPosition == 0)
                 listChats.scrollToPosition(position + 1)
@@ -2118,6 +2182,25 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             return Triple(false, 0, "")
         }
         return Triple(isUnreadSeparatorIsAvailable, position, message)
+    }
+
+    private fun unReadMessageScrollPosition(position: Int) {
+        try {
+            if(mainList.size > position){
+                val sublist=
+                    mainList.subList(position, mainList.size)
+                if(sublist.size>3) {
+                    listChats.scrollToPosition(position + 3)
+                } else {
+                    listChats.scrollToPosition(position + 1)
+                }
+            } else {
+                listChats.scrollToPosition(position + 1)
+            }
+
+        } catch(e:Exception) {
+            LogMessage.e(TAG,e.toString())
+        }
     }
 
     protected fun handleUnreadMessageSeparator(remove: Boolean) {
@@ -2299,6 +2382,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             hideKeyboard()
             launchActivity<ForwardMessageActivity> {
                 putStringArrayListExtra(Constants.CHAT_MESSAGE, forwardMessageList)
+                putExtra(Constants.FROMUSER, chat.toUser)
             }
         }
         return true
@@ -2307,6 +2391,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     fun handleOnResume() {
         try {
             ChatManager.setOnGoingChatUser(chat.toUser)
+            SharedPreferenceManager.setString(Constants.ON_GOING_CHAT_USER,chat.toUser)
             selectedMessageIdForReply = ReplyHashMap.getReplyId(chat.toUser)
             sendMessageSeenStatus()
             NotificationManagerCompat.from(context!!).cancel(Constants.NOTIFICATION_ID)
@@ -2328,6 +2413,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         } else {
             val isUserBlocked = profileDetails.isBlocked
             val isAdminBlocked = profileDetails.isAdminBlocked
+            if(isUserBlocked || isAdminBlocked || profileDetails.isDeletedContact() || (!ChatManager.getAvailableFeatures().isOneToOneCallEnabled || !ChatManager.getAvailableFeatures().isGroupCallEnabled)){
+                hideDismissSchedulePopup()
+            }else{
+                showScheduleIcon()
+            }
             if (isUserBlocked || isAdminBlocked) {
                 showTxtNoMsg(isAdminBlocked)
                 makeViewsGone(viewChat, imgSend, voiceAttachment, replyMessageSentView, closeReplyMessage)
@@ -2338,6 +2428,10 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 setBottomChatFooterView()
             }
         }
+    }
+
+    protected fun hideBlockedUserView() {
+        makeViewsGone(txtNoMsg)
     }
 
     protected fun setUpBlockedUserView(){
@@ -2354,10 +2448,28 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
     }
 
+    fun hideDismissSchedulePopup() {
+        sendScheduleMeet.visibility = View.GONE
+        scheduleBottomSheetFragment?.dismiss()
+    }
+
+    fun showScheduleIcon(){
+        sendScheduleMeet.visibility = View.VISIBLE
+    }
+
+    fun scheduleIconVisibility(){
+        if (ChatManager.getAvailableFeatures().isGroupCallEnabled || ChatManager.getAvailableFeatures().isOneToOneCallEnabled)
+            showScheduleIcon()
+        else
+            hideDismissSchedulePopup()
+    }
+
     protected fun setUpGroupChatEditText() {
         if (parentViewModel.isGroupUserExist(chat.toUser, SharedPreferenceManager.getCurrentUserJid())) {
+            scheduleIconVisibility()
             setBottomChatFooterView()
         } else {
+            hideDismissSchedulePopup()
             if(isGroupMemberListShowing) {
                 groupUserTagLayout.visibility = View.GONE
                 chatMessageEditText.text?.clear()
@@ -2383,8 +2495,10 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
      protected fun handleAttachmentRestriction() {
          val features = ChatManager.getAvailableFeatures()
-         attachment.visibility = if (features.isAttachmentEnabled) View.VISIBLE else View.GONE
-         voiceAttachment.visibility = if (features.isAudioAttachmentEnabled) View.VISIBLE else View.GONE
+         if(!isAudioRecordingPausedByLifeCycle){
+             attachment.visibility = if (features.isAttachmentEnabled) View.VISIBLE else View.GONE
+             voiceAttachment.visibility = if (features.isAudioAttachmentEnabled) View.VISIBLE else View.GONE
+         }
     }
 
     private fun setBottomChatFooterView() {
@@ -2392,8 +2506,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             makeViewsGone(chatFooter)
             if (emojiHandler.isEmojiShowing) emojiHandler.hideEmoji()
         } else {
-            if (chatMessageEditText.text.isNullOrBlank())
-                makeViewsGone(txtNoMsg, imgSend)
+            if (chatMessageEditText.text.isNullOrBlank()&& !isAudioRecordingPausedByLifeCycle)
+                hideSendView(false)
             else
                 makeViewsGone(txtNoMsg)
             if (audioRecordView.mediaState == com.mirrorflysdk.flycommons.Constants.COUNT_ZERO) {
@@ -2401,6 +2515,31 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 handleAttachmentRestriction()
             } else
                 showViews(viewChat, chatFooter)
+        }
+    }
+
+    private fun hideSendView(isTextWatcher:Boolean) {
+        LogMessage.d(TAG, "#record hideSendView isTextWatcher:$isTextWatcher")
+        CoroutineScope(Dispatchers.Main).launch {
+                if(isTextWatcher){
+                    imgSend.isEnabled = false
+                    sendImageViewGone(true)
+                    imgSend.setImageResource(R.drawable.ic_send_inactive)
+                    if (isReplyTagged)
+                        parentViewModel.addMessage(
+                            parentViewModel.getMessageForId(
+                                selectedMessageIdForReply), chat.toUser)
+                } else {
+                    sendImageViewGone(false)
+                }
+        }
+    }
+
+    private fun sendImageViewGone(isTextWatcher:Boolean) {
+        if(isTextWatcher){
+            imgSend.gone()
+        } else {
+            makeViewsGone(txtNoMsg, imgSend)
         }
     }
 
@@ -2451,6 +2590,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private fun exportChatEmail(){
         isEmailChatClicked = false
+        isFileChooser=true
         FlyCore.exportChatConversationToEmail(chat.toUser, emptyList())
     }
 
@@ -2795,7 +2935,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private fun searchKeyObserver(){
 
-        parentViewModel.searchkeydata.observe(this) { keyword ->
+        parentViewModel.searchKeyData.observe(this) { keyword ->
             try{
                 searchedPrev=""
                 searchedNxt=""
@@ -2977,7 +3117,7 @@ override fun onAttachDocument() {
 
     override fun onDestroy() {
         super.onDestroy()
-        parentViewModel.searchkeydata.removeObservers(this)
+        parentViewModel.searchKeyData.removeObservers(this)
     }
 
     open fun bindUserMention(mentionConfig: UserMentionConfig, handler: OnMentionEventListener) {

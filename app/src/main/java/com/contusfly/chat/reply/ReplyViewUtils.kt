@@ -32,7 +32,7 @@ class ReplyViewUtils {
                     }
                 }
                 is ImageSentViewHolder, is AudioSentViewHolder, is ContactSentViewHolder,
-                is FileSentViewHolder, is LocationSentViewHolder, is VideoSentViewHolder -> {
+                is FileSentViewHolder, is LocationSentViewHolder, is VideoSentViewHolder, is MeetSentViewHolder -> {
                     val replyMessageViewHolder = this as ReplyMessageViewHolder
                     if (item.isThisAReplyMessage()) {
                         replyMessageViewHolder.showSentReplyView()
@@ -68,7 +68,7 @@ class ReplyViewUtils {
                         replyMessageReceivedView?.gone()
                 }
                 is AudioReceivedViewHolder, is ContactReceivedViewHolder, is FileReceivedViewHolder,
-                is LocationReceivedViewHolder, is ImageReceivedViewHolder, is VideoReceivedViewHolder -> {
+                is LocationReceivedViewHolder, is ImageReceivedViewHolder, is VideoReceivedViewHolder, is MeetReceivedViewHolder -> {
                     val replyMessageViewHolder = this as ReplyMessageViewHolder
                     handleReceiverReplyview(context, this, replyMessageViewHolder, item)
                 }
@@ -113,6 +113,11 @@ class ReplyViewUtils {
                     if (!item.isMessageSentByMe())
                         handleVisibility(fileFavoriteImage, item.isMessageStarred())
                 }
+                is MeetSentViewHolder -> handleVisibility(imageStar, item.isMessageStarred)
+                is MeetReceivedViewHolder -> handleVisibility(
+                    imgReceivedStar,
+                    item.isMessageStarred
+                )
                 else -> { //Not needed
                 }
             }

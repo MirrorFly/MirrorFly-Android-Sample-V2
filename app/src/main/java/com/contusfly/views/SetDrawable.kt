@@ -82,10 +82,31 @@ class SetDrawable : BaseDrawable {
     }
 
     private fun getProfileNameIcon(username: String): String {
+
         var profileLetters = username.substring(0, 2)
-        if (isEmojiOnly(profileLetters) == true) {
-            profileLetters = if (isEmojiOnly(username.substring(0, 4)) == true) username.substring(0, 4) else username.substring(0, 3)
+
+        if (username.length <= 2)//old implementation allowed username with space in front with emoji which caused crash
+            return profileLetters.toUpperCase()
+
+        if (isEmojiOnly(profileLetters) == true) { //where first letter is emoji of size 2 followed by character
+            profileLetters = if (username.length >= 4 && isEmojiOnly(
+                    username.substring(
+                        0,
+                        4
+                    )
+                ) == true
+            ) username.substring(0, 4) else username.substring(0, 3)
+            return profileLetters.toUpperCase()
         }
+        if (username.length >= 3 && isEmojiOnly(
+                username.substring(
+                    1,
+                    3
+                )
+            ) == true
+        )//if we reach here it means second character may have been emoji so we check for emoji here
+            profileLetters = username.substring(0, 3)
+
         return profileLetters.toUpperCase()
     }
 }

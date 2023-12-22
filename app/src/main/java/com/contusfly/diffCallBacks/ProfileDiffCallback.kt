@@ -63,7 +63,7 @@ fun isProfileObjEqual(oldItem: ProfileDetails?, newItem: ProfileDetails?): Boole
                     && oldItem.lastSeenPrivacyFlag == newItem.lastSeenPrivacyFlag
                     && oldItem.mobileNumber == newItem.mobileNumber && oldItem.mobileNUmberPrivacyFlag == newItem.mobileNUmberPrivacyFlag
                     && oldItem.status == newItem.status && oldItem.statusPrivacyFlag == newItem.statusPrivacyFlag
-                    && oldItem.nickName == newItem.nickName
+                    && oldItem.nickName == newItem.nickName && oldItem.contactType == newItem.contactType
         } ?: false
     } ?: newItem?.let { false } ?: true
 }

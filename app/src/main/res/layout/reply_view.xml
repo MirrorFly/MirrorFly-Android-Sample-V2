@@ -79,9 +79,10 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_image_placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:shapeAppearanceOverlay="@style/roundedReplyPreviewView" />
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/close_reply"

@@ -21,6 +21,7 @@ object ContusContactUtils {
         contusContactList: ContusContactList?,
         processContusContactCallback: ProcessContusContactCallback
     ) {
+        LogMessage.d(TAG, "#contact #NewContacts  processContusContactResponse ")
         if (contusContactList == null) {
             processContusContactCallback.onProcessContusContactCompleted()
             return
@@ -35,7 +36,7 @@ object ContusContactUtils {
         val adminBlockedContacts = getAdminBlockedContusContacts()
         contusContactList.created?.let { created ->
             created.forEach {
-                LogMessage.d(TAG, "processContusContactResponse created still processing")
+                LogMessage.d(TAG, "#contact #NewContacts processContusContactResponse created still processing")
                 if (it.isChatUser == 1) {
                     val userJid = FlyUtils.getJid(it.username ?: Constants.EMPTY_STRING)
                     val isBlockedUser = contusBlockedContacts.any { profile -> profile.jid == userJid }
@@ -62,7 +63,7 @@ object ContusContactUtils {
 
         contusContactList.updated?.let { updated ->
             updated.forEach {
-                LogMessage.d(TAG, "processContusContactResponse updated still processing")
+                LogMessage.d(TAG, "#contact #NewContacts processContusContactResponse updated still processing")
                 if (it.isChatUser == 1) {
                     MirrorFlyDatabase.getInstance().contusContactDao().insertContusContact(
                         ContusContact(
@@ -87,7 +88,7 @@ object ContusContactUtils {
 
         contusContactList.deleted?.let { deleted ->
             deleted.forEach {
-                LogMessage.d(TAG, "processContusContactResponse deleted still processing")
+                LogMessage.d(TAG, "#contact #NewContacts processContusContactResponse deleted still processing")
                 MirrorFlyDatabase.getInstance().contusContactDao()
                     .deleteContusContact(FlyUtils.getJid(it.username ?: Constants.EMPTY_STRING))
             }
@@ -96,6 +97,7 @@ object ContusContactUtils {
     }
 
     suspend fun getContusContacts(): ArrayList<ProfileDetails> {
+        LogMessage.d(TAG, "#contact #NewContacts #Forward getContacts")
         val profilesList = ArrayList<ProfileDetails>()
         MirrorFlyDatabase.getInstance().contusContactDao().getAllContusContact()
             ?.forEach { contusContact ->
@@ -103,7 +105,7 @@ object ContusContactUtils {
                     profilesList.add(it)
                 }
             }
-
+        LogMessage.d(TAG, "#contact #NewContacts #Forward getContacts profilesList:${profilesList.size}")
         return profilesList
     }
 
@@ -151,8 +153,10 @@ object ContusContactUtils {
     }
 
     fun refreshContusContact(jid: String){
+        LogMessage.d(TAG, "#contact #NewContacts #Forward refreshContact")
         ContactManager.getUserProfile(jid, true) { isSuccess, _, data ->
             if (isSuccess && data.getData() is ProfileDetails) {
+                LogMessage.d(TAG, "#contact #NewContacts #Forward getUserProfile")
                 val userProfileDetails = data.getData() as ProfileDetails
                 insertContusContact(userProfileDetails)
             }

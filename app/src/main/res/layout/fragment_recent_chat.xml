@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/items_swipe_to_refresh"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -24,16 +25,37 @@
             layout="@layout/view_no_messages"
             android:visibility="gone" />
 
+        <include
+            android:id="@+id/no_search_message_view"
+            layout="@layout/view_no_search_message_layout"
+            android:visibility="gone" />
 
-        <com.contusfly.views.CustomRecyclerView
-            android:id="@+id/view_list_contacts"
+        <include
+            android:id="@+id/private_chat_unlock_view"
+            layout="@layout/private_chat_empty_view_recent_screen_layout"
+            android:visibility="gone" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/transparent_color"
-            android:cacheColorHint="?attr/transparent_color"
-            android:divider="?attr/transparent_color"
-            android:footerDividersEnabled="true"
-            android:listSelector="?attr/transparent_color" />
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/private_chat_release_view"
+                layout="@layout/pull_refresh_private_chat_view_layout"/>
+
+            <com.contusfly.views.CustomRecyclerView
+                android:id="@+id/view_list_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:cacheColorHint="?attr/transparent_color"
+                android:divider="?attr/transparent_color"
+                android:footerDividersEnabled="true"
+                android:listSelector="?attr/transparent_color" />
+
+
+        </RelativeLayout>
+
 
         <include
             android:id="@+id/empty_list"

@@ -738,6 +738,7 @@
     <string name="pin_message_1">If App Lock enabled, the app will be locked automatically after %02d sec when it is not in use.</string>
     <string name="notes">Note: Once a PIN is set, it will be expired in %d days and has to be renewed.</string>
     <string name="msg_set_pin_alert">You need to set pin first in order to enable bio metric authentication</string>
+    <string name="msg_enable_app_lock_info">You need to enable PIN Lock first in order to enable bio metric authentication</string>
     <string name="msg_chat_msg_deleted">Your chat conversation are deleted</string>
     <string name="place_thumb">"Confirm your fingerprint so we can \n verify it's you."</string>
     <string name="verify_device_password">Enable Fingerprint</string>
@@ -970,4 +971,34 @@
     <string name="delete_lable">DELETE</string>
     <string name="edit_tag_info">Tap \'Edit\' to change the order or delete tags.</string>
     <string name="remove_chat_tag_title">This will remove chat tag, your chats will not be deleted.</string>
+
+    <!--private chat-->
+    <string name="label_private_chat">Private Chat</string>
+    <string name="private_chat_info_title">Keep This Chat Locked and Hidden</string>
+    <string name="private_chat_info">Use your PIN or Face ID / Finger print to open this chat and read notification on this phone. For added privacy, locked chat will be kept separate from other chats</string>
+    <string name="label_lock_chat">Lock this chat</string>
+    <string name="chat_locked_title">This Chat is Now Locked</string>
+    <string name="chat_locked_info">You can find it locked in the chats tab</string>
+    <string name="view_label">View</string>
+    <string name="private_chat_release_label">Release for Private Messages</string>
+    <string name="label_private_chats">Private Chats</string>
+    <string name="no_private_chats">No private chats</string>
+    <string name="unarchive_label">UnArchive</string>
+    <string name="archive_chat_lock_title">This chat is Archived. To lock this chat Unarchive it.</string>
+    <string name="loacked_chat_title_label">All Chats are Locked</string>
+    <string name="unlock_chat_label">Unlock Your Private Chat</string>
+    <string name="create_new_meeting">Create new meeting</string>
+    <string name="share_a_link_for_your_mirrorfly_meet">Share a link for your Mirrorfly meet</string>
+    <string name="recent_calls">Recent Calls</string>
+    <string name="generate_meeting_link">Generate Meeting Link</string>
+    <string name="anyone_with_mirror_fly_can_join_call">Anyone with Mirrorfly can use this link to join this meet. Only share it with people you trust</string>
+    <string name="meet_link_will_be_generated_here">meet link will be generated here</string>
+    <string name="instant_meet">Instant Meet</string>
+    <string name="copy_the_link">Copy the link or click to join the meeting</string>
+    <string name="schedule_meeting">Schedule Meeting</string>
+    <string name="schedule_validation_text">Please check your selected date and time</string>
+    <string name="schedule_meet_link_generate_preview_loader">Loading…</string>
+    <string name="join_meeting">Join Meeting</string>
+    <string name="share_call_link">Share</string>
+    <string name="invite_contacts_call_link">Invite Contacts</string>
 </resources>

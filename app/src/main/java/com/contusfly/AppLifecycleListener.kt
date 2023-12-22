@@ -10,9 +10,12 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.activities.AdminBlockedActivity
+import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.utils.Constants
+import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.api.ChatManager
+import org.greenrobot.eventbus.EventBus
 
 
 class AppLifecycleListener : LifecycleObserver {
@@ -20,6 +23,7 @@ class AppLifecycleListener : LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onMoveToBackground() {
         isForeground = false
+        isAPPForeground = false
         // app moved to background
         Log.d(LOG_TAG, "App moved to background")
         SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
@@ -38,6 +42,7 @@ class AppLifecycleListener : LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onMoveToForeground() {
         isForeground = true
+        isAPPForeground = true
         Log.d(LOG_TAG, "App moved to forground")
         // app moved to foreground
         deviceContactCount = 0
@@ -60,7 +65,7 @@ class AppLifecycleListener : LifecycleObserver {
             Log.d(LOG_TAG, " show pin $isOnCall$backPressedSP")
             showPinActivity("onMoveToForeground")
             SharedPreferenceManager.setBoolean(Constants.BACK_PRESS, false)
-        } else Log.d(LOG_TAG, "Else dont show pin")
+        } else sendPrivateChatAuthenticationShowStatus()
         Log.d(LOG_TAG, "App moved to Foreground " + isPinEnabled + " " + sessionTimeDifference + shouldShowPinActivity())
     }
 
@@ -112,6 +117,9 @@ class AppLifecycleListener : LifecycleObserver {
         var isForeground = false
 
         @JvmField
+        var isAPPForeground = false
+
+        @JvmField
         var fromOnCreate = false
         var deviceLock = false
 
@@ -139,9 +147,46 @@ class AppLifecycleListener : LifecycleObserver {
 
         fun showPinActivity(from: String?) {
             if (shouldShowPinActivity()) {
+                showPin(from)
+            } else {
+                sendPrivateChatAuthenticationShowStatus()
+            }
+        }
+
+        private fun showPin(from: String?) {
+            if(isPresentPrivateChat) {
+                sendPrivateChatAuthenticationShowStatus()
+            } else {
                 presentPinActivity(from)
             }
         }
+
+        private fun sendPrivateChatAuthenticationShowStatus() {
+            if (isPresentPrivateChat && pinAvailable && !CallManager.isOnGoingCall()) {
+                postPrivateChatAuthentication()
+            } else if(getCurrentChatUserIsPrivateOrNot() && pinAvailable && !CallManager.isOnGoingCall()) {
+                postPrivateChatAuthentication()
+            }
+        }
+
+        private fun postPrivateChatAuthentication() {
+            val model=PrivateChatAuthenticationModel(true)
+            EventBus.getDefault().post(model)
+        }
+
+        fun getCurrentChatUserIsPrivateOrNot(): Boolean {
+            var isPrivateChatUser:Boolean=false
+            try {
+                var currentChatUser=SharedPreferenceManager.getString(Constants.ON_GOING_CHAT_USER)
+                if(currentChatUser.isNotEmpty()) {
+                    isPrivateChatUser=ChatManager.isPrivateChat(currentChatUser)
+                }
+            } catch(e:Exception){
+                LogMessage.e("Exception",e.toString())
+            }
+            return isPrivateChatUser
+        }
+
 
         fun shouldShowPinActivity(): Boolean =
             if(SharedPreferenceManager.getBoolean(Constants.IS_SAFE_CHAT_ENABLED)){ true }
@@ -172,6 +217,11 @@ class AppLifecycleListener : LifecycleObserver {
         val isPinEnabled: Boolean
             get() = SharedPreferenceManager.getBoolean(Constants.SHOW_PIN)
 
+         val pinAvailable: Boolean get() =  SharedPreferenceManager.getString(Constants.MY_PIN).isNotEmpty()
+
+         val isPresentPrivateChat: Boolean get() =  SharedPreferenceManager.getBoolean(Constants.PRIVATE_CHAT)
+
+
         private val isQuickShare: Boolean
             get() {
                 if (SharedPreferenceManager.getBoolean(Constants.QUICK_SHARE)) {
@@ -185,15 +235,23 @@ class AppLifecycleListener : LifecycleObserver {
             isForeground = false
             if (isPinEnabled && !isQuickShare &&!isOnCall) {
                 if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
-                    val intent = Intent(ChatManager.applicationContext, ChatManager.biometricActivty)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    ChatManager.applicationContext.startActivity(intent)
+                    launchBiometricActivity()
                 } else if (!isOnCall && !pinActivityShowing) {
-                    val intent = Intent(ChatManager.applicationContext, ChatManager.pinActivity)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    ChatManager.applicationContext.startActivity(intent)
+                    launchPinActivity()
                 }
             }
+        }
+
+        private fun launchBiometricActivity() {
+            val intent = Intent(ChatManager.applicationContext, ChatManager.biometricActivty)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            ChatManager.applicationContext.startActivity(intent)
+        }
+
+        private fun launchPinActivity() {
+            val intent = Intent(ChatManager.applicationContext, ChatManager.pinActivity)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            ChatManager.applicationContext.startActivity(intent)
         }
     }
 }

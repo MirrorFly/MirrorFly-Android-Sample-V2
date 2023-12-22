@@ -17,8 +17,10 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,6 +50,7 @@ import com.mirrorflysdk.api.ChatManager.pinActivity
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.helpers.ResourceHelper
 import com.mirrorflysdk.flydatabase.model.ContactMessage
 import com.mirrorflysdk.models.Contact
@@ -85,6 +88,15 @@ class QuickShareActivity : BaseActivity(),
 
     private var searchKey = Constants.EMPTY_STRING
     private var mUserListType = UserListType.USER_LIST
+
+    private var toUserJid:String=""
+    private var isGoToMediaPage:Boolean = false
+
+    private var mediaFileList = ArrayList<FileObject>()
+    private var otherFileList = ArrayList<FileObject>()
+    private var uriList = java.util.ArrayList<Uri>()
+    private var userIdList = java.util.ArrayList<String>()
+    private var jidList = java.util.ArrayList<String>()
 
     /**
      * The handler to delay the search
@@ -478,7 +490,7 @@ class QuickShareActivity : BaseActivity(),
     }
 
     private fun shareFiles() {
-        val jidList = java.util.ArrayList<String>()
+         jidList = java.util.ArrayList<String>()
         for (key in selectedUsersWithNames.keys) {
             jidList.add(key)
         }
@@ -489,14 +501,16 @@ class QuickShareActivity : BaseActivity(),
     }
 
     private fun shareFiles(jidList: java.util.ArrayList<String>) {
+        LogMessage.e(TAG,"SelectedUserList${jidList.size}")
         if (!isFeatureAvailableForFiles(fileList!!)) {
             CustomAlertDialog().showFeatureRestrictionAlert(this)
             return
         }
-        val mediaFileList = ArrayList<FileObject>()
-        val otherFileList = ArrayList<FileObject>()
-        val uriList = java.util.ArrayList<Uri>()
-        val userIdList = getSelectedUserIdList()
+         mediaFileList = ArrayList<FileObject>()
+         otherFileList = ArrayList<FileObject>()
+         uriList = java.util.ArrayList<Uri>()
+         userIdList= ArrayList<String>()
+         userIdList = getSelectedUserIdList()
         for (fileObj in fileList!!) {
             if (videoImageFormats.contains(fileObj.fileExtension.toLowerCase())) {
                 if (fileObj.uri != null) uriList.add(fileObj.uri!!)
@@ -509,17 +523,7 @@ class QuickShareActivity : BaseActivity(),
                 if (AppUtils.isNetConnected(this) && otherFileList.isNotEmpty())
                     sendOtherFiles(otherFileList, userIdList, false)
                 else mediaFileList.addAll(otherFileList)
-                startActivity(
-                    Intent(this, MediaPreviewActivity::class.java)
-                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        .setType(intent.type)
-                        .putExtra(Constants.INTENT_KEY_SHARE, "share")
-                        .putStringArrayListExtra(Constants.INTENT_KEY_JID_LIST, jidList)
-                        .putParcelableArrayListExtra("FILE_OBJECTS", mediaFileList)
-                        .putStringArrayListExtra(USERS, userIdList)
-                        .putExtra(Constants.INTENT_KEY_RECEIVED_FILES, uriList)
-                )
-                finish()
+                privateChatUserCheckingForMediaPreviewPage()
             }
             otherFileList.isNotEmpty() -> {
                 progressDialog = DoProgressDialog(this)
@@ -565,18 +569,85 @@ class QuickShareActivity : BaseActivity(),
     private fun navigateToAppropriateScreen(userIdList: java.util.ArrayList<String>) {
         if (userIdList.size == 1) {
             val userId = userIdList[0]
-            startActivity(
-                Intent(this, ChatActivity::class.java)
-                    .putExtra(LibConstants.JID, userId)
-                    .putExtra(Constants.CHAT_TYPE, ProfileDetailsUtils.getProfileDetails(userId)?.getChatType())
-                    .putExtra(Constants.FROM_QUICK_SHARE, true)
-            )
+            privateChatUserChecking(userId)
         } else if (userIdList.size > 1) {
             val intent = Intent(this, DashboardActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
     }
+
+    /**
+     * chat Acttivity to show whether the private chat status to be enabled or disabled...
+     */
+    private fun privateChatUserCheckingForMediaPreviewPage() {
+        isGoToMediaPage=true
+        val userIdList = getSelectedUserIdList()
+        if(userIdList.size == 1 && ChatManager.isPrivateChat(userIdList.first())) {
+            launchQuickSharePinActivity()
+        } else {
+            launchChatViewPage(Constants.EMPTY_STRING,isGoToMediaPage)
+        }
+    }
+
+    /**
+     * chat Acttivity to show whether the private chat status to be enabled or disabled...
+     */
+    private fun privateChatUserChecking(toUser: String) {
+        toUserJid=toUser
+        isGoToMediaPage=false
+        if(ChatManager.isPrivateChat(toUser)) {
+            launchQuickSharePinActivity()
+        } else {
+            launchChatViewPage(toUser,isGoToMediaPage)
+        }
+    }
+
+    private fun launchChatViewPage(userId: String,isGoToMediaPage:Boolean) {
+        if(!isGoToMediaPage) {
+            startActivity(
+                Intent(this, ChatActivity::class.java)
+                    .putExtra(LibConstants.JID, userId)
+                    .putExtra(Constants.CHAT_TYPE, ProfileDetailsUtils.getProfileDetails(userId)?.getChatType())
+                    .putExtra(Constants.FROM_QUICK_SHARE, true))
+
+        } else {
+            startActivity(
+                Intent(this, MediaPreviewActivity::class.java)
+                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    .setType(intent.type)
+                    .putExtra(Constants.INTENT_KEY_SHARE, "share")
+                    .putStringArrayListExtra(Constants.INTENT_KEY_JID_LIST, jidList)
+                    .putParcelableArrayListExtra("FILE_OBJECTS", mediaFileList)
+                    .putStringArrayListExtra(USERS, userIdList)
+                    .putExtra(Constants.INTENT_KEY_RECEIVED_FILES, uriList)
+            )
+            finish()
+        }
+    }
+
+    private fun launchQuickSharePinActivity() {
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            quickShareActivityResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            quickShareActivityResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var quickShareActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                launchChatViewPage(toUserJid,isGoToMediaPage)
+            }
+        }
+
 
     /**
      * Dialog action to show whether the busy status to be enabled or disabled...

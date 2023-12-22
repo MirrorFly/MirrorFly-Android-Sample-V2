@@ -17,6 +17,7 @@ import com.contusfly.adapters.ViewAllLinksAdapter
 import com.contusfly.databinding.FragmentViewAllMediaBinding
 import com.contusfly.getChatType
 import com.contusfly.gone
+import com.contusfly.isMeetMessage
 import com.contusfly.utils.ChatUtils
 import com.contusfly.utils.Constants
 import com.contusfly.viewmodels.ViewAllMediaViewModel
@@ -78,7 +79,8 @@ class ViewAllLinksFragment : Fragment() {
 
         viewAllLinksAdapter.onLinkClickedCallback{ clickedMessage ->
             if (AppUtils.isNetConnected(requireContext())) {
-                val url = clickedMessage.messageTextContent
+                val url =
+                    if (clickedMessage.isMeetMessage()) clickedMessage.meetingChatMessage.link else clickedMessage.messageTextContent
                 if (url.contains(BuildConfig.WEB_CHAT_LOGIN)) {
                     ChatUtils.navigateToOnGoingCallPreviewScreen(requireContext(), clickedMessage.getChatUserJid(), url)
                 } else {

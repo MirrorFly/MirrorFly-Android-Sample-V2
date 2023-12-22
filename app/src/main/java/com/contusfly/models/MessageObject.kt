@@ -17,7 +17,9 @@ data class MessageObject(var toJid: String,
                          var base64Thumbnail: String,
                          var audioDuration: Long,
                          var isAudioRecorded: Boolean,
-                         var mentionedUsersIds: List<String>) {
+                         var mentionedUsersIds: List<String>,
+                         var meetMessageParams: MeetMessageParams?
+    ) {
     /**
      * Text Message Constructor
      */
@@ -27,7 +29,7 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String, mentionedUsersIds: List<String>) :
             this(toJid, messageType, textMessage, replyMessageId, 0.0, 0.0,
                     Constants.EMPTY_STRING, listOf(), null, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, 0,false,mentionedUsersIds)
+                    Constants.EMPTY_STRING, 0,false,mentionedUsersIds,null)
 
     /**
      * Location Message Constructor
@@ -39,7 +41,7 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, latitude, longitude,
                     Constants.EMPTY_STRING, listOf(), null, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, 0, false, listOf()
+                    Constants.EMPTY_STRING, 0, false, listOf(),null
             )
 
     /**
@@ -52,7 +54,7 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
                     contactName, contactNumbers, null, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, 0,false, listOf()
+                    Constants.EMPTY_STRING, 0,false, listOf(),null
             )
 
     /**
@@ -65,7 +67,7 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
                     Constants.EMPTY_STRING, listOf(), file, fileName, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, 0,false, listOf()
+                    Constants.EMPTY_STRING, 0,false, listOf(),null
             )
 
     /**
@@ -78,7 +80,7 @@ data class MessageObject(var toJid: String,
                 file: File?,
                 replyMessageId: String, mentionedUsersIds: List<String>) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
-                    Constants.EMPTY_STRING, listOf(), file, Constants.EMPTY_STRING, imageCaption, base64Thumbnail, 0,false, mentionedUsersIds)
+                    Constants.EMPTY_STRING, listOf(), file, Constants.EMPTY_STRING, imageCaption, base64Thumbnail, 0,false, mentionedUsersIds,null)
 
     /**
      * Audio Message Constructor
@@ -91,7 +93,7 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
                     Constants.EMPTY_STRING, listOf(), file, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
-                    Constants.EMPTY_STRING, audioDuration,isAudioRecorded, listOf()
+                    Constants.EMPTY_STRING, audioDuration,isAudioRecorded, listOf(),null
             )
 
     /**
@@ -104,5 +106,15 @@ data class MessageObject(var toJid: String,
                 replyMessageId: String, mentionedUsersIds: List<String>) :
             this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
                     Constants.EMPTY_STRING, listOf(), file, Constants.EMPTY_STRING, videoCaption,
-                    Constants.EMPTY_STRING, 0,false, mentionedUsersIds)
+                    Constants.EMPTY_STRING, 0,false, mentionedUsersIds,null)
+
+    /**
+     * Meet Message Constructor
+     */
+    constructor(toJid: String,
+                messageType: String,
+                replyMessageId: String, mentionedUsersIds: List<String>,meetMessageParams: MeetMessageParams,) :
+            this(toJid, messageType, Constants.EMPTY_STRING, replyMessageId, 0.0, 0.0,
+                Constants.EMPTY_STRING, listOf(), null, Constants.EMPTY_STRING, Constants.EMPTY_STRING,
+                Constants.EMPTY_STRING, 0,false,mentionedUsersIds,meetMessageParams)
 }

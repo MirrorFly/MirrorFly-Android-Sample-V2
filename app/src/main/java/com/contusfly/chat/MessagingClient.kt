@@ -12,6 +12,7 @@ import android.content.Intent
 import android.net.Uri
 import com.contusfly.interfaces.MessageListener
 import com.contusfly.models.ContactShareModel
+import com.contusfly.models.MeetMessageParams
 import com.contusfly.models.MessageObject
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.*
@@ -19,6 +20,7 @@ import com.mirrorflysdk.api.chat.ContactMessageParams
 import com.mirrorflysdk.api.chat.FileMessage
 import com.mirrorflysdk.api.chat.FileMessageParams
 import com.mirrorflysdk.api.chat.LocationMessageParams
+import com.mirrorflysdk.api.chat.MeetMessage
 import com.mirrorflysdk.api.chat.TextMessage
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.flycommons.models.MessageType
@@ -56,8 +58,19 @@ constructor(val application: Application) : CoroutineScope {
      * @param replyMessageId The message id for which this message will be sent as a reply message.
      * @return the prepared [MessageObject] object
      */
-    fun composeTextMessage(toJid: String, textMessage: String, replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds:List<String> = listOf()): MessageObject {
-        return MessageObject(toJid, Constants.MSG_TYPE_TEXT, textMessage, replyMessageId, mentionedUsersIds)
+    fun composeTextMessage(
+        toJid: String,
+        textMessage: String,
+        replyMessageId: String = Constants.EMPTY_STRING,
+        mentionedUsersIds: List<String> = listOf()
+    ): MessageObject {
+        return MessageObject(
+            toJid,
+            Constants.MSG_TYPE_TEXT,
+            textMessage,
+            replyMessageId,
+            mentionedUsersIds
+        )
     }
 
     fun sendMessage(messageObject: MessageObject, messageListener: MessageListener?) {
@@ -69,6 +82,7 @@ constructor(val application: Application) : CoroutineScope {
             Constants.MSG_TYPE_IMAGE -> sendImageMessage(messageObject, messageListener)
             Constants.MSG_TYPE_AUDIO -> sendAudioMessage(messageObject, messageListener)
             Constants.MSG_TYPE_VIDEO -> sendVideoMessage(messageObject, messageListener)
+            Constants.MSG_TYPE_MEET -> sendMeetMessage(messageObject, messageListener)
         }
     }
 
@@ -81,7 +95,11 @@ constructor(val application: Application) : CoroutineScope {
                 mentionedUsersIds = messageObject.mentionedUsersIds
             }
             FlyMessenger.sendTextMessage(sendMessageParams, object : SendMessageCallback {
-                override fun onResponse(isSuccess: Boolean, error: Throwable?, chatMessage: ChatMessage?) {
+                override fun onResponse(
+                    isSuccess: Boolean,
+                    error: Throwable?,
+                    chatMessage: ChatMessage?
+                ) {
                     if (isSuccess && chatMessage != null && messageListener != null)
                         messageListener.onSendMessageSuccess(chatMessage)
                 }
@@ -91,7 +109,10 @@ constructor(val application: Application) : CoroutineScope {
         }
     }
 
-    private fun sendLocationMessage(messageObject: MessageObject, messageListener: MessageListener?) {
+    private fun sendLocationMessage(
+        messageObject: MessageObject,
+        messageListener: MessageListener?
+    ) {
         try {
             val sendMessageParams = FileMessage().apply {
                 toId = messageObject.toJid
@@ -103,7 +124,7 @@ constructor(val application: Application) : CoroutineScope {
                 }
             }
 
-            FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback{
+            FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
                 override fun onResponse(
                     isSuccess: Boolean,
                     error: Throwable?,
@@ -120,7 +141,10 @@ constructor(val application: Application) : CoroutineScope {
         }
     }
 
-    private fun sendContactMessage(messageObject: MessageObject, messageListener: MessageListener?) {
+    private fun sendContactMessage(
+        messageObject: MessageObject,
+        messageListener: MessageListener?
+    ) {
         try {
             val sendMessageParams = FileMessage().apply {
                 toId = messageObject.toJid
@@ -132,7 +156,7 @@ constructor(val application: Application) : CoroutineScope {
                 }
             }
 
-            FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback{
+            FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
                 override fun onResponse(
                     isSuccess: Boolean,
                     error: Throwable?,
@@ -149,7 +173,10 @@ constructor(val application: Application) : CoroutineScope {
         }
     }
 
-    private fun sendDocumentMessage(messageObject: MessageObject, messageListener: MessageListener?) {
+    private fun sendDocumentMessage(
+        messageObject: MessageObject,
+        messageListener: MessageListener?
+    ) {
         try {
             messageObject.file?.let {
                 val sendMessageParams = FileMessage().apply {
@@ -192,7 +219,7 @@ constructor(val application: Application) : CoroutineScope {
                     }
                 }
 
-                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback{
+                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
                     override fun onResponse(
                         isSuccess: Boolean,
                         error: Throwable?,
@@ -215,7 +242,8 @@ constructor(val application: Application) : CoroutineScope {
             messageObject.file?.let {
                 val sendMessageParams = FileMessage().apply {
                     toId = messageObject.toJid
-                    messageType = if (messageObject.isAudioRecorded) MessageType.AUDIO_RECORDED else MessageType.AUDIO
+                    messageType =
+                        if (messageObject.isAudioRecorded) MessageType.AUDIO_RECORDED else MessageType.AUDIO
                     replyMessageId = messageObject.replyMessageId
                     fileMessage = FileMessageParams().apply {
                         file = it
@@ -252,7 +280,7 @@ constructor(val application: Application) : CoroutineScope {
                         caption = messageObject.caption
                     }
                 }
-                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback{
+                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
                     override fun onResponse(
                         isSuccess: Boolean,
                         error: Throwable?,
@@ -271,6 +299,31 @@ constructor(val application: Application) : CoroutineScope {
         }
     }
 
+    private fun sendMeetMessage(messageObject: MessageObject, messageListener: MessageListener?) {
+        try {
+            val sendMeetMessageParams = MeetMessage().apply {
+                toId = messageObject.toJid
+                replyMessageId = messageObject.replyMessageId
+                mentionedUsersIds = messageObject.mentionedUsersIds
+                title = messageObject.meetMessageParams?.title
+                link = messageObject.meetMessageParams?.link
+                scheduledDateTime = messageObject.meetMessageParams?.scheduleMeetDateTime
+            }
+            FlyMessenger.sendMeetMessage(sendMeetMessageParams, object : SendMessageCallback {
+                override fun onResponse(
+                    isSuccess: Boolean,
+                    error: Throwable?,
+                    chatMessage: ChatMessage?
+                ) {
+                    if (isSuccess && chatMessage != null && messageListener != null)
+                        messageListener.onSendMessageSuccess(chatMessage)
+                }
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     /**
      * Creates a new contact message[MessageObject] with required default values which
      * can be sent to the user via [sendMessage] method.
@@ -283,13 +336,19 @@ constructor(val application: Application) : CoroutineScope {
      * @param replyMessageId The message id for which this message will be sent as a reply message.
      * @return the prepared [MessageObject] object
      */
-    fun composeContactMessage(toJid: String, data: Intent, replyMessageId: String = Constants.EMPTY_STRING): MessageObject {
+    fun composeContactMessage(
+        toJid: String,
+        data: Intent,
+        replyMessageId: String = Constants.EMPTY_STRING
+    ): MessageObject {
 
         val contactName = data.getStringExtra(Constants.USERNAME)
         val contactNumbers: List<String> = data.getStringArrayListExtra(INTENT_PHONE_NUMBERS)!!
 
-        return MessageObject(toJid, Constants.MSG_TYPE_CONTACT, contactName
-            ?: Constants.EMPTY_STRING, contactNumbers, replyMessageId)
+        return MessageObject(
+            toJid, Constants.MSG_TYPE_CONTACT, contactName
+                ?: Constants.EMPTY_STRING, contactNumbers, replyMessageId
+        )
     }
 
     /**
@@ -305,8 +364,19 @@ constructor(val application: Application) : CoroutineScope {
      * @param replyMessageId The message id for which this message will be sent as a reply message.
      * @return the prepared [MessageObject] object
      */
-    fun composeContactMessage(toJid: String, contactName: String, contactNumbers: List<String>, replyMessageId: String = Constants.EMPTY_STRING): MessageObject {
-        return MessageObject(toJid, Constants.MSG_TYPE_CONTACT, contactName, contactNumbers, replyMessageId)
+    fun composeContactMessage(
+        toJid: String,
+        contactName: String,
+        contactNumbers: List<String>,
+        replyMessageId: String = Constants.EMPTY_STRING
+    ): MessageObject {
+        return MessageObject(
+            toJid,
+            Constants.MSG_TYPE_CONTACT,
+            contactName,
+            contactNumbers,
+            replyMessageId
+        )
     }
 
     /**
@@ -321,7 +391,11 @@ constructor(val application: Application) : CoroutineScope {
      * @param replyMessageId The message id for which this message will be sent as a reply message.
      * @return the prepared [MessageObject] object
      */
-    fun composeContactMessage(toJid: String, contactShareModel: ContactShareModel, replyMessageId: String = Constants.EMPTY_STRING): MessageObject {
+    fun composeContactMessage(
+        toJid: String,
+        contactShareModel: ContactShareModel,
+        replyMessageId: String = Constants.EMPTY_STRING
+    ): MessageObject {
 
         val contactName = contactShareModel.name
         val contactNumbers = arrayListOf<String>()
@@ -329,8 +403,10 @@ constructor(val application: Application) : CoroutineScope {
             contactNumbers.add(contact.contactNos)
         }
 
-        return MessageObject(toJid, Constants.MSG_TYPE_CONTACT, contactName
-            ?: Constants.EMPTY_STRING, contactNumbers, replyMessageId)
+        return MessageObject(
+            toJid, Constants.MSG_TYPE_CONTACT, contactName
+                ?: Constants.EMPTY_STRING, contactNumbers, replyMessageId
+        )
     }
 
     /**
@@ -345,14 +421,24 @@ constructor(val application: Application) : CoroutineScope {
      * @param replyMessageId The message id for which this message will be sent as a reply message.
      * @return the prepared [MessageObject] object in a [Pair]. [Pair.first] indicates the success status
      */
-    fun composeLocationMessage(toJid: String, data: Intent, replyMessageId: String = Constants.EMPTY_STRING)
+    fun composeLocationMessage(
+        toJid: String,
+        data: Intent,
+        replyMessageId: String = Constants.EMPTY_STRING
+    )
             : Pair<Boolean, MessageObject?> {
         return try { // Check if the latitude and longitude are valid data
             if (abs(data.getDoubleExtra(Constants.LATITUDE, 0.0)) > 0.0000001
-                && abs(data.getDoubleExtra(Constants.LONGITUDE, 0.0)) > 0.0000001) {
+                && abs(data.getDoubleExtra(Constants.LONGITUDE, 0.0)) > 0.0000001
+            ) {
 
-                val message = MessageObject(toJid, Constants.MSG_TYPE_LOCATION, data.getDoubleExtra(Constants.LATITUDE, 0.0),
-                    data.getDoubleExtra(Constants.LONGITUDE, 0.0), replyMessageId)
+                val message = MessageObject(
+                    toJid,
+                    Constants.MSG_TYPE_LOCATION,
+                    data.getDoubleExtra(Constants.LATITUDE, 0.0),
+                    data.getDoubleExtra(Constants.LONGITUDE, 0.0),
+                    replyMessageId
+                )
 
                 Pair(true, message)
             } else {
@@ -377,10 +463,19 @@ constructor(val application: Application) : CoroutineScope {
      * @param replyMessageId The message id for which this message will be sent as a reply message.
      * @return the prepared [MessageObject] object
      */
-    fun composeImageMessage(toJid: String, imageFilePath: String, imageCaption: String = Constants.EMPTY_STRING,
-                            replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds: List<String>): MessageObject {
-        return MessageObject(toJid, Constants.MSG_TYPE_IMAGE, imageCaption,
-            ImageUtils.getImageThumbImage(imageFilePath), File(imageFilePath), replyMessageId, mentionedUsersIds)
+    fun composeImageMessage(
+        toJid: String, imageFilePath: String, imageCaption: String = Constants.EMPTY_STRING,
+        replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds: List<String>
+    ): MessageObject {
+        return MessageObject(
+            toJid,
+            Constants.MSG_TYPE_IMAGE,
+            imageCaption,
+            ImageUtils.getImageThumbImage(imageFilePath),
+            File(imageFilePath),
+            replyMessageId,
+            mentionedUsersIds
+        )
     }
 
     /**
@@ -397,7 +492,11 @@ constructor(val application: Application) : CoroutineScope {
      * [Triple.first] indicates isValidDocumentsType
      * [Triple.second] indicates isValidDocumentsSize
      */
-    fun composeDocumentsMessage(toJid: String, mediaFilePath: String, replyMessageId: String = Constants.EMPTY_STRING)
+    fun composeDocumentsMessage(
+        toJid: String,
+        mediaFilePath: String,
+        replyMessageId: String = Constants.EMPTY_STRING
+    )
             : Triple<Boolean, Boolean, MessageObject?> {
 
         var isValidDocumentsType = true
@@ -415,8 +514,10 @@ constructor(val application: Application) : CoroutineScope {
 
         val mediaFileName = Uri.parse(mediaFilePath).lastPathSegment
 
-        val message = MessageObject(toJid, Constants.MSG_TYPE_FILE, File(mediaFilePath), mediaFileName
-            ?: Constants.EMPTY_STRING, replyMessageId)
+        val message = MessageObject(
+            toJid, Constants.MSG_TYPE_FILE, File(mediaFilePath), mediaFileName
+                ?: Constants.EMPTY_STRING, replyMessageId
+        )
 
         return Triple(isValidDocumentsType, isValidDocumentsSize, message)
     }
@@ -435,7 +536,12 @@ constructor(val application: Application) : CoroutineScope {
      * [Triple.first] indicates isValidAudioType
      * [Triple.second] indicates isAudioSizeUnderLimit
      */
-    fun composeAudioMessage(toJid: String,isAudioRecorded: Boolean, mediaFilePath: String, replyMessageId: String = Constants.EMPTY_STRING)
+    fun composeAudioMessage(
+        toJid: String,
+        isAudioRecorded: Boolean,
+        mediaFilePath: String,
+        replyMessageId: String = Constants.EMPTY_STRING
+    )
             : Triple<Boolean, Boolean, MessageObject?> {
         val fileExtension = mediaFilePath.substring(mediaFilePath.lastIndexOf('.')).toLowerCase()
 
@@ -452,8 +558,10 @@ constructor(val application: Application) : CoroutineScope {
             return Triple(isValidAudioType, isAudioSizeUnderLimit, null)
         }
 
-        val messageObject = MessageObject(toJid, Constants.MSG_TYPE_AUDIO, File(mediaFilePath),
-            MediaDetailUtils.getMediaDuration(mediaFilePath),isAudioRecorded,replyMessageId)
+        val messageObject = MessageObject(
+            toJid, Constants.MSG_TYPE_AUDIO, File(mediaFilePath),
+            MediaDetailUtils.getMediaDuration(mediaFilePath), isAudioRecorded, replyMessageId
+        )
 
         return Triple(isValidAudioType, isAudioSizeUnderLimit, messageObject)
     }
@@ -472,14 +580,39 @@ constructor(val application: Application) : CoroutineScope {
      * @return the prepared [MessageObject] object in a [Pair.second]. [Pair.first] indicates whether video size
      * exceeds the limit or not.
      */
-    fun composeVideoMessage(toJid: String, videoFilePath: String, videoCaption: String = Constants.EMPTY_STRING,
-                            replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds: List<String>): Pair<Boolean, MessageObject?> {
+    fun composeVideoMessage(
+        toJid: String, videoFilePath: String, videoCaption: String = Constants.EMPTY_STRING,
+        replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds: List<String>
+    ): Pair<Boolean, MessageObject?> {
 
         val isVideoDurationUnderLimit = true
 
-        val messageObject = MessageObject(toJid, Constants.MSG_TYPE_VIDEO, videoCaption, File(videoFilePath), replyMessageId, mentionedUsersIds)
+        val messageObject = MessageObject(
+            toJid,
+            Constants.MSG_TYPE_VIDEO,
+            videoCaption,
+            File(videoFilePath),
+            replyMessageId,
+            mentionedUsersIds
+        )
 
         return Pair(isVideoDurationUnderLimit, messageObject)
+    }
+
+
+    fun composeMeetMessage(
+        toJid: String,
+        replyMessageId: String = Constants.EMPTY_STRING,
+        mentionedUsersIds: List<String>,
+        meetMessageParams: MeetMessageParams
+    ): MessageObject {
+        return MessageObject(
+            toJid,
+            Constants.MSG_TYPE_MEET,
+            replyMessageId,
+            mentionedUsersIds,
+            meetMessageParams
+        )
     }
 
 

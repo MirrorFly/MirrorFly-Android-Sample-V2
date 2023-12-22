@@ -21,6 +21,7 @@ import com.contusfly.call.groupcall.GroupCallActivity
 import com.contusfly.call.groupcall.OnGoingCallPreviewActivity
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.notification.AppNotificationManager
+import com.contusfly.privateChat.PrivateChatListActivity
 import com.mirrorflysdk.api.FlyCore
 
 
@@ -143,23 +144,16 @@ class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
     }
 
     private fun goToChatView(jid: String, chatType: String) {
-        if (AppLifecycleListener.fromOnCreate && AppLifecycleListener.isPinEnabled)
-            pinForChatOrGroup(jid, chatType)
-        else if (!AppLifecycleListener.isForeground && shouldShowPinOrNot()) {
-            if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
-                SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
-                val intent = Intent(this@StartActivity, BiometricActivity::class.java)
-                    intent.putExtra(GOTO, "CHATVIEW")
-                    intent.putExtra(LibConstants.JID, jid)
-                    intent.putExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE, chatType)
-                    startActivity(intent)
-            } else{
-                SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
-                pinForChatOrGroup(jid, chatType)
-            }
+        if (AppLifecycleListener.fromOnCreate && AppLifecycleListener.isPinEnabled) {
+            Log.d(TAG, "checkNotificationIntent:  oncreate_APP")
+            privateChatNotificationHandle(jid, chatType)
+        }else if (!AppLifecycleListener.isAPPForeground && shouldShowPinOrNot()) {
+            Log.d(TAG, "checkNotificationIntent:  SHOW_PIN")
+            NormalNotificationHandle(jid, chatType)
         } else if (AppLifecycleListener.pinActivityShowing) {
+            Log.d(TAG, "checkNotificationIntent:  SHOW_PIN1")
             SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
-            pinForChatOrGroup(jid, chatType)
+            privateChatNotificationHandle(jid, chatType)
         } else if (intent.hasExtra(Constants.IS_FOR_SAFE_CHAT)){
             Log.d(TAG, getString(R.string.is_from_chat_shortcut))
             startActivities(
@@ -170,9 +164,88 @@ class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
                             .putExtra(Constants.IS_FOR_SAFE_CHAT, true)
                     ).intents
             )
+        } else if (intent.hasExtra(Constants.PRIVATE_CHAT)) {
+            Log.d(TAG, "checkNotificationIntent:  in PRIVATE_CHAT")
+            privateChatNotificationHandle(jid, chatType)
         } else {
             checkAndNavigateToDashboard(jid, chatType)
         }
+    }
+
+    private fun NormalNotificationHandle(jid: String, chatType: String){
+        if(intent.hasExtra(Constants.AUTHENTICATION_NEED)){
+            var isAuthenticationNeed=intent.getBooleanExtra(Constants.AUTHENTICATION_NEED,false)
+            if(isAuthenticationNeed) {
+                pinForChatOrGroup(jid, chatType)
+            } else {
+                redirectToChatPageWithoutAuthentication(jid,chatType)
+            }
+        } else {
+            pinForChatOrGroup(jid, chatType)
+        }
+        SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
+
+    }
+
+    private fun redirectToChatPageWithoutAuthentication(jid: String, chatType: String) {
+        if(shouldShowPinOrNot()) {
+            pinForChatOrGroup(jid, chatType)
+        } else {
+            startActivities(
+                TaskStackBuilder.create(this)
+                    .addNextIntent(
+                        Intent(this, DashboardActivity::class.java)
+                            .setAction(Intent.ACTION_VIEW)
+                            .putExtra(Constants.CHAT_TYPE, chatType)
+                    ).addNextIntent(
+                        Intent(this, ChatActivity::class.java)
+                            .setAction(Intent.ACTION_VIEW)
+                            .putExtra(LibConstants.JID, jid)
+                            .putExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE, chatType)
+                    )
+                    .intents
+            )
+        }
+
+    }
+
+    private fun privateChatNotificationHandle(jid: String, chatType: String) {
+        if(intent.hasExtra(Constants.AUTHENTICATION_NEED)){
+            var isAuthenticationNeed=intent.getBooleanExtra(Constants.AUTHENTICATION_NEED,false)
+            if(isAuthenticationNeed) {
+                pinForChatOrGroup(jid, chatType)
+            } else {
+                if(intent.hasExtra(Constants.PRIVATE_CHAT)){
+                    privateChatRedirectToChatPageWithoutAuthentication(jid,chatType)
+                } else {
+                    redirectToChatPageWithoutAuthentication(jid,chatType)
+                }
+            }
+        } else {
+            pinForChatOrGroup(jid, chatType)
+        }
+    }
+
+    private fun privateChatRedirectToChatPageWithoutAuthentication(jid: String, chatType: String){
+
+        startActivities(
+            TaskStackBuilder.create(this)
+                .addNextIntent(
+                    Intent(this, DashboardActivity::class.java)
+                        .setAction(Intent.ACTION_VIEW)
+                        .putExtra(Constants.CHAT_TYPE, chatType)
+                ).addNextIntent(
+                    Intent(this, PrivateChatListActivity::class.java)
+                        .setAction(Intent.ACTION_VIEW)
+                ).addNextIntent(
+                    Intent(this, ChatActivity::class.java)
+                        .setAction(Intent.ACTION_VIEW)
+                        .putExtra(LibConstants.JID, jid)
+                        .putExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE, chatType)
+                )
+                .intents
+        )
+
     }
 
     private fun checkAndNavigateToDashboard(jid: String, chatType: String) {
@@ -217,11 +290,14 @@ class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
     }
 
     private fun pinForChatOrGroup(jid: String?, chatType: String?) {
+        var isShowPrivateChatList:Boolean=false
+        if(intent.hasExtra(Constants.IS_SHOW_PRIVATE_CHAT_LIST)) isShowPrivateChatList=true
         if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
             val intent = Intent(this@StartActivity, BiometricActivity::class.java)
             intent.putExtra(GOTO, "CHATVIEW")
             intent.putExtra(LibConstants.JID, jid)
             intent.putExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE, chatType)
+            if(isShowPrivateChatList)  intent.putExtra(Constants.IS_SHOW_PRIVATE_CHAT_LIST, true)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             ChatManager.applicationContext.startActivity(intent)
         } else {
@@ -229,6 +305,7 @@ class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
             intent.putExtra(GOTO, "CHATVIEW")
             intent.putExtra(LibConstants.JID, jid)
             intent.putExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE, chatType)
+            if(isShowPrivateChatList)  intent.putExtra(Constants.IS_SHOW_PRIVATE_CHAT_LIST, true)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             ChatManager.applicationContext.startActivity(intent)
         }

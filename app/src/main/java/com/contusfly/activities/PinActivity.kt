@@ -29,6 +29,7 @@ import com.contusfly.R
 import com.contusfly.TAG
 import com.contusfly.databinding.ActivityPinBinding
 import com.contusfly.fragments.BottomSheetOtpFragment
+import com.contusfly.privateChat.PrivateChatListActivity
 import com.contusfly.utils.RequestCode
 import com.contusfly.utils.SafeChatUtils
 import com.contusfly.views.CommonAlertDialog
@@ -148,12 +149,12 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
         SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.IS_PIN_VALIDATED, true)
         binding = ActivityPinBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        intentExtras
         initViews()
         setUpPinExpiryDialog()
         callBackFromPhoneAuth()
         hideKeyboard()
         currentPin
-        intentExtras
         progressDialog = ProgressDialog(this)
         if (intent != null) {
             isFromDisableBoth = intent.getBooleanExtra("DISABLE_BOTH", false)
@@ -180,6 +181,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
     private fun initViews(){
         bottomSheetOtpFragment = BottomSheetOtpFragment(this)
         bottomSheetOtpFragment!!.setCancelButton(this)
+        bottomSheetOtpFragment!!.setComingPage(goTo)
         commonAlertDialog = CommonAlertDialog(this)
         commonAlertDialog!!.setOnDialogCloseListener(this)
         binding.keyboardNumeric.setmPasswordField(binding.pinEditText)
@@ -253,6 +255,9 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
             super.onBackPressed()
         } else if (goTo == Constants.LOGOUT_PIN)
             finish()
+        else if (goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_DISABLE || goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_ENABLE || goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_LIST) {
+            finish()
+        }
         else {
             SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.BACK_PRESS, false)
             SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.IS_PIN_VALIDATED, true)
@@ -333,12 +338,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)).addNextIntent(Intent(this.applicationContext, ChatActivity::class.java).setAction(Intent.ACTION_VIEW)
                                 .putExtra(LibConstants.JID, jid).putExtra(Constants.CHAT_TYPE, chatType)).intents)
                 } else {
-                    startActivities(
-                        TaskStackBuilder.create(this)
-                            .addNextIntent(Intent(this, DashboardActivity::class.java).setAction(Intent.ACTION_VIEW))
-                            .addNextIntent(Intent(this, ChatActivity::class.java).setAction(Intent.ACTION_VIEW)
-                                .putExtra(LibConstants.JID, jid).putExtra(Constants.CHAT_TYPE, chatType)).intents)
-                    finish()
+                    launchChatView()
                 }
             }
             Constants.LOGOUT_PIN -> {
@@ -351,11 +351,54 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
+            com.contusfly.utils.Constants.PRIVATE_CHAT_DISABLE -> {
+
+                val intent=Intent()
+                intent.putExtra(com.contusfly.utils.Constants.PRIVATE_CHAT_TYPE,com.contusfly.utils.Constants.PRIVATE_CHAT_DISABLE)
+                setResult(RESULT_OK,intent)
+                finish()
+            }
+
+            com.contusfly.utils.Constants.PRIVATE_CHAT_ENABLE -> {
+
+                val intent=Intent()
+                intent.putExtra(com.contusfly.utils.Constants.PRIVATE_CHAT_TYPE,com.contusfly.utils.Constants.PRIVATE_CHAT_ENABLE)
+                setResult(RESULT_OK,intent)
+                finish()
+            }
+
+            com.contusfly.utils.Constants.PRIVATE_CHAT_LIST ->{
+                val intent=Intent()
+                intent.putExtra(com.contusfly.utils.Constants.PRIVATE_CHAT_TYPE,com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
+                setResult(RESULT_OK,intent)
+                finish()
+            }
             else -> {
                 handleReDirections()
             }
         }
         isFromShowDialog = false
+    }
+
+    private fun launchChatView(){
+
+        if(intent.hasExtra(com.contusfly.utils.Constants.IS_SHOW_PRIVATE_CHAT_LIST)){
+
+            startActivities(
+                TaskStackBuilder.create(this)
+                    .addNextIntent(Intent(this, DashboardActivity::class.java).setAction(Intent.ACTION_VIEW))
+                    .addNextIntent(Intent(this, PrivateChatListActivity::class.java).setAction(Intent.ACTION_VIEW))
+                    .addNextIntent(Intent(this, ChatActivity::class.java).setAction(Intent.ACTION_VIEW)
+                        .putExtra(LibConstants.JID, jid).putExtra(Constants.CHAT_TYPE, chatType)).intents)
+            finish()
+        } else {
+            startActivities(
+                TaskStackBuilder.create(this)
+                    .addNextIntent(Intent(this, DashboardActivity::class.java).setAction(Intent.ACTION_VIEW))
+                    .addNextIntent(Intent(this, ChatActivity::class.java).setAction(Intent.ACTION_VIEW)
+                        .putExtra(LibConstants.JID, jid).putExtra(Constants.CHAT_TYPE, chatType)).intents)
+            finish()
+        }
     }
 
     private fun handleReDirections() {
@@ -367,6 +410,8 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
             })
         } else if ("DASHBOARD" == goTo || !SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.RESET_PIN)) {
             if (isFromSettings) finish()
+            else if (goTo == "")
+                finish()
             else {
                 startActivity(Intent(this, DashboardActivity::class.java))
                 finish()
@@ -647,8 +692,10 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
     /**
      * if Pin Expired, this function helps to navigate to Dashboard after new pin set.
      */
-    fun goToDashBoard(){
+    fun goToDashBoard() {
+        if(goTo != com.contusfly.utils.Constants.PRIVATE_CHAT_DISABLE && goTo != com.contusfly.utils.Constants.PRIVATE_CHAT_LIST)
         goTo = "DASHBOARD"
+
         dialog.dismiss()
     }
 
@@ -675,6 +722,18 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
          */
         private fun callAppListener(isShow: Boolean) {
             AppLifecycleListener.pinActivityShowing = isShow
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val intentKey = com.contusfly.utils.Constants.GO_TO
+        if (intent != null && intent.hasExtra(intentKey)) {
+            goTo = intent.getStringExtra(intentKey).toString()
+            if (goTo.equals("CHATVIEW", ignoreCase = true)) {
+                jid = intent.getStringExtra(LibConstants.JID)
+                chatType = intent.getStringExtra(Constants.CHAT_TYPE)
+            }
         }
     }
 

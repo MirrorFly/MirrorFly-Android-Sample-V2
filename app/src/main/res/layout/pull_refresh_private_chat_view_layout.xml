@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/private_chat_release_parent_layout"
+    android:visibility="visible">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_80"
+        android:background="@color/color_chat_contact_separator">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/down_arrow_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/private_title_tv"
+            app:layout_constraintLeft_toRightOf="@+id/private_title_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/down_arrow_round_icon"
+            android:paddingStart="@dimen/padding_12"
+            android:paddingTop="@dimen/padding_15"
+            android:paddingEnd="@dimen/padding_12"
+            android:paddingBottom="@dimen/padding_12" />
+
+        <TextView
+            android:id="@+id/private_title_tv"
+            style="@style/StatusList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="true"
+            android:paddingStart="@dimen/padding_12"
+            android:paddingTop="@dimen/padding_15"
+            android:paddingEnd="@dimen/padding_12"
+            android:paddingBottom="@dimen/padding_12"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/private_chat_release_label"
+            android:theme="@style/ChatTag_semibold"
+            android:textColor="@color/dashboard_toolbar_text_color"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:textSize="@dimen/padding_14"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

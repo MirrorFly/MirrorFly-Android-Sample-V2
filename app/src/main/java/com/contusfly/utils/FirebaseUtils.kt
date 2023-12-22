@@ -6,19 +6,20 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
+import com.contusfly.TAG
 import com.contusfly.constants.MobileApplication
 import com.contusfly.getChatType
 import com.contusfly.notification.AppNotificationManager
 import com.contusfly.notification.NotificationBuilder
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.installations.FirebaseInstallations
 import com.mirrorflysdk.api.ChatActionListener
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.notification.NotificationEventListener
 import com.mirrorflysdk.api.notification.PushNotificationManager
-import com.mirrorflysdk.media.MediaUploadHelper
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.installations.FirebaseInstallations
 import com.mirrorflysdk.flycommons.ChatType
+import com.mirrorflysdk.media.MediaUploadHelper
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -28,6 +29,8 @@ import kotlin.coroutines.CoroutineContext
  * @version 1.0
  */
 class FirebaseUtils : CoroutineScope {
+
+    class FirebaseUtils()
 
     /**
      * The notification data read from the Firebase.
@@ -85,6 +88,7 @@ class FirebaseUtils : CoroutineScope {
             if (it.containsKey("push_from") && it["push_from"].equals("MirrorFly")) {
                 PushNotificationManager.handleReceivedMessage(it, object : NotificationEventListener {
                     override fun onMessageReceived(chatMessage : ChatMessage) {
+                        com.mirrorflysdk.flycommons.LogMessage.v(TAG, "#fcm Delivery API Callback Received")
                         updateProfileOnNotification(context,chatMessage)
                         val messageType = Utils.returnEmptyStringIfNull(it[com.mirrorflysdk.flycommons.Constants.TYPE])
                         if ((it.containsKey("user_jid") && !ProfileDetailsUtils.getProfileDetails(it["user_jid"].toString())?.isMuted!!) ||

@@ -2,8 +2,11 @@ package com.contusfly.chat
 
 import android.content.Context
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.*
@@ -44,7 +47,7 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
                 suggestionLayout.gone()
                 parentViewmodel.addMessage(replyMessage, jid)
                 when (replyMessage.messageType) {
-                    MessageType.TEXT ->
+                    MessageType.TEXT,MessageType.MEET ->
                         showReplyTextMessage(replyMessage)
                     MessageType.IMAGE, MessageType.VIDEO ->
                         showReplyImageVideoMessage(replyMessage)
@@ -70,13 +73,20 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
      * @param replyMessage       Reply message item
      */
     private fun showReplyTextMessage(replyMessage: ChatMessage) {
-        if(replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted())
+        if (replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted())
             showRecalledReplyMessage(replyMessage)
         else {
-            messageContent.text = if(replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
-                MentionUtils.formatMentionText(context,replyMessage,false)
+            if (MessageType.MEET == replyMessage.messageType) {
+                val meetMessage =
+                    ChatUserTimeUtils.scheduledDateTimeFormat(replyMessage.meetingChatMessage.scheduledDateTime.toLong())
+                messageContent.text = meetMessage
             } else {
-                ChatUtils.getSpannedText(context,replyMessage.messageTextContent)
+                messageContent.text =
+                    if (replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
+                        MentionUtils.formatMentionText(context, replyMessage, false)
+                    } else {
+                        ChatUtils.getSpannedText(context, replyMessage.messageTextContent)
+                    }
             }
             messageSenderName.text = replyMessage.getSenderName()
         }

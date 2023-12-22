@@ -102,7 +102,7 @@ class UserListActivity : BaseContactActivity() {
                         mUserListType = UserListType.SEARCH
                         viewModel.resetSearch()
                         viewModel.addSearchLoaderToTheList()
-                        viewModel.searchUserList(searchString, fromGroupInfo, groupId)
+                        viewModel.searchUserList(searchKey, fromGroupInfo, groupId)
                     }
 
                     setAdapterBasedOnSearchType()

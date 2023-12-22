@@ -43,7 +43,7 @@ class CustomRecyclerView : RecyclerView {
      *
      * @param context the startupActivityContext
      */
-    constructor(context: Context?) : super(context!!) {}
+    constructor(context: Context?) : super(context!!)
 
     /**
      * Instantiates a new custom recycler view.
@@ -51,7 +51,7 @@ class CustomRecyclerView : RecyclerView {
      * @param context the startupActivityContext
      * @param attrs   the attrs
      */
-    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {}
+    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs)
 
     /**
      * Instantiates a new custom recycler view.
@@ -60,7 +60,11 @@ class CustomRecyclerView : RecyclerView {
      * @param attrs    the attrs
      * @param defStyle the def style
      */
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context!!, attrs, defStyle) {}
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
+        context!!,
+        attrs,
+        defStyle
+    )
 
     override fun setAdapter(adapter: Adapter<*>?) {
         val oldAdapter = getAdapter()
@@ -90,4 +94,5 @@ class CustomRecyclerView : RecyclerView {
         this.emptyView = emptyView
         checkIfEmpty()
     }
+
 }

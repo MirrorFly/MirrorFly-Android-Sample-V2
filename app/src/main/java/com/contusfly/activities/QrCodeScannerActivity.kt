@@ -9,6 +9,7 @@ import com.contusfly.BuildConfig
 import com.contusfly.R
 import com.contusfly.databinding.ActivityQrCodeScannerBinding
 import com.contusfly.getMessage
+import com.contusfly.utils.LogMessage
 import com.contusfly.utils.UserInterfaceUtils.Companion.setUpToolBar
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.FlyCore
@@ -54,6 +55,7 @@ class QrCodeScannerActivity : BaseActivity(), BarcodeCallback {
     }
 
     override fun barcodeResult(result: BarcodeResult?) {
+        LogMessage.e("#qrlogin","Scanned Successfully")
         FlyCore.loginWebChatViaQRCode(result!!.result.text) { isSuccess, _, data ->
             if (isSuccess) {
                 val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator

@@ -36,8 +36,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 15
-        versionName "7.6.0"
+        versionCode 16
+        versionName "7.9.3"
         multiDexEnabled true
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         vectorDrawables.useSupportLibrary = true
@@ -47,6 +47,7 @@ android {
 
     buildTypes {
         debug {
+            initWith debug
             buildConfigField 'Boolean', 'IS_QA_BUILD', 'true'
             buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
@@ -73,6 +74,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -139,13 +141,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-config-ktx'
     implementation 'androidx.browser:browser:1.3.0'
 
+    // Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.3.0'
+
     //KTX Depenedency
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
-
     //For lifecycle listener
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     //noinspection LifecycleAnnotationProcessorWithJava8
     kapt 'android.arch.lifecycle:compiler:1.1.1'
+
 
     //For gson parsing
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -199,7 +205,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.6.4'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.9.3'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
@@ -215,9 +221,7 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.5.0'
     implementation "androidx.room:room-ktx:2.5.0"
 
-    // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    kapt 'androidx.lifecycle:lifecycle-compiler:2.3.0'
+
     //apicalls
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
@@ -250,6 +254,12 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    implementation("org.greenrobot:eventbus:3.3.1")
+
+
+    def lottieVersion = "6.1.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 
 }
 repositories {

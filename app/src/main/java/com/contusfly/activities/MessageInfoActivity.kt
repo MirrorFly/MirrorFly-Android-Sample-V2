@@ -8,6 +8,7 @@ import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.R
 import com.contusfly.activities.parent.BaseMessageInfoActivity
 import com.contusfly.databinding.ActivityMessageInfoBinding
+import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.utils.ChatMessageUtils
 import com.contusfly.utils.ChatMsgTime
 import com.contusfly.utils.UserInterfaceUtils
@@ -15,6 +16,9 @@ import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ChatMessageStatusDetail
 import dagger.android.AndroidInjection
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -146,4 +150,22 @@ class MessageInfoActivity : BaseMessageInfoActivity() {
             else ChatMessageUtils.setFavouriteStatus(imgFav, message!!.isMessageStarred())
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(messageEvent: PrivateChatAuthenticationModel?) {
+        if(messageEvent!!.isAutheticationShow) {
+            launchAuthPinActivity()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+
 }

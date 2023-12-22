@@ -198,7 +198,7 @@ fun Boolean.ifElse(functionOne: () -> Unit, functionTwo: () -> Unit) {
 fun RecentChat.isDeletedContact() = contactType == ContactType.DELETED_CONTACT
 fun RecentChat.isSingleChat() = !isGroup && !isBroadCast
 
-fun RecentChat.isUnknownContact() = !isDeletedContact() && !isItSavedContact() && !isGroup
+fun RecentChat.isUnknownContact() = !isDeletedContact() && !isItSavedContact && !isGroup
 
 fun RecentChat.isEmailContact() : Boolean{
     return if (isUnknownContact()) {
@@ -206,7 +206,16 @@ fun RecentChat.isEmailContact() : Boolean{
     } else false
 }
 
-fun RecentChat.getDisplayName(): String = (if (isSingleChat() && BuildConfig.CONTACT_SYNC_ENABLED) nickName else profileName) ?: jid
+fun RecentChat.getDisplayName(): String {
+    return if (BuildConfig.CONTACT_SYNC_ENABLED) {
+        when {
+            isUnknownContact() || nickName.isNullOrBlank() -> Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(jid))
+            else -> nickName
+        }
+    } else {
+        profileName ?: jid
+    }
+}
 
 fun ChatMessage.isContactMessage() = messageType == com.mirrorflysdk.flycommons.models.MessageType.CONTACT
 
@@ -329,7 +338,7 @@ fun CustomDrawable.getDefaultDrawable(recentChat: RecentChat): Drawable {
             if (profileDetails?.isBlockedMe!! || profileDetails.isAdminBlocked || profileDetails.isDeletedContact()) {
                 this.context.getDefaultDrawable(profileDetails.getChatType())
             } else {
-                SetDrawable(context, profileDetails).setDrawable(profileDetails.getDisplayName())!!
+                SetDrawable(context, profileDetails).setDrawableForProfile(profileDetails.getDisplayName())
             }
         }
     }
@@ -341,7 +350,7 @@ fun CustomDrawable.getDefaultDrawable(profileDetails: ProfileDetails): Drawable 
         profileDetails.isGroupProfile -> this.context.getDefaultDrawable(ChatType.TYPE_GROUP_CHAT)
         else -> {
             if(!profileDetails.isBlockedMe && !profileDetails.isAdminBlocked && !profileDetails.isDeletedContact() && profileDetails.nickName != null)
-                SetDrawable(context, profileDetails).setDrawable(profileDetails.getDisplayName())!!
+                SetDrawable(context, profileDetails).setDrawableForProfile(profileDetails.getDisplayName())
             else
                 this.context.getDefaultDrawable(profileDetails.getChatType())
         }
@@ -389,9 +398,10 @@ fun ChatMessage.isMessageSeen() = messageStatus == MessageStatus.SEEN
 
 fun ChatMessage.isGroupMessage() = messageChatType == ChatTypeEnum.groupchat
 fun ChatMessage.getSenderJid(): String =
-    if (isGroupMessage()) getChatUserJid() else getSenderUserJid()
+    if (isGroupMessage()) chatUserJid else senderUserJid
 
 fun ChatMessage.isTextMessage() = messageType == com.mirrorflysdk.flycommons.models.MessageType.TEXT
+fun ChatMessage.isMeetMessage() = messageType == com.mirrorflysdk.flycommons.models.MessageType.MEET
 fun ChatMessage.isAudioMessage() =
     messageType == com.mirrorflysdk.flycommons.models.MessageType.AUDIO
 
@@ -522,7 +532,6 @@ fun ProfileDetails.getDisplayName() : String {
     return if (BuildConfig.CONTACT_SYNC_ENABLED) {
         when {
             jid.equals(getCurrentUserJid()) -> Constants.YOU
-            isDeletedContact() -> Constants.DELETED_USER
             isUnknownContact() || nickName.isNullOrBlank() -> Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(jid))
             else -> nickName
         }
@@ -824,4 +833,16 @@ fun Context.isWritePermissionAllowed(permission: String): Boolean{
 
 fun Context.isNotificationPermissionAllowed(permission: String): Boolean{
     return Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+}
+
+fun View.visibilityChanged(action: (View) -> Unit) {
+    this.viewTreeObserver.addOnGlobalLayoutListener {
+        val newVis: Int = this.visibility
+        if (this.tag as Int? != newVis) {
+            this.tag = this.visibility
+
+            // visibility has changed
+            action(this)
+        }
+    }
 }

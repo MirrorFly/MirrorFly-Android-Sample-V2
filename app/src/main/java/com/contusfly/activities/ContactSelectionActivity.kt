@@ -19,10 +19,14 @@ import com.contusfly.databinding.ActivityContactSelectionBinding
 import com.contusfly.emptyString
 import com.contusfly.models.DeviceContactModel
 import com.contusfly.models.PhoneNumber
+import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.utils.Constants
 import com.contusfly.viewmodels.ContactSelectionViewModel
 import com.mirrorflysdk.views.CustomToast
 import dagger.android.AndroidInjection
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -97,10 +101,6 @@ class ContactSelectionActivity : BaseActivity() {
             contactSelectionViewModel.onContactItemClicked(item)
             if (isSelected)
                 contactSelectionBinding.selectedContactsRecyclerView.scrollToPosition(contactSelectionViewModel.selectedContactList.size)
-        }
-
-        contactSectionAdapter.onContactMaxLimitReached {
-            showMaxRestrictionToast(it)
         }
 
         contactSelectionPreviewAdapter.onContactRemoved { item ->
@@ -192,4 +192,23 @@ class ContactSelectionActivity : BaseActivity() {
         })
         return true
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(messageEvent: PrivateChatAuthenticationModel?) {
+        if(messageEvent!!.isAutheticationShow) {
+            launchAuthPinActivity()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+
 }

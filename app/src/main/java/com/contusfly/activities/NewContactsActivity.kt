@@ -9,7 +9,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -106,10 +108,13 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
         val contactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_CONTACTS)
 
         if(contactPermissionGranted) {
-            syncContacts()
+            LogMessage.i(TAG, "#NewContacts contactPermissionLauncher  contactPermissionGranted")
+            setContactSyncObservers()
             viewModel.checkContactsUpdate()
         }
     }
+
+    private var profiledetails:ProfileDetails?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -200,10 +205,6 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
             newContactsBinding.emptyList.textEmptyView.gone()
             newContactsBinding.viewListContacts.setEmptyView(newContactsBinding.noContactsView.root)
         }
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
     }
 
     private fun showMenuOption(menu: Menu): Boolean {
@@ -342,6 +343,7 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
 
     private fun setObservers() {
         viewModel.contactDiffResult.observe(this) {
+            LogMessage.i(TAG, "#NewContacts contactDiffResult changes observed ")
             // Retrieve the selected profiles state
             retrievedSelectedProfilesState()
 
@@ -388,6 +390,7 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
     }
 
     private fun updateContactsList() {
+        LogMessage.i(TAG, "#NewContacts updateContactsList ")
         viewModel.getContactList(fromGroupInfo, groupId)
     }
 
@@ -408,13 +411,52 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
                 }
                 ft.addToBackStack(null)
                 dialogFragment!!.show(ft, "dialog")
-            } else{
-                startActivity(Intent(context, ChatActivity::class.java)
-                    .putExtra(LibConstants.JID, profile.jid)
-                    .putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT))
+            } else {
+                privateChatUserChecking(profile)
             }
         }
     }
+
+
+    private fun privateChatUserChecking(profile: ProfileDetails) {
+        profiledetails=profile
+        if(ChatManager.isPrivateChat(profile.jid)) {
+            launchPinActivity()
+        } else {
+            launchChatPage(profile)
+        }
+    }
+
+    private fun launchChatPage(profile: ProfileDetails){
+        if(profile!=null) {
+            startActivity(Intent(context, ChatActivity::class.java)
+                .putExtra(LibConstants.JID, profile.jid)
+                .putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT))
+        }
+    }
+
+    private fun launchPinActivity() {
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            myActivityResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            myActivityResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var myActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                profiledetails?.let { launchChatPage(it) }
+            }
+        }
+
 
     private fun handleMultiSelection(profile: ProfileDetails) {
         if (profile.isBlocked)
@@ -450,11 +492,13 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
 
     override fun userDetailsUpdated() {
         super.userDetailsUpdated()
+        LogMessage.i(TAG, "#NewContacts userDetailsUpdated ")
         updateContactsList()
     }
 
     override fun userUpdatedHisProfile(jid: String) {
         super.userUpdatedHisProfile(jid)
+        LogMessage.i(TAG, "#NewContacts userUpdatedHisProfile ")
         updateUserProfileInfo(jid)
     }
 
@@ -463,10 +507,12 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
      */
     override fun userDeletedHisProfile(jid: String) {
         super.userDeletedHisProfile(jid)
+        LogMessage.i(TAG, "#NewContacts userDeletedHisProfile ")
         removeUserProfile(jid)
     }
 
     private fun removeUserProfile(jid: String) {
+        LogMessage.i(TAG, "#NewContacts removeUserProfile jid:$jid")
         val userIndex = viewModel.contactListAdapter.indexOfFirst { profile -> profile.jid == jid }
         if (userIndex.isValidIndex()) {
             viewModel.selectedUsersJid.remove(jid)
@@ -478,46 +524,61 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
 
     override fun userBlockedMe(jid: String) {
         super.userBlockedMe(jid)
+        LogMessage.i(TAG, "#NewContacts userBlockedMe jid:$jid")
         ContusContactUtils.refreshContusContact(jid)
         updateUserProfileInfo(jid)
     }
 
     override fun userUnBlockedMe(jid: String) {
         super.userUnBlockedMe(jid)
+        LogMessage.i(TAG, "#NewContacts userUnBlockedMe jid:$jid")
         ContusContactUtils.refreshContusContact(jid)
         updateUserProfileInfo(jid)
     }
 
+    private fun checkWhenUserIndexIsValid(userIndex: Int ,jid: String){
+        LogMessage.i(TAG, "#NewContacts checkWhenUserIndexIsValid jid:$jid userIndex:$userIndex")
+        val oldProfile = viewModel.contactListAdapter[userIndex]
+        val updatedProfile = ProfileDetailsUtils.getProfileDetails(jid)!!
+        updatedProfile.isSelected = oldProfile.isSelected
+        viewModel.contactListAdapter[userIndex] = updatedProfile
+        val bundle = Bundle()
+        bundle.putInt(Constants.NOTIFY_PROFILE_ICON, 2)
+        mAdapter.notifyItemChanged(userIndex, bundle)
+        newContactsBinding.viewListContacts.post {
+            if (searchKey.isNotBlank())
+                mAdapter.filter.filter(searchKey)
+        }
+        if (this.profileDetails != null && dialogFragment != null && dialogFragment!!.context != null && dialogFragment!!.profileDetails.jid == jid) {
+            dialogFragment!!.profileDetails = ProfileDetailsUtils.getProfileDetails(jid)!!
+            dialogFragment!!.refreshView()
+        }
+    }
+
     private fun updateUserProfileInfo(jid: String) {
         try {
+            LogMessage.i(TAG, "#NewContacts updateUserProfileInfo jid:$jid")
             val userIndex = viewModel.contactListAdapter.indexOfFirst { profile -> profile.jid == jid }
             if (userIndex.isValidIndex()) {
-                val oldProfile = viewModel.contactListAdapter[userIndex]
-                val updatedProfile = ProfileDetailsUtils.getProfileDetails(jid)!!
-                updatedProfile.isSelected = oldProfile.isSelected
-                viewModel.contactListAdapter[userIndex] = updatedProfile
-                val bundle = Bundle()
-                bundle.putInt(Constants.NOTIFY_PROFILE_ICON, 2)
-                mAdapter.notifyItemChanged(userIndex, bundle)
-                newContactsBinding.viewListContacts.post {
-                    if (searchKey.isNotBlank())
-                        mAdapter.filter.filter(searchKey)
-                }
-                if (this.profileDetails != null && dialogFragment != null && dialogFragment!!.context != null && dialogFragment!!.profileDetails.jid == jid) {
-                    dialogFragment!!.profileDetails = ProfileDetailsUtils.getProfileDetails(jid)!!
-                    dialogFragment!!.refreshView()
-                }
+                checkWhenUserIndexIsValid(userIndex,jid)
             } else {
                 val updatedProfile = ProfileDetailsUtils.getProfileDetails(jid)!!
                 if(!updatedProfile.isUnknownContact() && !updatedProfile.isDeletedContact() ) {
-                    val list =
-                        viewModel.contactDetailsList.value?.toMutableList() ?: mutableListOf()
-                    list.add(updatedProfile)
-                    val sortedList = ProfileDetailsUtils.sortProfileList(list)
-                    val newIndex = sortedList.indexOfFirst { profile -> profile.jid == jid }
-                    viewModel.contactListAdapter.add(newIndex, updatedProfile)
-                    mAdapter.notifyItemInserted(newIndex)
-                    mAdapter.filter.filter(searchKey)
+                    if(viewModel.contactDetailsList.value!!.isNotEmpty()){
+                        val list =
+                            viewModel.contactDetailsList.value?.toMutableList() ?: mutableListOf()
+                        list.add(updatedProfile)
+                        LogMessage.i(TAG, "#NewContacts updateUserProfileInfo list:${list.size}")
+                        val sortedList = ProfileDetailsUtils.sortProfileList(list)
+                        val newIndex = sortedList.indexOfFirst { profile -> profile.jid == jid }
+                        LogMessage.i(TAG, "#NewContacts updateUserProfileInfo sortedList:$sortedList")
+                        LogMessage.i(TAG, "#NewContacts updateUserProfileInfo newIndex:$newIndex")
+                        viewModel.contactListAdapter.add(newIndex, updatedProfile)
+                        mAdapter.notifyItemInserted(newIndex)
+                        mAdapter.filter.filter(searchKey)
+                    }else{
+                        LogMessage.i(TAG, "#NewContacts updateUserProfileInfo list may be fetching!!")
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -557,6 +618,7 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
     override fun onResume() {
         super.onResume()
         if (BuildConfig.CONTACT_SYNC_ENABLED) {
+            LogMessage.i(TAG, "#NewContacts onResume CONTACT_SYNC_ENABLED ")
             if (viewModel.contactSyncNeeded.value != null && !viewModel.contactSyncNeeded.value!!)
                 newContactsBinding.progressSpinner.gone()
             checkContactPermission()
@@ -565,8 +627,9 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
     }
 
     private fun checkContactPermission() {
+        LogMessage.i(TAG, "#NewContacts  checkContactPermission syncNeeded:$syncNeeded")
         if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)){
-            syncContacts()
+            setContactSyncObservers()
             if (syncNeeded)
                 viewModel.checkContactsUpdate()
             else if (FlyCore.contactSyncState.value == Result.InProgress)
@@ -574,17 +637,20 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
         }
     }
 
-    private fun syncContacts() {
-        viewModel.contactSyncNeeded.observe(this, { syncNeeded ->
-            LogMessage.i(TAG, "[Contact Sync] contactSyncNeeded: $syncNeeded ")
+    private fun setContactSyncObservers() {
+        LogMessage.i(TAG, "#NewContacts setContactSyncObservers ")
+        viewModel.contactSyncNeeded.observe(this) { syncNeeded ->
+            LogMessage.i(TAG, "#NewContacts contactSyncNeeded syncNeeded: $syncNeeded ")
             if (syncNeeded && BuildConfig.CONTACT_SYNC_ENABLED) refreshContacts()
-        })
-        viewModel.isContactSyncSuccess.observe(this, {
+        }
+        viewModel.isContactSyncSuccess.observe(this) {
+            LogMessage.i(TAG, "#NewContacts isContactSyncSuccess : $it")
             viewModel.getContactList(fromGroupInfo, groupId)
-        })
+        }
     }
 
     private fun checkContactPermissionAndSync(){
+        LogMessage.i(TAG, "#NewContacts checkContactPermissionAndSync ")
         if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
             viewModel.contactSyncNeeded.value = true
         } else MediaPermissions.requestContactsReadPermission(
@@ -595,20 +661,21 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
     }
 
     private fun refreshContacts() {
-        LogMessage.d(TAG, "[Contact Sync] refreshContacts()")
+        LogMessage.d(TAG, "#NewContacts  refreshContacts()")
         if (AppUtils.isNetConnected(this)) {
             if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
                 newContactsBinding.progressSpinner.show()
                 newContactsBinding.swipeToRefreshLayout.isRefreshing = false
                 if (FlyCore.contactSyncState.value != Result.InProgress) {
                     val s=SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE)
-                    LogMessage.d(TAG, "[Contact Sync] refreshContacts()$s")
+                    LogMessage.d(TAG, "#NewContacts  INITIAL_CONTACT_SYNC_DONE: $s")
                     FlyCore.syncContacts(!SharedPreferenceManager.getBoolean(Constants.INITIAL_CONTACT_SYNC_DONE)) { success, _, _ ->
+                        LogMessage.d(TAG, "#NewContacts  syncContacts success: $success")
                         newContactsBinding.progressSpinner.gone()
                         viewModel.onContactSyncFinished(success)
                         viewModel.isContactSyncSuccess.value = true
                     }
-                } else LogMessage.d(TAG, "[Contact Sync] Contact syncing is already in progress")
+                } else LogMessage.d(TAG, "#NewContacts Sync Contact syncing is already in progress")
             } else {
                 MediaPermissions.requestContactsReadPermission(
                     this,
@@ -627,13 +694,14 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
 
     override fun onContactSyncComplete(isSuccess: Boolean) {
         super.onContactSyncComplete(isSuccess)
-        LogMessage.e(TAG, "checkContactPermission isSuccess: called2")
+        LogMessage.d(TAG, "#NewContacts Sync onContactSyncComplete isSuccess: $isSuccess")
         if (!MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)){
             viewModel.getContactList(fromGroupInfo, groupId)
-            LogMessage.e(TAG, "checkContactPermission isSuccess: called")
+            LogMessage.d(TAG, "#NewContacts Sync checkContactPermission READ_CONTACTS failed")
             return
         }
         if (isSuccess) {
+            LogMessage.d(TAG, "#NewContacts Sync onContactSyncComplete isSuccess")
             SharedPreferenceManager.setBoolean(Constants.INITIAL_CONTACT_SYNC_DONE, true)
             val email = Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.EMAIL))
             if (ChatUtils.isContusUser(email))
@@ -646,6 +714,7 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
     }
 
     private fun finishContactSync(success: Boolean) {
+        LogMessage.d(TAG, "#NewContacts Sync finishContactSync ")
         newContactsBinding.progressSpinner.gone()
         viewModel.onContactSyncFinished(success)
         viewModel.isContactSyncSuccess.value = true

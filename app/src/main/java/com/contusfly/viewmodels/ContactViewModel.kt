@@ -20,6 +20,7 @@ import com.mirrorflysdk.api.contacts.ProfileDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 /**
@@ -49,21 +50,32 @@ class ContactViewModel @Inject constructor() : ViewModel() {
 
     var selectedUsersJid = ArrayList<String>()
 
+    var isGetContactListInProgress = AtomicBoolean(false)
+
     fun getContactList(fromGroupInfo: Boolean, groupId: String?) {
         viewModelScope.launch {
-            val contusContacts = ContusContactUtils.getContusContacts()
-            if (fromGroupInfo && !groupId.isNullOrEmpty()) {
-                getGroupContactList(contusContacts, groupId)
-            } else {
-                getContactList(contusContacts)
+            LogMessage.i(TAG, "#NewContacts getContactList fromGroupInfo:$fromGroupInfo groupId:$groupId")
+            if(isGetContactListInProgress.compareAndSet(false,true)){
+                val contusContacts = ContusContactUtils.getContusContacts()
+                if (fromGroupInfo && !groupId.isNullOrEmpty()) {
+                    getGroupContactList(contusContacts, groupId)
+                } else {
+                    getContactList(contusContacts)
+                }
+            }else{
+                LogMessage.i(TAG, "#NewContacts getContactList already in progress")
             }
         }
     }
 
-    private fun getContactList(contusContacts: ArrayList<ProfileDetails>){
+    @Synchronized
+    private fun  getContactList(contusContacts: ArrayList<ProfileDetails>){
+        LogMessage.i(TAG, "#NewContacts getContactList Contacts: ${contusContacts.size}")
         FlyCore.getRegisteredUsers(false) { isSuccess, _, data ->
             if (isSuccess) {
+
                 val profileDetails = data[SDK_DATA] as MutableList<ProfileDetails>
+                LogMessage.i(TAG, "#NewContacts getContactList getRegisteredUsers profileDetails: ${profileDetails.size}")
                 profileDetails.forEach { contact ->
                     val index = contusContacts.indexOfFirst { it.jid == contact.jid }
                     if (index.isValidIndex())
@@ -77,6 +89,7 @@ class ContactViewModel @Inject constructor() : ViewModel() {
                     else
                         selectedUsersJid.remove(jid)
                 }
+                LogMessage.d(TAG, "#NewContacts getContactList  profileDetails size to be set${profileDetails.size}")
                 contactDetailsList.value = updateProfiles(profileDetails)
                 getContactDiffResult()
             }
@@ -85,10 +98,11 @@ class ContactViewModel @Inject constructor() : ViewModel() {
 
     private fun getGroupContactList(contusContacts: java.util.ArrayList<ProfileDetails>, groupId: String) {
         val profileDetailsList = GroupManager.getUsersListToAddMembersInOldGroup(groupId).toMutableList()
-        LogMessage.e(TAG, "checkContactPermission isSuccess: size2:${profileDetailsList.size}")
+        LogMessage.d(TAG, "#NewContacts getGroupContactList InitialSize:${profileDetailsList.size}")
         val groupMemberDetailsList = ArrayList<ProfileDetails>()
         GroupManager.getGroupMembersList(false, groupId) { isSuccess, _, data ->
             if (isSuccess) {
+                LogMessage.d(TAG, "#NewContacts getGroupContactList getGroupMembersList isSuccess")
                 val groupMemberList = data[SDK_DATA] as MutableList<ProfileDetails>
                 groupMemberDetailsList.addAll(groupMemberList)
             }
@@ -100,14 +114,14 @@ class ContactViewModel @Inject constructor() : ViewModel() {
             profileDetailsList.forEach { contact ->
                 val index = contusContacts.indexOfFirst { it.jid == contact.jid }
                 if (index.isValidIndex()) {
-                    if (contact.isItSavedContact())
+                    if (contact.isItSavedContact)
                         contusContacts.removeAt(index)
                     else
                         profileDetailsList.remove(contact)
                 }
             }
             profileDetailsList.addAll(contusContacts)
-            LogMessage.d(FlyCore.TAG, "#profile getFriendsList size1:${profileDetailsList.size}")
+            LogMessage.d(FlyCore.TAG, "#NewContactsget #profile GroupContactList: profileDetailsList:${profileDetailsList.size}")
             contactDetailsList.value = updateProfiles(profileDetailsList)
             getContactDiffResult()
         }
@@ -115,11 +129,13 @@ class ContactViewModel @Inject constructor() : ViewModel() {
 
 
     private fun updateProfiles(profileDetails: List<ProfileDetails>): List<ProfileDetails> {
+        LogMessage.i(TAG, "#NewContacts updateProfiles profileDetails: ${profileDetails.size}")
         val filteredProfiles = mutableListOf<ProfileDetails>()
         val profiles = ProfileDetailsUtils.sortProfileList(profileDetails)
         profiles.forEach { profileDetail ->
             if (!profileDetail.isAdminBlocked) filteredProfiles.add(profileDetail)
         }
+        LogMessage.d(FlyCore.TAG, "#NewContacts updateProfiles: filteredProfiles: ${filteredProfiles.size}")
         return filteredProfiles
     }
 
@@ -147,12 +163,15 @@ class ContactViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun getContactDiffResult() {
+    fun getContactDiffResult() {
         viewModelScope.launch {
+            LogMessage.i(TAG, "#NewContacts getContactList getContactDiffResult : ")
             val diffResult = getDiffUtilResult(ProfileDiffCallback(contactListAdapter, contactDetailsList.value!!))
             contactListAdapter.clear()
             contactListAdapter.addAll(contactDetailsList.value!!)
             contactDiffResult.value = diffResult
+            isGetContactListInProgress.set(false)
+            LogMessage.i(TAG, "#NewContacts getContactList getContactDiffResult isGetContactListInProgress: ${isGetContactListInProgress.get()}")
         }
     }
 
@@ -161,14 +180,14 @@ class ContactViewModel @Inject constructor() : ViewModel() {
     }
 
     fun checkContactsUpdate() {
-        LogMessage.i(TAG, "[Contact Sync] checkContactsUpdate")
+        LogMessage.i(TAG, "#contact sync checkContactsUpdate")
         viewModelScope.launch {
             mContactCount = SharedPreferenceManager.getInt(ContactUtils.CONTACTS_COUNT)
             val currentCount = ContactUtils.getContactCount(ChatManager.applicationContext)
             if (currentCount < mContactCount || currentCount > mContactCount) {
                 updateContacts(currentCount)
             } else {
-                LogMessage.i(TAG, "[Contact Sync] contact sync not needed")
+                LogMessage.i(TAG, "#contact sync contact sync not needed")
             }
         }
     }
@@ -181,16 +200,16 @@ class ContactViewModel @Inject constructor() : ViewModel() {
     private fun updateContacts(contactCount: Int) {
         if (!isRefreshing) {
             isRefreshing = true
-            LogMessage.d(TAG, "[Contact Sync] Contact syncing due to phone book changes")
+            LogMessage.d(TAG, "#contact sync Contact syncing due to phone book changes")
             contactSyncNeeded.value = true
             SharedPreferenceManager.setInt(ContactUtils.CONTACTS_COUNT, contactCount)
         } else {
-            LogMessage.d(TAG, "[Contact Sync] Contact syncing is already in progress")
+            LogMessage.d(TAG, "#contact sync Contact syncing is already in progress")
         }
     }
 
     fun onContactSyncFinished(success: Boolean) {
-        LogMessage.d(TAG, "[Contact Sync] Contact sync success: $success")
+        LogMessage.d(TAG, "#contact sync Contact sync success: $success")
         viewModelScope.launch {
             isRefreshing = false
             contactSyncNeeded.value = false

@@ -158,8 +158,14 @@ class PinSetting : AppCompatActivity(), BiometricCallback/*, CallLogListener*/, 
     }
 
     private fun showAlert() {
+        var message:String=""
         binding.biometricTogglePin.isChecked = false
-        mDialog!!.showAlertDialog(getString(R.string.msg_set_pin_alert), getString(R.string.action_Ok),
+        if(pinAvailable) {
+            message=getString(R.string.msg_enable_app_lock_info)
+        } else {
+            message=getString(R.string.msg_set_pin_alert)
+        }
+        mDialog!!.showAlertDialog(message, getString(R.string.action_Ok),
             getString(R.string.action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
         mDialog!!.dialogAction = CommonAlertDialog.DialogAction.SET_PIN_ALERT
     }
@@ -263,7 +269,9 @@ class PinSetting : AppCompatActivity(), BiometricCallback/*, CallLogListener*/, 
 
     override fun onDialogClosed(dialogType: CommonAlertDialog.DIALOGTYPE?, isSuccess: Boolean) {
         if (isSuccess) if (mDialog!!.dialogAction == CommonAlertDialog.DialogAction.SET_PIN_ALERT) {
-            goToSetOrChangePinActivity("SET", true)
+            if(!pinAvailable) {
+                goToSetOrChangePinActivity("SET", true)
+            }
         } else deleteRecords()
     }
 

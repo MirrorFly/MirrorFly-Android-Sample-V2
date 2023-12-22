@@ -149,17 +149,25 @@ class PinEntryChange : AppCompatActivity() {
         binding.saveBtn!!.setOnClickListener { _: View? ->
             if (validateOldAndNewPin()) {
                 if (validatePin()) {
-                    try {
-                        savePin()
-                    } catch (e: ParseException) {
-                        LogMessage.e("TAG", e.toString())
-                    }
+                    pinSaveChangeValidation()
                 } else {
                     CustomToast.show(this@PinEntryChange, errorMessage)
                 }
             } else {
                 CustomToast.show(this@PinEntryChange, errorMessage)
             }
+        }
+    }
+
+    private fun pinSaveChangeValidation() {
+        try {
+            if(intent.extras!!.containsKey("FROM_PRIVATE_CHAT")) {
+                privateChatSavePin()
+            } else {
+                savePin()
+            }
+        } catch (e: ParseException) {
+            LogMessage.e("TAG", e.toString())
         }
     }
 
@@ -209,6 +217,21 @@ class PinEntryChange : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+
+    /**
+     * to save the pin
+     */
+    @Throws(ParseException::class)
+    private fun privateChatSavePin() {
+        SharedPreferenceManager.setString(Constants.MY_PIN, confirmPinValue)
+        SharedPreferenceManager.setBoolean(Constants.RESET_PIN, true)
+        SharedPreferenceManager.setString(Constants.CHANGE_PIN_NEXT, confirmPinValue)
+        val intent=Intent()
+        intent.putExtra(Constants.PRIVATE_CHAT_TYPE,Constants.PRIVATE_CHAT_ENABLE)
+        setResult(RESULT_OK,intent)
+        finish()
     }
 
     private fun updateSafeChat(){

@@ -8,8 +8,8 @@ import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.media.MediaPlayer
 import android.os.Build
+import android.service.notification.StatusBarNotification
 import android.text.TextUtils
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -30,15 +30,16 @@ import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.flycommons.ChatType
 import java.io.File
-import java.util.*
 
 
 object NotificationBuilder {
 
     val chatNotifications = hashMapOf<Int, NotificationModel>()
     private var securedNotificationChannelId = 0
+    private var privateChatNotificationChannelId = 0
     var file: File?=null
     var groupFile: File?=null
+    var privateChatDeletedMessageCount = 0;
     /**
      * Create notification when new chat message received
      * @param context Context of the application
@@ -196,11 +197,7 @@ object NotificationBuilder {
         val title = profileDetails?.getDisplayName()
         val chatJid = profileDetails?.jid
 
-        val notificationIntent = Intent(context, ChatManager.startActivity).apply {
-            flags = (Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            putExtra(Constants.IS_FROM_NOTIFICATION, true)
-            if (!TextUtils.isEmpty(chatJid)) putExtra(Constants.JID, chatJid)
-        }
+        val notificationIntent = getNormalChatNotificationIntent(context, chatJid!!)
 
         val requestID = System.currentTimeMillis().toInt()
         val mainPendingIntent =
@@ -246,6 +243,21 @@ object NotificationBuilder {
         val mNotificationManagerCompat: NotificationManagerCompat =
             NotificationManagerCompat.from(context)
         mNotificationManagerCompat.notify(notificationId, notificationCompatBuilder.build())
+    }
+
+    private fun getNormalChatNotificationIntent(context: Context, chatJid: String) : Intent {
+
+        val notificationIntent = Intent(context, ChatManager.startActivity).apply {
+            flags = (Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            putExtra(Constants.IS_FROM_NOTIFICATION, true)
+            if(AppLifecycleListener.isAPPForeground){
+                putExtra(Constants.AUTHENTICATION_NEED, false)
+            } else {
+                putExtra(Constants.AUTHENTICATION_NEED, true)
+            }
+            if (!TextUtils.isEmpty(chatJid)) putExtra(Constants.JID, chatJid)
+        }
+        return notificationIntent
     }
 
     /**
@@ -409,7 +421,7 @@ object NotificationBuilder {
     @Synchronized
     fun setDrawable(context: Context, profileDetails: ProfileDetails?): Drawable? {
         if (profileDetails != null && !profileDetails.isGroupProfile) {
-            return SetDrawable(context, profileDetails).setDrawable(profileDetails.getDisplayName())!!
+            return SetDrawable(context, profileDetails).setDrawableForProfile(profileDetails.getDisplayName())!!
         }
         return ContextCompat.getDrawable(context, R.drawable.ic_profile)
     }
@@ -521,9 +533,132 @@ object NotificationBuilder {
         displaySummaryNotification(context, lastMessageContent)
     }
 
+
+    fun privateChatNotification(context: Context, message: ChatMessage) {
+        val chatJid = message.getChatUserJid()
+        val name = context.getAppName()
+        val lastMessageContent = StringBuilder()
+        val privatelastMessageContent = StringBuilder()
+        val notificationId = chatJid.hashCode().toLong().toInt()
+        val profileDetails = ProfileDetailsUtils.getProfileDetails(chatJid)
+        LogMessage.e("NOT_ID",notificationId.toString())
+        if (profileDetails?.isMuted == true)
+            return
+
+        var messagingStyle = NotificationCompat.MessagingStyle(Person.Builder().setName("Me").build())
+
+        if (!chatNotifications.containsKey(notificationId))
+            chatNotifications[notificationId] = NotificationModel(messagingStyle, arrayListOf(),0)
+
+        val privateChatnotificationModel = chatNotifications[notificationId]
+        privateChatnotificationModel!!.messages.add(message)
+        var privatemessagingStyle = privateChatnotificationModel.messagingStyle
+        appendChatMessageInMessageStyle(
+            context,
+            privatelastMessageContent,
+            privatemessagingStyle,
+            message)
+
+        if (privateChatNotificationChannelId == 0)
+            privateChatNotificationChannelId = notificationId
+
+        lastMessageContent.append("New Message")
+
+        var messageCount=FlyMessenger.getUnreadPrivateChatUserMessageCount()
+        if(message.isMessageRecalled) privateChatDeletedMessageCount+= 1
+
+        var finalMessageCount=messageCount- privateChatDeletedMessageCount
+
+        messagingStyle.addMessage(lastMessageContent, message.getMessageSentTime(),
+            Person.Builder()
+                .setName(GetMsgNotificationUtils.getSummaryTitle(name, finalMessageCount, FlyMessenger.getUnreadPrivateChatMessagesCount()))
+                .setIcon(IconCompat.createWithResource(context, R.drawable.ic_notification_blue))
+                .build())
+
+        val lastMessageTime: Long = if (message.getMessageSentTime().toString().length > 13) message.getMessageSentTime() / 1000 else message.getMessageSentTime()
+
+        val notificationIntent = getPrivateChatNotificationIntent(context,chatJid)
+        val requestID = System.currentTimeMillis().toInt()
+        val mainPendingIntent = PendingIntentHelper.getActivity(context, requestID, notificationIntent)
+        val notificationCompatBuilder = NotificationCompat.Builder(
+            context,
+            buildNotificationChannelAndGetChannelId(context, privateChatNotificationChannelId.toString(), null,false)
+        )
+
+        notificationCompatBuilder.apply {
+            setStyle(messagingStyle)
+            setContentTitle(name)
+            setContentText(lastMessageContent)
+            setAutoCancel(true)
+            setSmallIcon(R.drawable.ic_notification_blue)
+            color = ContextCompat.getColor(context, R.color.colorAccent)
+            setContentIntent(mainPendingIntent)
+            setGroup(GROUP_KEY_MESSAGE)  // Adds the notification to the group sharing the specified key.
+            setNumber(FlyMessenger.getUnreadMessageCountExceptMutedChat())
+            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+            setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            priority = NotificationCompat.PRIORITY_HIGH
+            setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+
+            if (lastMessageTime > 0)
+                setWhen(lastMessageTime)
+
+            if (SharedPreferenceManager.getBoolean(Constants.VIBRATION)) {
+                setVibrate(NotifyRefererUtils.defaultVibrationPattern)
+            } else {
+                setVibrate(null)
+            }
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            NotifyRefererUtils.setNotificationSound(notificationCompatBuilder)
+
+        val mNotificationManagerCompat: NotificationManagerCompat =
+            NotificationManagerCompat.from(context)
+        mNotificationManagerCompat.notify(privateChatNotificationChannelId, notificationCompatBuilder.build())
+
+        displaySummaryNotification(context, lastMessageContent)
+
+        if(finalMessageCount == 0){
+            cancelPrivateChatNotifications(context)
+        }
+    }
+
+    private fun getPrivateChatNotificationIntent(context: Context, chatJid: String) : Intent {
+        val notificationIntent = Intent(context, ChatManager.startActivity).apply {
+            flags = (Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            putExtra(Constants.IS_FROM_NOTIFICATION, true)
+            putExtra(Constants.PRIVATE_CHAT, true)
+            if(AppLifecycleListener.isAPPForeground && AppLifecycleListener.isPresentPrivateChat){
+                putExtra(Constants.AUTHENTICATION_NEED, false)
+            } else {
+                putExtra(Constants.AUTHENTICATION_NEED, true)
+                if(AppLifecycleListener.isPresentPrivateChat) putExtra(Constants.IS_SHOW_PRIVATE_CHAT_LIST, true)
+            }
+            if (!TextUtils.isEmpty(chatJid)) putExtra(Constants.JID, chatJid)
+        }
+        return notificationIntent
+    }
+
+    fun cancelPrivateChatNotifications(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val barNotifications: Array<StatusBarNotification> = notificationManager.activeNotifications
+            for (notification in barNotifications) {
+                NotificationManagerCompat.from(context).cancel(notification.id)
+            }
+        } else {
+            NotificationManagerCompat.from(context).cancel(Constants.NOTIFICATION_ID)
+            NotificationBuilderBelow24.cancelNotifications()
+        }
+    }
+
+
     fun cancelNotifications() {
         chatNotifications.clear()
         securedNotificationChannelId = 0
+        privateChatNotificationChannelId = 0
+        privateChatDeletedMessageCount = 0
     }
 
     private fun getTotalUnReadMessageCount(notificationId: Int): Int {

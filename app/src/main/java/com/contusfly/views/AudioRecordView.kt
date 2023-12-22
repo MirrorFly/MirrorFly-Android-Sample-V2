@@ -10,9 +10,11 @@ import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
 import com.contusfly.R
+import com.contusfly.TAG
 import com.contusfly.activities.parent.ChatParent
 import com.contusfly.utils.AudioRecorder
 import com.contusfly.utils.Constants
+import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.views.CustomToast
 import java.text.SimpleDateFormat
@@ -84,6 +86,8 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
 
     private lateinit var focusChangeListener: AudioManager.OnAudioFocusChangeListener
 
+    private var isPausedByHiddenAction = false
+
     fun setRecordingListener(recordingListener: RecordingListener?) {
         this.recordingListener = recordingListener
     }
@@ -101,7 +105,10 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
 
         chatParent.voiceAttachment.setOnClickListener {
             chatParent.chatMessageEditText.text?.clear()
-            startRecordClickListener()
+            chatParent.hideKeyboard()
+            Handler(Looper.getMainLooper()).postDelayed(
+                {startRecordClickListener()},100
+            )
         }
 
         chatParent.imageViewAudio.setOnClickListener {
@@ -117,10 +124,14 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
 
         chatParent.textAudioSlideToCancel.setOnTouchListener { _, motionEvent ->
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                LogMessage.e("RECORDING","START_RECORD")
                 onStartRecording(motionEvent)
             } else if (motionEvent.action == MotionEvent.ACTION_UP || motionEvent.action == MotionEvent.ACTION_CANCEL) {
+                LogMessage.e("RECORDING","STOP_MOVING")
                 onStopMoving()
+                visibleGoneRecordTimerDeleteIcon(false)
             } else if (motionEvent.action == MotionEvent.ACTION_MOVE) {
+                LogMessage.e("RECORDING","START_MOVING---$stopTrackingAction")
                 if (stopTrackingAction) {
                     true
                 }
@@ -172,6 +183,7 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         if (!canRecordVoice)
             return
         val direction: UserBehaviour = getDirection(motionEvent)
+        LogMessage.e("RECORDING","$direction")
         if (direction == UserBehaviour.CANCELING) {
             if (userBehaviour == UserBehaviour.NONE || motionEvent.rawY + chatParent.voiceAttachment.width / 2 > firstY) {
                 userBehaviour = UserBehaviour.CANCELING
@@ -207,26 +219,37 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
 
     private fun translateX(x: Float) {
         if (if (isLayoutDirectionRightToLeft) x > cancelOffset else x < -cancelOffset) {
+            LogMessage.e("RECORDING","CANCELLED")
             canceled()
             chatParent.imageViewAudio.translationX = 0f
             chatParent.textAudioSlideToCancel.translationX = 0f
             return
         }
         if (if (isLayoutDirectionRightToLeft) x > cancelIconOffset else x < -cancelIconOffset) {
-            chatParent.imageAudioRecordDelete.visibility = View.VISIBLE
-            chatParent.textAudioRecordTimer.visibility = View.GONE
+            LogMessage.e("RECORDING","SWIPE_VISIBLE_DELETE")
+            visibleGoneRecordTimerDeleteIcon(true)
         } else {
-            chatParent.imageAudioRecordDelete.visibility = View.GONE
-            chatParent.textAudioRecordTimer.visibility = View.VISIBLE
+            LogMessage.e("RECORDING","SWIPE_GONE_DELETE")
+            visibleGoneRecordTimerDeleteIcon(false)
         }
         chatParent.textAudioSlideToCancel.translationX = x
         chatParent.imageViewAudio.translationY = 0f
     }
 
-    private fun startRecord() {
-        isRecordingStarted = true
-        recordingListener?.onRecordingStarted()
-        stopTrackingAction = false
+    private fun visibleGoneRecordTimerDeleteIcon(isDeleteIconVisible:Boolean){
+        if(isDeleteIconVisible){
+            chatParent.imageAudioRecordDelete.visibility = View.VISIBLE
+            chatParent.textAudioRecordTimer.visibility = View.GONE
+        } else {
+            chatParent.imageAudioRecordDelete.visibility = View.GONE
+
+            if(chatParent.layoutViewAudio.visibility == View.VISIBLE)
+            chatParent.textAudioRecordTimer.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideViewForRecording(){
+        LogMessage.d(TAG,"#record hideViewForRecording  ")
         chatParent.smiley.visibility = View.GONE
         chatParent.imgSend.visibility = View.GONE
         chatParent.chatMessageEditText.visibility = View.GONE
@@ -234,6 +257,13 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         chatParent.voiceAttachment.visibility = View.GONE
         chatParent.layoutViewAudio.visibility = View.VISIBLE
         chatParent.viewAudioRecordSpace.visibility = View.VISIBLE
+    }
+
+    private fun startRecord() {
+        isRecordingStarted = true
+        recordingListener?.onRecordingStarted()
+        stopTrackingAction = false
+        hideViewForRecording()
         chatParent.textAudioRecordTimer.visibility = View.VISIBLE
         chatParent.textAudioSlideToCancel.visibility = View.VISIBLE
         if (!::audioTimer.isInitialized) {
@@ -354,8 +384,7 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         }
     }
 
-    private fun locked() {
-        stopTrackingAction = true
+    private fun showViewsToSend(){
         chatParent.textAudioRecordCancel.visibility = View.VISIBLE
         chatParent.textAudioSlideToCancel.visibility = View.GONE
         chatParent.imageAudioRecord.visibility = View.VISIBLE
@@ -363,6 +392,12 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         chatParent.imgSend.visibility = View.VISIBLE
         chatParent.imgSend.setImageResource(R.drawable.ic_send_active)
         chatParent.imgSend.isEnabled = true
+    }
+
+    private fun locked() {
+        LogMessage.d(TAG,"#record locked: ")
+        stopTrackingAction = true
+        showViewsToSend()
         stopRecording(RecordingBehaviour.PAUSED)
         isLocked = true
     }
@@ -381,18 +416,37 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
     fun sendRecording(){
         isLocked = false
         stopRecording(RecordingBehaviour.LOCK_DONE)
+        isPausedByHiddenAction = false
     }
 
-    fun pauseOngoingRecording(){
+    fun pauseOngoingRecording(activityHidden:Boolean = false):Boolean{
         if (!isLocked && !isAudioRecordingStopped) {
             locked()
             chatParent.imageViewAudio.translationY = 0f
+            if(activityHidden)
+                isPausedByHiddenAction = true
+            return  true
+        }
+        if(isLocked && isAudioRecordingStopped){
+            //case when user does not send the file first time and goes to background and comes online again
+            return  true
+        }
+        return false
+    }
+
+    fun showPausedOngoingRecording(){
+        LogMessage.d(TAG,"#record showPausedOngoingRecording isPausedByHiddenAction:$isPausedByHiddenAction isAudioRecordingStopped:$isAudioRecordingStopped")
+        LogMessage.d(TAG,"#record showPausedOngoingRecording isLocked:$isLocked ")
+        if(isPausedByHiddenAction && isAudioRecordingStopped) {
+            LogMessage.d(TAG, "#record show below views ")
+            locked()
         }
     }
 
     fun cancelRecording(){
         isLocked = false
         stopRecording(RecordingBehaviour.CANCELED)
+        isPausedByHiddenAction = false
     }
 
     fun toPauseMediaPlayer() {

@@ -12,8 +12,10 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
@@ -126,6 +128,10 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     }
     private val downloadPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) {}
+
+    private var isStarredMediaClick:Boolean=false
+    private var chatMessage:ChatMessage?=null
+    private var clickedMessageJid:String=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -302,30 +308,36 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     private fun addSearchedMessagesToList(filterKey: String) {
         viewModelStarredMessage.searchedStarredMessageList.clear()
         for (message in viewModelStarredMessage.starredMessagesList) {
-            if (isTextMessageContainsFilterKey(message, filterKey)) {
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            } else if (isImageCaptionContainsFilterKey(message, filterKey))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (isVideoCaptionContainsFilterKey(message, filterKey))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (MessageType.DOCUMENT == message.messageType && message.mediaChatMessage.mediaFileName.isNotEmpty()
-                && message.mediaChatMessage.mediaFileName.lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (MessageType.CONTACT == message.messageType && message.contactChatMessage.contactName.isNotEmpty()
-                && message.contactChatMessage.contactName.lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (message.senderUserName.isNotEmpty()
-                && message.senderUserName.lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if (message.isMessageSentByMe && "You".lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
-            else if(message.isGroupMessage() && ProfileDetailsUtils.getDisplayName(message.chatUserJid)
-                    .lowercase().contains(filterKey.lowercase()))
-                viewModelStarredMessage.searchedStarredMessageList.add(message)
+            addMessageToListIfMatches(message, filterKey)
         }
         starredMessageAdapter!!.setSearch(searchEnabled, searchedText)
         starredMessageAdapter!!.setStarredMessages(viewModelStarredMessage.searchedStarredMessageList)
         starredMessageAdapter!!.notifyDataSetChanged()
+    }
+
+    private fun addMessageToListIfMatches(
+        message: ChatMessage,
+        filterKey: String
+    ) {
+        if (isTextMessageContainsFilterKey(message, filterKey) ||
+            isImageCaptionContainsFilterKey(message, filterKey) ||
+            isVideoCaptionContainsFilterKey(message, filterKey) ||
+            isMeetMessageContainsFilterKey(message, filterKey) ||
+            (message.messageType == MessageType.DOCUMENT &&
+                    message.mediaChatMessage.mediaFileName.isNotEmpty() &&
+                    message.mediaChatMessage.mediaFileName.lowercase().contains(filterKey.lowercase())) ||
+            (message.messageType == MessageType.CONTACT &&
+                    message.contactChatMessage.contactName.isNotEmpty() &&
+                    message.contactChatMessage.contactName.lowercase().contains(filterKey.lowercase())) ||
+            (message.senderUserName.isNotEmpty() &&
+                    message.senderUserName.lowercase().contains(filterKey.lowercase())) ||
+            (message.isMessageSentByMe &&
+                    "You".lowercase().contains(filterKey.lowercase())) ||
+            (message.isGroupMessage() &&
+                    ProfileDetailsUtils.getDisplayName(message.chatUserJid).lowercase().contains(filterKey.lowercase()))
+        ) {
+            viewModelStarredMessage.searchedStarredMessageList.add(message)
+        }
     }
 
     private fun isVideoCaptionContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
@@ -341,6 +353,13 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     private fun isTextMessageContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
         return MessageType.TEXT == message.messageType &&
                 isMentionUserIdAvailableInMessage(message, filterKey)
+    }
+    private fun isMeetMessageContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
+        return MessageType.MEET == message.messageType &&
+                isMeetMessageAvailable(message, filterKey)
+    }
+    private fun isMeetMessageAvailable(message: ChatMessage, filterKey: String): Boolean {
+        return message.meetingChatMessage.link.lowercase().contains(filterKey.lowercase())
     }
 
     private fun isMentionUserIdAvailableInMediaMessage(message: ChatMessage, filterKey: String): Boolean {
@@ -517,13 +536,7 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
                     itemPosition = position
                     val clickedMessage =
                         if (viewModelStarredMessage.searchedStarredMessageList.isEmpty()) viewModelStarredMessage.starredMessagesList[position] else viewModelStarredMessage.searchedStarredMessageList[position]
-                    startActivity(
-                        Intent(this, ChatActivity::class.java)
-                            .putExtra(LibConstants.JID, clickedMessage.chatUserJid)
-                            .putExtra(LibConstants.MESSAGE_ID, clickedMessage.messageId)
-                            .putExtra(Constants.CHAT_TYPE, clickedMessage.getChatType())
-                            .putExtra(Constants.IS_STARRED_MESSAGE, true)
-                    )
+                    handleStarredMediaMessageClickOpenChatView(clickedMessage,true)
                 }
                 lastClickTime = SystemClock.elapsedRealtime()
             }
@@ -535,6 +548,71 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     override fun onSenderItemLongClick(item: ChatMessage?, position: Int) {
         onItemLongClick(position)
     }
+
+
+    private fun handleStarredMediaMessageClickOpenChatView(clickedMessage: ChatMessage,isStarredMediaMessage:Boolean) {
+        isStarredMediaClick=true
+        chatMessage=clickedMessage
+        clickedMessageJid=""
+        if(ChatManager.isPrivateChat(clickedMessage.chatUserJid)){
+            launchPinActivity()
+        } else {
+            launchChatPage(clickedMessage,isStarredMediaMessage,Constants.EMPTY_STRING)
+        }
+    }
+
+    private fun contactClickOpenChatView(jid: String,isStarredMediaMessage:Boolean) {
+        isStarredMediaClick=false
+        chatMessage=null
+        clickedMessageJid=jid
+        if(ChatManager.isPrivateChat(jid)){
+            launchPinActivity()
+        } else {
+            launchChatPage(ChatMessage(),isStarredMediaMessage,jid)
+        }
+    }
+
+    private fun launchChatPage(clickedMessage: ChatMessage,isStarredMediaMessage:Boolean,registeredJid:String){
+        if(isStarredMediaMessage){
+            startActivity(
+                Intent(this, ChatActivity::class.java)
+                    .putExtra(LibConstants.JID, clickedMessage.chatUserJid)
+                    .putExtra(LibConstants.MESSAGE_ID, clickedMessage.messageId)
+                    .putExtra(Constants.CHAT_TYPE, clickedMessage.getChatType())
+                    .putExtra(Constants.IS_STARRED_MESSAGE, true))
+
+        } else {
+            startActivity(Intent(this, ChatActivity::class.java).putExtra(LibConstants.JID, registeredJid).putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT))
+        }
+
+    }
+
+    private fun launchPinActivity() {
+
+        if (SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)) {
+            val intent = Intent(activity, BiometricActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            myActivityResultLauncher.launch(intent)
+        } else  {
+            val intent = Intent(activity, PinActivity::class.java)
+            intent.putExtra(Constants.GO_TO, Constants.PRIVATE_CHAT_LIST)
+            myActivityResultLauncher.launch(intent)
+        }
+
+    }
+
+    private var myActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) { result->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                if(isStarredMediaClick){
+                    launchChatPage(chatMessage!!,isStarredMediaClick,Constants.EMPTY_STRING)
+                } else {
+                    launchChatPage(chatMessage!!,isStarredMediaClick,clickedMessageJid)
+                }
+            }
+        }
+
 
     /**
      * Handle On item long click for the options having delete, forward and info. Add into the
@@ -656,7 +734,7 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
             return
         if (isSavedContact && item.contactChatMessage.getContactPhoneNumbers().size <= 1) {
             if (registeredJid != null) {
-                startActivity(Intent(this, ChatActivity::class.java).putExtra(LibConstants.JID, registeredJid).putExtra(Constants.CHAT_TYPE, ChatType.TYPE_CHAT))
+                contactClickOpenChatView(registeredJid,false)
             } else {
                 inviteUserDialog(item.getContactChatMessage())
             }

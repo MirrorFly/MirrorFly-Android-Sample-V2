@@ -15,9 +15,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.mirrorflysdk.flycommons.ChatType
-import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
-import com.mirrorflysdk.flycommons.Features
 import com.contusfly.*
 import com.contusfly.activities.parent.DashboardParent
 import com.contusfly.adapters.ViewPagerAdapter
@@ -29,15 +26,18 @@ import com.contusfly.interfaces.RecentChatEvent
 import com.contusfly.utils.*
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.PermissionAlertDialog
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import com.mirrorflysdk.AppUtils
-import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
+import com.mirrorflysdk.flycommons.ChatType
+import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.flycommons.Result
 import dagger.android.AndroidInjection
 
@@ -61,12 +61,13 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
     private var userJid:String = Constants.EMPTY_STRING
     private var handler: Handler? = null
     private var menuReference: Menu? = null
-    protected val permissionAlertDialog: PermissionAlertDialog by lazy { PermissionAlertDialog(this) }
+    private val permissionAlertDialog: PermissionAlertDialog by lazy { PermissionAlertDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         checkConditionForPin()
         super.onCreate(savedInstanceState)
+        LogMessage.d("DashboardActivity", "#dashboard onCreate")
         dashboardBinding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(dashboardBinding.root)
         handler = Handler(Looper.getMainLooper())
@@ -140,11 +141,12 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         if((message.messageTextContent.contains("removed you") || message.messageTextContent.contains("added you")) &&
             viewModel.selectedRecentChats.isNotEmpty())
             recentClick(viewModel.selectedRecentChats, false)
-        viewModel.getRecentChatOfUser(message.getChatUserJid(), RecentChatEvent.GROUP_EVENT)
+        viewModel.getRecentChatOfUser(message.chatUserJid, RecentChatEvent.GROUP_EVENT)
         viewModel.unreadChatCountLiveData.value = FlyMessenger.getUnreadMessagesCount()
     }
 
     private fun addFragmentsToViewPagerAdapter(): ArrayList<Fragment> {
+        LogMessage.d("DashboardActivity", "#dashboard addFragmentsToViewPagerAdapter")
         return if (ChatManager.getAvailableFeatures().isOneToOneCallEnabled || ChatManager.getAvailableFeatures().isGroupCallEnabled) {
             val fragmentsArray = ArrayList<Fragment>()
             recentChatFragment = RecentChatListFragment()
@@ -379,13 +381,23 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                 recentChatFragment.updateSearchAdapter(searchItemClickedPosition)
         }
         viewModel.getRestartActivitygetrecentChatList()
+        viewModel.getPrivateChatStatus()
         viewModel.getArchivedChatStatus()
         viewModel.updateUnReadChatCount()
         validateMissedCallsCount()
     }
 
+    override fun onPause() {
+        super.onPause()
+        LogMessage.d("DashboardActivity", "#dashboard onPause")
+        viewModel.getPrivateChatStatus()
+    }
+
     override fun onResume() {
         super.onResume()
+        LogMessage.d("DashboardActivity", "#dashboard onResume")
+        SharedPreferenceManager.setBoolean(Constants.PRIVATE_CHAT, false)
+        viewModel.getPrivateChatStatus()
         viewModel.getArchivedChatStatus()
         viewModel.updateUnReadChatCount()
         callLogviewModel.resetPagination()
@@ -410,7 +422,12 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         }
         callLogviewModel.uploadUnSyncedCallLogs()
         ChatManager.setOnGoingChatUser("")
+        SharedPreferenceManager.setString(Constants.ON_GOING_CHAT_USER,"")
         callLogMenuShowHide()
+        if (viewModel.selectedRecentChats.isNotEmpty())
+            Handler(Looper.getMainLooper()).postDelayed({
+                recentClick(viewModel.selectedRecentChats, false)
+            }, 100)
     }
 
     private fun checkContactPermission() {
@@ -429,6 +446,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
             if (syncNeeded && BuildConfig.CONTACT_SYNC_ENABLED) refreshContacts()
         }
         viewModel.isContactSyncSuccess.observe(this) {
+            LogMessage.i(TAG, "#dashboard isContactSyncSuccess getRecentChats")
             viewModel.getRecentChats()
         }
         viewModel.checkContactsUpdate()
@@ -578,6 +596,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
      * @param message Instance of the Message
      */
     override fun onMessageReceived(message: ChatMessage) {
+        LogMessage.d(TAG, "#dashboard #recent  onMessageReceived: ")
         viewModel.setReceivedMsg(message)
         if (viewModel.selectedRecentChats.isNotEmpty())
             Handler(Looper.getMainLooper()).postDelayed({
@@ -586,6 +605,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
     }
 
     override fun onMessageStatusUpdated(messageId: String) {
+        LogMessage.d(TAG, "#dashboard #recent  onMessageStatusUpdated: ")
         viewModel.setMessageStatus(messageId)
         viewModel.updateUnReadChatCount()
         viewModel.getArchivedChatStatus()
@@ -606,13 +626,13 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
     }
 
     private fun setObservers() {
-        viewModel.unreadChatCountLiveData.observe(this, {
+        viewModel.unreadChatCountLiveData.observe(this) {
             validateUnreadChatUsers(it)
-        })
+        }
 
-        viewModel.clearallCallLog.observe(this, {
+        viewModel.clearallCallLog.observe(this) {
             callLogMenuShowHide()
-        })
+        }
 
     }
 
@@ -694,6 +714,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
 
     override fun restoreCompleted() {
         viewModel.refreshFetchedRecentChat()
+        viewModel.getPrivateChatStatus()
         viewModel.getArchivedChatStatus()
     }
 
@@ -721,6 +742,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
 
     override fun onContactSyncComplete(isSuccess: Boolean) {
         super.onContactSyncComplete(isSuccess)
+        LogMessage.v(TAG, "#contact sync  onContactSyncComplete isSuccess:$isSuccess ")
         callLogviewModel.getCallLogsList(false)
         viewModel.onContactSyncFinished(isSuccess)
         viewModel.isContactSyncSuccess.value = true
@@ -778,7 +800,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
 
     private fun updateActionMenuIcons(features: Features, recentList: List<RecentChat>) {
         try {
-            actionModeMenu?.let {
+            actionModeMenu.let {
                 if (features.isDeleteChatEnabled)
                     menuValidationForDeleteIcon(recentList)
                 else hideMenu(it.get(R.id.action_delete))
@@ -790,6 +812,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
 
     override fun onConnected() {
         super.onConnected()
+        LogMessage.d("DashboardActivity", "#dashboard #recent onConnected chatHistoryMigration")
         viewModel.chatHistoryMigration()
     }
 }

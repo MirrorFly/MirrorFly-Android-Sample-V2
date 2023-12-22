@@ -13,6 +13,10 @@ abstract class RecentChatPaginationScrollListener(private val linearLayoutManage
             //bottom of list!
             loadMoreItems()
         }
+
+        if(dy > 0){
+            hidePrivateChat()
+        }
     }
 
     protected abstract fun loadMoreItems()
@@ -20,4 +24,6 @@ abstract class RecentChatPaginationScrollListener(private val linearLayoutManage
     abstract fun isLastPage(): Boolean
 
     abstract fun isFetching(): Boolean
+
+    protected abstract fun hidePrivateChat()
 }

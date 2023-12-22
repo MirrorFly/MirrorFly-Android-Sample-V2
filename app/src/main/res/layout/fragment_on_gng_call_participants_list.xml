@@ -19,4 +19,7 @@
         android:footerDividersEnabled="true"
         android:listSelector="@android:color/transparent" />
 
+    <include android:id="@+id/view_participants_list_empty_view"
+        layout="@layout/view_empty_data" />
+
 </LinearLayout>

@@ -24,10 +24,11 @@ object ProfileDetailsUtils {
      * @return List<ProfileDetails> Sorted profile list
     </ProfileDetails> */
     fun sortProfileList(profilesList: List<ProfileDetails>?): List<ProfileDetails> {
+        LogMessage.i(TAG, "#NewContacts sortProfileList profileDetails: ${profilesList?.size}")
         profilesList?.let {
-            return it.sortedBy { profileDetails -> profileDetails.getDisplayName()?.toLowerCase() }
+            return it.sortedBy { profileDetails -> profileDetails.getDisplayName()?.lowercase() }
         }
-        return listOf()
+        return profilesList?:listOf()
     }
 
     /**
@@ -142,6 +143,13 @@ object ProfileDetailsUtils {
         if (jid == null)
             return Constants.EMPTY_STRING
         return getProfileDetails(jid)?.getDisplayName() ?: jid
+    }
+
+    fun getDisplayNameFromJid(jid: String?): String {
+        if (jid == null)
+            return Constants.EMPTY_STRING
+        return getProfileDetails(jid)?.getDisplayName() ?: Utils.getFormattedPhoneNumber(
+            com.mirrorflysdk.utils.ChatUtils.getUserFromJid(jid))
     }
 
     fun addContact(profileDetail: ProfileDetails) {

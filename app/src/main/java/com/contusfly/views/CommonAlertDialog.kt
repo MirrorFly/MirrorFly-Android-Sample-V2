@@ -2,6 +2,8 @@ package com.contusfly.views
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -11,15 +13,21 @@ import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import com.contus.call.CallConstants
-import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.contusfly.BuildConfig
 import com.contusfly.R
 import com.contusfly.call.groupcall.OnGoingCallPreviewActivity
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.databinding.CommonAlertDialogBinding
+import com.contusfly.databinding.CreateCallLinkDialogLayoutBinding
+import com.contusfly.databinding.PrivateChatEnableDialogLayoutBinding
 import com.contusfly.runOnUiThread
+import com.contusfly.setOnClickListener
 import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
+import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.views.CustomToast
+
 
 /**
  *
@@ -160,7 +168,7 @@ class CommonAlertDialog(context: Context?) {
      */
     fun showListDialog(title: String, listItems: Array<String>): AlertDialog? {
         val builder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
-        if (!title.isEmpty()) builder.setTitle(title)
+        if (title.isNotEmpty()) builder.setTitle(title)
         builder.setItems(listItems) { dialog: DialogInterface, item: Int ->
             dialog.dismiss()
             if (listener != null) listener!!.listOptionSelected(item)
@@ -299,17 +307,21 @@ class CommonAlertDialog(context: Context?) {
             CallManager.disconnectCall(object : CallActionListener {
                 override fun onResponse(isSuccess: Boolean, message: String) {
                     runOnUiThread {
-                        //New Call preview page
-                        context!!.startActivity(
-                            Intent(context, OnGoingCallPreviewActivity::class.java).putExtra(
-                                CallConstants.CALL_LINK, callLink)
-                        )
+                        moveToOngoingCallPreviewActivity(context,callLink)
                         dialog.dismiss()
                     }
                 }
             })
         }
         builder.create().show()
+    }
+
+    private fun moveToOngoingCallPreviewActivity(context: Context?,callLink: String){
+        //New Call preview page
+        context!!.startActivity(
+            Intent(context, OnGoingCallPreviewActivity::class.java).putExtra(
+                CallConstants.CALL_LINK, callLink)
+        )
     }
 
     /**
@@ -367,6 +379,78 @@ class CommonAlertDialog(context: Context?) {
         builder.create().show()
     }
 
+
+    fun privateChatEnableDialog(activity: Activity,dialogType: DIALOGTYPE, listener: CommonDialogClosedListener?) {
+        val dialogBuilder = AlertDialog.Builder(context,  R.style.CustomAlertDialog)
+        val inflater: LayoutInflater = activity.layoutInflater
+        val dialogBinding = PrivateChatEnableDialogLayoutBinding.inflate(inflater)
+
+        dialogBuilder.apply {
+            setCancelable(true)
+            setView(dialogBinding.root)
+        }
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        dialogBinding.viewTv.setOnClickListener {
+            alertDialog.dismiss()
+            listener?.onDialogClosed(dialogType, true)
+        }
+        dialogBinding.cancelTv.setOnClickListener {
+            alertDialog.dismiss()
+            listener?.onDialogClosed(dialogType, false)
+        }
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(alertDialog.window!!.attributes)
+        layoutParams.width = (AndroidUtils.getScreenWidth(activity) * 0.8).toInt()
+        alertDialog.window!!.attributes = layoutParams
+    }
+
+    fun generateMeetLink(
+        meetLink: String,
+        activity: Activity,
+        dialogType: DIALOGTYPE,
+        listener: CommonTripleDialogClosedListener?
+    ) {
+        val dialogBuilder = AlertDialog.Builder(context, R.style.CustomAlertDialog)
+        val inflater: LayoutInflater = activity.layoutInflater
+        val dialogBinding = CreateCallLinkDialogLayoutBinding.inflate(inflater)
+
+        dialogBinding.meetLinkTextView.text = BuildConfig.WEB_CHAT_LOGIN + meetLink
+
+        dialogBuilder.apply {
+            setCancelable(true)
+            setView(dialogBinding.root)
+        }
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        dialogBinding.joinMeeting.setOnClickListener(1000) {
+            moveToOngoingCallPreviewActivity(context, callLink = meetLink)
+            alertDialog.dismiss()
+            listener?.onTripleOptionDialogClosed(dialogType, 1)
+        }
+        dialogBinding.shareMeetLink.setOnClickListener(1000) {
+            alertDialog.dismiss()
+            listener?.onTripleOptionDialogClosed(dialogType, 2)
+        }
+        dialogBinding.inviteContactCallLink.setOnClickListener(1000) {
+            alertDialog.dismiss()
+            listener?.onTripleOptionDialogClosed(dialogType, 3)
+        }
+
+        dialogBinding.meetLinkCopy.setOnClickListener(1000) {
+            val clipboardManager  = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipData  = ClipData.newPlainText("text", BuildConfig.WEB_CHAT_LOGIN +  meetLink)
+            clipboardManager .setPrimaryClip(clipData )
+            CustomToast.show(context, context?.getString(R.string.link_copied_clipboard))
+        }
+
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(alertDialog.window!!.attributes)
+        layoutParams.width = (AndroidUtils.getScreenWidth(activity) * 0.85).toInt()
+        alertDialog.window!!.attributes = layoutParams
+    }
+
+
     /**
      * The Enum DIALOGTYPE.
      */
@@ -393,7 +477,7 @@ class CommonAlertDialog(context: Context?) {
     enum class DialogAction {
         CLEAR_CONVERSATION, DELETE_CHAT, CAMERA, GALLERY, STATUS_BUSY, UNBLOCK, BLOCK, SMART_REPLY_UNBLOCK, SMART_REPLY_BUSY,
         SET_PIN_ALERT, INVITE, STATUS_BUSY_KEYBOARD, STATUS_BUSY_EMOJI,FORWARD_STATUS_BUSY, SAFE_CHAT_ENABLED,
-        SAFE_CHAT_ENABLE_APP_LOCK, REPORT_MESSAGES
+        SAFE_CHAT_ENABLE_APP_LOCK, REPORT_MESSAGES, UNARCHIVE, STATUS_BUSY_SCHEDULE
     }
 
     /**

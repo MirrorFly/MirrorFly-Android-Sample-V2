@@ -163,6 +163,7 @@ class Constants {
         const val MSG_TYPE_FILE = "document"
         const val MSG_TYPE_NOTIFICATION = "notification"
         const val MSG_TYPE_VIDEO = "video"
+        const val MSG_TYPE_MEET = "meet"
         const val MESSAGE = "message"
         const val IMAGE_RESULTS = "image_results"
         const val MULTI_SELECTION = "multi_selection"
@@ -200,6 +201,7 @@ class Constants {
         const val MAX_DOCUMENT_UPLOAD_SIZE = 20
         const val SELECTED_IMAGES = "selected_images"
         const val CHAT_MESSAGE = "chatmessage"
+        const val FROMUSER = "Fromuser"
         const val PRESENCE_AVAILABLE = "presence_available"
         const val ONLINE = "Online"
         const val ONLINE_STATUS = "0"
@@ -211,6 +213,7 @@ class Constants {
         const val RECALL = "recall"
         const val YOU = "You"
         const val TAG = "Contus Fly"
+        const val MEET_SCHEDULED_ON="Meet scheduled on"
         const val IS_FROM_NOTIFICATION = "is_from_notification"
         const val JID = "jid"
         const val NOTIFICATION_CHANNEL_ID = (BuildConfig.APPLICATION_ID + ".notification")
@@ -405,6 +408,17 @@ class Constants {
                 "\ud83c\ude02\ud83c\ude1a\ud83c\ude2f\ud83c\ude32-\ud83c\ude3a\ud83c\ude50-\ud83c\ude51\u200d\ud83c\udf00-\ud83d\uddff\ud83d\ude00-\ud83d\ude4f\ud83d\ude80-" +
                 "\ud83d\udeff\ud83e\udd00-\ud83e\uddff\udb40\udc20-\udb40\udc7f]|\u200d[\u2640\u2642]|[\ud83c\udde6-\ud83c\uddff]{2}|"
         val emojiPattern: Pattern = Pattern.compile("$regex1.[\u20e0\u20e3\ufe0f]+)+[\\s\n\r]*)+$")
+
+        //Private Chat
+        const val PRIVATE_CHAT="private_chat"
+        const val PRIVATE_CHAT_TYPE="private_chat_type"
+        const val PRIVATE_CHAT_LIST = "private_chat_list"
+        const val PRIVATE_CHAT_DISABLE = "private_chat_disable"
+        const val PRIVATE_CHAT_ENABLE = "private_chat_enable"
+        const val DASHBOARD="dashboard"
+        const val AUTHENTICATION_NEED="authentication_need"
+        const val IS_SHOW_PRIVATE_CHAT_LIST="show_private_chat_list"
+        const val ON_GOING_CHAT_USER="ongoing_chat_user"
 
 
     }

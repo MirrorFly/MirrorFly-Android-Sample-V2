@@ -153,6 +153,9 @@ class ViewAllMediaViewModel : ViewModel() {
             message.isImageMessage() || message.isVideoMessage() -> {
                 message.getMediaChatMessage().getMediaCaptionText()
             }
+            message.isMeetMessage()->{
+                message.meetingChatMessage.link
+            }
             else -> Constants.EMPTY_STRING
         }
         if (textContent.isNotBlank()) {

@@ -53,7 +53,7 @@ class ModifiedlinkMovementMethod(
             val off = layout.getOffsetForHorizontal(line, x.toFloat())
             val link = buffer.getSpans(off, off + 1, ClickableSpan::class.java)
             if (link.isNotEmpty()) {
-                if ((link[0] as URLSpan).url.contains("http") || (link[0] as URLSpan).url.contains("https")) {
+                if ((link[0] as URLSpan).url.contains("http") || (link[0] as URLSpan).url.contains("https") || (link[0] as URLSpan).url.contains("tel:")) {
                     longClickChecking(link,widget,event,action)
                 }
                 return true
