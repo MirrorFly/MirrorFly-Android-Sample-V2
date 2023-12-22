@@ -31,7 +31,7 @@ class ReplyMessageUtils : SentReplyTextUtils() {
         replyMessageViewHolder.imgSenderImageVideoPreview?.gone()
         replyMessageViewHolder.imgSenderMessageType?.gone()
         when (replyMessage.getMessageType()) {
-            MessageType.TEXT -> showSenderReplyTextView(context, replyMessageViewHolder, replyMessage, isGroupMessage)
+            MessageType.TEXT ,MessageType.AUTO_TEXT-> showSenderReplyTextView(context, replyMessageViewHolder, replyMessage, isGroupMessage)
             MessageType.IMAGE -> showSenderReplyImageVideoView(context!!, replyMessageViewHolder, replyMessage, isGroupMessage)
             else -> {
                 /*No Implementation Needed*/

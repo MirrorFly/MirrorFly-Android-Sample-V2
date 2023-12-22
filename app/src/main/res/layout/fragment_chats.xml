@@ -497,6 +497,43 @@
             android:visibility="visible"
             android:background="@color/color_list_divider_color" />
 
+        <RelativeLayout
+            android:id="@+id/layout_call_logs_export"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="24dp"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="24dp">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_call_logs"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/call_log_export_image"
+                android:text="@string/call_logs_export" />
+
+            <ImageView
+                android:id="@+id/call_log_export_image"
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_right_icon" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:visibility="visible"
+            android:background="@color/color_list_divider_color" />
+
         <com.contusfly.views.CustomTextView
             android:id="@+id/text_clear_conversation"
             style="@style/TextMediumStyle"

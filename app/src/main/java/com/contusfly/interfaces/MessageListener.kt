@@ -17,4 +17,6 @@ interface MessageListener {
      */
     fun onSendMessageSuccess(message: ChatMessage)
 
+    fun onSendMessageFailure(message: String)
+
 }

@@ -45,7 +45,7 @@ object GetMsgNotificationUtils {
      * @return String Summary of the message
      */
     internal fun getMessageSummary(context: Context, message: ChatMessage): String {
-        return if (MessageType.TEXT == message.getMessageType() || MessageType.NOTIFICATION == message.getMessageType())
+        return if (MessageType.TEXT == message.getMessageType() || MessageType.NOTIFICATION == message.getMessageType() || MessageType.AUTO_TEXT == message.messageType)
             if (message.isMessageRecalled())
                 deleted_message
             else {

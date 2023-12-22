@@ -592,6 +592,11 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
         viewModel.getArchivedChatStatus()
     }
 
+    override fun onUpdateBusyStatus(status: Boolean, message: String?) {
+        super.onUpdateBusyStatus(status, message)
+        LogMessage.d(TAG,"#busy updateBusySettings=>$status ::busyMessage=>$message")
+    }
+
     /**
      * This method checks whether the web chat is logged in or not and redirects accordingly...
      */

@@ -381,9 +381,6 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                 recentChatFragment.updateSearchAdapter(searchItemClickedPosition)
         }
         viewModel.getRestartActivitygetrecentChatList()
-        viewModel.getPrivateChatStatus()
-        viewModel.getArchivedChatStatus()
-        viewModel.updateUnReadChatCount()
         validateMissedCallsCount()
     }
 

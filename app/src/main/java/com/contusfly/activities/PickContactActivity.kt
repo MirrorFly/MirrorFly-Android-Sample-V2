@@ -21,6 +21,7 @@ import com.contusfly.chat.MessagingClient
 import com.contusfly.chat.ShareMessagesController
 import com.contusfly.models.ContactShareModel
 import com.contusfly.utils.ProfileDetailsUtils
+import com.contusfly.utils.QuickShareMessageListener
 import com.contusfly.utils.UserInterfaceUtils
 import com.contusfly.views.CustomRecyclerView
 import com.contusfly.views.ShareDialog
@@ -241,10 +242,14 @@ class PickContactActivity : BaseActivity() {
     private fun sendContacts(contactList: ArrayList<ContactShareModel>) {
         if (AppUtils.isNetConnected(this)) {
             shareDialog!!.initializeAndShowShareDialog("Quick Share", "Sending contacts...")
-            shareMessagesController.sendContactMessage(contactList, userIdList!!)
-            shareDialog!!.dismissShareDialog()
-            navigateToAppropriateScreen()
-            finish()
+            shareMessagesController.sendContactMessage(contactList, userIdList!!,object:
+                QuickShareMessageListener {
+                override fun sendMediaSucess() {
+                    shareDialog!!.dismissShareDialog()
+                    navigateToAppropriateScreen()
+                    finish()
+                }
+            })
         } else {
             shareDialog!!.dismissShareDialog()
             CustomToast.show(this, getString(R.string.msg_no_internet))

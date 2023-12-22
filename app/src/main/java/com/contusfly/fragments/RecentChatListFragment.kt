@@ -825,7 +825,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     private fun privateChatPullRefreshViewVisibleGone(
         archiveChats: MutableList<RecentChat>,
         privateChatList: ArrayList<RecentChat>) {
-        if (archiveChats?.size == 0 && privateChatList.size == 0){
+        if (archiveChats?.size == 0 && privateChatList.size == 0) {
             recentChatBinding.privateChatReleaseView.privateChatReleaseParentLayout.visibility =View.GONE
         }
     }

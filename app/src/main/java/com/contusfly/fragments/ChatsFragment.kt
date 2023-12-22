@@ -33,6 +33,7 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import com.contusfly.R
 import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.flycall.webrtc.CallLogger
 
 
 /**
@@ -140,6 +141,10 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
             setArchivedSettingsData(it)
         })
 
+        viewModel.busySettingsStatus.observe(viewLifecycleOwner, Observer {
+            displayUserBusyStatusPreference()
+        })
+
         viewModel.availableFeatureLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             featureActionValidation(it)
         })
@@ -184,6 +189,7 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
         fragmentChatsBinding.textDeleteConversation.setOnClickListener(this)
         fragmentChatsBinding.layoutTranslation.setOnClickListener(this)
         fragmentChatsBinding.layoutChatBackup.setOnClickListener(this)
+        fragmentChatsBinding.layoutCallLogsExport.setOnClickListener(this)
     }
 
     /**
@@ -294,8 +300,11 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
 
             R.id.layout_last_seen -> postLastSeenUserPreference()
             R.id.layout_user_busy_status -> {
-                FlyCore.enableDisableBusyStatus(!FlyCore.isBusyStatusEnabled())
-                displayUserBusyStatusPreference()
+                FlyCore.enableDisableBusyStatus(!FlyCore.isBusyStatusEnabled()) { isSuccess, _, data ->
+                    displayUserBusyStatusPreference()
+                    if (!isSuccess) CustomToast.show(requireContext(), data.getMessage())
+                }
+
             }
             R.id.layout_auto_download -> {
                 if (!checkWriteExternalPermission()) {
@@ -329,6 +338,13 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
 
             R.id.layout_chat_backup ->
                 requireActivity().launchActivity<BackUpActivity> { }
+            R.id.layout_call_logs_export -> {
+                chatSettingsAction = ChatSettingsAction.EXPORT_CALL_LOG
+                dialog!!.showAlertDialog(resources.getString(R.string.export_call_log_alert),
+                    getString(R.string.export_log_text), getString(R.string.clear_log_text),
+                    CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false)
+            }
+
         }
     }
     /**
@@ -347,6 +363,15 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
                         CustomToast.show(settingsActivity!!.applicationContext,
                             resources.getString(R.string.msg_no_internet))
                     }
+                }
+                ChatSettingsAction.EXPORT_CALL_LOG ->{
+                    CallLogger().callLogExportToChosenApp(context)
+                }
+            }
+        }else{
+            when(chatSettingsAction){
+                ChatSettingsAction.EXPORT_CALL_LOG->{
+                    CallLogger().deleteCallLogFile(context)
                 }
             }
         }
@@ -382,7 +407,7 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
      * done in this activity.
      */
     private enum class ChatSettingsAction {
-        CLEAR_CONVERSATION, DELETE_CONVERSATION
+        CLEAR_CONVERSATION, DELETE_CONVERSATION, EXPORT_CALL_LOG
     }
 
     override val coroutineContext: CoroutineContext

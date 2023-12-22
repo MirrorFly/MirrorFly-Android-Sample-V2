@@ -47,7 +47,7 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
                 suggestionLayout.gone()
                 parentViewmodel.addMessage(replyMessage, jid)
                 when (replyMessage.messageType) {
-                    MessageType.TEXT,MessageType.MEET ->
+                    MessageType.TEXT,MessageType.AUTO_TEXT,MessageType.MEET ->
                         showReplyTextMessage(replyMessage)
                     MessageType.IMAGE, MessageType.VIDEO ->
                         showReplyImageVideoMessage(replyMessage)

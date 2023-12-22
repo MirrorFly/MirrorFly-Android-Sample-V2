@@ -18,6 +18,7 @@ import com.contusfly.activities.CommonEditorActivity
 import com.contusfly.activities.SettingsActivity
 import com.contusfly.adapters.StatusAdapter
 import com.contusfly.databinding.FragmentUserBusyStatusBinding
+import com.contusfly.getMessage
 import com.contusfly.utils.StatusDeleteDialog
 import com.contusfly.utils.StatusDeleteDialog.UpdateAdapterListener
 import com.contusfly.views.CommonAlertDialog
@@ -31,6 +32,7 @@ import com.mirrorflysdk.api.FlyCore.getMyBusyStatus
 import com.mirrorflysdk.api.FlyCore.setMyBusyStatus
 import com.mirrorflysdk.api.models.BusyStatus
 import com.contusfly.utils.EmojiUtils
+import com.mirrorflysdk.views.CustomToast
 import kotlin.collections.ArrayList
 
 /**
@@ -114,7 +116,7 @@ class UserBusyStatusFragment : Fragment(), View.OnClickListener,
      */
     private val textDone: Unit
         private get() {
-            if (busyStatus != null && !busyStatus!!.status.isEmpty()) enableDisableBusyStatus(true)
+            if (busyStatus != null && !busyStatus!!.status.isEmpty()) enableDisableBusyStatus(true){ _, _, _ -> }
             updateStatus(busyStatus!!.status)
             if (currentActivity != null) requireActivity().onBackPressed()
         }
@@ -125,7 +127,10 @@ class UserBusyStatusFragment : Fragment(), View.OnClickListener,
      */
     private fun updateStatus(status: String) {
         try {
-            setMyBusyStatus(status)
+            setMyBusyStatus(status) { isSuccess, _, data ->
+                if (!isSuccess)
+                    CustomToast.show(requireContext(), data.getMessage())
+            }
         } catch (e: Exception) {
             LogMessage.e(e)
         }
@@ -149,20 +154,36 @@ class UserBusyStatusFragment : Fragment(), View.OnClickListener,
                 ) != busyStatus!!.status
             ) {
                 val status = data.getStringExtra(Constants.TITLE)!!
-                if(statusList.filter { it.status ==  data.getStringExtra(Constants.TITLE)!!}.size == 0){
-                    var tempStatusList: ArrayList<BusyStatus> = ArrayList()
-                    tempStatusList.addAll(statusList)
-                    busyStatus!!.status = data.getStringExtra(Constants.TITLE)!!
-                    statusList.clear()
-                    statusList.add(busyStatus!!)
-                    tempStatusList.remove(busyStatus)
-                    statusList.addAll(tempStatusList)
-                }
+                updateStatusFromEditText(status, data)
+            }
+        } catch (e: Exception) {
+            LogMessage.e(e)
+        }
+    }
 
-                EmojiUtils.setEmojiText(fragmentUserBusyStatusBinding.textEditBusyStatus, status)
-                listAdapter?.setStatus(statusList, status)
-                listAdapter?.notifyDataSetChanged()
-                updateStatus(status)
+    private fun updateStatusFromEditText(status: String,intentData: Intent) {
+        try {
+            setMyBusyStatus(status) { isSuccess, _, data ->
+                if (!isSuccess)
+                    CustomToast.show(requireContext(), data.getMessage())
+                else {
+
+                    if(statusList.filter { it.status == intentData.getStringExtra(Constants.TITLE)!! }
+                            .isEmpty()){
+                        val tempStatusList: ArrayList<BusyStatus> = ArrayList()
+                        tempStatusList.addAll(statusList)
+                        busyStatus!!.status = intentData.getStringExtra(Constants.TITLE)!!
+                        val newElement = BusyStatus( getMyBusyStatus()?.id?.plus(1)?:1, status=intentData.getStringExtra(Constants.TITLE)!!, isCurrentStatus = true)
+                        statusList.clear()
+                        statusList.add(newElement)
+                        tempStatusList.remove(busyStatus)
+                        statusList.addAll(tempStatusList)
+                    }
+
+                    EmojiUtils.setEmojiText(fragmentUserBusyStatusBinding.textEditBusyStatus, status)
+                    listAdapter?.setStatus(statusList, status)
+                    listAdapter?.notifyDataSetChanged()
+                }
             }
         } catch (e: Exception) {
             LogMessage.e(e)
@@ -230,11 +251,27 @@ class UserBusyStatusFragment : Fragment(), View.OnClickListener,
          * Apply the changes if the status changes and type is busy status
          */
         if (adapterView.id == R.id.list_busy_status && statusList[i].status != busyStatus!!.status) {
-            busyStatus = statusList[i]
-            EmojiUtils.setEmojiText(fragmentUserBusyStatusBinding.textEditBusyStatus, busyStatus!!.status)
-            listAdapter?.setStatus(statusList, busyStatus!!.status)
-            listAdapter?.notifyDataSetChanged()
-            updateStatus(busyStatus!!.status)
+            updateStatusFromItemClick(statusList[i].status,i)
+        }
+    }
+
+    private fun updateStatusFromItemClick(status: String, position: Int) {
+        try {
+            setMyBusyStatus(status) { isSuccess, _, data ->
+                if (!isSuccess)
+                    CustomToast.show(requireContext(), data.getMessage())
+                else {
+                    busyStatus = statusList[position]
+                    EmojiUtils.setEmojiText(
+                        fragmentUserBusyStatusBinding.textEditBusyStatus,
+                        busyStatus!!.status
+                    )
+                    listAdapter?.setStatus(statusList, busyStatus!!.status)
+                    listAdapter?.notifyDataSetChanged()
+                }
+            }
+        } catch (e: Exception) {
+            LogMessage.e(e)
         }
     }
 

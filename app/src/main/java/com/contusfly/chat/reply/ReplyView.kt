@@ -49,7 +49,7 @@ class ReplyView {
             }
         else {
             when (replyMessage.messageType) {
-                MessageType.TEXT -> {
+                MessageType.TEXT,MessageType.AUTO_TEXT -> {
                     with(replyMessageViewHolder) {
                         txtChatReply?.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
                         replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReply!!,"",false) }
@@ -161,7 +161,7 @@ class ReplyView {
             }
         else {
             when (replyMessage.getMessageType()) {
-                MessageType.TEXT -> {
+                MessageType.TEXT,MessageType.AUTO_TEXT -> {
                     with(replyMessageViewHolder) {
                         txtChatReceivedReply?.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
                         replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReceivedReply!!,"",false) }

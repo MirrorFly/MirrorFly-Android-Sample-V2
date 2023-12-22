@@ -103,6 +103,7 @@ import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.mirrorflysdk.helpers.LocationUtils
 import com.mirrorflysdk.utils.*
+import com.mirrorflysdk.views.CustomToast
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
@@ -291,6 +292,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     protected var searchEnabled = false
 
     protected var isAttachMenuClick = false
+
+    protected var isAudioRecordClick = false
 
     /**
      * Chat type of the chat view
@@ -1803,6 +1806,10 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             listChats.scrollToPosition(mainList.size - 1) }, 100)
     }
 
+    override fun onSendMessageFailure(message: String) {
+        CustomToast.show(this, message)
+    }
+
 
     /**
      * check the camera permission
@@ -1954,6 +1961,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 openCustomOSAudioSelection()
             }
             manufacturer.contains("VIVO") -> {
+                openCustomOSAudioSelection()
+            }
+            manufacturer.contains("ONEPLUS") -> {
                 openCustomOSAudioSelection()
             }
             manufacturer.contains("REALME") -> {
@@ -2223,7 +2233,15 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     private fun displayUnreadMessageSeparator(separatorPosition: Int) {
-        val noOfItemsAfterUnreadMessageSeparator = mainList.size - separatorPosition - 1
+        val shouldNotCount = (separatorPosition + 1 until mainList.size)
+            .count { mainList[it].isMessageSentByMe }
+        LogMessage.e(TAG, "should not count--->$shouldNotCount")
+
+        val defaultUnreadCountResult = mainList.size - separatorPosition - 1
+        val shouldNotCountResult = defaultUnreadCountResult - shouldNotCount
+        LogMessage.e(TAG, "should Not Count Result--->$shouldNotCountResult")
+
+        val noOfItemsAfterUnreadMessageSeparator = if(shouldNotCountResult!=0) shouldNotCountResult else mainList.size - separatorPosition - 1
         if (noOfItemsAfterUnreadMessageSeparator != 0) {
             val unreadMessageDetails = mainList[separatorPosition]
             if (mainList[separatorPosition].messageId == unreadMessageTypeMessageId) {
@@ -3034,6 +3052,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         if (!isBlocked)
             chatAdapter.pauseMediaPlayer()
         return if (FlyCore.isBusyStatusEnabled() && ChatType.TYPE_CHAT.equals(chat.chatType, false)) {
+            isAudioRecordClick = true
             showBusyAlert()
             false
         } else if (isBlocked) {

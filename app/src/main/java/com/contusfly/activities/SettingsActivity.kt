@@ -142,6 +142,13 @@ class SettingsActivity : BaseActivity(), CoroutineScope {
         viewModel.getArchivedSettingsStatus(archivedSettingsStatus)
     }
 
+    override fun onUpdateBusyStatus(status: Boolean, message: String?) {
+        super.onUpdateBusyStatus(status, message)
+        viewModel.getBusySettingsStatus(status)
+        LogMessage.e(TAG,"#updateBusySettings=> status::$status ::busyMessage=>$message")
+
+    }
+
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + Job()
 

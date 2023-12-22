@@ -67,15 +67,13 @@ class ConfigurationUtils {
          * @param context Instance of application
          */
         fun insertDefaultBusyStatus(context: Context) {
-            if (getBusyStatusList().isEmpty()) {
                 val defaultStatus = context.resources.getStringArray(R.array.default_busy_status_values)
                 for (statusValue in defaultStatus) {
                     insertMyBusyStatus(statusValue!!)
                 }
                 if (getMyBusyStatus() == null || getMyBusyStatus()!!.status.isEmpty()) {
-                    setMyBusyStatus(context.getString(R.string.default_busy_status))
+                    setMyBusyStatus(context.getString(R.string.default_busy_status)){ _, _, _ -> }
                 }
-            }
         }
 
         /**

@@ -70,13 +70,16 @@ import dagger.android.AndroidInjection
 import io.github.rockerhieu.emojicon.EmojiconGridFragment
 import io.github.rockerhieu.emojicon.EmojiconsFragment
 import io.github.rockerhieu.emojicon.emoji.Emojicon
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickListener,
@@ -604,7 +607,9 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         val multipleImages: MediaPreviewModel
         mimeType = mimeType ?: intent.type
         var filePathFromUri: String? = ""
-        filePathFromUri = if (uri.scheme == null) uri.path else RealPathUtil.getRealPath(this@MediaPreviewActivity, uri)
+        filePathFromUri = RealPathUtil.getRealPath(this@MediaPreviewActivity, uri)
+
+       // filePathFromUri = if (uri.scheme == null) uri.path else RealPathUtil.getRealPath(this@MediaPreviewActivity, uri)
         LogMessage.d(TAG, "file path createAdapterObject = $filePathFromUri")
         LogMessage.d(TAG, "log mime type in createAdapterObject = $mimeType")
         if (mimeType!!.startsWith("image/")) {
@@ -1014,14 +1019,13 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
 
     private fun sendMediaFilesForSingleUser() {
         if (AppUtils.isNetConnected(this)) {
-            shareMessagesController.sendMediaMessagesForSingleUser(fileObjects, selectedUsers!!)
-
-            val handler = Handler()
-            handler.postDelayed({
-                progressDialog!!.dismiss()
-                navigateToAppropriateScreen()
-                finish()
-            }, 500)
+            shareMessagesController.sendMediaMessagesForSingleUser(fileObjects, selectedUsers!!,object: QuickShareMessageListener{
+                override fun sendMediaSucess() {
+                    progressDialog!!.dismiss()
+                    navigateToAppropriateScreen()
+                    finish()
+                }
+            })
         } else {
             progressDialog!!.dismiss()
             CustomToast.show(context, getString(R.string.msg_no_internet))
@@ -1058,77 +1062,128 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 return
             }
             setTextIncludingMention(mentionedUsersIds)
-            val messageObject = messagingClient.composeVideoMessage(toUser, intent.getStringExtra(Constants.FILE_PATH)!!,
-                sendTextMessageWithMentionFormat.toString(), replyMessageId, mentionedUsersIds).second
 
-            messageObject?.let {
-                messagingClient.sendMessage(it, object : MessageListener {
-                    override fun onSendMessageSuccess(message: ChatMessage) {
-                        mediaPreviewBinding.previewProgress.previewProgress.gone()
-                        ReplyHashMap.saveReplyId(toUser, Constants.EMPTY_STRING)
-                        SharedPreferenceManager.setString(
-                            Constants.REPLY_MESSAGE_USER,
-                            Constants.EMPTY_STRING
-                        )
-                        SharedPreferenceManager.setString(
-                            Constants.REPLY_MESSAGE_ID,
-                            Constants.EMPTY_STRING
-                        )
-                        viewModel.setUnSentMessageForAnUser(toUser, Constants.EMPTY_STRING)
-                        FlyMessenger.saveUnsentMentionedUserId(toUser,"")
-                        unSentMentionedUserIdList.clear()
-                        ChatParent.startActivity(
-                            this@MediaPreviewActivity,
-                            toUser,
-                            viewModel.profileDetails.value!!.getChatType()
-                        )
-                    }
-                })
+            CoroutineScope(Dispatchers.IO).launch {
+                val messageObject = messagingClient.composeVideoMessage(toUser, intent.getStringExtra(Constants.FILE_PATH)!!,
+                    sendTextMessageWithMentionFormat.toString(), replyMessageId, mentionedUsersIds).second
+
+                messageObject?.let {
+                    messagingClient.sendMessage(it, object : MessageListener {
+                        override fun onSendMessageSuccess(message: ChatMessage) {
+                            mediaPreviewBinding.previewProgress.previewProgress.gone()
+                            ReplyHashMap.saveReplyId(toUser, Constants.EMPTY_STRING)
+                            SharedPreferenceManager.setString(
+                                Constants.REPLY_MESSAGE_USER,
+                                Constants.EMPTY_STRING
+                            )
+                            SharedPreferenceManager.setString(
+                                Constants.REPLY_MESSAGE_ID,
+                                Constants.EMPTY_STRING
+                            )
+                            viewModel.setUnSentMessageForAnUser(toUser, Constants.EMPTY_STRING)
+                            FlyMessenger.saveUnsentMentionedUserId(toUser,"")
+                            unSentMentionedUserIdList.clear()
+                            ChatParent.startActivity(
+                                this@MediaPreviewActivity,
+                                toUser,
+                                viewModel.profileDetails.value!!.getChatType()
+                            )
+                        }
+
+                        override fun onSendMessageFailure(message: String) {
+                            runOnUiThread {
+                                mediaPreviewBinding.sendMedia.isEnabled = true
+                                mediaPreviewBinding.previewProgress.previewProgress.gone()
+                                if(message.isNotEmpty())
+                                CustomToast.show(this@MediaPreviewActivity, message)
+                            }
+                        }
+                    })
+                }
             }
+
+
         }
         myApp?.clearMediaCaptionObject()
     }
 
     private fun sendGalleryAttachments(toUser: String, replyMessageId: String) {
         mediaPreviewBinding.previewProgress.previewProgress.show()
-        val sentMessages = arrayListOf<ChatMessage>()
-        for (item in selectedImageList) {
-            var messageObject: MessageObject?
-            if (item.isImage) {
-                if (!ChatManager.getAvailableFeatures().isImageAttachmentEnabled) {
-                    mediaPreviewBinding.previewProgress.previewProgress.gone()
-                    CustomAlertDialog().showFeatureRestrictionAlert(this)
-                    mediaPreviewBinding.sendMedia.isEnabled = true
-                    break
-                }
-                messageObject = messagingClient.composeImageMessage(toUser, item.path, item.caption, replyMessageId,item.mentionedUsersIds)
-            } else {
-                if (!ChatManager.getAvailableFeatures().isVideoAttachmentEnabled) {
-                    mediaPreviewBinding.previewProgress.previewProgress.gone()
-                    CustomAlertDialog().showFeatureRestrictionAlert(this)
-                    mediaPreviewBinding.sendMedia.isEnabled = true
-                    break
-                }
-                messageObject = messagingClient.composeVideoMessage(toUser, item.path, item.caption, replyMessageId,item.mentionedUsersIds).second
-            }
-            messageObject?.let {
-                messagingClient.sendMessage(it, object : MessageListener {
-                    override fun onSendMessageSuccess(message: ChatMessage) {
-                        sentMessages.add(message)
-                        if (sentMessages.size == selectedImageList.size) {
-                            mediaPreviewBinding.previewProgress.previewProgress.gone()
-                            ReplyHashMap.saveReplyId(toUser, Constants.EMPTY_STRING)
-                            SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_USER, Constants.EMPTY_STRING)
-                            SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_ID, Constants.EMPTY_STRING)
-                            viewModel.setUnSentMessageForAnUser(toUser, Constants.EMPTY_STRING)
-                            ChatParent.startActivity(this@MediaPreviewActivity, toUser, viewModel.profileDetails.value!!.getChatType())
-                        }
+        CoroutineScope(Dispatchers.IO).launch {
+            val sentMessages = arrayListOf<ChatMessage>()
+            var errorMessageList = ArrayList<String>()
+            for (item in selectedImageList) {
+                var messageObject: MessageObject?
+                if (item.isImage) {
+                    if (!ChatManager.getAvailableFeatures().isImageAttachmentEnabled) {
+                        mediaPreviewBinding.previewProgress.previewProgress.gone()
+                        CustomAlertDialog().showFeatureRestrictionAlert(this@MediaPreviewActivity)
+                        mediaPreviewBinding.sendMedia.isEnabled = true
+                        break
                     }
-                })
+                    messageObject = messagingClient.composeImageMessage(toUser, item.path, item.caption, replyMessageId,item.mentionedUsersIds)
+                } else {
+                    if (!ChatManager.getAvailableFeatures().isVideoAttachmentEnabled) {
+                        mediaPreviewBinding.previewProgress.previewProgress.gone()
+                        CustomAlertDialog().showFeatureRestrictionAlert(this@MediaPreviewActivity)
+                        mediaPreviewBinding.sendMedia.isEnabled = true
+                        break
+                    }
+                    messageObject = messagingClient.composeVideoMessage(toUser, item.path, item.caption, replyMessageId,item.mentionedUsersIds).second
+                }
+                sendGalleryAttachmentFiles(messageObject,sentMessages,toUser,errorMessageList)
+
             }
+            FlyMessenger.saveUnsentMentionedUserId(toUser,"")
+            unSentMentionedUserIdList.clear()
         }
-        FlyMessenger.saveUnsentMentionedUserId(toUser,"")
-        unSentMentionedUserIdList.clear()
+
+    }
+
+    private fun sendGalleryAttachmentFiles(
+        messageObject: MessageObject?,
+        sentMessages: ArrayList<ChatMessage>,
+        toUser: String,
+        errorMessageList: ArrayList<String>
+    ) {
+        messageObject?.let {
+            messagingClient.sendMessage(it, object : MessageListener {
+                override fun onSendMessageSuccess(message: ChatMessage) {
+                    sentMessages.add(message)
+                    launchChatPage(sentMessages,toUser,errorMessageList)
+                }
+
+                override fun onSendMessageFailure(message: String) {
+                    if(message.isNotEmpty()) {
+                        errorMessageList.add(message)
+                    }
+                    sentMessages.add(ChatMessage())
+                    launchChatPage(sentMessages,toUser,errorMessageList)
+                }
+            })
+        }
+
+    }
+
+    private fun launchChatPage(
+        sentMessages: ArrayList<ChatMessage>,
+        toUser: String,
+        errorMessageList: ArrayList<String>
+    ) {
+        if (sentMessages.size == selectedImageList.size) {
+            runOnUiThread {
+                mediaPreviewBinding.sendMedia.isEnabled = true
+                mediaPreviewBinding.previewProgress.previewProgress.gone()
+                if(errorMessageList.size > 0) {
+                    CustomToast.show(this@MediaPreviewActivity, errorMessageList.get(0))
+                }
+            }
+            ReplyHashMap.saveReplyId(toUser, Constants.EMPTY_STRING)
+            SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_USER, Constants.EMPTY_STRING)
+            SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_ID, Constants.EMPTY_STRING)
+            viewModel.setUnSentMessageForAnUser(toUser, Constants.EMPTY_STRING)
+            ChatParent.startActivity(this@MediaPreviewActivity, toUser, viewModel.profileDetails.value!!.getChatType())
+        }
     }
 
     private fun removeSelectedFile() {

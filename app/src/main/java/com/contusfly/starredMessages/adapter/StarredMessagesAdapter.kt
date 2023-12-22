@@ -1503,20 +1503,32 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 chatAdapterHelper!!.mediaUploadView(mediaStatus.progressBar!!, mediaStatus.cancelImageview!!, mediaStatus.viewProgress)
                 if (mediaStatus.item!!.messageType == MessageType.VIDEO) mediaStatus.imgPlay!!.visibility = View.VISIBLE
                 mediaStatus.txtRetry!!.visibility = View.GONE
+                mediaStatus.progressbuffer!!.visibility = View.GONE
                 if (mediaStatus.download != null) mediaStatus.download!!.visibility = View.GONE
             }
             MediaDownloadStatus.MEDIA_DOWNLOADING, MediaUploadStatus.MEDIA_UPLOADING -> {
-                mediaStatus.progressBar!!.visibility = View.VISIBLE
-                mediaStatus.cancelImageview!!.visibility = View.VISIBLE
+
                 if (mediaStatus.viewProgress != null) mediaStatus.viewProgress!!.visibility = View.VISIBLE
+                mediaStatus.progressBar!!.visibility = View.GONE
+                mediaStatus.progressbuffer!!.visibility = View.VISIBLE
+
+                mediaStatus.cancelImageview!!.visibility = View.VISIBLE
                 mediaStatus.txtRetry!!.visibility = View.GONE
+                mediaStatus.download!!.visibility = View.GONE
+                mediaStatus.imgPlay!!.visibility = View.GONE
             }
-            MediaDownloadStatus.MEDIA_NOT_DOWNLOADED -> {
+            MediaDownloadStatus.MEDIA_NOT_DOWNLOADED, MediaDownloadStatus.STORAGE_NOT_ENOUGH -> {
                 chatAdapterHelper!!.mediaUploadView(mediaStatus.progressBar!!, mediaStatus.cancelImageview!!, mediaStatus.viewProgress)
                 mediaStatus.download!!.visibility = View.VISIBLE
+                mediaStatus.txtRetry!!.visibility = View.GONE
+                mediaStatus.imgPlay!!.visibility = View.GONE
+                mediaStatus.progressbuffer!!.visibility = View.GONE
             }
             MediaUploadStatus.MEDIA_NOT_UPLOADED -> {
                 mediaStatus.txtRetry!!.visibility = View.VISIBLE
+                mediaStatus.imgPlay!!.visibility = View.GONE
+                mediaStatus.download!!.visibility = View.GONE
+                mediaStatus.progressbuffer!!.visibility = View.GONE
                 chatAdapterHelper!!.mediaUploadView(mediaStatus.progressBar!!, mediaStatus.cancelImageview!!, mediaStatus.viewProgress)
             }
         }

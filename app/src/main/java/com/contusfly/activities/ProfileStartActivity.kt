@@ -787,6 +787,7 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
                         profileStartBinding.textEmail.text.toString().isNotEmpty()) {
                     profileName = profileStartBinding.editProfileName.text.toString().trim()
                     setUserProfileName(profileName!!)
+                    FlyCore.getBusySettingsStatusFromServer()
                     updateProfile()
                 } else {
                     if (!this.isDestroyed) UserProfileUtils().closeProgress(progressDialog)

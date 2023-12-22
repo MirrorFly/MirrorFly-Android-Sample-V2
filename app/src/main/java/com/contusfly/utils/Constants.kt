@@ -29,7 +29,6 @@ class Constants {
         const val MAX_NAME_COUNT = 30
         const val VIDEO_DURATION_LIMIT = 300
         const val AUDIO_DURATION_LIMIT = 300
-        const val MAX_AUDIO_SIZE_LIMIT = 30
         const val MAX_CAPTION_LENGTH = 1024
         const val EMPTY_TIME = ""
         const val NOTIFY_MESSAGE_HIGHLIGHT = "notify_message_highlight"
@@ -112,6 +111,7 @@ class Constants {
         const val HINT = "hint"
         const val TEXT_COUNT = "text_count"
         const val MSG_TYPE_TEXT = "text"
+        const val MSG_TYPE_AUTO_TEXT = "auto_text"
         const val MAX_TEXT_COUNT = 139
         const val GROUP_NAME_UPDATE = 2
         const val MAX_GROUP_NAME_COUNT = 25
@@ -198,7 +198,6 @@ class Constants {
         const val UNSTAR = "unstar"
         val CONTENT_URI = Uri.parse("content://eu.janmuller.android.simplecropimage.contus-fly/")
         const val MIME_TYPE_VIDEO = "video/*"
-        const val MAX_DOCUMENT_UPLOAD_SIZE = 20
         const val SELECTED_IMAGES = "selected_images"
         const val CHAT_MESSAGE = "chatmessage"
         const val FROMUSER = "Fromuser"
@@ -420,6 +419,9 @@ class Constants {
         const val IS_SHOW_PRIVATE_CHAT_LIST="show_private_chat_list"
         const val ON_GOING_CHAT_USER="ongoing_chat_user"
 
+
+        const val MAX_DOCUMENT_UPLOAD_SIZE = 2048 // 2 GB
+        const val MAX_AUDIO_SIZE_LIMIT = 2048 // 2 GB
 
     }
 }

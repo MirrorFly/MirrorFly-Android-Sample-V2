@@ -82,6 +82,7 @@ import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -271,12 +272,16 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     override fun onMessageReceived(message: ChatMessage) {
-        LogMessage.d("TAG","#chat #fetchmsg onMessageReceived")
+        LogMessage.d("TAG","#chat #fetchmsg onMessageReceived-> ")
         message.let {
-            if (message.isMessageSentByMe)
+            if (message.isMessageSentByMe) {
                 handleUnreadMessageSeparator(true)
+                if (message.messageType == MessageType.AUTO_TEXT)
+                    loadNextData()
+            }
             if (chat.toUser == message.chatUserJid && (!message.isMessageSentByMe || message.isItCarbonMessage)
-                && !message.isMessageDeleted) {
+                && !message.isMessageDeleted
+            ) {
                 removeUnReadMsgSeparatorOnMessageReceiver()
                 loadNextData()
                 playForgroundNotificationSound(this)
@@ -353,11 +358,18 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
      * Handle the upload/download progress changes
      */
     override fun onUploadDownloadProgressChanged(messageId: String, progressPercentage: Int) {
-        Log.d(TAG, "onUploadDownloadProgressChanged progressPercentage: $progressPercentage")
-        getMessagebyID(messageId)?.mediaChatMessage?.let {
-            it.mediaProgressStatus = progressPercentage.toLong()
+        Log.d(TAG, "onUploadDownloadProgressChanged progressPercentage: $progressPercentage messageID $messageId")
+        var message = getMessagebyID(messageId)
+        if(message != null) {
+            message.mediaChatMessage.mediaProgressStatus = progressPercentage.toLong()
+            var position = getMessagePosition(message.messageId)
+            if(position.isValidIndex()) {
+                val bundle = Bundle()
+                bundle.putInt(Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED, 1)
+                chatAdapter.notifyItemChanged(position, bundle)
+            }
+
         }
-        uploadDownloadProgressObserver.onNext(messageId)
     }
 
     private fun initObservers() {
@@ -386,14 +398,20 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
      * @param message Updated message
      */
     override fun onMediaStatusUpdated(message: ChatMessage) {
-        val messagePosition = getMessagePosition(message.messageId)
-        if (messagePosition.isValidIndex()) {
-            chatAdapter.refreshMessage(messagePosition, message)
-            val bundle = Bundle()
-            bundle.putInt(Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED, 1)
-            chatAdapter.notifyItemChanged(messagePosition, bundle)
-        }
-        invalidateActionMode()
+            val messagePosition = getMessagePosition(message.messageId)
+            if (messagePosition.isValidIndex()) {
+                chatAdapter.refreshMessage(messagePosition, message)
+                val bundle = Bundle()
+                bundle.putInt(Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED, 1)
+                    chatAdapter.notifyItemChanged(messagePosition, bundle)
+                    if(message.mediaChatMessage.mediaUploadStatus == MediaUploadStatus.MEDIA_UPLOADED_NOT_AVAILABLE) {
+                        CustomToast.show(context, context!!.getString(R.string.msg_media_does_not_exists))
+                    } else if(message.mediaChatMessage.mediaDownloadStatus == MediaDownloadStatus.STORAGE_NOT_ENOUGH) {
+                        CustomToast.show(context, context!!.getString(R.string.insufficient_memory_error))
+                    }
+            }
+            invalidateActionMode()
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -506,6 +524,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun initChatAdapter() {
         chatAdapter = ChatAdapter(mainList, clickedMessages, chat.chatType, this, userJid)
         chatAdapter.hasStableIds()
+        listChats.setHasFixedSize(true)
         listChats.adapter = chatAdapter
         chatAdapter.setOnDownloadClickListener(this)
         val messageSwipeController = MessageSwipeController(this, object : MessageSwipeController.SwipeControllerActions {
@@ -991,7 +1010,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         sendScheduleMeet.setOnTouchListener { view, event ->
             // Pass touch events to GestureDetector for handling click event
             gestureDetector.onTouchEvent(event)
-
             val boundaryLeft= 0
             val boundaryTop=0
 
@@ -1191,7 +1209,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             try{
                 val fileRealPath = RealPathUtil.getRealPath(this, filePathUri)
                 if (fileRealPath == null)
-                    showDriveFileValidation()
+                   return
                 else if (fileRealPath.isNotEmpty()) {
                     if (!ChatManager.getAvailableFeatures().isDocumentAttachmentEnabled) {
                         CustomAlertDialog().showFeatureRestrictionAlert(this)
@@ -1206,6 +1224,9 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                         validateAndSendMessage(fileMessage.third!!)
                 } else
                     showFileValidation()
+            } catch (e: IOException) {
+                CustomToast.show(this,getString(R.string.insufficient_memory_error))
+                LogMessage.e(e)
             } catch (e: Exception) {
                 LogMessage.e(e)
             }
@@ -1425,28 +1446,28 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     override fun onResume() {
         super.onResume()
-        setSecureFlag()
-        keyboardHeightProvider?.onResume()
-        try {
-            registerReceiver(dateChangedBroadcastReceiver, IntentFilter(Intent.ACTION_TIME_CHANGED))
-        } catch (e: Exception) {
-            LogMessage.e(e)
-        }
-        viewModel.getProfileDetails()
-        addMessagesforSmartReply()
-        handleOnResume()
-        showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
-        removeUnReadMsgSeparator()
-        if (mainList.isNotEmpty() && !parentViewModel.getFetchingIsInProgress())
-            parentViewModel.loadNextData()
-        if (SharedPreferenceManager.getBoolean(Constants.SHOW_LABEL))
-            netConditionalCall(
-                { chatXmppConnectionStatusLayout.gone() },
-                { chatXmppConnectionStatusLayout.show() })
-        getRecalledMessagesForThisUser()
-        handleCursorAndKeyboardVisibility()
-        clearNotification()
-        showPausedOngoingRecording()
+            setSecureFlag()
+            keyboardHeightProvider?.onResume()
+            try {
+                registerReceiver(dateChangedBroadcastReceiver, IntentFilter(Intent.ACTION_TIME_CHANGED))
+            } catch (e: Exception) {
+                LogMessage.e(e)
+            }
+            viewModel.getProfileDetails()
+            addMessagesforSmartReply()
+            handleOnResume()
+            showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
+            removeUnReadMsgSeparator()
+            if (mainList.isNotEmpty() && !parentViewModel.getFetchingIsInProgress())
+                parentViewModel.loadNextData()
+            if (SharedPreferenceManager.getBoolean(Constants.SHOW_LABEL))
+                netConditionalCall(
+                    { chatXmppConnectionStatusLayout.gone() },
+                    { chatXmppConnectionStatusLayout.show() })
+            getRecalledMessagesForThisUser()
+            handleCursorAndKeyboardVisibility()
+            clearNotification()
+            showPausedOngoingRecording()
     }
 
     private fun checkIsGroupAdminBlocked() {
@@ -1528,9 +1549,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                         chatMessageEditText.setText(smartReplyText)
                     }
                     sendSmartReply()
-                } else if (action == CommonAlertDialog.DialogAction.STATUS_BUSY && isAttachMenuClick) {
-                    onAttachMenuClick()
-                    isAttachMenuClick = false
                 } else {
                     handleSuccessResponse(action)
                 }
@@ -1556,13 +1574,39 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 selectedReportMessage = Constants.EMPTY_STRING
                 dismissProgress()
             }
+        } else if (action == CommonAlertDialog.DialogAction.STATUS_BUSY && isAttachMenuClick) {
+            onAttachmentClickCallBackAfterDisableBusyStatus()
+        } else if (action == CommonAlertDialog.DialogAction.STATUS_BUSY && isAudioRecordClick) {
+            onAudioClickCallBackAfterDisableBusyStatus()
+        }
+    }
+
+    private fun onAudioClickCallBackAfterDisableBusyStatus(){
+        FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+            if (isSuccess) {
+                audioRecordView.startRecordClickListener()
+                isAudioRecordClick = false
+            }else{
+                CustomToast.show(context, data.getMessage())
+            }
+        }
+    }
+
+    private fun onAttachmentClickCallBackAfterDisableBusyStatus(){
+        FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+            if (isSuccess) {
+                onAttachMenuClick()
+                isAttachMenuClick = false
+            }else{
+                CustomToast.show(context, data.getMessage())
+            }
         }
     }
 
     private fun handleFailureResponse(action: CommonAlertDialog.DialogAction) {
         if (action == CommonAlertDialog.DialogAction.REPORT_MESSAGES) {
             selectedReportMessage = Constants.EMPTY_STRING
-        } else if (action == CommonAlertDialog.DialogAction.UNBLOCK) {
+        } else if (action == CommonAlertDialog.DialogAction.UNBLOCK || action == CommonAlertDialog.DialogAction.STATUS_BUSY) {
             messagesQueue.clear()
         } else if ((action == CommonAlertDialog.DialogAction.SMART_REPLY_UNBLOCK || action == CommonAlertDialog.DialogAction.SMART_REPLY_BUSY)) {
             chatMessageEditText.setText(Constants.EMPTY_STRING)
@@ -1601,30 +1645,27 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 deleteChat(dialogType,position)
             }
             CommonAlertDialog.DialogAction.SMART_REPLY_BUSY -> {
-                FlyCore.enableDisableBusyStatus(false)
+                FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+                    if (!isSuccess) CustomToast.show(context, data.getMessage())
+                }
             }
             CommonAlertDialog.DialogAction.FORWARD_STATUS_BUSY -> {
-                FlyCore.enableDisableBusyStatus(false)
-                if(clickedMessages.isNotEmpty())
-                    forwardMessageActionMenuClicked(clickedMessages)
-                else
-                    senderMediaForward(forwardClickedPostition)
+                forwardMessageAfterDisableBusyStatus()
             }
             CommonAlertDialog.DialogAction.STATUS_BUSY -> {
-                FlyCore.enableDisableBusyStatus(false)
-                sendQueuedUpMessages()
+                sendQueuedMessageAfterDisableBusyStatus()
             }
             CommonAlertDialog.DialogAction.STATUS_BUSY_EMOJI -> {
                 if (attachmentDialog.isShowing)
                     closeControls()
                 hideKeyboard()
-                FlyCore.enableDisableBusyStatus(false)
+                FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+                    if (!isSuccess) CustomToast.show(context, data.getMessage())
+                }
             }
 
             CommonAlertDialog.DialogAction.STATUS_BUSY_KEYBOARD -> {
-                chatMessageEditText.showSoftKeyboard()
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-                FlyCore.enableDisableBusyStatus(false)
+                showSoftKeyboardAfterDisableBusyStatus()
             }
 
             CommonAlertDialog.DialogAction.BLOCK -> blockContact()
@@ -1634,12 +1675,55 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 unblockContact()
             }
 
-            CommonAlertDialog.DialogAction.STATUS_BUSY_SCHEDULE->{
-                FlyCore.enableDisableBusyStatus(false)
-                showScheduleBottomSheetFragment()
+            CommonAlertDialog.DialogAction.STATUS_BUSY_SCHEDULE -> {
+                onShowScheduleBottomSheetAfterDisableBusyStatus()
             }
             else -> {
                 /*No Implementation needed*/
+            }
+        }
+    }
+
+    private fun showSoftKeyboardAfterDisableBusyStatus(){
+        FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+            if (isSuccess) {
+                chatMessageEditText.showSoftKeyboard()
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            } else {
+                CustomToast.show(context, data.getMessage())
+            }
+        }
+    }
+
+    private fun forwardMessageAfterDisableBusyStatus(){
+        FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+            if (isSuccess) {
+                if (clickedMessages.isNotEmpty())
+                    forwardMessageActionMenuClicked(clickedMessages)
+                else
+                    senderMediaForward(forwardClickedPostition)
+            } else {
+                CustomToast.show(context, data.getMessage())
+            }
+        }
+    }
+
+    private fun sendQueuedMessageAfterDisableBusyStatus(){
+        FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+            if (isSuccess) {
+                sendQueuedUpMessages()
+            }else{
+                CustomToast.show(context, data.getMessage())
+            }
+        }
+    }
+
+    private fun onShowScheduleBottomSheetAfterDisableBusyStatus(){
+        FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+            if (isSuccess) {
+                showScheduleBottomSheetFragment()
+            } else {
+                CustomToast.show(context, data.getMessage())
             }
         }
     }
@@ -2156,7 +2240,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
         if (externalCall) {
             clickedMessages.clear()
-            reloadUserChat()
+            //reloadUserChat()
+            parentViewModel.loadNextData(Constants.EMPTY_STRING,false)
         }
 
         updateReplyMessageAction()
@@ -2283,7 +2368,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
      */
     private fun showBottomMessage() {
         val tempMessage = mainList.lastOrNull()
-        if(tempMessage == null || tempMessage.isNotificationMessage() && tempMessage.messageTextContent.contains(resources.getString(R.string.msg_you_changed_icon)))
+        if(tempMessage == null || tempMessage.isNotificationMessage() && tempMessage.messageTextContent.contains(resources.getString(R.string.msg_you_changed_icon))|| (tempMessage.isAutoMessage() && tempMessage.isMessageSentByMe))
             return
         canShowReceivedMessage = false
         if (!isViewingRecentMessage) {

@@ -96,7 +96,7 @@ fun isCallConnecting(callStatus: String) =
     callStatus == CallStatus.CONNECTING || callStatus == CallStatus.CONNECTED
 
 fun isCallTimeOut(callStatus: String) =
-    callStatus.isNotBlank() && callStatus == CallStatus.OUTGOING_CALL_TIME_OUT
+    callStatus.isNotBlank() && (callStatus == CallStatus.CALL_TIME_OUT || callStatus == CallStatus.OUTGOING_CALL_TIME_OUT)
 
 fun CallManager.getInComingCallStatus(context: Context): String {
     return if (isAudioCall())

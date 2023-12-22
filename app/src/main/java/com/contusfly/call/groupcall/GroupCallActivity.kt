@@ -785,20 +785,29 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
 
         private fun handleCallStatusMessages(@CallStatus callEvent: String, userJid: String) {
-            LogMessage.d(TAG, "$CALL_UI $JOIN_CALL received call status: $callEvent")
+            LogMessage.d(TAG, "$CALL_UI $JOIN_CALL received call status: $callEvent userJid:$userJid")
             when (callEvent) {
                 CallStatus.CONNECTED -> handleCallStatusConnected(userJid)
                 CallStatus.DISCONNECTED -> disconnectCall(true, callEvent)
-                CallStatus.CONNECTING -> callViewHelper.updateStatusAdapter(userJid)
+                CallStatus.CONNECTING -> {
+                    callViewHelper.updateStatusAdapter(userJid)
+                }
                 CallStatus.OUTGOING_CALL_TIME_OUT -> {
+                    LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CALL_TIME_OUT userJid:${CallStatus.OUTGOING_CALL_TIME_OUT}")
                     if (CallManager.isCallConnected()) {
-                        checkAndUpdateTimeoutUsers()
+                        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CALL_TIME_OUT userJid:$userJid")
+                        val timeOutUserList = userJid.split(",").toList()
+                        checkAndUpdateTimeoutUsers(timeOutUserList)
                     } else {
                         callViewHelper.showCallAgainView()
                     }
                 }
 
-                CallStatus.INVITE_CALL_TIME_OUT -> checkAndUpdateTimeoutInviteUsers()
+                CallStatus.INVITE_CALL_TIME_OUT -> {
+                    LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CALL_TIME_OUT userJid:$userJid")
+                    val timeOutUserList = userJid.split(",").toList()
+                    checkAndUpdateTimeoutInviteUsers(timeOutUserList)
+                }
                 CallStatus.INCOMING_CALL_TIME_OUT -> disconnectCall(true, CallStatus.DISCONNECTED)
                 else -> handleOtherCallStatusMessages(callEvent, userJid)
             }
@@ -824,10 +833,52 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             }
         }
 
+        private fun handleRemoteBusyBasedOnCallSize(userJid: String) {
+            LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize userJid:$userJid ")
+            if (GroupCallUtils.getAvailableCallUsersList().size < 1 &&
+                !GroupCallUtils.getInvitedUsersList().contains(userJid)
+            ) {
+                LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize isOneToOneCall ")
+                showToast("User is busy")
+                disconnectCall(true, "User Busy")
+            } else {
+                LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize busy from $userJid ")
+                handleToastRemoteOtherBusy(userJid)
+                callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
+                updateStatusAndRemove(userJid)
+            }
+        }
+
+        private fun handleToastRemoteOtherBusy(userJid: String) {
+            LogMessage.d(TAG, "$CALL_UI handleToastRemoteOtherBusy   userJid: $userJid ")
+            val remoteBusyUserName: String = CallManager.getUserName(userJid)
+            if (remoteBusyUserName.equals(
+                    com.contusfly.utils.Constants.EMPTY_STRING,
+                    false
+                )
+            )
+                showToast("User is busy")
+            else
+                showToast("$remoteBusyUserName is busy")
+        }
+
+        private fun handleToastRemoteEngaged(userJid: String) {
+            val remoteEngageUserName: String = CallManager.getUserName(userJid)
+            if (remoteEngageUserName.equals(
+                    com.contusfly.utils.Constants.EMPTY_STRING,
+                    false
+                )
+            )
+                showToast("User is on another call")
+            else
+                showToast("$remoteEngageUserName is on another call")
+        }
+
         private fun handleCallActionMessages(callAction: String, userJid: String) {
             LogMessage.d(TAG, "$CALL_UI received callAction: $callAction")
             when (callAction) {
                 CallAction.ACTION_REMOTE_OTHER_BUSY -> {
+                    handleToastRemoteOtherBusy(userJid)
                     callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
                     updateStatusAndRemove(userJid)
                 }
@@ -838,8 +889,14 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                     CallStatus.DISCONNECTED
                 )
 
-                CallAction.ACTION_REMOTE_BUSY -> disconnectCall(true, "User Busy")
-                CallAction.ACTION_REMOTE_ENGAGED -> disconnectCall(true, "Call Engaged")
+                CallAction.ACTION_REMOTE_BUSY -> {
+                    handleRemoteBusyBasedOnCallSize(userJid)
+                }
+
+                CallAction.ACTION_REMOTE_ENGAGED -> {
+                    handleToastRemoteEngaged(userJid)
+                    handleCallEngagedBasedOnCallSize(userJid)
+                    }
                 CallAction.ACTION_AUDIO_DEVICE_CHANGED -> callViewHelper.setSelectedAudioDeviceIcon()
                 CallAction.CHANGE_TO_AUDIO_CALL -> {
                     activityBinding.layoutCallOptions.imageMuteVideo.isActivated = false
@@ -873,6 +930,20 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
                 else -> handleCallVideoMessages(callAction, userJid)
             }
+        }
+    }
+
+
+
+    private fun handleCallEngagedBasedOnCallSize(userJid: String) {
+        LogMessage.d(TAG, "$CALL_UI handleCallEngagedBasedOnCallSize userJid:$userJid ")
+        if (GroupCallUtils.getAvailableCallUsersList().size < 1 &&
+            !GroupCallUtils.getInvitedUsersList().contains(userJid)
+        )
+            disconnectCall(true, "Call Engaged")
+        else {
+            callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
+            updateStatusAndRemove(userJid)
         }
     }
 
@@ -923,12 +994,15 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         callViewHelper.updatedRejoinedUsers(userJid)
     }
 
-    private fun checkAndUpdateTimeoutUsers() {
-        LogMessage.d(TAG, "$CALL_UI checkAndUpdateTimeoutUsers()")
-        for (userJid in CallManager.getTimeOutUsersList()) {
+    private fun checkAndUpdateTimeoutUsers(timeOutUserList:List<String>) {
+        LogMessage.d(TAG, "$CALL_UI checkAndUpdateTimeoutUsers() timeOutUserList:$timeOutUserList")
+        for (userJid in timeOutUserList) {
             callUsersListAdapter.removeUser(userJid)
             callUserGridAdapter.removeUser(userJid)
-            CallManager.removeTimeoutUser(userJid)
+            if (::participantListFragment.isInitialized) {
+                LogMessage.e(TAG, "$CALL_UI checkAndUpdateTimeoutUsers invite user left::$userJid")
+                participantListFragment.updateUserLeft(userJid)
+            }
         }
         checkAndRemoveIfPinnedUserLeft()
         setUpCallUI()
@@ -939,12 +1013,11 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         if (CallManager.isPinnedUserLeft()) callViewHelper.pinnedUserLeft(CallUtils.getPinnedUserJid())
     }
 
-    private fun checkAndUpdateTimeoutInviteUsers() {
+    private fun checkAndUpdateTimeoutInviteUsers(timeOutUserList:List<String>) {
         LogMessage.d(TAG, "$CALL_UI checkAndUpdateTimeoutInviteUsers()")
-        for (userJid in CallManager.getInviteTimeOutUsersList()) {
+        for (userJid in timeOutUserList) {
             callUsersListAdapter.removeUser(userJid)
             callUserGridAdapter.removeUser(userJid)
-            CallManager.removeTimeoutUser(userJid)
             if (::participantListFragment.isInitialized) {
                 LogMessage.e(TAG, "$CALL_UI invite user left::$userJid")
                 participantListFragment.updateUserLeft(userJid)

@@ -124,14 +124,17 @@ constructor(val application: Application) : CoroutineScope {
                 }
             }
 
-            FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
+            FlyMessenger.sendMediaFileMessage(sendMessageParams, object : SendMessageCallback {
                 override fun onResponse(
                     isSuccess: Boolean,
                     error: Throwable?,
                     chatMessage: ChatMessage?
                 ) {
-                    if (isSuccess && chatMessage != null && messageListener != null)
+                    if (isSuccess && chatMessage != null && messageListener != null) {
                         messageListener.onSendMessageSuccess(chatMessage)
+                    } else  {
+                        messageListener!!.onSendMessageFailure(error?.message?:Constants.EMPTY_STRING)
+                    }
                 }
             })
         } catch (e: NoSuchMethodError) {
@@ -156,14 +159,17 @@ constructor(val application: Application) : CoroutineScope {
                 }
             }
 
-            FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
+            FlyMessenger.sendMediaFileMessage(sendMessageParams, object : SendMessageCallback {
                 override fun onResponse(
                     isSuccess: Boolean,
                     error: Throwable?,
                     chatMessage: ChatMessage?
                 ) {
-                    if (isSuccess && chatMessage != null && messageListener != null)
+                    if (isSuccess && chatMessage != null && messageListener != null){
                         messageListener.onSendMessageSuccess(chatMessage)
+                    } else  {
+                        messageListener!!.onSendMessageFailure(error?.message?:Constants.EMPTY_STRING)
+                    }
                 }
             })
         } catch (e: NoSuchMethodError) {
@@ -187,14 +193,17 @@ constructor(val application: Application) : CoroutineScope {
                         file = it
                     }
                 }
-                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
+                FlyMessenger.sendMediaFileMessage(sendMessageParams, object : SendMessageCallback {
                     override fun onResponse(
                         isSuccess: Boolean,
                         error: Throwable?,
                         chatMessage: ChatMessage?
                     ) {
-                        if (isSuccess && chatMessage != null && messageListener != null)
+                        if (isSuccess && chatMessage != null && messageListener != null) {
                             messageListener.onSendMessageSuccess(chatMessage)
+                        } else {
+                            messageListener!!.onSendMessageFailure(error?.message?:Constants.EMPTY_STRING)
+                        }
                     }
                 })
             }
@@ -219,14 +228,17 @@ constructor(val application: Application) : CoroutineScope {
                     }
                 }
 
-                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
+                FlyMessenger.sendMediaFileMessage(sendMessageParams, object : SendMessageCallback {
                     override fun onResponse(
                         isSuccess: Boolean,
                         error: Throwable?,
                         chatMessage: ChatMessage?
                     ) {
-                        if (isSuccess && chatMessage != null && messageListener != null)
+                        if (isSuccess && chatMessage != null && messageListener != null) {
                             messageListener.onSendMessageSuccess(chatMessage)
+                        } else {
+                            messageListener!!.onSendMessageFailure(error?.message?:Constants.EMPTY_STRING)
+                        }
                     }
                 })
             }
@@ -249,14 +261,17 @@ constructor(val application: Application) : CoroutineScope {
                         file = it
                     }
                 }
-                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
+                FlyMessenger.sendMediaFileMessage(sendMessageParams, object : SendMessageCallback {
                     override fun onResponse(
                         isSuccess: Boolean,
                         error: Throwable?,
                         chatMessage: ChatMessage?
                     ) {
-                        if (isSuccess && chatMessage != null && messageListener != null)
+                        if (isSuccess && chatMessage != null && messageListener != null) {
                             messageListener.onSendMessageSuccess(chatMessage)
+                        } else {
+                            messageListener!!.onSendMessageFailure(error?.message?:Constants.EMPTY_STRING)
+                        }
                     }
                 })
             }
@@ -280,14 +295,18 @@ constructor(val application: Application) : CoroutineScope {
                         caption = messageObject.caption
                     }
                 }
-                FlyMessenger.sendFileMessage(sendMessageParams, object : SendMessageCallback {
+                FlyMessenger.sendMediaFileMessage(sendMessageParams, object : SendMessageCallback {
                     override fun onResponse(
                         isSuccess: Boolean,
                         error: Throwable?,
                         chatMessage: ChatMessage?
                     ) {
-                        if (isSuccess && chatMessage != null && messageListener != null)
+                        if (isSuccess && chatMessage != null && messageListener != null) {
                             messageListener.onSendMessageSuccess(chatMessage)
+                        } else  {
+                            messageListener!!.onSendMessageFailure(error?.message?:Constants.EMPTY_STRING)
+                        }
+
                     }
 
                 })
@@ -550,11 +569,6 @@ constructor(val application: Application) : CoroutineScope {
 
         if (!(fileExtension == ".mp3" || fileExtension == ".wav" || fileExtension == ".aac" || fileExtension == ".mp4")) {
             isValidAudioType = false
-            return Triple(isValidAudioType, isAudioSizeUnderLimit, null)
-        }
-
-        if (!PickFileUtils.checkFileSize(mediaFilePath, Constants.MAX_AUDIO_SIZE_LIMIT)) {
-            isAudioSizeUnderLimit = false
             return Triple(isValidAudioType, isAudioSizeUnderLimit, null)
         }
 

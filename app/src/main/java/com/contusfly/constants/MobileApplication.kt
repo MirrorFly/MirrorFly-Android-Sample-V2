@@ -228,9 +228,7 @@ class MobileApplication : Application(), HasAndroidInjector {
                 return if (ProfileDetailsUtils.getProfileDetails(jid) != null) ProfileDetailsUtils.getProfileDetails(jid)!!.getDisplayName() else Constants.EMPTY_STRING
             }
         })
-
-        CallManager.keepConnectionInForeground(false)
-
+        CallManager.enableCallLogExport(true)
     }
 
     private fun getMissedCallNotificationContent( isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
