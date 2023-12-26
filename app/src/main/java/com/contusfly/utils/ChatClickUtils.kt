@@ -9,6 +9,7 @@ import com.mirrorflysdk.flycommons.MediaUploadStatus
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.R
 import com.contusfly.activities.MediaSlideActivity
+import com.contusfly.isMediaMessage
 import com.contusfly.isMessageSent
 import com.contusfly.utils.MediaUtils.openMediaFile
 import com.mirrorflysdk.AppUtils
@@ -120,8 +121,14 @@ class ChatClickUtils {
                         openMediaFile(context, message.getMediaChatMessage().getMediaLocalStoragePath())
                     }
                 } else CustomToast.showShortToast(context, context.getString(R.string.msg_media_does_not_exists))
+            } else if(isMediaFileNotAvailable(isMediaFileAvailable,message)) {
+                CustomToast.showShortToast(context, context.getString(R.string.msg_media_does_not_exists))
             }
         }
+    }
+
+    private fun isMediaFileNotAvailable(isMediaFileAvailable:Boolean,message:ChatMessage):Boolean{
+        return !isMediaFileAvailable && message.isMediaMessage()
     }
 
     private fun isMediaExists(filePath: String): Boolean {

@@ -204,7 +204,7 @@ class ChatAdapterHelper internal constructor(private var inflater: LayoutInflate
                 handleProcessing(viewUploadOrDownload, progressBar, progressBarBuffer, status, messageId, cancelLayout)
             }
 
-            MediaDownloadStatus.MEDIA_NOT_DOWNLOADED, MediaDownloadStatus.MEDIA_DOWNLOADED_NOT_AVAILABLE, MediaUploadStatus.MEDIA_NOT_UPLOADED -> {
+            MediaDownloadStatus.MEDIA_NOT_DOWNLOADED, MediaDownloadStatus.MEDIA_DOWNLOADED_NOT_AVAILABLE, MediaUploadStatus.MEDIA_NOT_UPLOADED, MediaDownloadStatus.STORAGE_NOT_ENOUGH -> {
                 makeViewsGone(progressBar, cancelLayout)
                 forwardImage?.hide()
                 viewUploadOrDownload?.show()

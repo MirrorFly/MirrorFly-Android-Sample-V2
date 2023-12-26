@@ -86,6 +86,7 @@ constructor() : ViewModel() {
     val archiveChatStatus = MutableLiveData<Triple<Boolean, Boolean, Int>>()
     val privateChatStatus = MutableLiveData<Boolean>()
     val archivedSettingsStatus = MutableLiveData<Boolean>()
+    val busySettingsStatus = MutableLiveData<Boolean>()
     val archiveChatUpdated = MutableLiveData<Pair<String, Boolean>>()
     val selectedArchiveChats = MutableLiveData<MutableList<String>>()
     val addSearchLoader = MutableLiveData<Boolean>()
@@ -237,7 +238,7 @@ constructor() : ViewModel() {
         }
     }
 
-    fun getRestartActivitygetrecentChatList(){
+    fun getRestartActivitygetrecentChatList() {
 
         restartactivityRecentChatListlivedata.value=true
     }
@@ -359,7 +360,7 @@ constructor() : ViewModel() {
         getInitialChatList(prefetchedRecentChats)
     }
 
-    fun getChatTagData(){
+    fun getChatTagData() {
         ChatManager.getChatTagdata(object:FlyCallback {
             override fun flyResponse(
                 isSuccess: Boolean,
@@ -1169,6 +1170,11 @@ constructor() : ViewModel() {
     fun getArchivedSettingsStatus(status: Boolean) {
         viewModelScope.launch {
             archivedSettingsStatus.value = status
+        }
+    }
+    fun getBusySettingsStatus(status: Boolean) {
+        viewModelScope.launch {
+            busySettingsStatus.value = status
         }
     }
 

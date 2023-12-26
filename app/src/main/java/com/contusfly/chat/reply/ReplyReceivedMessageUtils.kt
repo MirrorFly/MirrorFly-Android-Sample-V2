@@ -34,7 +34,7 @@ class ReplyReceivedMessageUtils : ReceivedReplyTextUtils() {
         replyMessageViewHolder.imgReceivedReplyImageVideoPreview?.gone()
         replyMessageViewHolder.imgReceivedReplyMessageType?.gone()
         when (replyMessage.getMessageType()) {
-            MessageType.TEXT -> showReceivedReplyTextView(context, replyMessageViewHolder, replyMessage, isGroupMessage)
+            MessageType.TEXT,MessageType.AUTO_TEXT -> showReceivedReplyTextView(context, replyMessageViewHolder, replyMessage, isGroupMessage)
             MessageType.IMAGE, MessageType.VIDEO -> showReceivedReplyImageVideoView(context, replyMessageViewHolder, replyMessage, isGroupMessage)
             MessageType.LOCATION -> showReceivedReplyLocationMessage(replyMessageViewHolder, context, replyMessage, isGroupMessage)
             MessageType.AUDIO -> showReceivedReplyAudioMessage(replyMessageViewHolder, context, replyMessage, isGroupMessage)

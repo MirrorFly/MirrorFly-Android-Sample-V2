@@ -39,7 +39,6 @@ import com.contusfly.models.ContactShareModel
 import com.contusfly.models.FileObject
 import com.contusfly.network.NetworkConnection
 import com.contusfly.utils.*
-import com.contusfly.utils.MediaPermissions.isPermissionAllowed
 import com.contusfly.viewmodels.ForwardMessageViewModel
 import com.contusfly.views.*
 import com.contusfly.views.CommonAlertDialog.CommonDialogClosedListener
@@ -81,8 +80,8 @@ class QuickShareActivity : BaseActivity(),
 
     private var isFileValidationsVerified = true
 
-    private val SUPPORTED_IMAGE_VIDEO_FORMATS = arrayOf("jpg", "jpeg", "png", "webp", "gif", "mp4")
-    private val supportedFormats = arrayOf("pdf", "txt", "rtf", "xls", "ppt", "pptx", "zip", "rar", "xlsx", "doc", "docx", "wav", "mp3", "mp4", "aac", "jpg", "jpeg", "png", "webp", "gif", "pptx", "csv")
+    private val SUPPORTED_IMAGE_VIDEO_FORMATS = arrayOf("jpg", "jpeg", "png", "webp", "gif", "mp4", "mkv", "mov", "wmv", "avi", "flv")
+    private val supportedFormats = arrayOf("pdf", "txt", "rtf", "xls", "ppt", "pptx", "zip", "rar", "xlsx", "doc", "docx", "wav", "mp3", "mp4", "mkv", "aac", "jpg", "jpeg", "png", "webp", "gif", "pptx", "csv")
     private var formats = listOf(*supportedFormats)
     private var videoImageFormats = listOf(*SUPPORTED_IMAGE_VIDEO_FORMATS)
 
@@ -104,6 +103,8 @@ class QuickShareActivity : BaseActivity(),
     private lateinit var mHandler: Handler
 
     private val selectedUsersWithNames = linkedMapOf<String, String>()
+
+    private var selectedProfileDetails = ArrayList<ProfileDetails>()
 
     /**
      * List holds the media files
@@ -156,16 +157,12 @@ class QuickShareActivity : BaseActivity(),
     private val permissionAlertDialog: PermissionAlertDialog by lazy { PermissionAlertDialog(this) }
 
     private val galleryPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         val readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-        if (readPermissionGranted) {
-            Toast.makeText(this, "Storage Permission Granted", Toast.LENGTH_SHORT).show()
-            //Permissions are granted, handle the shared file now
+        if(readPermissionGranted) {
             handleIntent()
-        } else {
-            Toast.makeText(this, "Storage Permission Denied", Toast.LENGTH_SHORT).show()
-            finish()
+        } else if(ChatUtils.checkMediaPermission(this, Manifest.permission.READ_MEDIA_IMAGES) && ChatUtils.checkMediaPermission(this, Manifest.permission.READ_MEDIA_VIDEO)){
+            handleIntent()
         }
     }
 
@@ -202,6 +199,7 @@ class QuickShareActivity : BaseActivity(),
         viewModel.removeProfileDetails(jid)
         viewModel.removeSearchProfileDetails(jid)
         selectedUsersWithNames.remove(jid)
+        selectedProfileDetails.removeIf { it.jid == jid }
         quickShareBinding.selectedUsers.text = getSelectedUserNames()
     }
 
@@ -211,6 +209,7 @@ class QuickShareActivity : BaseActivity(),
         setLimitValues()
         fileList = ArrayList()
         initViews()
+        setUpAlertDialogListeners()
         setObservers()
         observeNetworkListener()
         viewModel.loadForwardChatList(null)
@@ -218,6 +217,7 @@ class QuickShareActivity : BaseActivity(),
             //handle sharing only when permissions are granted
             handleIntent()
         }
+
     }
 
     private fun setObservers() {
@@ -237,6 +237,7 @@ class QuickShareActivity : BaseActivity(),
         viewModel.userList.observe(this) { userList ->
             userList?.let {
                 mQuickShareAdapter.addProfileList(userList)
+
             }
         }
 
@@ -300,6 +301,10 @@ class QuickShareActivity : BaseActivity(),
         } else if (mUserListType == UserListType.SEARCH && (quickShareBinding.viewListRecent.adapter as SectionedShareAdapter).getSearchKey().isBlank()) {
             quickShareBinding.viewListRecent.adapter = mSearchQuickShareAdapter
         }
+    }
+
+    private fun setUpAlertDialogListeners() {
+        commonAlertDialog?.setOnDialogCloseListener(this)
     }
 
     private fun initViews() {
@@ -397,7 +402,9 @@ class QuickShareActivity : BaseActivity(),
         else if (intent.action != null && intent.action.equals(Intent.ACTION_SEND_MULTIPLE, ignoreCase = true))
             handleMultipleFileShare()
         else Toast.makeText(applicationContext, "Unsupported Format", Toast.LENGTH_LONG).show()
+
         clickListeners()
+
     }
 
     private fun checkConditionForPin() {
@@ -459,11 +466,16 @@ class QuickShareActivity : BaseActivity(),
 
     fun clickListeners() {
         quickShareBinding.next.setOnClickListener {
-            if (FlyCore.isBusyStatusEnabled()) {
+            val hasSingleChat = selectedProfileDetails.count { it.getChatType() == ChatType.TYPE_CHAT }
+            if (FlyCore.isBusyStatusEnabled() && hasSingleChat>0) {
                 showBusyAlert()
                 return@setOnClickListener
             }
-            handleNextClick()
+            if (checkPermission()) {
+                //handle sharing only when permissions are granted
+                handleNextClick()
+            }
+
         }
     }
 
@@ -494,7 +506,6 @@ class QuickShareActivity : BaseActivity(),
         for (key in selectedUsersWithNames.keys) {
             jidList.add(key)
         }
-        initializeDialog()
         if (isMediaScanSuccess && isFileValidationsVerified)
             shareFiles(jidList)
         else if (isFileValidationsVerified) Toast.makeText(this, "Media Scan Failed", Toast.LENGTH_SHORT).show()
@@ -550,16 +561,15 @@ class QuickShareActivity : BaseActivity(),
 
     private fun sendOtherFiles(otherFileList: java.util.ArrayList<FileObject>, userIdList: java.util.ArrayList<String>, isNavigationEnable: Boolean) {
         if (AppUtils.isNetConnected(this)) {
-            shareMessagesController.sendMediaMessagesForSingleUser(otherFileList, userIdList)
-
-            if (isNavigationEnable) {
-                val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({
-                    progressDialog!!.dismiss()
-                    navigateToAppropriateScreen(userIdList)
-                    finish()
-                }, 500)
-            }
+            shareMessagesController.sendMediaMessagesForSingleUser(otherFileList, userIdList,object: QuickShareMessageListener{
+                override fun sendMediaSucess() {
+                    if (isNavigationEnable) {
+                        progressDialog!!.dismiss()
+                        navigateToAppropriateScreen(userIdList)
+                        finish()
+                    }
+                }
+            })
         } else if (isNavigationEnable) {
             progressDialog!!.dismiss()
             CustomToast.show(context, getString(R.string.msg_no_internet))
@@ -749,26 +759,63 @@ class QuickShareActivity : BaseActivity(),
         super.onResume()
         AppLifecycleListener.isFromQuickShareForBioMetric = true
         AppLifecycleListener.isFromQuickShareForPin = true
-        if (isPermissionAllowed(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-            && MediaPermissions.isWriteFilePermissionAllowed(this)
-            && permissionDenied
-        ) {
-            permissionDenied = false
-            handleIntent()
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+
+            if (ChatUtils.checkMediaPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                && ChatUtils.checkWritePermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) && permissionDenied) {
+                permissionDenied = false
+                handleIntent()
+            }
+
+        } else {
+
+            if (ChatUtils.checkMediaPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                && ChatUtils.checkWritePermission(this, Manifest.permission.READ_MEDIA_VIDEO) && permissionDenied) {
+                permissionDenied = false
+                handleIntent()
+            }
         }
+
     }
 
     /**
      * @return if permission not granted return FALSE, else TRUE
      */
     private fun checkPermission(): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && !(isPermissionAllowed(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    && MediaPermissions.isWriteFilePermissionAllowed(this))) {
-            permissionDenied = true
-            MediaPermissions.requestStorageAccess(this, permissionAlertDialog, galleryPermissionLauncher)
-            return false
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+
+            if (ChatUtils.checkMediaPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                && ChatUtils.checkWritePermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissionDenied = false
+                return true
+
+        } else
+                permissionDenied = true
+                MediaPermissions.requestStorageAccess(
+                    this,
+                    permissionAlertDialog,
+                    galleryPermissionLauncher
+                )
+                return false
+
+        } else {
+
+            if (ChatUtils.checkMediaPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                && ChatUtils.checkWritePermission(this, Manifest.permission.READ_MEDIA_VIDEO)) {
+                permissionDenied = false
+                return true
+            } else {
+                permissionDenied = true
+                MediaPermissions.requestMediaFiles(
+                    this,
+                    permissionAlertDialog,
+                    galleryPermissionLauncher)
+                return false
+            }
         }
-        return true
+
     }
 
     private fun getSelectedUserNames(): String {
@@ -1023,11 +1070,15 @@ class QuickShareActivity : BaseActivity(),
         override fun onItemClicked(position: Int, profileDetails: ProfileDetails) {
             ContactManager.insertProfile(profileDetails)
             ProfileDetailsUtils.addContact(profileDetails)
-            if (isSelected(profileDetails.jid))
+            if (isSelected(profileDetails.jid)) {
                 selectedUsersWithNames.remove(profileDetails.jid)
+                selectedProfileDetails.remove(profileDetails)
+            }
             else {
-                if (!maxUserReached())
+                if (!maxUserReached()) {
                     selectedUsersWithNames[profileDetails.jid] = profileDetails.getDisplayName()
+                    selectedProfileDetails.add(profileDetails)
+                }
             }
 
             quickShareBinding.selectedUsers.text = getSelectedUserNames()
@@ -1061,8 +1112,14 @@ class QuickShareActivity : BaseActivity(),
 
     override fun onDialogClosed(dialogType: CommonAlertDialog.DIALOGTYPE?, isSuccess: Boolean) {
         if (commonAlertDialog!!.dialogAction === CommonAlertDialog.DialogAction.STATUS_BUSY && isSuccess) {
-            FlyCore.enableDisableBusyStatus(false)
-            handleNextClick()
+            FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+                if (isSuccess) {
+                    handleNextClick()
+                } else {
+                    CustomToast.show(context, data.getMessage())
+                }
+            }
+
         }
     }
 
@@ -1147,6 +1204,7 @@ class QuickShareActivity : BaseActivity(),
         super.onAdminBlockedOtherUser(jid, type, status)
         if (status && selectedUsersWithNames.containsKey(jid)) {
             selectedUsersWithNames.remove(jid)
+            selectedProfileDetails.removeIf { it.jid == jid }
         }
         mQuickShareAdapter.removeProfileDetails(jid)
         mSearchQuickShareAdapter.removeProfileDetails(jid)

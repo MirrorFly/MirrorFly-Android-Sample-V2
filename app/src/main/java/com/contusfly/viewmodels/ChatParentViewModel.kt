@@ -1,6 +1,7 @@
 package com.contusfly.viewmodels
 
 import androidx.lifecycle.*
+import com.contusfly.TAG
 import com.contusfly.getData
 import com.contusfly.getDisplayName
 import com.contusfly.getMessage
@@ -255,9 +256,6 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                     val messageList = data.getData() as ArrayList<ChatMessage>
                     LogMessage.d("TAG","#chat #fetchmsg loadInitialData loadMessages isSuccess")
                     LogMessage.d("TAG","#chat #fetchmsg loadInitialData loadMessages messageList size:${messageList.size}")
-                    messageList.forEach {
-                        LogMessage.d("TAG","#chat #fetchmsg loadInitialData messageTextContent  :${it.messageTextContent} messageTime: ${it.messageSentTime}")
-                    }
                     paginationMessageList.clear()
                     paginationMessageList.addAll(messageRepository.getMessageListWithDate(messageList))
                     initialMessageList.postValue(paginationMessageList)
@@ -444,17 +442,21 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         viewModelScope.launch {
             messageListQuery.loadPreviousMessages{ isSuccess, _, data ->
                 if (isSuccess) {
-                    val messageList = data.getData() as ArrayList<ChatMessage>
-                    if (messageList.isNotEmpty()) {
-                        val currentHeaderId: Long = messageRepository.getDateID(paginationMessageList.first())
-                        val previousHeaderId: Long = messageRepository.getDateID(messageList.last())
-                        removeTempDateHeader.postValue(currentHeaderId == previousHeaderId)
-                        val previousMessages = messageRepository.getMessageListWithDate(messageList)
-                        paginationMessageList.addAll(0, previousMessages)
-                        previousMessageList.postValue(previousMessages)
-                        searchDataShare(searchedText,Constants.PREV_LOAD)
-                    } else {
-                        searchDataShare(searchedText,Constants.NO_DATA)
+                    try {
+                        val messageList = data.getData() as ArrayList<ChatMessage>
+                        if (messageList.isNotEmpty()) {
+                            val currentHeaderId: Long = messageRepository.getDateID(paginationMessageList.first())
+                            val previousHeaderId: Long = messageRepository.getDateID(messageList.last())
+                            removeTempDateHeader.postValue(currentHeaderId == previousHeaderId)
+                            val previousMessages = messageRepository.getMessageListWithDate(messageList)
+                            paginationMessageList.addAll(0, previousMessages)
+                            previousMessageList.postValue(previousMessages)
+                            searchDataShare(searchedText,Constants.PREV_LOAD)
+                        } else {
+                            searchDataShare(searchedText,Constants.NO_DATA)
+                        }
+                    } catch(e:Exception) {
+                        LogMessage.d(TAG,e.toString())
                     }
                 }
                 setSwipeLoader(false)
@@ -499,11 +501,12 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         searchKeyData.postValue(event)
     }
 
-    fun loadNextData(searchedText: String="") {
+    fun loadNextData(searchedText: String="",isFetchProgressCheck:Boolean = true) {
 
         LogMessage.d("TAG","#chat #fetchmsg loadNextData  searchedText:$searchedText")
 
-        if(messageListQuery.isFetchingInProgress()) {
+        if(messageListQuery.isFetchingInProgress() && isFetchProgressCheck) {
+            LogMessage.d("TAG","#chat #fetchmsg loadNextData  fetch_inprogress so SKIP..")
             return
         }
 

@@ -272,6 +272,10 @@ class CommonEditorActivity : BaseActivity(), View.OnClickListener,
     private fun validateMoreAndFinish(text: String) {
         var isValid = false
         if (type == Constants.TYPE_USER_BUSY_STATUS) {
+            if(!AppUtils.isNetConnected(context)){
+                CustomToast.show(this, getString(R.string.error_check_internet))
+                return
+            }
             if (text.isNotEmpty()) isValid = true else CustomToast.show(this, getString(R.string.error_busy_status_empty))
         }
         if (isValid) {

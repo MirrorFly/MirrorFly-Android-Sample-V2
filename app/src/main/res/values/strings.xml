@@ -187,6 +187,7 @@
     <string name="file_viewing_message">You may not have a proper app viewing this content</string>
     <string name="error_google_map_not_installed">Google map not available</string>
     <string name="msg_no_internet">Please check your internet connection</string>
+    <string name="clear_call_log_file">Call Logs cleared successfully</string>
     <string name="recalled_message_not_available">Original message not available</string>
     <string name="title_audio">Audio</string>
     <string name="action_location">Location</string>
@@ -469,6 +470,9 @@
     <string name="msg_busy_status_notification">Your busy status will be set as auto-response to the messages received from individuals.</string>
     <string name="msg_select_status">Select your new status</string>
     <string name="clear_conversation_alert">Are you sure want to clear your conversation history?</string>
+    <string name="export_call_log_alert">Export or Clear Call logs</string>
+    <string name="export_log_text">Export</string>
+    <string name="clear_log_text">Clear</string>
     <string name="clear_conversation_message">All your conversation are cleared</string>
     <string name="msg_add_busy_status">Add Busy Status</string>
     <string name="title_set_busy_status">Set Busy Status</string>
@@ -875,6 +879,7 @@
 
     <string name="chat_backup">Chat Backup</string>
     <string name="last_backup">Last Backup</string>
+    <string name="call_logs_export">Call Logs Export</string>
     <string name="backup_info_text">Back up your chat history and media to Google Drive so if you loose your device or switch to new one, your chat history is safe.You can restore your chat history when you reinstall Mirrorfly.</string>
     <string name="auto_backup">Auto Backup</string>
     <string name="select_gmail_account">Select your Google Drive account</string>
@@ -1001,4 +1006,5 @@
     <string name="join_meeting">Join Meeting</string>
     <string name="share_call_link">Share</string>
     <string name="invite_contacts_call_link">Invite Contacts</string>
+    <string name="insufficient_memory_error">Not enough storage space on your device. Please free up space in your phone\'s memory.</string>
 </resources>

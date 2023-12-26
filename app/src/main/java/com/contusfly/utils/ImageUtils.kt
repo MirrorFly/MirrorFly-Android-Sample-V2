@@ -367,7 +367,7 @@ object ImageUtils {
             .dontAnimate()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .priority(Priority.HIGH)
-        Glide.with(context!!).load(bitmap).apply(options).into(imgView!!)
+        Glide.with(context!!).load(bitmap).override(300,300).apply(options).into(imgView!!)
     }
 
     /**
@@ -415,7 +415,7 @@ object ImageUtils {
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH)
-            Glide.with(context).load(imgUrl).thumbnail(0.1f).apply(options).into(imgView)
+            Glide.with(context).load(imgUrl).override(300,300).thumbnail(0.1f).apply(options).into(imgView)
         } else imgView.setImageDrawable(errorImg)
     }
 

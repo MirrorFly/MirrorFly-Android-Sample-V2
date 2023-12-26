@@ -9,6 +9,7 @@
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -32,7 +33,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_profile"/>
 
         <com.contusfly.views.CustomTextView
             android:id="@+id/text_unseen_count"
@@ -45,7 +47,8 @@
             android:visibility="gone"
             app:layout_constraintCircle="@id/image_chat_picture"
             app:layout_constraintCircleAngle="45"
-            app:layout_constraintCircleRadius="@dimen/margin_24" />
+            app:layout_constraintCircleRadius="@dimen/margin_24"
+            tools:ignore="MissingConstraints" />
 
         <com.contusfly.views.CircularImageView
             android:id="@+id/email_contact_icon"
@@ -55,7 +58,8 @@
             app:layout_constraintCircle="@id/image_chat_picture"
             app:layout_constraintCircleAngle="130"
             app:layout_constraintCircleRadius="@dimen/margin_24"
-            app:srcCompat="@drawable/ic_email_contact" />
+            app:srcCompat="@drawable/ic_email_contact"
+            tools:ignore="MissingConstraints" />
 
         <androidx.emoji.widget.EmojiAppCompatTextView
             android:id="@+id/text_chat_name"

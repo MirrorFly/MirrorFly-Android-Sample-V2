@@ -40,7 +40,7 @@ object AudioHandler {
                         null, status, mid, cancelLayout)
                 cancelLayout.visibility = View.VISIBLE
             }
-            MediaDownloadStatus.MEDIA_NOT_DOWNLOADED, MediaDownloadStatus.MEDIA_DOWNLOADED_NOT_AVAILABLE, MediaUploadStatus.MEDIA_NOT_UPLOADED -> {
+            MediaDownloadStatus.MEDIA_NOT_DOWNLOADED, MediaDownloadStatus.MEDIA_DOWNLOADED_NOT_AVAILABLE, MediaUploadStatus.MEDIA_NOT_UPLOADED, MediaDownloadStatus.STORAGE_NOT_ENOUGH -> {
                 ChatAdapterHelper(null).mediaUploadView(progressBar, cancelLayout, uploadOrDownloadLayout)
                 uploadOrDownloadLayout?.visibility = View.VISIBLE
                 imgPlay.visibility = View.GONE

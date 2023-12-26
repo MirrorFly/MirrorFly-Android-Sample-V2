@@ -141,7 +141,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
 
         //  Get the message type
         when (val messageType = message!!.getMessageType()) {
-            MessageType.TEXT -> loadTextItem(message)
+            MessageType.TEXT,MessageType.AUTO_TEXT -> loadTextItem(message)
             MessageType.LOCATION -> loadLocation(message)
             MessageType.CONTACT -> loadContactItem(message)
             MessageType.MEET -> loadMeetItem(message)
@@ -665,7 +665,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                 txtChat.text = getString(R.string.recalled_message_not_available)
             } else {
                 when (replyMessage.getMessageType()) {
-                    MessageType.TEXT -> {
+                    MessageType.TEXT,MessageType.AUTO_TEXT -> {
                         txtChat.maxWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
                         replyChatMessage?.let { setReplyViewMessageFormat(it,context!!,txtChat!!,"",false) }
                         imgImageVideo.gone()

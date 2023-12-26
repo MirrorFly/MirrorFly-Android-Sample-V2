@@ -56,6 +56,8 @@ import com.mirrorflysdk.utils.*
 import com.mirrorflysdk.views.CustomToast
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mirrorflysdk.flycommons.ChatType
+import com.mirrorflysdk.flycommons.MediaDownloadStatus
+import com.mirrorflysdk.flycommons.MediaUploadStatus
 import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -351,7 +353,7 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     }
 
     private fun isTextMessageContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
-        return MessageType.TEXT == message.messageType &&
+        return ((MessageType.TEXT == message.messageType) || (MessageType.AUTO_TEXT == message.messageType)) &&
                 isMentionUserIdAvailableInMessage(message, filterKey)
     }
     private fun isMeetMessageContainsFilterKey(message: ChatMessage, filterKey: String): Boolean {
@@ -455,6 +457,13 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     override fun onMediaStatusUpdated(message: ChatMessage) {
         super.onMediaStatusUpdated(message)
         viewModelStarredMessage.updateStarredMessageData(message.messageId)
+        runOnUiThread {
+            if(message.mediaChatMessage.mediaUploadStatus == MediaUploadStatus.MEDIA_UPLOADED_NOT_AVAILABLE) {
+                CustomToast.show(context, context!!.getString(R.string.msg_media_does_not_exists))
+            } else if(message.mediaChatMessage.mediaDownloadStatus == MediaDownloadStatus.STORAGE_NOT_ENOUGH) {
+                CustomToast.show(context, context!!.getString(R.string.insufficient_memory_error))
+            }
+        }
     }
 
     override fun onMessagesClearedOrDeleted(messageIds: ArrayList<String>, jid: String) {

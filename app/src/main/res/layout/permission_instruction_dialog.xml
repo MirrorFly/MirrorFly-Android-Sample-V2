@@ -26,7 +26,6 @@
 
     <TextView
         android:id="@+id/dialog_description"
-        style="@style/StatusList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:includeFontPadding="true"

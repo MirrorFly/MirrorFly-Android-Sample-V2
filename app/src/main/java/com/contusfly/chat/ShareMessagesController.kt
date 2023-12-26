@@ -1,15 +1,25 @@
 package com.contusfly.chat
 
+import com.contusfly.TAG
 import com.contusfly.models.MessageObject
 import com.mirrorflysdk.api.models.ChatMessage
 import com.contusfly.chat.FileMimeType.Companion.APPLICATION
 import com.contusfly.chat.FileMimeType.Companion.AUDIO
 import com.contusfly.chat.FileMimeType.Companion.IMAGE
 import com.contusfly.chat.FileMimeType.Companion.VIDEO
+import com.contusfly.interfaces.MessageListener
 import com.contusfly.models.ContactShareModel
 import com.contusfly.models.FileObject
-import java.util.*
+import com.contusfly.runOnUiThread
+import com.contusfly.utils.LogMessage
+import com.contusfly.utils.QuickShareMessageListener
+import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.views.CustomToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 /**
@@ -41,14 +51,16 @@ constructor(private val messagingClient: MessagingClient){
      * @param contacts list of ContactShareModel to share to the users
      * @param users    user id list to send the text message
      */
-    fun sendContactMessage(contacts: List<ContactShareModel>, users: List<String>) {
-        val messageObjectList = ArrayList<MessageObject>()
-        for (userId in users) {
-            for (contactMessage in contacts) {
-                messageObjectList.add(messagingClient.composeContactMessage(userId, contactMessage))
+    fun sendContactMessage(contacts: List<ContactShareModel>, users: List<String>,listener: QuickShareMessageListener?=null) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val messageObjectList = ArrayList<MessageObject>()
+            for (userId in users) {
+                for (contactMessage in contacts) {
+                    messageObjectList.add(messagingClient.composeContactMessage(userId, contactMessage))
+                }
             }
+            sendMediaAndContactMessage(messageObjectList,listener)
         }
-        sendMessage(messageObjectList)
     }
 
     /**
@@ -69,9 +81,10 @@ constructor(private val messagingClient: MessagingClient){
      * @param fileObjects list of files the needs to be uploaded
      * @param userIdList  list of JID to which the message is going to send.
      */
-    fun sendMediaMessagesForSingleUser(fileObjects: List<FileObject>, userIdList: List<String>) {
-        val messageObjectList = ArrayList<MessageObject>()
-        for (userId in userIdList) {
+    fun sendMediaMessagesForSingleUser(fileObjects: List<FileObject>, userIdList: List<String>,listener: QuickShareMessageListener?=null) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val messageObjectList = ArrayList<MessageObject>()
+            for (userId in userIdList) {
                 for (fileObject in fileObjects) {
                     when (fileObject.fileMimeType) {
                         IMAGE -> messageObjectList.add(messagingClient.composeImageMessage(userId, fileObject.filePath, fileObject.caption,"",fileObject.mentionedUsersIds))
@@ -89,8 +102,10 @@ constructor(private val messagingClient: MessagingClient){
                         }
                     }
                 }
+            }
+            sendMediaAndContactMessage(messageObjectList,listener)
         }
-        sendMessage(messageObjectList)
+
     }
 
     private fun addVideoMessage(videoMessage: Pair<Boolean, MessageObject?>, messageObjectList: ArrayList<MessageObject>){
@@ -115,7 +130,68 @@ constructor(private val messagingClient: MessagingClient){
      */
     private fun sendMessage(messageObjectList: ArrayList<MessageObject>) {
         for (messageObject in messageObjectList) {
-            messagingClient.sendMessage(messageObject, null)
+            messagingClient.sendMessage(messageObject, object : MessageListener {
+                override fun onSendMessageSuccess(message: ChatMessage) {
+                   LogMessage.e(TAG,"Send Message Success..")
+                }
+
+                override fun onSendMessageFailure(message: String) {
+                    runOnUiThread {
+                        if(message.isNotEmpty())
+                         CustomToast.show(ChatManager.applicationContext, message)
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * Send the message to the SDK
+     *
+     * @param messageObjectList list of messages to send
+     */
+    private fun sendMediaAndContactMessage(
+        messageObjectList: ArrayList<MessageObject>,
+        listener: QuickShareMessageListener?) {
+        val sentMessages = arrayListOf<ChatMessage>()
+        var errorMessageList = ArrayList<String>()
+        for (messageObject in messageObjectList) {
+            messagingClient.sendMessage(messageObject, object : MessageListener {
+                override fun onSendMessageSuccess(message: ChatMessage) {
+                    LogMessage.e(TAG,"Send Message Success..")
+                    sentMessages.add(message)
+                    sendCallback(sentMessages, messageObjectList, listener, errorMessageList)
+                }
+
+                override fun onSendMessageFailure(message: String) {
+                    if(message.isNotEmpty()) {
+                        errorMessageList.add(message)
+                    }
+                    sentMessages.add(ChatMessage())
+                    sendCallback(sentMessages,messageObjectList,listener,errorMessageList)
+                }
+            })
+        }
+    }
+
+    private fun sendCallback(
+        sentMessages: ArrayList<ChatMessage>,
+        messageObjectList: ArrayList<MessageObject>,
+        listener: QuickShareMessageListener?,
+        errorMessageList: ArrayList<String>
+    ){
+        if(sentMessages.size == messageObjectList.size) {
+            if(errorMessageList.size > 0) {
+                runOnUiThread {
+                    CustomToast.show(ChatManager.applicationContext, errorMessageList.get(0))
+                }
+            }
+            runOnUiThread {
+                if(listener != null) {
+                    listener.sendMediaSucess()
+                }
+            }
+
         }
     }
 }

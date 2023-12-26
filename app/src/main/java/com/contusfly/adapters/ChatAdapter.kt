@@ -677,32 +677,34 @@ class ChatAdapter(
         item: ChatMessage,
         position: Int
     ) {
-        with(videoSentViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
-                videoItemViewHelper.handleSenderVideoItemProgressUpdate(item, videoSentViewHolder)
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                handleVideoMediaStatusChanged(this, item)
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
-                    bindSenderVideoView(this, item, position)
-                else {
-                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
-                    setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
-                    setStaredStatus(
-                        item.isMessageStarred,
-                        getStarIcon(item, imgSentStarred, imgSentCaptionStar)
+            with(videoSentViewHolder) {
+                if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
                     )
+                } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
+                    videoItemViewHelper.handleSenderVideoItemProgressUpdate(item, videoSentViewHolder)
+                else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
+                    handleVideoMediaStatusChanged(this, item)
+                } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
+                    if (item.isMessageRecalled)
+                        bindSenderVideoView(this, item, position)
+                    else {
+                        isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
+                        setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
+                        setStaredStatus(
+                            item.isMessageStarred,
+                            getStarIcon(item, imgSentStarred, imgSentCaptionStar)
+                        )
+                    }
                 }
             }
-        }
+
+
     }
 
     private fun handleVideoMediaStatusChanged(
@@ -3495,6 +3497,7 @@ class ChatAdapter(
                     mediaStatus.cancelImageview,
                     mediaStatus.viewProgress
                 )
+                mediaStatus.progressbuffer?.gone()
                 if (mediaStatus.item!!.messageType == MessageType.VIDEO)
                     mediaStatus.imgPlay?.show()
                 hideMediaOption(mediaStatus.txtRetry, mediaStatus.download)
@@ -3502,19 +3505,22 @@ class ChatAdapter(
             }
 
             MediaDownloadStatus.MEDIA_DOWNLOADING, MediaUploadStatus.MEDIA_UPLOADING -> {
-                mediaStatus.progressBar?.show()
-                mediaStatus.cancelImageview?.show()
+                mediaStatus.progressBar?.gone()
                 mediaStatus.viewProgress?.show()
+                mediaStatus.progressbuffer?.show()
+
+                mediaStatus.cancelImageview?.show()
                 mediaStatus.forwardImageview?.hide()
                 hideMediaOption(mediaStatus.txtRetry, mediaStatus.download)
             }
 
-            MediaDownloadStatus.MEDIA_NOT_DOWNLOADED -> {
+            MediaDownloadStatus.MEDIA_NOT_DOWNLOADED, MediaDownloadStatus.STORAGE_NOT_ENOUGH -> {
                 chatAdapterHelper.mediaUploadView(
                     mediaStatus.progressBar,
                     mediaStatus.cancelImageview,
                     mediaStatus.viewProgress
                 )
+                mediaStatus.progressbuffer?.gone()
                 mediaStatus.download?.show()
                 mediaStatus.txtRetry?.hide()
                 mediaStatus.forwardImageview?.hide()
@@ -3525,6 +3531,7 @@ class ChatAdapter(
                 mediaStatus.txtRetry?.show()
                 mediaStatus.download?.hide()
                 mediaStatus.forwardImageview?.hide()
+                mediaStatus.progressbuffer?.gone()
                 chatAdapterHelper.mediaUploadView(
                     mediaStatus.progressBar,
                     mediaStatus.cancelImageview,

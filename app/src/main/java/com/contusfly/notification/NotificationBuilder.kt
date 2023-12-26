@@ -538,7 +538,6 @@ object NotificationBuilder {
         val chatJid = message.getChatUserJid()
         val name = context.getAppName()
         val lastMessageContent = StringBuilder()
-        val privatelastMessageContent = StringBuilder()
         val notificationId = chatJid.hashCode().toLong().toInt()
         val profileDetails = ProfileDetailsUtils.getProfileDetails(chatJid)
         LogMessage.e("NOT_ID",notificationId.toString())
@@ -552,12 +551,6 @@ object NotificationBuilder {
 
         val privateChatnotificationModel = chatNotifications[notificationId]
         privateChatnotificationModel!!.messages.add(message)
-        var privatemessagingStyle = privateChatnotificationModel.messagingStyle
-        appendChatMessageInMessageStyle(
-            context,
-            privatelastMessageContent,
-            privatemessagingStyle,
-            message)
 
         if (privateChatNotificationChannelId == 0)
             privateChatNotificationChannelId = notificationId

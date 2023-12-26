@@ -4,6 +4,7 @@ import com.contusfly.utils.FirebaseUtils
 import com.contusfly.utils.LogMessage
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.mirrorflysdk.flycall.webrtc.CallLogger
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -32,6 +33,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationData: Map<String, String> = remoteMessage.data
         if (notificationData.isNotEmpty()) {
             LogMessage.d(TAG, "RemoteMessage:$notificationData")
+            CallLogger().callLog(TAG,"RemoteMessage notification:$notificationData")
             firebaseUtils.handleReceivedMessage(this, notificationData)
         }
     }

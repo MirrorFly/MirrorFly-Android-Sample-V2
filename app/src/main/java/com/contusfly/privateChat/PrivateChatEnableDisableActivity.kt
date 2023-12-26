@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -57,9 +60,17 @@ class PrivateChatEnableDisableActivity : BaseActivity() {
         }
         toolbar.background = ContextCompat.getDrawable(this, R.drawable.gradient_top)
         toolbar.setNavigationIcon(R.drawable.ic_back)
-        BlendModeColorFilter(
-            ContextCompat
-                .getColor(this, R.color.color_black), BlendMode.MULTIPLY)
+        if (Build.VERSION.SDK_INT >= 29) {
+            BlendModeColorFilter(
+                ContextCompat
+                    .getColor(this, R.color.color_black), BlendMode.MULTIPLY
+            )
+        } else {
+            PorterDuffColorFilter(
+                ContextCompat.getColor(this, R.color.color_black),
+                PorterDuff.Mode.MULTIPLY
+            )
+        }
         toolbar.setNavigationOnClickListener { finish() }
         handleMainIntent()
         checkIsAlreadyPrivateChatUser()

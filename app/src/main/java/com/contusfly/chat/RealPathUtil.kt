@@ -8,6 +8,7 @@ package com.contusfly.chat
 import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
+import android.content.ContextWrapper
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -17,10 +18,11 @@ import android.provider.OpenableColumns
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import androidx.documentfile.provider.DocumentFile
-import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.mediapicker.helper.ImagePickerUtils
 import com.contusfly.utils.Constants
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.FilePathUtils
+import com.mirrorflysdk.utils.MemoryInfoHelper
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -51,7 +53,7 @@ object RealPathUtil {
      * @param fileUri the Uri object of the file
      * @return String the absolute path of the file.
      */
-    fun getRealPath(context: Context, fileUri: Uri?): String? {
+    fun getRealPath(context: ContextWrapper, fileUri: Uri?): String? {
         return when {
             fileUri == null -> {
                 getRealPathFromURIAPI19(context, fileUri)
@@ -75,7 +77,7 @@ object RealPathUtil {
      * @param uri     The Uri to query.
      */
     @SuppressLint("NewApi")
-    private fun getRealPathFromURIAPI19(context: Context, uri: Uri?): String? {
+    private fun getRealPathFromURIAPI19(context: ContextWrapper, uri: Uri?): String? {
         if (uri == null)
             return null
         when {
@@ -104,7 +106,7 @@ object RealPathUtil {
         return null
     }
 
-    private fun handleCloudAttach(context: Context, uri: Uri): String? {
+    private fun handleCloudAttach(context: ContextWrapper, uri: Uri): String? {
         val returnCursor = context.contentResolver.query(uri, null, null,
                 null, null)
         val nameIndex = returnCursor!!.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -121,7 +123,7 @@ object RealPathUtil {
      * @return path of the file
      */
     @SuppressLint("NewApi")
-    private fun handleExternalDoc(context: Context, uri: Uri): String? {
+    private fun handleExternalDoc(context: ContextWrapper, uri: Uri): String? {
         val docId = DocumentsContract.getDocumentId(uri)
         val split = docId.split(":".toRegex()).toTypedArray()
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
@@ -154,7 +156,7 @@ object RealPathUtil {
      * @return getDataColumn
      */
     @SuppressLint("NewApi")
-    private fun handleMediaDocument(context: Context, uri: Uri): String? {
+    private fun handleMediaDocument(context: ContextWrapper, uri: Uri): String? {
         val docId = DocumentsContract.getDocumentId(uri)
         val split = docId.split(":".toRegex()).toTypedArray()
         val type = split[0]
@@ -168,6 +170,8 @@ object RealPathUtil {
             }
             "audio" -> {
                 contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            } else -> {
+                contentUri = MediaStore.Files.getContentUri("external")
             }
         }
         val selection = "_id=?"
@@ -175,6 +179,7 @@ object RealPathUtil {
                 split[1]
         )
         return getDataColumn(context, contentUri, uri, selection, selectionArgs)
+
     }
 
     /**
@@ -185,7 +190,7 @@ object RealPathUtil {
      * @return check null
      */
     @SuppressLint("NewApi")
-    private fun handleDownloadDocument(context: Context, uri: Uri): String? {
+    private fun handleDownloadDocument(context: ContextWrapper, uri: Uri): String? {
         val id = DocumentsContract.getDocumentId(uri)
         return if (!TextUtils.isEmpty(id)) {
             if (id.startsWith("raw:")) {
@@ -210,7 +215,7 @@ object RealPathUtil {
      * @param contentUri the Uri object of the file
      * @return the absolute path of the file.
      */
-    private fun getDocumentRealPath(context: Context, uri: Uri, contentUri: Uri): String? {
+    private fun getDocumentRealPath(context: ContextWrapper, uri: Uri, contentUri: Uri): String? {
         var realPath: String?
         try {
             realPath = getDataColumn(context, contentUri, uri, null, null)
@@ -227,6 +232,7 @@ object RealPathUtil {
         return realPath
     }
 
+
     /**
      * Get the value of the data column for this Uri. This is useful for MediaStore Uris, and other
      * file-based ContentProviders.
@@ -237,23 +243,8 @@ object RealPathUtil {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    private fun getDataColumn(context: Context, uri: Uri?, fileUri: Uri?, selection: String?, selectionArgs: Array<String>?): String? {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            if (fileUri == null)
-                return null
-            val directoryName = (FilePathUtils.getExternalStorage()).toString() + File.separator + Constants.LOCAL_PATH
-                .replace(" ", "") +
-                    File.separator + Constants.FILE_LOCAL_PATH + File.separator + Constants.MSG_SENT_PATH
+    private fun getDataColumn(context: ContextWrapper, uri: Uri?, fileUri: Uri?, selection: String?, selectionArgs: Array<String>?): String? {
 
-
-            val documentFile = DocumentFile.fromSingleUri(context, fileUri)
-            var fileName =  documentFile!!.name
-            ImagePickerUtils.createFolderIfNotExist(directoryName)
-            val mimeType = getMimeTypeFromFilePath(context, fileUri)
-            if(fileName == null) fileName = Constants.TEMP_FILE_NAME
-            val filePath = getFilePath(fileName, mimeType, directoryName)
-            return checkFilePath(filePath,context,fileUri)
-        } else {
             var cursor: Cursor? = null
             val column = MediaStore.Images.Media.DATA
             val projection = arrayOf(column)
@@ -272,8 +263,36 @@ object RealPathUtil {
             } finally {
                 cursor?.close()
             }
+
+           try {
+               return getCopyFilePath(context,fileUri)
+           } catch(e:Exception) {
+               com.contusfly.utils.LogMessage.d(TAG,e.toString())
+           }
+
+            return null
+
+    }
+
+    private fun getCopyFilePath(context: ContextWrapper,fileUri: Uri?): String? {
+        if (fileUri == null)
+            return null
+        val directoryName = (FilePathUtils.getFileSentExternalStorage(context)).toString() + File.separator + Constants.LOCAL_PATH
+            .replace(" ", "") +
+                File.separator + Constants.FILE_LOCAL_PATH + File.separator + Constants.MSG_SENT_PATH
+
+
+        val documentFile = DocumentFile.fromSingleUri(context, fileUri)
+        if(!MemoryInfoHelper.isTransferPossible(documentFile!!.length())) {
             return null
         }
+
+        var fileName =  documentFile!!.name
+        ImagePickerUtils.createFolderIfNotExist(directoryName)
+        val mimeType = getMimeTypeFromFilePath(context, fileUri)
+        if(fileName == null) fileName = Constants.TEMP_FILE_NAME
+        val filePath = getFilePath(fileName, mimeType, directoryName)
+        return checkFilePath(filePath,context,fileUri)
     }
 
     private fun checkFilePath(filePath: File?,context: Context,fileUri: Uri?): String?  {
@@ -329,7 +348,7 @@ object RealPathUtil {
      * @param uri     the Uri object of the file
      * @return check null
      */
-    private fun getNewFilePath(context: Context, uri: Uri?): String? {
+    private fun getNewFilePath(context: ContextWrapper, uri: Uri?): String? {
         //copyFiles file and send new file path
         var fileName = getFileName(uri)
         if (fileName != null && !fileName.contains(".")) {
@@ -339,11 +358,12 @@ object RealPathUtil {
                 LogMessage.d("fileName :", getFileName(uri))
             }
         }
-        val directoryName = (FilePathUtils.getExternalStorage().toString() + File.separator
+        val directoryName = (FilePathUtils.getFileSentExternalStorage(context).toString() + File.separator
                 + Constants.LOCAL_PATH + File.separator + "temp")
         if (!TextUtils.isEmpty(fileName)) {
             val directory = File(directoryName)
-            if (!directory.exists()) directory.mkdir()
+            if (!directory.exists())
+                directory.mkdirs()
             val copyFile = File(directoryName + File.separator + fileName)
             copyUriToFile(context, uri, copyFile)
             return copyFile.absolutePath
@@ -351,7 +371,7 @@ object RealPathUtil {
         return null
     }
 
-    private fun getDriveFilePath(context: Context, fileName: String, fileUri: Uri): String? {
+    private fun getDriveFilePath(context: ContextWrapper, fileName: String, fileUri: Uri): String? {
         //copyFiles file and send new file path
         val directoryName = (FilePathUtils.getExternalStorage().toString() + File.separator
                 + Constants.LOCAL_PATH + File.separator + Constants.FILE_LOCAL_PATH + File.separator + Constants.MSG_SENT_PATH)

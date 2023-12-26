@@ -77,8 +77,11 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
             val fileStatus = if (messageItem.isItCarbonMessage()) fileDownloadStatus.toInt()
             else MessageUtils.getMediaStatus(fileUploadStatus, filePath, true)
             fileUploadStatus.isNotEmpty().let {
+                if(fileStatus == MediaUploadStatus.MEDIA_UPLOADED || fileStatus == MediaDownloadStatus.MEDIA_DOWNLOADED){
+                    progressSenderRotation.gone()
+                }
                 val mediaStatus = MediaStatus(txtRetryView, viewSentCarbonDownload, progressSender, fileStatus, messageItem, null,
-                    cancelUpload, imgSentForward, viewUploadProgress)
+                    cancelUpload, imgSentForward, viewUploadProgress,progressSenderRotation)
                 messageItemListener.setMediaStatus(mediaStatus)
                 if (messageItem.isItCarbonMessage())
                     messageItemListener.setImageViewSize(fileSize, viewSentCarbonDownload, txtCarbonImgSize)
@@ -87,9 +90,9 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
     }
 
     fun handleImageLoading(imgViewHolder: ImageSentViewHolder, filePath: String?, base64Img: String?) {
-        with(imgViewHolder) {
-            ImageUtils.loadImageInView(context, filePath ?: "", imageSenderImg, base64Img ?: "")
-        }
+            with(imgViewHolder) {
+                ImageUtils.loadImageInView(context, filePath ?: "", imageSenderImg, base64Img ?: "")
+            }
     }
 
     private fun handleImageWithCaption(messageItem: ChatMessage, imgViewHolder: ImageSentViewHolder,
@@ -272,7 +275,7 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
             if (fileStatus.isNotEmpty()){
                 val mediaStatus = MediaStatus(txtRetryView, viewDownload, progressRev,
                     MessageUtils.getMediaStatus(fileStatus, filePath, false),
-                    messageItem, null, cancelDownload,  receivedImageForward,viewDownloadProgress)
+                    messageItem, null, cancelDownload,  receivedImageForward,viewDownloadProgress,downloadProgressBuffer)
                 messageItemListener.setMediaStatus(mediaStatus)
             }
             val fileSize = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaFileSize())

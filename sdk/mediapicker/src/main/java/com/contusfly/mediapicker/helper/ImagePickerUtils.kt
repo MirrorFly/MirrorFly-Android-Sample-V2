@@ -12,8 +12,8 @@ import java.util.*
 object ImagePickerUtils {
 
     var maxFileRestriction = 10
-    var maxVideoFileSizeRestriction = 30
-    var maxImageFileSizeRestriction = 10
+    var maxVideoFileSizeRestriction = 2048 // 2 GB
+    var maxImageFileSizeRestriction = 2048 // 2 GB
     fun isVideoFormat(path: String): Boolean {
         val extension = getExtension(path)
         val mimeType = if (TextUtils.isEmpty(extension)) URLConnection.guessContentTypeFromName(path) else MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)

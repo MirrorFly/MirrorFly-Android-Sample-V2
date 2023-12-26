@@ -27,7 +27,6 @@ import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.mirrorflysdk.utils.Utils
 import com.jakewharton.rxbinding3.view.clicks
-import com.mirrorflysdk.api.contacts.ContactManager
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -356,7 +355,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
             holder.imageMediaType.gone()
         } else if (!msgType.isNullOrBlank()) {
             when {
-                Constants.MSG_TYPE_TEXT.equals(msgType, ignoreCase = true) -> {
+                Constants.MSG_TYPE_TEXT.equals(msgType, ignoreCase = true)||Constants.MSG_TYPE_AUTO_TEXT.equals(msgType, ignoreCase = true) -> {
                     holder.imageMediaType.gone()
                     setDataForTextMessage(chatMessage,holder,isRecall)
                 }
@@ -465,8 +464,6 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
         if (!recent.isGroup)
             userBlockedMe = recent.isBlockedMe
         holder.imageChatPicture.loadUserProfileImage(context, recent)
-        var profile=ContactManager.getProfileDetails(recent.jid)
-        LogMessage.e("Error","${profile!!.contactType}")
         holder.textChatName.text = recent.getDisplayName()
     }
 

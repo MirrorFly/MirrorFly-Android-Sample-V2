@@ -1,11 +1,13 @@
 package com.contusfly.privateChat
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -129,9 +131,17 @@ CommonAlertDialog.CommonDialogClosedListener {
         }
         privateChatsBinding.toolBar.toolbar.background = ContextCompat.getDrawable(this, R.drawable.gradient_top)
         privateChatsBinding.toolBar.toolbar.setNavigationIcon(R.drawable.ic_back)
-        BlendModeColorFilter(
-            ContextCompat
-                .getColor(this, R.color.color_black), BlendMode.MULTIPLY)
+        if (Build.VERSION.SDK_INT >= 29) {
+            BlendModeColorFilter(
+                ContextCompat
+                    .getColor(this, R.color.color_black), BlendMode.MULTIPLY
+            )
+        } else {
+            PorterDuffColorFilter(
+                ContextCompat.getColor(this, R.color.color_black),
+                PorterDuff.Mode.MULTIPLY
+            )
+        }
         privateChatsBinding.toolBar.toolbar.setNavigationOnClickListener { launchDashboardActivity() }
 
         privateListRecent = privateChatsBinding.viewListChats

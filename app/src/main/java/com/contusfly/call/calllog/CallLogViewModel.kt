@@ -16,9 +16,7 @@ import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatManager
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class CallLogViewModel @Inject
@@ -134,8 +132,14 @@ constructor(private val repository: CallLogRepository, private val apiCalls: Api
     fun uploadUnSyncedCallLogs() {
         if (AppUtils.isNetConnected(ChatManager.applicationContext)) {
             LogMessage.v(this@CallLogViewModel.TAG, "$CALL_UI uploadUnSyncedCallLogs working in thread: ${Thread.currentThread().name}")
-            viewModelScope.launch(exceptionHandler) {
-                CallLogManager.uploadUnSyncedCallLogs(apiCalls)
+            viewModelScope.launch {
+                try {
+                    withContext(Dispatchers.IO) {
+                        CallLogManager.uploadUnSyncedCallLogs(apiCalls)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }

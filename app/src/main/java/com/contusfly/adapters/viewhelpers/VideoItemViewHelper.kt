@@ -54,8 +54,10 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
         model: ChatItemRowModel
     ) {
         with(videoSenderViewHolder) {
-            val fileUploadStatus = Utils.returnEmptyStringIfNull(model.messageItem.getMediaChatMessage().getMediaUploadStatus().toString())
-            handleVideoLoading(model.messageItem, this, fileUploadStatus, model.filePath, model.base64Img)
+                val fileUploadStatus = Utils.returnEmptyStringIfNull(model.messageItem.getMediaChatMessage().getMediaUploadStatus().toString())
+                handleVideoLoading(model.messageItem, this, fileUploadStatus, model.filePath, model.base64Img)
+
+
             /*
               Check if the image item contain caption to show
              */
@@ -67,20 +69,20 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
 
     fun handleVideoLoading(messageItem: ChatMessage, videoSenderViewHolder: VideoSentViewHolder,
                            fileUploadStatus: String, filePath: String?, base64Img: String?) {
-        with(videoSenderViewHolder) {
-            if (messageItem.isVideoMessage() && (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING
-                        || fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_NOT_UPLOADED)) {
-                if (imageSenderImg.drawable != null) {
-                    ImageUtils.loadImageInView(
-                        context, filePath ?: "", imageSenderImg,
-                        base64Img ?: ""
-                    )
-                }
-                else ImageUtils.loadImageInView(context, filePath ?: "", imageSenderImg,
+            with(videoSenderViewHolder) {
+                if (messageItem.isVideoMessage() && (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING
+                            || fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_NOT_UPLOADED)) {
+                    if (imageSenderImg.drawable != null) {
+                        ImageUtils.loadImageInView(
+                            context, filePath ?: "", imageSenderImg,
+                            base64Img ?: ""
+                        )
+                    }
+                    else ImageUtils.loadImageInView(context, filePath ?: "", imageSenderImg,
+                        base64Img ?: "")
+                } else ImageUtils.loadImageInView(context, filePath ?: "", imageSenderImg,
                     base64Img ?: "")
-            } else ImageUtils.loadImageInView(context, filePath ?: "", imageSenderImg,
-                base64Img ?: "")
-        }
+            }
     }
 
     fun setVideoSenderMediaStatus(videoSenderViewHolder: VideoSentViewHolder, messageItem: ChatMessage) {
@@ -88,13 +90,17 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
         val fileDownloadStatus = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaDownloadStatus().toString())
         val filePath = com.mirrorflysdk.utils.Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaLocalStoragePath())
 
+
         with(videoSenderViewHolder) {
             val fileSize =
                 Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaFileSize())
             val fileStatus = if (messageItem.isItCarbonMessage()) fileDownloadStatus.toInt()
             else MessageUtils.getMediaStatus(fileUploadStatus, filePath, true)
             fileUploadStatus.isNotEmpty().let {
-                val mediaStatus = MediaStatus(txtRetryView, viewSentCarbonDownload, progressSender, fileStatus, messageItem, imgSendPlay, cancelUpload, imgSentForward, viewUploadProgress)
+                if(fileStatus == MediaUploadStatus.MEDIA_UPLOADED || fileStatus == MediaDownloadStatus.MEDIA_DOWNLOADED) {
+                    progressSenderRotation.gone()
+                }
+                val mediaStatus = MediaStatus(txtRetryView, viewSentCarbonDownload, progressSender, fileStatus, messageItem, imgSendPlay, cancelUpload, imgSentForward, viewUploadProgress, progressSenderRotation)
                 messageItemListener.setMediaStatus(mediaStatus)
                 if (messageItem.isItCarbonMessage())
                     messageItemListener.setImageViewSize(fileSize, viewSentCarbonDownload, txtCarbonImgSize)
@@ -146,7 +152,7 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
      * @param messageItem      Message item
      * @param videoViewHolder  The view holding the child items.
      */
-    fun handleSenderVideoItemProgressUpdate(messageItem: ChatMessage, videoViewHolder: VideoSentViewHolder){
+    fun handleSenderVideoItemProgressUpdate(messageItem: ChatMessage, videoViewHolder: VideoSentViewHolder) {
         var fileUploadStatus = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaUploadStatus().toString())
         val fileDownloadStatus = Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaDownloadStatus().toString())
         if (messageItem.isItCarbonMessage())
@@ -172,6 +178,7 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
                 progressSender.progress = videoProgressPercentage
             } else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
                 && (videoProgressPercentage < 1 || videoProgressPercentage >= 100)) {
+                progressSender.progress = 0
                 progressSender.gone()
                 progressSenderRotation.show()
             }
@@ -253,7 +260,7 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
             if (fileStatus.isNotEmpty()) {
                 val status = MessageUtils.getMediaStatus(fileStatus, filePath, false)
                 val mediaStatus = MediaStatus(txtRetryView, viewDownload, progressRev, status,
-                    messageItem, imgRevPlay, cancelDownload, receivedImageForward, viewDownloadProgress)
+                    messageItem, imgRevPlay, cancelDownload, receivedImageForward, viewDownloadProgress,downloadProgressBuffer)
                 messageItemListener.setMediaStatus(mediaStatus)
                 messageItemListener.setMediaDuration(txtRevDuration, status, messageItem, imgRevChatType)
             }
@@ -266,6 +273,7 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
         messageItem: ChatMessage,
         videoReceivedViewHolder: VideoReceivedViewHolder
     ) {
+
         with(videoReceivedViewHolder) {
             val fileStatus = if (messageItem.isMessageSentByMe()) Utils.returnEmptyStringIfNull(
                 messageItem.getMediaChatMessage().getMediaUploadStatus().toString()
@@ -278,6 +286,7 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
                     messageItem.getMediaChatMessage().getMediaProgressStatus()
                 )
             )
+
 
             if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING && progressPercentage in 1..99) {
                 progressRev.show()

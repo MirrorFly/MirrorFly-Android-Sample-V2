@@ -72,7 +72,7 @@ abstract class BaseChatAdapterHelper {
                 msgType = MessageType.TEXT
             }
             return when (msgType) {
-                MessageType.TEXT -> getType(messageItem, ChatAdapter.TYPE_TEXT_SENDER, ChatAdapter.TYPE_TEXT_RECEIVER)
+                MessageType.TEXT,MessageType.AUTO_TEXT -> getType(messageItem, ChatAdapter.TYPE_TEXT_SENDER, ChatAdapter.TYPE_TEXT_RECEIVER)
                 MessageType.LOCATION -> getType(messageItem, ChatAdapter.TYPE_LOCATION_SENDER, ChatAdapter.TYPE_LOCATION_RECEIVER)
                 MessageType.CONTACT -> getType(messageItem, ChatAdapter.TYPE_CONTACT_SENDER, ChatAdapter.TYPE_CONTACT_RECEIVER)
                 MessageType.NOTIFICATION -> ChatAdapter.TYPE_MSG_NOTIFICATION
@@ -137,7 +137,6 @@ abstract class BaseChatAdapterHelper {
     fun mediaUploadView(progressBar: View?, cancel: View?, viewProgress: View?) {
         progressBar?.gone()
         cancel?.gone()
-        cancel?.setOnClickListener(null)
         viewProgress?.gone()
     }
 
