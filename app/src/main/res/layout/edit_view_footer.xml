@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+    <View
+        android:id="@+id/chat_footer_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/chat_footer_divider_color"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/view_edit_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_marginBottom="9dp"
+        android:background="@drawable/bg_chat_footer_shape"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:weightSum="1"
+        app:layout_constraintHeight_max="@dimen/margin_350"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/layoutViewAudio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/group_user_tag_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/group_tag_name_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="3dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view_child_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_4.5">
+
+            <ImageView
+                android:id="@+id/image_chat_smiley"
+                style="@style/style_chat_controls"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0"
+                android:contentDescription="@string/title_content_description"
+                app:srcCompat="@drawable/ic_input_emoji" />
+
+            <com.contusfly.groupmention.MentionEditGroupText
+                android:id="@+id/edit_chat_msg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_chat_edit"
+                android:hint="@string/title_hint_msg"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences|textMultiLine"
+                android:lineSpacingExtra="@dimen/margin_5"
+                android:maxWidth="@dimen/margin_280"
+                android:maxLines="5"
+                android:padding="@dimen/padding_5"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/color_chat_list_time"
+                android:textSize="@dimen/text_size_15"
+                app:emojiconSize="@dimen/text_size_23" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutViewAudio"
+        android:layout_width="@dimen/margin_50"
+        android:layout_height="@dimen/margin_50"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/image_chat_send">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/title_content_description"
+            app:srcCompat="@drawable/ic_audio_recording_icon" />
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_chat_send"
+        android:layout_width="@dimen/margin_30"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/title_content_description"
+        android:padding="@dimen/padding_3"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_send_inactive" />
+
+
+    <View
+        android:id="@+id/chat_footer_bottom_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

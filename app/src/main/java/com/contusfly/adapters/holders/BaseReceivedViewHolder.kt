@@ -93,6 +93,9 @@ open class BaseReceivedViewHolder(view: View) : SenderNameHolder(view) {
      */
     val txtRevChatCaption: TextView = viewRevImageCaption.findViewById(R.id.txt_caption_rev_chat)
 
+    val txtEdited: AppCompatTextView = viewRevImageCaption.findViewById(R.id.edit_txt_id)
+
+
     /**
      * Sent caption for image
      */

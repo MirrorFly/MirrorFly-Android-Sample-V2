@@ -18,7 +18,7 @@ data class MessageObject(var toJid: String,
                          var audioDuration: Long,
                          var isAudioRecorded: Boolean,
                          var mentionedUsersIds: List<String>,
-                         var meetMessageParams: MeetMessageParams?
+                         var meetMessageParams: MeetMessageParams?,
     ) {
     /**
      * Text Message Constructor

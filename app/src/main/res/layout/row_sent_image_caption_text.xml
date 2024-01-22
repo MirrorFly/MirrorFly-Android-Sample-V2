@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:paddingBottom="@dimen/margin_10"
         android:layout_gravity="center_vertical"
         android:autoLink="all"
         android:breakStrategy="simple"
@@ -52,13 +53,27 @@
         android:id="@+id/caption_image_send_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/edit_txt_id"
+        android:layout_alignBottom="@+id/edit_txt_id"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_toStartOf="@+id/edit_txt_id"
+        android:contentDescription="@string/acknowledge_content_description"
+        android:src="@drawable/ic_message_acknowledged" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/edit_txt_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edited_txt"
+        android:visibility="gone"
+        android:textSize="@dimen/text_size_11"
+        app:fontFamily="@font/sf_ui_display_regular"
         android:layout_alignTop="@+id/caption_text_send_image_time"
         android:layout_alignBottom="@+id/caption_text_send_image_time"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:layout_toStartOf="@+id/caption_text_send_image_time"
-        android:contentDescription="@string/acknowledge_content_description"
-        android:src="@drawable/ic_message_acknowledged" />
+        />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/caption_text_send_image_time"

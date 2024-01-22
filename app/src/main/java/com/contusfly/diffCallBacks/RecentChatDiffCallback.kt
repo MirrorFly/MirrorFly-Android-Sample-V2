@@ -80,6 +80,7 @@ fun isRecentObjEqual(oldItem: RecentChat, newItem: RecentChat): Boolean {
             && oldItem.isBlocked == newItem.isBlocked && oldItem.isBlockedMe == newItem.isBlockedMe
             && oldItem.isChatPinned == newItem.isChatPinned && oldItem.isGroupInOfflineMode == newItem.isGroupInOfflineMode
             && oldItem.contactType == newItem.contactType
+            && oldItem.isLastMessageEdited ==newItem.isLastMessageEdited
 }
 
 private fun isJidEqual(oldRecentChat: RecentChat, newRecentChat: RecentChat): Boolean {

@@ -71,6 +71,11 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:label,android:allowBackup">
         <activity
+            android:name=".activities.EditMessageActivity"
+            android:exported="false"
+            android:theme="@style/TransparentTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".privateChat.PrivateChatListActivity"
             android:exported="false" />
         <activity
@@ -243,6 +248,7 @@
         -->
         <activity
             android:name=".call.groupcall.GroupCallActivity"
+            android:exported="false"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
@@ -255,7 +261,7 @@
             android:taskAffinity="call.video"
             android:turnScreenOn="true"
             android:windowSoftInputMode="stateHidden"
-            tools:targetApi="R" />
+            tools:targetApi="R"/>
         <activity
             android:name=".call.calllog.CallHistoryDetailActivity"
             android:screenOrientation="portrait" /> <!-- <activity -->
@@ -295,9 +301,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".call.groupcall.OnGoingCallPreviewActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.UserListActivity"
             android:exported="false"

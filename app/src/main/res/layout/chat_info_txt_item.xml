@@ -88,7 +88,7 @@
                             android:lineSpacingExtra="3dp"
                             android:linksClickable="true"
                             android:textColor="@color/color_black"
-                            android:textColorLink="@color/color_black"
+                            android:textColorLink="@color/light_blue"
                             android:textSize="@dimen/text_size_14"
                             app:emojiconSize="@dimen/text_size_19"
                             app:fontFamily="@font/sf_ui_display_regular"
@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
-                android:layout_marginBottom="@dimen/margin_5">
+                android:layout_marginBottom="@dimen/margin_1">
 
                 <ImageView
                     android:id="@+id/ic_star"
@@ -121,9 +121,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_4"
+                    android:layout_marginEnd="@dimen/margin_4"
                     android:layout_marginBottom="@dimen/margin_4"
                     android:contentDescription="@string/NotAcknowledge_content_description"
                     android:src="@drawable/ic_message_unsent" />
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/edit_txt_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/edited_txt"
+                    android:visibility="gone"
+                    android:textSize="@dimen/text_size_11"
+                    app:fontFamily="@font/sf_ui_display_regular"
+                    />
 
                 <com.contusfly.views.CustomTextView
                     android:id="@+id/txt_send_txt_time"

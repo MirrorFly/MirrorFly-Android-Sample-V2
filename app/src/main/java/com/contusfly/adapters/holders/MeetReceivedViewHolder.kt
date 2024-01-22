@@ -77,6 +77,9 @@ class MeetReceivedViewHolder(mainView: View) : SenderNameHolder(mainView) {
      */
     val txtChatRevTime: AppCompatTextView = mainView.findViewById(R.id.text_rev_text_time)
 
+    val txtEdited:AppCompatTextView = mainView.findViewById(R.id.edit_txt_id)
+
+
     val meetLinkTextLayout: LinearLayout = mainView.findViewById(R.id.meet_link_txt_view_ll)
 
     /**

@@ -23,6 +23,7 @@ import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.ActivityDashboardBinding
 import com.contusfly.fragments.RecentChatListFragment
 import com.contusfly.interfaces.RecentChatEvent
+import com.contusfly.notification.AppNotificationManager
 import com.contusfly.utils.*
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.PermissionAlertDialog
@@ -601,6 +602,19 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
             }, 1000)
     }
 
+
+    /**
+     * When a editedMessage is received the recent chat has to be updated and set a view to show the latest message...
+     *
+     * @param editedMessage Instance of the Message
+     */
+
+    override fun onMessageEdited(editedMessage: ChatMessage) {
+        LogMessage.d(TAG, "#dashboard #recent  onMessageEditedReceived: ")
+        onMessageStatusUpdated(editedMessage.messageId)
+
+    }
+
     override fun onMessageStatusUpdated(messageId: String) {
         LogMessage.d(TAG, "#dashboard #recent  onMessageStatusUpdated: ")
         viewModel.setMessageStatus(messageId)
@@ -656,8 +670,15 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         try{
             if (!isSuccess)
                 return
-            if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL && mRecentChatListType == RecentChatListType.RECENT)
+            if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL && mRecentChatListType == RecentChatListType.RECENT) {
+                val selectedJids = getJidFromList(viewModel.selectedRecentChats)
+                val recent=FlyCore.getRecentChatOf(selectedJids[0])
+                if(recent?.lastMessageId!=null) {
+                    val msg = FlyMessenger.getMessageOfId(recent.lastMessageId)
+                    AppNotificationManager.createNotification(context!!,msg!!,true,selectedJids)
+                }
                 deleteSelectedRecent(getJidFromList(viewModel.selectedRecentChats))
+            }
         } catch (e:Exception) {
             LogMessage.e(TAG,e)
         }

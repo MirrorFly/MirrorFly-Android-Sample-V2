@@ -10,6 +10,7 @@ import com.contusfly.utils.ChatTimeOperations
 import com.contusfly.utils.Constants
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.api.MessageStatus
 import com.mirrorflysdk.api.models.ChatMessage
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
@@ -239,6 +240,25 @@ class MessageRepository {
         val messageList = FlyMessenger.getMessagesUsingIds(messages)
         return Pair(messageList.all { it.isMessageSentByMe() && !it.isMessageRecalled() && it.messageSentTime > recallTimeDifference },
             messageList.any { it.isMediaMessage() && it.mediaChatMessage.mediaLocalStoragePath.isNotEmpty() })
+    }
+
+    fun isEditAvailableForGivenMessages(messageId: String):Boolean{
+        val editTimeBound = 15 * 60 * 1000 // 15 minutes in milliseconds
+        val currentTime = System.currentTimeMillis()
+        val editTimeDifference = (currentTime - editTimeBound.toLong()) * 1000L
+        val message = FlyMessenger.getMessageOfId(messageId)
+        if (message != null) {
+            if(message.messageType ==MessageType.TEXT || message.messageType==MessageType.AUTO_TEXT){
+                return isMessageCanEditable(message,editTimeDifference)
+            }else if(message.isMediaMessage()){
+                return !message.mediaChatMessage.mediaCaptionText.isNullOrEmpty() && isMessageCanEditable(message,editTimeDifference)
+            }
+        }
+        return false
+    }
+
+    private fun isMessageCanEditable(message: ChatMessage, editableTime:Long):Boolean{
+        return message.messageStatus!= MessageStatus.SENT && message.isMessageSentByMe && !message.isMessageRecalled && message.messageSentTime>editableTime
     }
 
     fun getRecalledMessageOfAnUser(jid: String): MutableList<String> {

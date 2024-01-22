@@ -322,8 +322,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
             val mentionUserNames= MentionUtils.getMentionedUserId(context,message,false)
             setSearchTextHighlightExceptionMention(viewBinding.searchTextRecentChatmsg,mentionText,mentionUserNames)
         }else {
-            viewBinding.searchTextRecentChatmsg.text =
-                message.mediaChatMessage.mediaCaptionText
+            viewBinding.searchTextRecentChatmsg.text = message.mediaChatMessage.mediaCaptionText
         }
     }
 
@@ -359,8 +358,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
                             mentionUserNames
                         )
                     }else
-                    viewBinding.searchTextRecentChatmsg.text =
-                        message.mediaChatMessage.mediaCaptionText
+                    viewBinding.searchTextRecentChatmsg.text = message.mediaChatMessage.mediaCaptionText
                 }
                 else viewBinding.searchTextRecentChatmsg.text = context.getString(R.string.title_video)
             }

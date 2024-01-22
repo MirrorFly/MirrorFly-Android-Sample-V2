@@ -245,10 +245,22 @@
                     android:contentDescription="@null"
                     android:visibility="gone"
                     app:srcCompat="@drawable/ic_star_receiver"
-                    app:layout_constraintEnd_toStartOf="@+id/text_rev_text_time"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_txt_id"
+                    app:layout_constraintTop_toTopOf="@+id/edit_txt_id"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_txt_id"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/edit_txt_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/edited_txt"
+                    android:visibility="gone"
+                    android:textSize="@dimen/text_size_11"
+                    app:fontFamily="@font/sf_ui_display_regular"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_rev_text_time"
                     app:layout_constraintTop_toTopOf="@+id/text_rev_text_time"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_rev_text_time"/>
-
+                    app:layout_constraintEnd_toStartOf="@+id/text_rev_text_time"
+                    />
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/text_rev_text_time"
                     android:layout_width="wrap_content"

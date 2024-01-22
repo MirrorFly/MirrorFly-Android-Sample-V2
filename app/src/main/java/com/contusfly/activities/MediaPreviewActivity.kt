@@ -1037,6 +1037,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             val userId = selectedUsers!![0]
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra(Constants.JID, userId)
+            intent.putExtra(Constants.IS_FROM_MEDIA_PREVIEW_ACTIVITY,true)
             intent.putExtra(Constants.CHAT_TYPE, ProfileDetailsUtils.getProfileDetails(userId))
             intent.putExtra(Constants.FROM_QUICK_SHARE, true)
             startActivity(intent)
@@ -1086,7 +1087,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                             ChatParent.startActivity(
                                 this@MediaPreviewActivity,
                                 toUser,
-                                viewModel.profileDetails.value!!.getChatType()
+                                viewModel.profileDetails.value!!.getChatType(),true
                             )
                         }
 
@@ -1182,7 +1183,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_USER, Constants.EMPTY_STRING)
             SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_ID, Constants.EMPTY_STRING)
             viewModel.setUnSentMessageForAnUser(toUser, Constants.EMPTY_STRING)
-            ChatParent.startActivity(this@MediaPreviewActivity, toUser, viewModel.profileDetails.value!!.getChatType())
+            ChatParent.startActivity(this@MediaPreviewActivity, toUser, viewModel.profileDetails.value!!.getChatType(),true)
         }
     }
 

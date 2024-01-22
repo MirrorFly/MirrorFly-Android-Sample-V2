@@ -127,4 +127,11 @@
         android:title="@string/menu_add_shortcut"
         app:showAsAction="never" />
 
+
+    <item
+        android:id="@+id/action_edit"
+        android:orderInCategory="114"
+        android:title="@string/action_edit"
+        app:showAsAction="never" />
+
 </menu>

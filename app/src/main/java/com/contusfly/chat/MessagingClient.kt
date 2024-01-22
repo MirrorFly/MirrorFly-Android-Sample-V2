@@ -12,11 +12,13 @@ import android.content.Intent
 import android.net.Uri
 import com.contusfly.interfaces.MessageListener
 import com.contusfly.models.ContactShareModel
+import com.contusfly.models.EditMessageParams
 import com.contusfly.models.MeetMessageParams
 import com.contusfly.models.MessageObject
 import com.contusfly.utils.*
 import com.mirrorflysdk.api.*
 import com.mirrorflysdk.api.chat.ContactMessageParams
+import com.mirrorflysdk.api.chat.EditMessage
 import com.mirrorflysdk.api.chat.FileMessage
 import com.mirrorflysdk.api.chat.FileMessageParams
 import com.mirrorflysdk.api.chat.LocationMessageParams
@@ -71,6 +73,70 @@ constructor(val application: Application) : CoroutineScope {
             replyMessageId,
             mentionedUsersIds
         )
+    }
+
+    fun sendEditedMessage(
+        editedMessageParams: EditMessageParams,
+        messageListener: MessageListener?,
+    ) {
+        when (editedMessageParams.messageType) {
+            MessageType.TEXT,MessageType.AUTO_TEXT -> sendEditedTextMessage(editedMessageParams, messageListener)
+            MessageType.IMAGE, MessageType.VIDEO -> sendEditedMediaMessage(editedMessageParams, messageListener)
+            else -> {
+                //add functionality for other type of messages if needed
+            }
+        }
+    }
+
+    fun sendEditedTextMessage(editedMessageParams:EditMessageParams, messageListener: MessageListener?){
+        try {
+            val sendEditedMessageParams = EditMessage().apply {
+                messageId = editedMessageParams.messageId
+                editedTextContent = editedMessageParams.editedText
+                mentionedUsersIds = editedMessageParams.mentionedUsersIds
+            }
+            FlyMessenger.editTextMessage(
+                sendEditedMessageParams,
+                object : SendMessageCallback {
+                    override fun onResponse(
+                        isSuccess: Boolean,
+                        error: Throwable?,
+                        chatMessage: ChatMessage?,
+                    ) {
+                        if (isSuccess && chatMessage != null && messageListener != null)
+                            messageListener.onSendMessageSuccess(chatMessage)
+                    }
+                })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun sendEditedMediaMessage(
+        editedMessageParams: EditMessageParams,
+        messageListener: MessageListener?,
+    ) {
+        try {
+            val sendEditedMessageParams = EditMessage().apply {
+                messageId = editedMessageParams.messageId
+                editedTextContent = editedMessageParams.editedText
+                mentionedUsersIds = editedMessageParams.mentionedUsersIds
+            }
+            FlyMessenger.editMediaCaption(
+                sendEditedMessageParams,
+                object : SendMessageCallback {
+                    override fun onResponse(
+                        isSuccess: Boolean,
+                        error: Throwable?,
+                        chatMessage: ChatMessage?,
+                    ) {
+                        if (isSuccess && chatMessage != null && messageListener != null)
+                            messageListener.onSendMessageSuccess(chatMessage)
+                    }
+                })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun sendMessage(messageObject: MessageObject, messageListener: MessageListener?) {
@@ -327,6 +393,7 @@ constructor(val application: Application) : CoroutineScope {
                 title = messageObject.meetMessageParams?.title
                 link = messageObject.meetMessageParams?.link
                 scheduledDateTime = messageObject.meetMessageParams?.scheduleMeetDateTime
+                editMessageId = messageObject.meetMessageParams?.editMessageId
             }
             FlyMessenger.sendMeetMessage(sendMeetMessageParams, object : SendMessageCallback {
                 override fun onResponse(

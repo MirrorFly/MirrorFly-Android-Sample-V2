@@ -62,7 +62,11 @@ class FileItemView(private val messageItemListener: MessageItemListener) {
         val fileStatus = if (message.isItCarbonMessage()) fileDownloadStatus else fileUploadStatus
 
         with(fileViewHolder) {
-            if ((fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
+            if (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
+                fileUploadCancelLayout.gone()
+                fileUploadProgress.gone()
+                fileUploadProgressBuffer.gone()
+            }else if ((fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
                 && progressPercentage > 0 && progressPercentage < 100) {
                 fileUploadProgressBuffer.gone()
                 fileUploadProgress.show()
@@ -108,18 +112,24 @@ class FileItemView(private val messageItemListener: MessageItemListener) {
         val fileStatus = Utils.returnEmptyStringIfNull(message.mediaChatMessage.mediaDownloadStatus.toString())
         val progressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(message.mediaChatMessage.mediaProgressStatus))
 
-        with(fileViewHolder){
-        if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING
-            && progressPercentage > 0 && progressPercentage < 100) {
-            fileDownloadProgressBuffer.gone()
-            fileDownloadProgress.show()
-            fileDownloadProgress.max = 100
-            fileDownloadProgress.progress = progressPercentage
-        } else if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING
-            && (progressPercentage < 1 || progressPercentage >= 100)) {
-            fileDownloadProgress.gone()
-            fileDownloadProgressBuffer.show()
-        }
+        with(fileViewHolder) {
+            if (fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
+                fileCancelLayout.gone()
+                fileDownloadProgress.gone()
+                fileDownloadProgressBuffer.gone()
+            } else if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING
+                && progressPercentage > 0 && progressPercentage < 100
+            ) {
+                fileDownloadProgressBuffer.gone()
+                fileDownloadProgress.show()
+                fileDownloadProgress.max = 100
+                fileDownloadProgress.progress = progressPercentage
+            } else if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING
+                && (progressPercentage < 1 || progressPercentage >= 100)
+            ) {
+                fileDownloadProgress.gone()
+                fileDownloadProgressBuffer.show()
+            }
         }
     }
 
