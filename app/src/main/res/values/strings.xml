@@ -128,6 +128,8 @@
     <string name="update_continue_label">Update &amp; Continue</string>
     <string name="sent_media_label">Sent Media</string>
     <string name="edit_label">Edit</string>
+    <string name="edit_message_tag">Edit Message</string>
+    <string name="edited_txt">Edited</string>
     <string name="share_label">Share</string>
     <string name="default_busy_status">I am busy</string>
     <string name="error_occurred_label">Error Occurred. Please try again.</string>
@@ -218,6 +220,7 @@
     <string name="something_went_wrong">Something went wrong. Please try again</string>
     <string name="action_reply">Reply</string>
     <string name="action_copy">Copy</string>
+    <string name="action_edit">Edit Message</string>
     <string name="action_share">Share</string>
     <string name="action_forward">Forward</string>
     <string name="action_information">Information</string>
@@ -258,6 +261,7 @@
     <string name="action_add_user">Add to Contacts</string>
     <string name="action_search">Search</string>
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_edit_message">EditMessageActivity</string>
     <string name="title_hint_caption">Add a caption…</string>
     <string name="text_audio_wrong_extension">You can upload only .aac, .mp3, .wav files</string>
     <string name="action_Ok">OK</string>

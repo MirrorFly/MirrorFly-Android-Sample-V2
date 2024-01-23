@@ -108,6 +108,14 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+
+    <style name="EditToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/sf_ui_display_semi_bold</item>
+        <item name="android:textColor">?attr/dashboard_toolbar_text_color</item>
+        <item name="android:textSize">@dimen/toolbar_header_size</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="CustomToolBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
@@ -117,6 +125,17 @@
         <item name="elevation">0dp</item>
         <item name="android:titleTextColor" tools:targetApi="M">?attr/dashboard_toolbar_text_color</item>
         <item name="titleTextAppearance">@style/ToolbarTitleStyle</item>
+    </style>
+
+    <style name="EditMessageToolBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="elevation">0dp</item>
+        <item name="android:titleTextColor" tools:targetApi="M">?attr/dashboard_toolbar_text_color</item>
+        <item name="titleTextAppearance">@style/EditToolbarTitleStyle</item>
     </style>
 
     <style name="ToolbarSeparatorStyle">
@@ -1094,5 +1113,10 @@
     <!-- set the rounded drawable as background to your bottom sheet -->
     <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_schedule_bottom_sheet</item>
+    </style>
+
+    <style name="TransparentTheme" parent="CustomTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 </resources>

@@ -38,6 +38,9 @@ class MeetSentViewHolder(mainView: View) : SenderNameHolder(mainView) {
      */
     val txtChatSender: TextView = mainView.findViewById(R.id.text_send_chat)
 
+    val txtEdited:AppCompatTextView = mainView.findViewById(R.id.edit_txt_id)
+
+
     val meetLinkTextLayout: LinearLayout = mainView.findViewById(R.id.meet_link_txt_view_ll)
 
     /**

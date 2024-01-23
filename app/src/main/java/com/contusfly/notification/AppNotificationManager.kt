@@ -21,7 +21,7 @@ object AppNotificationManager {
      * @param context Instance of Context
      * @param chatMessage Received Message
      */
-    fun createNotification(context: Context, chatMessage: ChatMessage) {
+    fun createNotification(context: Context, chatMessage: ChatMessage, isFromDelete:Boolean = false, deletedChatUserJid:List<String> = arrayListOf()) {
         /**
          * if the user enables mute notification in settings, we should not show any notification
          */
@@ -32,20 +32,20 @@ object AppNotificationManager {
             if (BuildConfig.HIPAA_COMPLIANCE_ENABLED)
                 NotificationBuilder.createSecuredNotification(context, chatMessage)
             else
-                privateChatNotificationValidate(context, chatMessage)
+                privateChatNotificationValidate(context, chatMessage, isFromDelete, deletedChatUserJid)
 
         } else {
             NotificationBuilderBelow24.createNotification(context, chatMessage)
         }
     }
 
-    private fun privateChatNotificationValidate(context: Context, chatMessage: ChatMessage) {
+    private fun privateChatNotificationValidate(context: Context, chatMessage: ChatMessage, isFromDelete:Boolean = false, deletedChatUserJid:List<String> = arrayListOf()) {
         try {
             val chatJid = chatMessage.getChatUserJid()
             if(ChatManager.isPrivateChat(chatJid)) {
                 NotificationBuilder.privateChatNotification(context, chatMessage)
             } else {
-                NotificationBuilder.createNotification(context, chatMessage)
+                NotificationBuilder.createNotification(context, chatMessage, isFromDelete, deletedChatUserJid)
             }
         } catch(e:Exception){
             LogMessage.e("Notification_Exception",e.toString())

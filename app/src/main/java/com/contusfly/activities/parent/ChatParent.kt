@@ -142,6 +142,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private var isRefreshing = false
 
+    val FILE_UPLOAD_TAG: String =" #FileUploadTask "
+
     protected val mentionViewModel by lazy {
         ViewModelProvider(this).get(MentionsViewModel::class.java)
     }
@@ -333,6 +335,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     protected var clickedMessages = ArrayList<String>()
 
+    protected var clickedMessageToEdit = emptyString()
+
     private val filteredPosition = ArrayList<Int>()
 
     protected var selectedContactMessage: ContactChatMessage? = null
@@ -380,11 +384,12 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
          * @param chatType Chat type
          */
         @JvmStatic
-        fun startActivity(activity: Activity, jid: String, chatType: String) {
+        fun startActivity(activity: Activity, jid: String, chatType: String, isFromMediaPreviewActivity:Boolean = false) {
             activity.startActivity(
                 Intent(activity, ChatActivity::class.java)
                     .putExtra(LibConstants.JID, jid)
                     .putExtra(Constants.CHAT_TYPE, chatType)
+                    .putExtra(Constants.IS_FROM_MEDIA_PREVIEW_ACTIVITY,isFromMediaPreviewActivity)
                     .putExtra("externalCall", true)
                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             )
@@ -1381,7 +1386,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                         menu.get(R.id.action_unfavourite),
                         menu.get(R.id.action_pin),
                         menu.get(R.id.action_un_pin),
-                        menu.get(R.id.action_add_chat_shortcuts)
+                        menu.get(R.id.action_add_chat_shortcuts),
+                        menu.get(R.id.action_edit)
                     )
                     updateMenuIcons(menu,true,features,isSingleMessage,menuHashMap)
 
@@ -1394,14 +1400,18 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                     menu.get(R.id.action_share).isVisible = menuHashMap[Constants.SHARE]!!
                     menu.get(R.id.action_forward).isVisible = menuHashMap[Constants.FORWARD]!!
                     menu.get(R.id.action_add_chat_shortcuts).isVisible = false
+                    menu.get(R.id.action_edit).isVisible = false
                     if (isSingleMessage) {
+                        updateEditMessageMenu(menu)
                         updateCopyMessageMenu(menu)
                         menu.get(R.id.action_report).isVisible = menuHashMap[Constants.REPORT]!!
-                        if (menuHashMap[Constants.INFO]!!)  menu.get(R.id.action_info).isVisible = true
+                        if (menuHashMap[Constants.INFO]!!) menu.get(R.id.action_info).isVisible =
+                            true
                     } else {
                         menu.get(R.id.action_info).isVisible = false
                         menu.get(R.id.action_copy).isVisible = false
                         menu.get(R.id.action_report).isVisible = false
+                        menu.get(R.id.action_edit).isVisible = false
                     }
 
                     updateMenuIcons(menu,false,features,isSingleMessage,menuHashMap)
@@ -1421,6 +1431,28 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             }
         } catch(e:Exception){
             LogMessage.e(TAG,e.toString())
+        }
+    }
+    private fun updateEditMessageMenu(menu: Menu) {
+        try {
+            if (parentViewModel.isMessagesCanBeEdited(clickedMessages[0]) && clickedMessages.isNotEmpty()) {
+                val chatMessage = getMessagebyID(clickedMessages[0])
+                menu.get(R.id.action_edit).isVisible =
+                    if (ChatType.TYPE_GROUP_CHAT == chat.chatType) {
+                        parentViewModel.isGroupUserExist(
+                            chat.toUser,
+                            chat.getMyJid()
+                        ) && !profileDetails.isAdminBlocked && chatMessage != null && (chatMessage.messageType == MessageType.TEXT || chatMessage.messageType == MessageType.AUTO_TEXT) || (null != chatMessage && chatMessage.mediaChatMessage.mediaCaptionText != null && !chatMessage.mediaChatMessage.mediaCaptionText.equals(
+                            ""
+                        ))
+                    } else {
+                        !profileDetails.isAdminBlocked && chatMessage != null && (chatMessage.messageType == MessageType.TEXT || chatMessage.messageType == MessageType.AUTO_TEXT) || (null != chatMessage && chatMessage.mediaChatMessage.mediaCaptionText != null && !chatMessage.mediaChatMessage.mediaCaptionText.equals(
+                            ""
+                        ))
+                    }
+            }
+        } catch (e: Exception) {
+            LogMessage.e(TAG, e.toString())
         }
     }
 
@@ -1507,8 +1539,12 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     /**
      * Alert dialog whether to unblock or cancel to continue sending messages...
      */
-    protected fun showBlockedAlert() {
-        commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.UNBLOCK
+    protected fun showBlockedAlert(isEditMessage:Boolean=false) {
+        commonAlertDialog.dialogAction =
+            if (isEditMessage)
+                CommonAlertDialog.DialogAction.EDIT_MESSAGE_UNBLOCK
+            else
+                CommonAlertDialog.DialogAction.UNBLOCK
         commonAlertDialog.showAlertDialog(
             getString(R.string.msg_unblock), getString(R.string.action_unblock),
             getString(R.string.action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false
@@ -1518,9 +1554,14 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     /**
      * Dialog action to show whether the busy status to be enabled or disabled...
      */
-    protected fun showBusyAlert(isScheduleFabClicked:Boolean = false) {
+    protected fun showBusyAlert(isScheduleFabClicked:Boolean = false, isEditMessage:Boolean=false) {
         commonAlertDialog.dialogAction =
-            if (isScheduleFabClicked) CommonAlertDialog.DialogAction.STATUS_BUSY_SCHEDULE else CommonAlertDialog.DialogAction.STATUS_BUSY
+            if (isScheduleFabClicked)
+                CommonAlertDialog.DialogAction.STATUS_BUSY_SCHEDULE
+            else if (isEditMessage)
+                CommonAlertDialog.DialogAction.EDIT_MESSAGES_DISABLE_BUSY_STATUS
+            else
+                CommonAlertDialog.DialogAction.STATUS_BUSY
         commonAlertDialog.showAlertDialog(
             getString(R.string.msg_disable_busy_status), getString(R.string.action_yes),
             getString(R.string.action_no), CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false
@@ -1788,6 +1829,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }
 
     override fun onSendMessageSuccess(message: ChatMessage) {
+        if(message.isEdited){
+            resetReplyMessageView()
+            onMessageEdited(message)
+            return
+        }
         if(isLoadNextAvailable) {
             messageId = Constants.EMPTY_STRING
             parentViewModel.loadInitialMessages(messageId)

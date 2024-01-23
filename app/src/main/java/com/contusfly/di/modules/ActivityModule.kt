@@ -2,6 +2,7 @@ package com.contusfly.di.modules
 
 import com.contusfly.activities.*
 import com.contusfly.activities.parent.ChatParent
+import com.contusfly.activities.parent.EditChatParent
 import com.contusfly.call.calllog.CallHistoryDetailActivity
 import com.contusfly.chatTag.activities.ChatTagActivity
 import com.contusfly.chatTag.activities.EditTagActivity
@@ -36,7 +37,13 @@ abstract class ActivityModule {
     internal abstract fun contributeChatActivity(): ChatActivity
 
     @ContributesAndroidInjector
+    internal abstract fun contributeEditMessageActivity(): EditMessageActivity
+
+    @ContributesAndroidInjector
     internal abstract fun contributeChatParent(): ChatParent
+
+    @ContributesAndroidInjector
+    internal abstract fun contributeEditChatParent(): EditChatParent
 
     @ContributesAndroidInjector
     internal abstract fun contributeForwardMessageActivity(): ForwardMessageActivity

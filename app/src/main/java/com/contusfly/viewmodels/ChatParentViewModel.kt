@@ -193,6 +193,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
     fun hasUserStarredAnyMessage(jid: String) = messageRepository.hasUserStarredAnyMessage(jid)
 
     fun isMessagesCanBeRecalled(messageIds: ArrayList<String>) = messageRepository.isRecallAvailableForGivenMessages(messageIds)
+    fun isMessagesCanBeEdited(messageIds: String) = messageRepository.isEditAvailableForGivenMessages(messageIds)
 
     fun getMessageForId(jid: String) = messageRepository.getMessageForId(jid)
 

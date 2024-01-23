@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="false"
-    android:visibility="gone"
+    android:visibility="visible"
     android:background="@drawable/shape_chat_reply_sender_header_bg"
     android:minWidth="@dimen/margin_200"
     android:minHeight="@dimen/margin_50">

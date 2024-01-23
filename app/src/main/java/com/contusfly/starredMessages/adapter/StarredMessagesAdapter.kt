@@ -56,6 +56,7 @@ import com.contusfly.models.MediaCaption
 import com.contusfly.models.MediaStatus
 import com.contusfly.utils.*
 import com.contusfly.utils.ChatUtils.setSelectedChatItem
+import com.contusfly.utils.ChatUtils.txtEditedVisibility
 import com.contusfly.utils.Constants
 import com.contusfly.utils.ImageUtils.loadMapWithGlide
 import com.contusfly.utils.LogMessage
@@ -341,6 +342,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             val starredTxtSenderViewHolder: TextSentViewHolder = holder as TextSentViewHolder
             setHeader(holder, SENDER_HEADER, item)
             val time: String = getChatMsgTime(item)!!
+            txtEditedVisibility(item.isEdited, starredTxtSenderViewHolder.txtEdited)
             starredTxtSenderViewHolder.txtChatTime.text = time
             starredTxtSenderViewHolder.txtChatTime
                     .setTextColor(ContextCompat.getColor(context!!, R.color.color_sent_message_time))
@@ -355,6 +357,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             senderItemClick(starredTxtSenderViewHolder.viewRowItem, item, position)
             replyViewUtils!!.showSenderReplyWindow(starredTxtSenderViewHolder, item, context!!)
             setSelectedChatItem(starredTxtSenderViewHolder.itemView, item, starredMessageMessages, context)
+            ChatUtils.setMarginBottom(starredTxtSenderViewHolder.txtChatSender,item)
             with(starredTxtSenderViewHolder.txtChatSender) {
                 if(item.mentionedUsersIds != null && item.mentionedUsersIds.size > 0) {
                     isClickable = false
@@ -493,6 +496,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         val starredTxtReceiverViewHolder = holder as TextReceivedViewHolder
         setHeader(holder, RECEIVER_HEADER, item)
         val time: String = getChatMsgTime(item)!!
+        txtEditedVisibility(item.isEdited,starredTxtReceiverViewHolder.txtEdited)
         starredTxtReceiverViewHolder.txtChatRevTime.text = time
         starredTxtReceiverViewHolder.txtChatRevTime
                 .setTextColor(ContextCompat.getColor(context!!, R.color.color_chat_msg_received_time))
@@ -505,6 +509,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         setListenersForReceiverTextMessages(starredTxtReceiverViewHolder, item, position)
         receiverItemClick(starredTxtReceiverViewHolder.viewRowItem, item, position)
         setSelectedChatItem(starredTxtReceiverViewHolder.itemView, item, starredMessageMessages, context)
+        ChatUtils.setReceiverMarginBottom(starredTxtReceiverViewHolder.txtChatReceiver,item)
         with(starredTxtReceiverViewHolder.txtChatReceiver) {
             if(item.mentionedUsersIds != null && item.mentionedUsersIds.size > 0) {
                 setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
@@ -1501,7 +1506,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         when (mediaStatus.status) {
             MediaDownloadStatus.MEDIA_DOWNLOADED, MediaUploadStatus.MEDIA_UPLOADED -> {
                 chatAdapterHelper!!.mediaUploadView(mediaStatus.progressBar!!, mediaStatus.cancelImageview!!, mediaStatus.viewProgress)
-                if (mediaStatus.item!!.messageType == MessageType.VIDEO) mediaStatus.imgPlay!!.visibility = View.VISIBLE
+                if (mediaStatus.item!!.messageType == MessageType.VIDEO) mediaStatus.imgPlay?.visibility = View.VISIBLE
                 mediaStatus.txtRetry!!.visibility = View.GONE
                 mediaStatus.progressbuffer!!.visibility = View.GONE
                 if (mediaStatus.download != null) mediaStatus.download!!.visibility = View.GONE
@@ -1515,18 +1520,18 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 mediaStatus.cancelImageview!!.visibility = View.VISIBLE
                 mediaStatus.txtRetry!!.visibility = View.GONE
                 mediaStatus.download!!.visibility = View.GONE
-                mediaStatus.imgPlay!!.visibility = View.GONE
+                mediaStatus.imgPlay?.visibility = View.GONE
             }
             MediaDownloadStatus.MEDIA_NOT_DOWNLOADED, MediaDownloadStatus.STORAGE_NOT_ENOUGH -> {
                 chatAdapterHelper!!.mediaUploadView(mediaStatus.progressBar!!, mediaStatus.cancelImageview!!, mediaStatus.viewProgress)
                 mediaStatus.download!!.visibility = View.VISIBLE
                 mediaStatus.txtRetry!!.visibility = View.GONE
-                mediaStatus.imgPlay!!.visibility = View.GONE
+                mediaStatus.imgPlay?.visibility = View.GONE
                 mediaStatus.progressbuffer!!.visibility = View.GONE
             }
             MediaUploadStatus.MEDIA_NOT_UPLOADED -> {
                 mediaStatus.txtRetry!!.visibility = View.VISIBLE
-                mediaStatus.imgPlay!!.visibility = View.GONE
+                mediaStatus.imgPlay?.visibility = View.GONE
                 mediaStatus.download!!.visibility = View.GONE
                 mediaStatus.progressbuffer!!.visibility = View.GONE
                 chatAdapterHelper!!.mediaUploadView(mediaStatus.progressBar!!, mediaStatus.cancelImageview!!, mediaStatus.viewProgress)

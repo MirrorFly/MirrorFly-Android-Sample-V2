@@ -5,6 +5,4 @@ rootProject.name = "UI-Kit Dev"
 include ':sdk:cameraview'
 include ':sdk:googletranslation'
 include ':sdk:spinnerview'
-include ':mirrorflysdk'
-
 

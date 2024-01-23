@@ -71,7 +71,8 @@ class ChatAdapter(
     private var selectedMessages: ArrayList<String>,
     private val chatType: String,
     val activity: Context,
-    val userJid: String
+    val userJid: String,
+    val isFromEditScreen:Boolean = false
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), MessageItemListener {
 
     var isLinkLongClick: Boolean = false
@@ -289,6 +290,8 @@ class ChatAdapter(
                     setStatus(item, imgChatStatus)
                     replyViewUtils.markFavoriteItem(this, item)
                 }
+            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
+                bindSenderTextView(this, item, position)
             }
         }
     }
@@ -314,6 +317,8 @@ class ChatAdapter(
                 else {
                     replyViewUtils.markFavoriteItem(this, item)
                 }
+            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
+                bindReceiverTextView(this, item, position)
             }
         }
     }
@@ -394,13 +399,13 @@ class ChatAdapter(
                     context
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
+                if (item.isMessageRecalled || item.isEdited)
                     bindSenderMeetView(this, item, position)
                 else {
                     isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, imgChatStatus)
                     replyViewUtils.showSenderReplyWindow(this, item, context)
-                    if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
+                    if (canShowForwardMeet(item))
                         imgForwardMeet?.show()
                     imgForwardMeet?.setOnClickListener {
                         listener?.onSenderMediaForward(
@@ -411,6 +416,10 @@ class ChatAdapter(
                 }
             }
         }
+    }
+
+    private fun canShowForwardMeet( item: ChatMessage):Boolean{
+       return item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen()
     }
 
     private fun handlePayloadsScheduleMeetReceived(
@@ -429,7 +438,7 @@ class ChatAdapter(
                     context
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
+                if (item.isMessageRecalled || item.isEdited)
                     bindReceiverMeetView(this, item, position)
                 else {
                     replyViewUtils.showReceiverReplyWindow(this, item, context)
@@ -598,7 +607,7 @@ class ChatAdapter(
             else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
                 handleImageMediaStatusChanged(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
+                if (item.isMessageRecalled ||item.isEdited)
                     bindSenderImageView(this, item, position)
                 else {
                     isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
@@ -608,6 +617,8 @@ class ChatAdapter(
                         getStarIcon(item, imgSentStarred, imgSentCaptionStar)
                     )
                 }
+            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
+                bindSenderImageView(this, item, position)
             }
         }
     }
@@ -659,7 +670,7 @@ class ChatAdapter(
                     )
                 imageItemViewHelper.setImageReceiverMediaStatus(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
+                if (item.isMessageRecalled )
                     bindReceiverImageView(this, item, position)
                 else {
                     setStaredStatus(
@@ -667,6 +678,8 @@ class ChatAdapter(
                         getStarIcon(item, imgStarred, txtRevCaptionStar)
                     )
                 }
+            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
+                bindReceiverImageView(this, item, position)
             }
         }
     }
@@ -677,34 +690,34 @@ class ChatAdapter(
         item: ChatMessage,
         position: Int
     ) {
-            with(videoSentViewHolder) {
-                if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                    val isHighLighted =
-                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                    ChatUtils.setSelectedChatItem(
-                        viewRowItem,
-                        isHighLighted,
-                        context
+        with(videoSentViewHolder) {
+            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
+                val isHighLighted =
+                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                ChatUtils.setSelectedChatItem(
+                    viewRowItem,
+                    isHighLighted,
+                    context
+                )
+            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
+                videoItemViewHelper.handleSenderVideoItemProgressUpdate(item, videoSentViewHolder)
+            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
+                handleVideoMediaStatusChanged(this, item)
+            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
+                if (item.isMessageRecalled || item.isEdited)
+                    bindSenderVideoView(this, item, position)
+                else {
+                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
+                    setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
+                    setStaredStatus(
+                        item.isMessageStarred,
+                        getStarIcon(item, imgSentStarred, imgSentCaptionStar)
                     )
-                } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
-                    videoItemViewHelper.handleSenderVideoItemProgressUpdate(item, videoSentViewHolder)
-                else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                    handleVideoMediaStatusChanged(this, item)
-                } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                    if (item.isMessageRecalled)
-                        bindSenderVideoView(this, item, position)
-                    else {
-                        isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
-                        setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
-                        setStaredStatus(
-                            item.isMessageStarred,
-                            getStarIcon(item, imgSentStarred, imgSentCaptionStar)
-                        )
-                    }
                 }
+            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
+                bindSenderVideoView(this, item, position)
             }
-
-
+        }
     }
 
     private fun handleVideoMediaStatusChanged(
@@ -761,7 +774,7 @@ class ChatAdapter(
                     )
                 videoItemViewHelper.setVideoReceiverMediaStatus(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
+                if (item.isMessageRecalled )
                     bindReceiverVideoView(this, item, position)
                 else {
                     setStaredStatus(
@@ -769,6 +782,8 @@ class ChatAdapter(
                         getStarIcon(item, imgStarred, txtRevCaptionStar)
                     )
                 }
+            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
+                bindReceiverVideoView(this, item, position)
             }
         }
     }
@@ -987,6 +1002,7 @@ class ChatAdapter(
             try {
                 adjustPadding(space, position, mainList)
                 time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+
                 with(txtChatTime) {
                     text = time
                     setTextColor(ContextCompat.getColor(context, R.color.color_sent_message_time))
@@ -996,12 +1012,15 @@ class ChatAdapter(
                 txtChatSender.setTextColor(ContextCompat.getColor(context, R.color.color_black))
                 txtSenderViewHolder.isSentMessage =
                     item.isMessageSentByMe && !item.isMessageSent()
+                ChatUtils.setMarginBottom(txtChatSender,item)
                 if (item.isMessageRecalled) {
                     txtSenderViewHolder.isRecallMessage = true
                     displayRecallInfoForSender(txtSenderViewHolder)
                     viewSender.isEnabled = true
+                    txtEdited.visibility = View.GONE
                     senderItemClick(this, txtSenderViewHolder.viewSender, item)
                 } else {
+                    ChatUtils.txtEditedVisibility(item.isEdited,txtEdited)
                     txtSenderViewHolder.isRecallMessage = false
                     viewSender.isEnabled = true
                     senderItemClick(this, viewSender, item)
@@ -1395,11 +1414,14 @@ class ChatAdapter(
     ) {
         val msg = item.messageTextContent
         with(textViewHolder) {
+            ChatUtils.setReceiverMarginBottom(txtChatReceiver,item)
             if (item.isMessageRecalled) {
                 textViewHolder.isRecallMessage = true
                 displayRecallInfoForReceiver(this)
+                txtEdited.visibility = View.GONE
                 receiverItemClick(this, viewReceiver, item)
             } else {
+                ChatUtils.txtEditedVisibility(item.isEdited,txtEdited)
                 textViewHolder.isRecallMessage = false
                 receiverItemClick(this, viewReceiver, item)
                 receivedRecallImage.gone()
@@ -2226,8 +2248,10 @@ class ChatAdapter(
                 replyViewUtils.markFavoriteItem(this, item)
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
                 setListenersForSenderMeetMessages(this, item)
-                if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
+                if ((item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen()) && !isFromEditScreen)
                     imgForwardMeet?.show()
+                else
+                    imgForwardMeet?.gone()
                 imgForwardMeet?.setOnClickListener {
                     listener?.onSenderMediaForward(
                         item,
@@ -3501,7 +3525,10 @@ class ChatAdapter(
                 if (mediaStatus.item!!.messageType == MessageType.VIDEO)
                     mediaStatus.imgPlay?.show()
                 hideMediaOption(mediaStatus.txtRetry, mediaStatus.download)
-                mediaStatus.forwardImageview?.show()
+                if (!isFromEditScreen)
+                    mediaStatus.forwardImageview?.show()
+                else
+                    mediaStatus.forwardImageview?.hide()
             }
 
             MediaDownloadStatus.MEDIA_DOWNLOADING, MediaUploadStatus.MEDIA_UPLOADING -> {
