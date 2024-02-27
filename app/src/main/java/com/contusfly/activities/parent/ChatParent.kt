@@ -142,8 +142,6 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private var isRefreshing = false
 
-    val FILE_UPLOAD_TAG: String =" #FileUploadTask "
-
     protected val mentionViewModel by lazy {
         ViewModelProvider(this).get(MentionsViewModel::class.java)
     }

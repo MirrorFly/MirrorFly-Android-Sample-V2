@@ -141,8 +141,8 @@ class Constants {
         const val EMAIL = "email"
         const val ASK_PERMISSION = "ask_permission"
         const val USER_PROFILE_NAME = "profile_name"
-        const val EMAIL_PATTERN = ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,3})$")
+        const val EMAIL_PATTERN = ("^[_A-Za-z0-9-%+!$&#\\+]+(\\.[_A-Za-z0-9-%+!$&#\\+]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,6})$")
         const val FROM_SETTINGS_PROFILE = "from_settings_profile"
         const val FROM_LOGIN_PROFILE = "from_login_profile"
         const val REGISTER_END_POINT = "/api/v1/sandbox/register"
@@ -425,6 +425,11 @@ class Constants {
 
         const val MAX_DOCUMENT_UPLOAD_SIZE = 2048 // 2 GB
         const val MAX_AUDIO_SIZE_LIMIT = 2048 // 2 GB
+
+        //Full Screen Intent Permission
+        const val ASK_FULL_SCREEN_INTENT_PERMISSION = "ask_full_screen_notification_permission"
+        const val FULLSCREEN_NOTIFICATION_PERMISSION_ASKED = "fullscreen_notification_permission_asked_before"
+
 
     }
 }

@@ -157,6 +157,16 @@ object ChatUtils {
         }
     }
 
+    fun checkFullScreenNotificationPermissionEnabled(): Boolean {
+        val minSdk34 = Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU
+        var needToRequestFullScreenPermission = minSdk34
+        if(needToRequestFullScreenPermission){
+            return CallManager.canUseFullScreenIntent()
+        }
+        return  minSdk34
+    }
+
+
     fun checkNotificationPermission(context: Context, permission: String): Boolean {
         return MediaPermissions.isPermissionAllowed(context, permission)
     }

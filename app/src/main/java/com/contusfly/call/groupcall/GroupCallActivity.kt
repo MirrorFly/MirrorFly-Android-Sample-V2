@@ -27,8 +27,10 @@ import com.contusfly.call.groupcall.listeners.ActivityOnClickListener
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.ActivityGroupCallBinding
 import com.contusfly.utils.ChatUtils
+import com.contusfly.utils.Constants
 import com.contusfly.utils.MediaPermissions
 import com.contusfly.utils.ProfileDetailsUtils
+import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.PermissionAlertDialog
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
@@ -223,6 +225,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         initClickListeners()
         setUpCallDataAndUI()
         groupCallViewModel.checkInternetConnection()
+
+        checkAndRequestFullScreenPermission()
     }
 
     private fun setUpCallDataAndUI() {
@@ -1215,5 +1219,27 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         super.onGroupProfileUpdated(groupJid)
         LogMessage.d(TAG, "$CALL_UI onGroupProfileUpdated groupJid:$groupJid")
         updateUserDetailsUpdatedInCall(groupJid)
+    }
+
+    fun checkAndRequestFullScreenPermission() {
+        if(!ChatUtils.checkFullScreenNotificationPermissionEnabled()){
+            com.contusfly.utils.LogMessage.d(TAG,"#fullscreen fullScreenNotificationPermission requesting!!")
+            if(!SharedPreferenceManager.getBoolean(Constants.ASK_FULL_SCREEN_INTENT_PERMISSION)) {
+                MediaPermissions.requestFullScreenNotificationPermission(
+                    this,
+                    permissionAlertDialog,
+                    fullScreenNotificationPermissionLauncher,isCall = true)
+            }
+
+        } else {
+            com.contusfly.utils.LogMessage.d(TAG,"#fullscreen fullScreenNotificationPermission enabled!!")
+        }
+    }
+
+    private val fullScreenNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { _ ->
+        if(ChatUtils.checkFullScreenNotificationPermissionEnabled()){
+            com.contusfly.utils.LogMessage.d(TAG,"#fullscreen fullScreenNotificationPermission Launcher enabled!!")
+        }
     }
 }
