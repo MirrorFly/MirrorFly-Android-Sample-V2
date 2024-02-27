@@ -42,7 +42,7 @@ class RoundedCornerLayout : LinearLayout {
             mPaint!!.shader = mBitmapShader
             mRectF = RectF(0f, 0f, width.toFloat(), height.toFloat())
         }
-        super.draw(mOffscreenCanvas)
+        mOffscreenCanvas?.let { super.draw(it) }
         canvas.drawRoundRect(mRectF!!, 50.0f, 50.0f, mPaint!!)
     }
 }

@@ -141,5 +141,7 @@ class PermissionAlertDialog(private var activity: Activity) {
         const val VIDEO_CALL_PERMISSION_DENIED = "video_call_permission_denied"
         const val NOTIFCATION_PERMISSION_DENIED = "notification_permission_denied"
         const val NOTIFICATION_LOCKED_STATE_PERMISSION_DENIED = "notification_permission_locked_state_denied"
+        const val FULLSCREEN_NOTIFICATION_PERMISSION_DENIED = "fullscreen_notification_permission_denied"
+
     }
 }
