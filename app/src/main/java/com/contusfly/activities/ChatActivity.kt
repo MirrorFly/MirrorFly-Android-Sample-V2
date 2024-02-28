@@ -2164,6 +2164,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     override fun onCancelUploadClicked(messageItem: ChatMessage) {
+        LogMessage.d("FILE_UPLOAD_TAG","Cancel Uploading.......")
         if (!messageItem.isMediaUploaded() || !messageItem.isMediaDownloaded())
             handleCancelClickedOnMediaMessage(messageItem)
         else {
@@ -2189,6 +2190,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     override fun onRetryClicked(item: ChatMessage?) {
+        LogMessage.d("FILE_UPLOAD_TAG","Resume Uploading.......")
         netConditionalCall({
             item?.let {
                 FlyMessenger.uploadMedia(it.messageId)
@@ -2238,6 +2240,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 listChats.scrollToPosition(mainList.size - 1)
         } catch (e: java.lang.Exception) {
             LogMessage.e(e)
+            LogMessage.e("FILE_UPLOAD_TAG","Clear Chat Error $e")
         }
     }
 

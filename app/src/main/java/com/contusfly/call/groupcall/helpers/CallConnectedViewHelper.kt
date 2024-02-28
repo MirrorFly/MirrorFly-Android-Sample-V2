@@ -584,11 +584,12 @@ class CallConnectedViewHelper(
     }
 
     fun updateCallStatus() {
-        LogMessage.i(TAG, "$CALL_UI CallConnectedViewHelper updateCallStatus")
+        LogMessage.i(TAG, "$CALL_UI CallConnectedViewHelper updateCallStatus isOneToOneCall: ${CallManager.isOneToOneCall()}")
         val pinnedUser = CallUtils.getPinnedUserJid()
         val connectedStatus =
             if (CallManager.isOneToOneCall()) CallManager.getCallConnectedStatus(activity)
             else CallManager.getCallStatus(pinnedUser)
+        LogMessage.i(TAG, "$CALL_UI CallConnectedViewHelper connectedStatus:$connectedStatus")
         if (connectedStatus in arrayOf(
                 CallStatus.ON_HOLD,
                 CallStatus.RECONNECTING,
