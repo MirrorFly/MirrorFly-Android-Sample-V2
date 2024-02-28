@@ -817,13 +817,24 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             }
         }
 
+        private fun checkAndUpdateStatusForUser(userJid: String){
+            if ((CallManager.isOneToOneCall() || CallUtils.getPinnedUserJid() == userJid) && !CallUtils.getIsGridViewEnabled()) callViewHelper.updateCallStatus()
+            else callViewHelper.updateStatusAdapter(userJid)
+        }
+
         private fun handleOtherCallStatusMessages(@CallStatus callEvent: String, userJid: String) {
             when (callEvent) {
                 CallStatus.ON_RESUME -> handleCallStatusResume(userJid)
                 CallStatus.RECONNECTING, CallStatus.ON_HOLD -> {
+                    LogMessage.d(TAG, "$CALL_UI $JOIN_CALL #reconnecting  userJid:$userJid")
                     setUpCallUI()
-                    if ((CallManager.isOneToOneCall() || CallUtils.getPinnedUserJid() == userJid) && !CallUtils.getIsGridViewEnabled()) callViewHelper.updateCallStatus()
-                    else callViewHelper.updateStatusAdapter(userJid)
+                    if(callEvent.equals(CallStatus.RECONNECTING,true)){
+                        CallUtils.clearPeakSpeakingUser(userJid)
+                        onUserStoppedSpeaking(userJid)
+                        durationHandler.postDelayed({checkAndUpdateStatusForUser(userJid)},1200)
+                    }else{
+                        checkAndUpdateStatusForUser(userJid)
+                    }
                 }
 
                 CallStatus.RINGING, CallStatus.CALLING_AFTER_10S -> {

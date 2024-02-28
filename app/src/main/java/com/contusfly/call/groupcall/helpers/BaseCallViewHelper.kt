@@ -1075,7 +1075,8 @@ class BaseCallViewHelper(
     }
 
     fun onUserSpeaking(userJid: String, audioLevel: Int) {
-        if (CallManager.isCallConnected()) {
+        val userStatus = GroupCallUtils.getCallStatus(userJid)
+        if (CallManager.isCallConnected() && !userStatus.equals(CallStatus.RECONNECTING,false)) {
             CallUtils.onUserSpeaking(userJid, audioLevel)
             if (activity.isInPIPMode())
                 pipViewHelper.onUserSpeaking(userJid, audioLevel)

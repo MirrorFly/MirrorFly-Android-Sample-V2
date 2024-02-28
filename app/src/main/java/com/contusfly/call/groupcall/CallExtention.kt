@@ -68,7 +68,7 @@ fun CallManager.getCallConnectedStatus(context: Context): String {
             CallStatus.RECONNECTING -> context.getString(R.string.reconnecting)
             else -> {
                 when (val remoteCallStatus = getCallStatus(getEndCallerJid())) {
-                    CallStatus.CALLING, CallStatus.RINGING, CallStatus.ON_HOLD -> remoteCallStatus
+                    CallStatus.CALLING, CallStatus.RINGING, CallStatus.ON_HOLD,CallStatus.RECONNECTING -> remoteCallStatus
                     else -> Constants.EMPTY_STRING
                 }
             }

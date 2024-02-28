@@ -68,6 +68,7 @@
         </intent>
     </queries>
 
+
     <application
         android:name=".constants.MobileApplication"
         android:allowBackup="false"

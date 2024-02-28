@@ -833,9 +833,11 @@
     <string name="video_call_permission_denied_alert_label">MirrorFly need the Microphone and Camera Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\" and \"Camera\".</string>
     <string name="notification_permission_denied_alert_label">Allow MirrorFly to send you notifications to stay \nconnected with friends and family.\n\n Please continue to app Settings > select Permission > enable Notification.\n</string>
     <string name="notification_permission_locked_state_denied_alert_label">Allow MirrorFly to send you notifications while the app in background.\n\n Please continue to app Settings > select OthersPermission > enable the all permissions.\n</string>
+    <string name="notification_full_intent_permission_denied_alert_label">Permission for Full Screen Notifications is required when receiving an incoming call while the device is locked..\n\n Please continue to app Settings > select Permission > Notification > enable Full Screen Notification.\n</string>
 
     <string name="turn_on_notification_label">Turn On</string>
     <string name="notification_title">Turn on notification for MirrorFly</string>
+    <string name="notification_full_screen_title">Turn on Full Screen Notification for MirrorFly</string>
     <!-- Contact Us Screen -->
     <string name="label_title">Title</string>
     <string name="feedback_description">Description</string>
@@ -1011,9 +1013,5 @@
     <string name="share_call_link">Share</string>
     <string name="invite_contacts_call_link">Invite Contacts</string>
     <string name="insufficient_memory_error">Not enough storage space on your device. Please free up space in your phone\'s memory.</string>
-
-
-    <string name="notification_full_screen_title">Turn on Full Screen Notification for MirrorFly</string>
-    <string name="notification_full_intent_permission_denied_alert_label">Permission for Full Screen Notifications is required when receiving an incoming call while the device is locked..\n\n Please continue to app Settings > select Permission > Notification > enable Full Screen Notification.\n</string>
 
 </resources>

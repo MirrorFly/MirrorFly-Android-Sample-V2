@@ -229,6 +229,7 @@ class MobileApplication : Application(), HasAndroidInjector {
             }
         })
         CallManager.enableCallLogExport(true)
+        CallManager.enableDebugLogs(true)
     }
 
     private fun getMissedCallNotificationContent( isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
