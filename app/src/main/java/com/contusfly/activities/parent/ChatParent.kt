@@ -1832,16 +1832,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             onMessageEdited(message)
             return
         }
-        if(isLoadNextAvailable) {
-            messageId = Constants.EMPTY_STRING
-            parentViewModel.loadInitialMessages(messageId)
-        } else {
-            if (parentViewModel.isLoadNextAvailable()) {
-                if (!parentViewModel.getFetchingIsInProgress())
-                    parentViewModel.loadNextData()
-            } else {
-                parentViewModel.addSentMessage(message) //If Sent message time is less than last received message time then it will add to the message list and shown in UI
-            }
+        LogMessage.d(TAG,"#chat #sendMessageSuccess load message available-->"+parentViewModel.isLoadNextAvailable())
+        if(parentViewModel.isLoadNextAvailable()){
+            parentViewModel.loadNextData()
         }
         handleUnreadMessageSeparator(true)
         Handler(Looper.getMainLooper()).postDelayed({

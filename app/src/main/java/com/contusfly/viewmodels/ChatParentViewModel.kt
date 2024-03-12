@@ -371,7 +371,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         }
 
         viewModelScope.launch {
-            messageListQuery.loadLocalMessages { isSuccess, _, data ->
+            messageListQuery.loadMessages { isSuccess, _, data ->
                 if (isSuccess) {
                     LogMessage.d("TAG","#chat loadInitialMessages loadLocalMessages isSuccess loadFromMessageId:$loadFromMessageId")
 
@@ -402,6 +402,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                 if (isSuccess) {
                     LogMessage.d("TAG","#chat #fetchmsg loadNextMessages  isSuccess")
                     val messageList = data.getData() as ArrayList<ChatMessage>
+                    LogMessage.d(TAG,"#chat #fetchmsg loadNextMessage message size-->"+messageList.size)
                     if (messageList.isNotEmpty()) {
                         messageList.forEach {
                             LogMessage.d("TAG","#chat #fetchmsg loadNextMessages  messageSentTime: ${it.messageSentTime} messageTextContent: ${it.messageTextContent}")
@@ -475,7 +476,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         }
 
         viewModelScope.launch {
-            messageListQuery.loadLocalPreviousMessages { isSuccess, _, data ->
+            messageListQuery.loadPreviousMessages { isSuccess, _, data ->
                 if (isSuccess) {
                     val messageList = data.getData() as ArrayList<ChatMessage>
                     if (messageList.isNotEmpty()) {
@@ -512,12 +513,14 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         }
 
         viewModelScope.launch {
-            messageListQuery.loadLocalNextMessages { isSuccess, _, data ->
+            messageListQuery.loadNextMessages { isSuccess, _, data ->
                 if (isSuccess) {
 
                     LogMessage.d("TAG","#chat #fetchmsg loadLocalNextMessages  ")
 
                     val messageList = data.getData() as ArrayList<ChatMessage>
+
+                    LogMessage.d(TAG,"#chat #fetchmsg loadnextdata size--->"+messageList.size)
 
                     if (messageList.isNotEmpty()) {
                         var skipFirstMessage = false
