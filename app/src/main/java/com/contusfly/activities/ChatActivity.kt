@@ -72,6 +72,7 @@ import com.mirrorflysdk.views.CustomToast
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import com.mirrorflysdk.api.contacts.ProfileDetails
+
 import dagger.android.AndroidInjection
 import io.github.rockerhieu.emojicon.EmojiconGridFragment
 import io.github.rockerhieu.emojicon.EmojiconsFragment
