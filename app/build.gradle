@@ -35,7 +35,7 @@ android {
         targetSdkVersion 34
         compileSdk(34)
         versionCode 16
-        versionName "7.11.6"
+        versionName "7.11.7"
         multiDexEnabled true
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         vectorDrawables.useSupportLibrary = true
@@ -202,7 +202,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.11.6'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.11.7'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
