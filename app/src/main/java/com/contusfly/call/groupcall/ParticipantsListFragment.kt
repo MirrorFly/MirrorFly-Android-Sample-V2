@@ -32,6 +32,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.mirrorflysdk.activities.FlyBaseActivity
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
 
 
 class ParticipantsListFragment : Fragment(), CoroutineScope {
@@ -66,6 +67,11 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
     private var searchKey: SearchView? = null
 
     private var tabPosition = 0
+
+    /**
+     * call action listener to listen for invite user list call back
+     */
+    private var callActionListener:CallActionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -162,7 +168,8 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
         addParticipantsListFragment = AddParticipantFragment.newInstance(
             groupId,
             groupId.isEmpty(),
-            callConnectedUserList
+            callConnectedUserList,
+            callActionListener
         )
         fragmentsArray.add(onGngCallParticipantsListFragment)
         fragmentsArray.add(addParticipantsListFragment)
@@ -243,13 +250,15 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
         fun newInstance(
             groupId: String?,
             isOneToOneCall: Boolean,
-            callUsersList: ArrayList<String>?
+            callUsersList: ArrayList<String>?,
+            callActionListener: CallActionListener?
         ) = ParticipantsListFragment().apply {
             arguments = Bundle().apply {
                 putString(Constants.GROUP_ID, groupId)
                 putBoolean(AddParticipantFragment.ADD_USERS_TO_ONE_TO_ONE_CALL, isOneToOneCall)
                 putStringArrayList(AddParticipantFragment.CONNECTED_USER_LIST, callUsersList)
             }
+            this.callActionListener = callActionListener
         }
     }
 

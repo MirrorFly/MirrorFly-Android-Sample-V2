@@ -43,6 +43,7 @@ import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycall.webrtc.api.JoinCallActionListener
 import com.mirrorflysdk.flycommons.Error
 import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.flycommons.exception.FlyException
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import org.webrtc.RendererCommon
@@ -144,6 +145,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
             finish()
             return
         }
+        LogMessage.d(TAG, "#OnGngCall onCreate")
         isFromOnCreate = true
         onGoingCallPreviewScreenBinding =
             ActivityOnGoingCallPreviewScreenBinding.inflate(layoutInflater)
@@ -192,6 +194,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
     }
 
     private fun askCallSwitchPopup(url: String) {
+        LogMessage.d(TAG, "#OnGngCall askCallSwitchPopup")
         commonAlertDialog!!.showCallSwitchAlertDialog(
             url,
             this.getString(R.string.action_ok),
@@ -201,6 +204,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
     }
 
     private fun subscribeCallEvents() {
+        LogMessage.d(TAG, "#OnGngCall $JOIN_CALL subscribeCallEvents")
         CallManager.subscribeCallEvents(callLink, userName, object : JoinCallActionListener {
             override fun onFailure(error: Error) {
                 LogMessage.d(TAG, "#OnGngCall $JOIN_CALL Subscribe call failure")
@@ -224,6 +228,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
         observingCallEvents()
         setLocalViewProfilePic()
         observeNetworkListener()
+        subscribeCallEvents()
     }
 
     private fun handleOnFailure(error: Error) {
@@ -249,6 +254,19 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
                 callEndedMessage = getString(R.string.something_went_wrong)
                 isInvalidLink = false
             }
+
+            Error.SIGNAL_SERVER_CONNECTION_NOT_AVAILABLE -> {
+                callEnded = getString(R.string.call_ended_text)
+                callEndedMessage = Error.SIGNAL_SERVER_CONNECTION_NOT_AVAILABLE.description
+                isInvalidLink = false
+            }
+
+            Error.JANUS_CONNECTION_ERROR_CODE -> {
+                callEnded = getString(R.string.call_ended_text)
+                callEndedMessage = Error.JANUS_CONNECTION_ERROR_CODE.description
+                isInvalidLink = false
+            }
+
 
             Error.MAX_USERS_REACHED -> {
                 showToast(
@@ -403,6 +421,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
     }
 
     private fun observingCallEvents() {
+        LogMessage.d(TAG, "#OnGngCall $JOIN_CALL observingCallEvents setJoinCallEventsListener")
         CallManager.setJoinCallEventsListener(object : JoinCallListener {
             override fun onError(error: Error) {
                 LogMessage.d(TAG, "#OnGngCall $JOIN_CALL  setJoinCallEventsListener onError  ")
@@ -529,6 +548,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
     }
 
     private fun setLocalViewProfilePic() {
+        LogMessage.d(TAG, "#OnGngCall $JOIN_CALL setLocalViewProfilePic")
         val userImgUrl =
             Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_PROFILE_IMAGE))
         if (userImgUrl.isNotEmpty())
@@ -578,6 +598,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
     }
 
     private fun showAlertForTelephonyCall() {
+        LogMessage.d(TAG, "#OnGngCall showAlertForTelephonyCall")
         if (CallManager.isOnTelephonyCall(this)) {
             commonAlertDialog!!.showAlertDialog(
                 this.getString(R.string.msg_telephony_call_alert),
@@ -637,7 +658,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
         val isVideoMuted = !muteVideoImage.isActivated
         if (!isVideoMuted) CallManager.startVideoCapture()
         CallManager.muteVideo(isVideoMuted, object : CallActionListener {
-            override fun onResponse(isSuccess: Boolean, message: String) {
+            override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                 LogMessage.d(TAG, "$CALL_UI $JOIN_CALL muteVideo onResponse()")
                 if (isVideoMuted) showUserProfilePic()
                 else {
@@ -696,7 +717,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
                 progressDialog!!.showProgress()
                 //Current call disconnect
                 CallManager.disconnectCall(object : CallActionListener {
-                    override fun onResponse(isSuccess: Boolean, message: String) {
+                    override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                         joinCallPreviewInitialization()
                     }
                 })

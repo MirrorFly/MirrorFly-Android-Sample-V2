@@ -26,6 +26,7 @@ import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycommons.exception.FlyException
 import com.mirrorflysdk.views.CustomToast
 
 
@@ -305,7 +306,7 @@ class CommonAlertDialog(context: Context?) {
         builder.setPositiveButton(positiveString) { dialog: DialogInterface, _: Int ->
             //Current call disconnect
             CallManager.disconnectCall(object : CallActionListener {
-                override fun onResponse(isSuccess: Boolean, message: String) {
+                override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                     runOnUiThread {
                         moveToOngoingCallPreviewActivity(context,callLink)
                         dialog.dismiss()

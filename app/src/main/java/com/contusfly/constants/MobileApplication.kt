@@ -192,7 +192,6 @@ class MobileApplication : Application(), HasAndroidInjector {
     }
 
     private fun initializeCallSdk(){
-        CallManager.init(this)
         CallManager.setCallActivityClass(GroupCallActivity::class.java)
         CallManager.setMissedCallListener(object : MissedCallListener {
             override fun onMissedCall(

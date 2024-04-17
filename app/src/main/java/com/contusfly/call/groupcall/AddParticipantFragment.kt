@@ -36,6 +36,7 @@ import com.mirrorflysdk.activities.FlyBaseActivity
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
 import com.mirrorflysdk.views.CustomToast
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.CoroutineScope
@@ -166,6 +167,11 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
                 String.format(getString(R.string.msg_add_participants), selectedList.size)
             }
         }
+
+    /**
+     * call action listener to listen for invite user list call back
+     */
+    private var callActionListener: CallActionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -402,7 +408,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
                     CustomAlertDialog().showFeatureRestrictionAlert(requireContext())
                 } else {
                     addParticipantsLayout.isEnabled = false
-                    CallManager.inviteUsersToOngoingCall(selectedList)
+                    CallManager.inviteUsersToOngoingCall(selectedList, inputCallActionListener = callActionListener)
                     CallUtils.setIsAddUsersToTheCall(false)
                     requireActivity().supportFragmentManager.popBackStackImmediate()
                 }
@@ -538,13 +544,15 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
         fun newInstance(
             groupId: String?,
             isOneToOneCall: Boolean,
-            callUsersList: ArrayList<String>?
+            callUsersList: ArrayList<String>?,
+            callActionListener: CallActionListener?
         ) = AddParticipantFragment().apply {
             arguments = Bundle().apply {
                 putString(Constants.GROUP_ID, groupId)
                 putBoolean(ADD_USERS_TO_ONE_TO_ONE_CALL, isOneToOneCall)
                 putStringArrayList(CONNECTED_USER_LIST, callUsersList)
             }
+            this.callActionListener = callActionListener
         }
     }
 
