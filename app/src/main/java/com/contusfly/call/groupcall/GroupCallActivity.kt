@@ -41,6 +41,7 @@ import com.mirrorflysdk.flycall.webrtc.api.CallEventsListener
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.flycommons.exception.FlyException
 import com.mirrorflysdk.views.CustomToast
 import kotlinx.android.synthetic.main.custom_toast.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -221,6 +222,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         window.setFormat(PixelFormat.TRANSLUCENT)
         //register for call events
         CallManager.setCallEventsListener(customCallEventsListener)
+        CallManager.setupCallActionListener(customCallEventsListener)
 
         initClickListeners()
         setUpCallDataAndUI()
@@ -503,9 +505,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         LogMessage.d(TAG, "$CALL_UI answer()")
         if (isAnswerCalled.compareAndSet(false, true)) {
             CallManager.answerCall(object : CallActionListener {
-                override fun onResponse(isSuccess: Boolean, message: String) {
-                    LogMessage.d(TAG, "$CALL_UI answer() success: $isSuccess")
-                    setUpCallUI()
+                override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
+                    val errorMessage = flyException?.message ?: ""
+                    LogMessage.d(TAG, "$CALL_UI answer() success: $isSuccess message:${errorMessage}")
+                    if(isSuccess)
+                        setUpCallUI()
+                    else
+                        Toast.makeText(this@GroupCallActivity,errorMessage,Toast.LENGTH_SHORT)
                 }
             })
         }
@@ -529,7 +535,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     ) {
         LogMessage.d(
             TAG,
-            "$CALL_UI $JOIN_CALL disconnectCall IN UI isDisconnectCalled: $isDisconnectCalled isNotFromRetry:$isNotFromRetry"
+            "$CALL_UI $JOIN_CALL #disconnect ui start disconnectCall IN UI isDisconnectCalled: $isDisconnectCalled isNotFromRetry:$isNotFromRetry"
         )
         if (isDisconnectCalled.compareAndSet(false, true)) {
             // The below code execution is guaranteed to be called only once
@@ -542,6 +548,10 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             else
                 finish()
         }
+        LogMessage.d(
+            TAG,
+            "$CALL_UI $JOIN_CALL #disconnect ui done!!"
+        )
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -629,7 +639,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             participantListFragment = ParticipantsListFragment.newInstance(
                 groupId,
                 groupId.isNullOrEmpty(),
-                CallManager.getCallUsersList()
+                CallManager.getCallUsersList(),
+                customCallEventsListener
             )
             val fragmentTransaction: FragmentTransaction =
                 supportFragmentManager.beginTransaction()
@@ -666,6 +677,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     public override fun onDestroy() {
         LogMessage.d(TAG, "$CALL_UI onDestroy  called()")
         CallManager.removeCallEventsListener(customCallEventsListener)
+        CallManager.removeCallActionListener(customCallEventsListener)
         CallUtils.setVideoViewInitialization(false)
         super.onDestroy()
     }
@@ -738,7 +750,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
     }
 
-    private inner class CustomCallEventsListener : CallEventsListener {
+    private inner class CustomCallEventsListener : CallEventsListener,CallActionListener{
         override fun onCallStatusUpdated(callStatus: String, userJid: String) {
             handleCallStatusMessages(callStatus, userJid)
         }
@@ -868,7 +880,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             LogMessage.d(TAG, "$CALL_UI handleToastRemoteOtherBusy   userJid: $userJid ")
             val remoteBusyUserName: String = CallManager.getUserName(userJid)
             if (remoteBusyUserName.equals(
-                    com.contusfly.utils.Constants.EMPTY_STRING,
+                    Constants.EMPTY_STRING,
                     false
                 )
             )
@@ -880,7 +892,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         private fun handleToastRemoteEngaged(userJid: String) {
             val remoteEngageUserName: String = CallManager.getUserName(userJid)
             if (remoteEngageUserName.equals(
-                    com.contusfly.utils.Constants.EMPTY_STRING,
+                    Constants.EMPTY_STRING,
                     false
                 )
             )
@@ -944,6 +956,15 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 }
 
                 else -> handleCallVideoMessages(callAction, userJid)
+            }
+        }
+
+        override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
+            LogMessage.d(TAG, "$CALL_UI onResponse")
+            val errorMessage = flyException?.message ?: ""
+            runOnUiThread {
+                if(!isSuccess)
+                    Toast.makeText(this@GroupCallActivity, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
     }

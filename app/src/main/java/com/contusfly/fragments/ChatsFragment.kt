@@ -365,13 +365,13 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
                     }
                 }
                 ChatSettingsAction.EXPORT_CALL_LOG ->{
-                    CallLogger().callLogExportToChosenApp(context)
+                    CallLogger.callLogExportToChosenApp(context)
                 }
             }
         }else{
             when(chatSettingsAction){
                 ChatSettingsAction.EXPORT_CALL_LOG->{
-                    CallLogger().deleteCallLogFile(context)
+                    CallLogger.deleteCallLogFile(context)
                 }
             }
         }
