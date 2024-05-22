@@ -46,8 +46,10 @@ android {
     buildTypes {
         debug {
             buildConfigField 'Boolean', 'IS_QA_BUILD', 'true'
+            //buildConfigField 'String', 'SDK_BASE_URL', '"https://api-preprod-sandbox.mirrorfly.com/api/v1/"'
             buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
+            //buildConfigField 'Boolean', 'IS_TRIAL_LICENSE', 'true'
             buildConfigField "String", "SUPPORT_MAIL", '"contussupport@gmail.com"'
             resValue("string", "app_name", "UI Kit")
             shrinkResources false
@@ -57,11 +59,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
+
         release {
             initWith debug
             buildConfigField 'Boolean', 'IS_QA_BUILD', 'true'
+            //buildConfigField 'String', 'SDK_BASE_URL', '"https://api-preprod-sandbox.mirrorfly.com/api/v1/"'
             buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
+            //buildConfigField 'Boolean', 'IS_TRIAL_LICENSE', 'true'
             buildConfigField "String", "SUPPORT_MAIL", '"contussupport@gmail.com"'
             resValue("string", "app_name", "UI Kit")
             shrinkResources false
@@ -202,7 +207,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.12.0'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.12.4'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'

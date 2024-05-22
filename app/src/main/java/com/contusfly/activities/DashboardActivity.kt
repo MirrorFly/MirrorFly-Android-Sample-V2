@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.contusfly.*
 import com.contusfly.activities.parent.DashboardParent
 import com.contusfly.adapters.ViewPagerAdapter
+import com.contusfly.call.MissedCallNotificationUtils.clearMissedCallNotificationDetails
 import com.contusfly.call.calllog.CallHistoryFragment
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.ActivityDashboardBinding
@@ -202,6 +203,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                     1 -> {
                         swipeRefreshLayout.isEnabled = false
                         dashboardBinding.newChatFab.visibility = View.GONE
+                        clearMissedCallNotificationDetails()
                         //mark missed calls as read
                         CallLogManager.markAllUnreadMissedCallsAsRead()
                         validateMissedCallsCount()
@@ -398,9 +400,9 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         viewModel.getPrivateChatStatus()
         viewModel.getArchivedChatStatus()
         viewModel.updateUnReadChatCount()
-        callLogviewModel.resetPagination()
+        callLogviewModel.resetPagination(context = context!!)
         if (callLogviewModel.isCallLogScreenInitiated()) {
-            callLogviewModel.addLoaderToTheList()
+            callLogviewModel.addLoaderToTheList(context = context)
             callLogviewModel.getCallLogsList(isLoadCallLogsOnMainThread)
             CallUtils.setCallsTabToBeShown(false)
         }
@@ -573,14 +575,16 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                 checkListForMuteUnMuteIcon.add(recentList[i].isMuted)
 
         when {
-            checkListForMuteUnMuteIcon.contains(false) -> {
-                actionModeMenu.findItem(R.id.action_mute).isVisible = true
-                actionModeMenu.findItem(R.id.action_unmute).isVisible = false
-            }
             checkListForMuteUnMuteIcon.contains(true) -> {
                 actionModeMenu.findItem(R.id.action_mute).isVisible = false
                 actionModeMenu.findItem(R.id.action_unmute).isVisible = true
             }
+
+            checkListForMuteUnMuteIcon.contains(false) -> {
+                actionModeMenu.findItem(R.id.action_mute).isVisible = true
+                actionModeMenu.findItem(R.id.action_unmute).isVisible = false
+            }
+
             else -> {
                 actionModeMenu.findItem(R.id.action_mute).isVisible = false
                 actionModeMenu.findItem(R.id.action_unmute).isVisible = false
@@ -832,5 +836,6 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         super.onConnected()
         LogMessage.d("DashboardActivity", "#dashboard #recent onConnected chatHistoryMigration")
         viewModel.chatHistoryMigration()
+        callLogviewModel.uploadUnSyncedCallLogs()
     }
 }

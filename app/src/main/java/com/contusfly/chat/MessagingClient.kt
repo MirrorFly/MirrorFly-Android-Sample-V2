@@ -664,10 +664,14 @@ constructor(val application: Application) : CoroutineScope {
     fun composeVideoMessage(
         toJid: String, videoFilePath: String, videoCaption: String = Constants.EMPTY_STRING,
         replyMessageId: String = Constants.EMPTY_STRING, mentionedUsersIds: List<String>
-    ): Pair<Boolean, MessageObject?> {
+    ): Triple<Boolean,Boolean, MessageObject?> {
 
         val isVideoDurationUnderLimit = true
-
+        var isValidVideoSize = true
+        if (!PickFileUtils.checkFileSize(videoFilePath, Constants.MAX_VIDEO_UPLOAD_SIZE)) {
+            isValidVideoSize = false
+            return Triple(isVideoDurationUnderLimit, isValidVideoSize, null)
+        }
         val messageObject = MessageObject(
             toJid,
             Constants.MSG_TYPE_VIDEO,
@@ -677,7 +681,7 @@ constructor(val application: Application) : CoroutineScope {
             mentionedUsersIds
         )
 
-        return Pair(isVideoDurationUnderLimit, messageObject)
+        return Triple(isVideoDurationUnderLimit, isValidVideoSize, messageObject)
     }
 
 

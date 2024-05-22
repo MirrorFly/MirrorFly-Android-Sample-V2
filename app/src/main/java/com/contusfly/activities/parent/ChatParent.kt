@@ -13,11 +13,9 @@ import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.location.LocationManager
-import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
-import android.media.MediaPlayer.OnCompletionListener
 import android.net.Uri
 import android.os.*
 import android.provider.ContactsContract
@@ -626,11 +624,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         showViews(viewChat, imgSend)
         makeViewsGone(txtNoMsg)
         layoutRedirectLastMessage.setOnClickListener {
-            if (parentViewModel.isLoadNextAvailable()) {
-                messageId = Constants.EMPTY_STRING
-                parentViewModel.loadInitialMessages(messageId)
-            } else
-                listChats.scrollToPosition(mainList.size - 1)
+            listChats.scrollToPosition(mainList.size - 1)
         }
 
         initRecyclerView()
@@ -936,8 +930,14 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 it.get(R.id.action_audio_call).isVisible = ChatManager.getAvailableFeatures().isOneToOneCallEnabled
                 it.get(R.id.action_video_call).setVisible(ChatManager.getAvailableFeatures().isOneToOneCallEnabled)
             } else {
-                it.get(R.id.action_audio_call).isVisible = ChatManager.getAvailableFeatures().isGroupCallEnabled
-                it.get(R.id.action_video_call).setVisible(ChatManager.getAvailableFeatures().isGroupCallEnabled)
+                it.get(R.id.action_audio_call).isVisible = ChatManager.getAvailableFeatures().isGroupCallEnabled && parentViewModel.isGroupUserExist(
+                    chat.toUser,
+                    SharedPreferenceManager.getCurrentUserJid()
+                )
+                it.get(R.id.action_video_call).setVisible(ChatManager.getAvailableFeatures().isGroupCallEnabled && parentViewModel.isGroupUserExist(
+                    chat.toUser,
+                    SharedPreferenceManager.getCurrentUserJid()
+                ))
             }
         }
     }
@@ -1424,12 +1424,23 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private fun updateCopyMessageMenu(menu: Menu) {
         try {
             if (clickedMessages.size > 0) {
-                val chat = getMessagebyID(clickedMessages[0])
-                menu.get(R.id.action_copy).isVisible = chat != null && chat.messageType == MessageType.TEXT || (null != chat && chat.mediaChatMessage.mediaCaptionText != null && !chat.mediaChatMessage.mediaCaptionText.equals(""))
+                val chatMessage = getMessagebyID(clickedMessages[0])
+                menu.get(R.id.action_copy).isVisible = chatMessage != null && chatMessage.messageType == MessageType.TEXT || (null != chatMessage && chatMessage.mediaChatMessage.mediaCaptionText != null && !chatMessage.mediaChatMessage.mediaCaptionText.equals(""))
+                if (chatType == ChatType.TYPE_GROUP_CHAT)
+                    menu.get(R.id.action_reply).isVisible = parentViewModel.isGroupUserExist(
+                        chat.toUser,
+                        SharedPreferenceManager.getCurrentUserJid())
             }
         } catch(e:Exception){
             LogMessage.e(TAG,e.toString())
         }
+    }
+
+    fun isGroupUserAvailableInGroupChatOrSingleChat(): Boolean {
+        return chatType == ChatType.TYPE_CHAT || (chatType == ChatType.TYPE_GROUP_CHAT && parentViewModel.isGroupUserExist(
+            chat.toUser,
+            SharedPreferenceManager.getCurrentUserJid())
+                )
     }
     private fun updateEditMessageMenu(menu: Menu) {
         try {
@@ -1833,8 +1844,15 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             return
         }
         LogMessage.d(TAG,"#chat #sendMessageSuccess load message available-->"+parentViewModel.isLoadNextAvailable())
-        if(parentViewModel.isLoadNextAvailable()){
-            parentViewModel.loadNextData()
+        if (parentViewModel.isLoadNextAvailable()) {
+            if (!parentViewModel.getFetchingIsInProgress()) {
+                parentViewModel.loadNextData()
+            }
+            else{
+                parentViewModel.addSentMessage(message)
+            }
+        } else {
+            parentViewModel.addSentMessage(message) //If Sent message time is less than last received message time then it will add to the message list and shown in UI
         }
         handleUnreadMessageSeparator(true)
         Handler(Looper.getMainLooper()).postDelayed({
@@ -2329,7 +2347,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             val messageToShow = "Are you sure you want to delete selected ${if (clickedMessages.size > 1) "Messages" else "Message"}?"
             val isRecallAvailable = parentViewModel.isMessagesCanBeRecalled(clickedMessages)
             commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.DELETE_CHAT
-            if (isRecallAvailable.first) {
+            if (isRecallAvailable.first && isGroupUserAvailableInGroupChatOrSingleChat()) {
                 commonAlertDialog.showAlertDialogWithRecall(messageToShow, getString(R.string.action_delete_for_me),
                         getString(R.string.action_cancel), getString(R.string.action_delete_for_all), CommonAlertDialog.DIALOGTYPE.DIALOG_TRIPLE, isRecallAvailable.second)
             } else {
@@ -2523,7 +2541,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         if (parentViewModel.isGroupUserExist(chat.toUser, SharedPreferenceManager.getCurrentUserJid())) {
             scheduleIconVisibility()
             setBottomChatFooterView()
+            setCallButtonVisibility()
         } else {
+            setCallButtonVisibility()
             hideDismissSchedulePopup()
             if(isGroupMemberListShowing) {
                 groupUserTagLayout.visibility = View.GONE
@@ -3126,21 +3146,28 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
     }
 
-    fun playForgroundNotificationSound(context:Context) {
+    fun playForegroundNotificationSound(context:Context) {
         try {
             val audioManager = context.getSystemService(AUDIO_SERVICE) as AudioManager
-            val audioAttributes = AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
-                .setLegacyStreamType(AudioManager.STREAM_RING)
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE).build()
-            val sessionId: Int = audioManager.generateAudioSessionId()
-            val notificationSoundUri = Uri.parse(SharedPreferenceManager.getString(Constants.NOTIFICATION_URI))
-            if(notificationSoundUri != null && !(notificationSoundUri.toString().equals("None") || notificationSoundUri.toString().equals("\"None\""))){
-                var mediaPlayer = MediaPlayer.create(context, R.raw.forground_notification,audioAttributes,sessionId)
-                mediaPlayer?.setOnCompletionListener(OnCompletionListener {
-                    mediaPlayer?.release()
-                })
-                mediaPlayer?.start()
+            val resultNotification = audioManager.requestAudioFocus(
+                null,
+                AudioManager.STREAM_RING,
+                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
+            )
+            if (resultNotification == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                val notificationSoundUri =
+                    Uri.parse(SharedPreferenceManager.getString(Constants.NOTIFICATION_URI))
+                if (notificationSoundUri != null && !(notificationSoundUri.toString()
+                        .equals("None") || notificationSoundUri.toString().equals("\"None\""))
+                ) {
+                    var mediaPlayer = MediaPlayer.create(
+                        context,
+                        R.raw.forground_notification)
+                    mediaPlayer?.setOnCompletionListener {
+                        mediaPlayer.release()
+                    }
+                    mediaPlayer?.start()
+                }
             }
         } catch(e:Exception) {
             LogMessage.e(TAG, e.message)

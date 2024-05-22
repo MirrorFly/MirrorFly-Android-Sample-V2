@@ -172,11 +172,16 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
      */
     private fun uploadImgProgressView(messageItem: ChatMessage, videoViewHolder: VideoSentViewHolder, fileUploadStatus: String) {
         with(videoViewHolder) {
-            val videoProgressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaProgressStatus()))
+            val videoProgressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaProgressStatus))
             if (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
-                viewUploadProgress.gone()
-                progressSender.gone()
-                progressSenderRotation.gone()
+                if (messageItem.mediaChatMessage.mediaLocalStoragePath != null && messageItem.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
+                        messageItem.mediaChatMessage.mediaLocalStoragePath
+                    )
+                ) {
+                    viewUploadProgress.gone()
+                    progressSender.gone()
+                    progressSenderRotation.gone()
+                }
             }else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
                 && videoProgressPercentage > 0 && videoProgressPercentage < 100) {
                 progressSender.show()
@@ -297,9 +302,14 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
             )
 
             if (fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
-                viewDownloadProgress.gone()
-                downloadProgressBuffer.gone()
-                progressRev.gone()
+                if (messageItem.mediaChatMessage.mediaLocalStoragePath != null && messageItem.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
+                        messageItem.mediaChatMessage.mediaLocalStoragePath
+                    )
+                ) {
+                    viewDownloadProgress.gone()
+                    downloadProgressBuffer.gone()
+                    progressRev.gone()
+                }
             }else if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING && progressPercentage in 1..99) {
                 progressRev.show()
                 downloadProgressBuffer.gone()

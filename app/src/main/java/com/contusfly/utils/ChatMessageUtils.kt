@@ -16,6 +16,7 @@ import com.mirrorflysdk.api.ChatManager.applicationContext
 import com.mirrorflysdk.api.MessageStatus
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.helpers.ResourceHelper
+import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
@@ -86,6 +87,11 @@ object ChatMessageUtils {
 
     fun setFavouriteStatus(imgFav: ImageView?, isFav: Boolean) {
         if (isFav) imgFav!!.show() else imgFav!!.gone()
+    }
+
+    fun isMediaExists(filePath: String): Boolean {
+        val file = File(filePath)
+        return file.exists()
     }
 
     /**

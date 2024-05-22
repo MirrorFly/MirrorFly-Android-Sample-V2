@@ -22,7 +22,7 @@ class PermissionAlertDialog(private var activity: Activity) {
 
     fun showPermissionInstructionDialog(
         permissionType: String,
-        permissionDialogListener: PermissionDialogListener
+        permissionDialogListener: PermissionDialogListener, isFromAudio:Boolean = false
     ) {
                 try {
                     var dialogBinding: ViewBinding? = null
@@ -55,6 +55,9 @@ class PermissionAlertDialog(private var activity: Activity) {
                             val inflater: LayoutInflater = activity.layoutInflater
                             dialogBinding = PermissionInstructionDialogBinding.inflate(inflater)
                             dialogBinding.dialogIcon.setImageResource(getDialogIcon(permissionType))
+                        if(isFromAudio)
+                            dialogBinding.dialogDescription.text = getDialogDescription(AUDIO_MUSIC_PERMISSION)
+                        else
                             dialogBinding.dialogDescription.text = getDialogDescription(permissionType)
                             dialogBuilder.apply {
                                 setCancelable(false)
@@ -94,6 +97,7 @@ class PermissionAlertDialog(private var activity: Activity) {
             AUDIO_CALL_PERMISSION_DENIED -> activity.getString(R.string.audio_call_permission_denied_alert_label)
             VIDEO_CALL_PERMISSION -> activity.getString(R.string.video_call_permission_alert_label)
             VIDEO_CALL_PERMISSION_DENIED -> activity.getString(R.string.video_call_permission_denied_alert_label)
+            AUDIO_MUSIC_PERMISSION -> activity.getString(R.string.audio_music_permission_alert_label)
             NOTIFCATION_PERMISSION_DENIED -> activity.getString(R.string.notification_permission_denied_alert_label)
             NOTIFICATION_LOCKED_STATE_PERMISSION_DENIED -> activity.getString(R.string.notification_permission_locked_state_denied_alert_label)
             else -> activity.getString(R.string.contact_and_media_permission_alert_label)
@@ -138,6 +142,7 @@ class PermissionAlertDialog(private var activity: Activity) {
         const val AUDIO_CALL_PERMISSION = "audio_call_permission"
         const val AUDIO_CALL_PERMISSION_DENIED = "audio_call_permission_denied"
         const val VIDEO_CALL_PERMISSION = "video_call_permission"
+        const val AUDIO_MUSIC_PERMISSION = "audio_music_permission"
         const val VIDEO_CALL_PERMISSION_DENIED = "video_call_permission_denied"
         const val NOTIFCATION_PERMISSION_DENIED = "notification_permission_denied"
         const val NOTIFICATION_LOCKED_STATE_PERMISSION_DENIED = "notification_permission_locked_state_denied"

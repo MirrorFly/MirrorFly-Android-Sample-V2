@@ -79,6 +79,7 @@ fun CallManager.getCallConnectedStatus(context: Context): String {
 
 fun CallManager.getOutGoingCallStatus(context: Context): String {
     val localCallStatus = getCallStatus(getCurrentUserId())
+    LogMessage.d(TAG, "${CallConstants.CALL_UI} ${CallConstants.JOIN_CALL} ${CallConstants.CALL_FLOW_TAG} getOutGoingCallStatus : $localCallStatus")
     return when {
         isCallTryingToConnect(localCallStatus) -> context.getString(R.string.trying_to_connect)
         isCallTimeOut(localCallStatus) -> context.getString(R.string.call_try_again_info)
@@ -90,10 +91,9 @@ fun CallManager.getOutGoingCallStatus(context: Context): String {
 fun CallManager.isReconnecting() = getCallStatus(getCurrentUserId()) == CallStatus.RECONNECTING
 
 fun isCallTryingToConnect(callStatus: String) = callStatus.isEmpty()
-        || callStatus == CallStatus.DISCONNECTED
+        || callStatus == CallStatus.DISCONNECTED || callStatus == CallStatus.CONNECTING
 
-fun isCallConnecting(callStatus: String) =
-    callStatus == CallStatus.CONNECTING || callStatus == CallStatus.CONNECTED
+fun isCallConnecting(callStatus: String) = callStatus == CallStatus.RINGING
 
 fun isCallTimeOut(callStatus: String) =
     callStatus.isNotBlank() && (callStatus == CallStatus.CALL_TIME_OUT || callStatus == CallStatus.OUTGOING_CALL_TIME_OUT)

@@ -333,12 +333,13 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
                 messageContent = setRecalledMessageText(holder, isFromSender)
             } else {
                 messageContent = recent.lastMessageContent
-                if (chatMessage!!.messageChatType.name == Constants.GROUP_CHAT && !isFromSender && recent.getDisplayName() != chatMessage.senderUserName &&
-                        !recent.lastMessageType.equals(Constants.MSG_TYPE_NOTIFICATION, ignoreCase = true)) {
-                    setGroupMessageSenderName(holder, chatMessage)
-                } else holder.textChatPerson.visibility = View.GONE
-                msgType = chatMessage.messageType.name
+                msgType = chatMessage!!.messageType.name
             }
+            if (chatMessage!!.messageChatType.name == Constants.GROUP_CHAT && !isFromSender && recent.getDisplayName() != chatMessage.senderUserName &&
+                !recent.lastMessageType.equals(Constants.MSG_TYPE_NOTIFICATION, ignoreCase = true)
+            ) {
+                setGroupMessageSenderName(holder, chatMessage)
+            } else holder.textChatPerson.visibility = View.GONE
         } catch (e: Exception) {
             LogMessage.e(TAG, e)
         }

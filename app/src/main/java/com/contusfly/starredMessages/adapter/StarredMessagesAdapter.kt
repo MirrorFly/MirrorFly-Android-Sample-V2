@@ -49,6 +49,7 @@ import com.contusfly.chat.MediaController
 import com.contusfly.chat.reply.ReplyMessageUtils
 import com.contusfly.chat.reply.ReplyViewUtils
 import com.contusfly.groupmention.MentionUtils
+import com.contusfly.interfaces.AudioPlayItemViewSetListener
 import com.contusfly.interfaces.MessageItemListener
 import com.contusfly.interfaces.OnChatItemClickListener
 import com.contusfly.models.ChatItemRowModel
@@ -79,7 +80,8 @@ import java.util.*
  * @author ContusTeam <developers@contus.in>
  * @version 1.0
  */
-class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(), MessageItemListener {
+class StarredMessagesAdapter(val listChats: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), MessageItemListener,
+    AudioPlayItemViewSetListener {
 
     private val SENDER_HEADER = 1
 
@@ -840,7 +842,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             replyViewUtils!!.showSenderReplyWindow(starredAudioSenderViewHolder, item, context!!)
             mMediaController!!.checkStateOfPlayer(starredAudioSenderViewHolder.imgAudioPlay,
                     starredAudioSenderViewHolder.audioMirrorFlySeekBar,
-                    starredAudioSenderViewHolder.txtAudioDuration, position)
+                    starredAudioSenderViewHolder.txtAudioDuration, position,  starredMessageData as ArrayList<ChatMessage>)
             setListenersForAudioMessages(starredAudioSenderViewHolder, item, position)
             senderItemClick(starredAudioSenderViewHolder.viewRowItem, item, position)
             uploadClick(starredAudioSenderViewHolder.viewRetry, starredAudioSenderViewHolder.viewCarbonRetry, starredAudioSenderViewHolder.progressUploadDownloadLayout, item)
@@ -880,7 +882,7 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 starredAudioReceiverViewHolder.txtAudioDuration, false)
             mMediaController!!.checkStateOfPlayer(starredAudioReceiverViewHolder.imgAudioPlay,
                     starredAudioReceiverViewHolder.audioMirrorFlySeekBar,
-                    starredAudioReceiverViewHolder.txtAudioDuration, position)
+                    starredAudioReceiverViewHolder.txtAudioDuration, position,  starredMessageData as ArrayList<ChatMessage>)
             replyViewUtils!!.showReceiverReplyWindow(starredAudioReceiverViewHolder, item, context!!)
             setListenersForReceiverAudioMessages(starredAudioReceiverViewHolder, item, position)
             receiverItemClick(starredAudioReceiverViewHolder.viewRowItem, item, position)
@@ -1447,15 +1449,25 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                                       seekBar: SeekBar, durationView: TextView, doesSentMessage: Boolean) {
         playImage.setOnClickListener { _: View? ->
             val filePath = Utils.returnEmptyStringIfNull(chatMessage.mediaChatMessage.mediaLocalStoragePath)
+            if(mMediaController!!.currentAudioPlayMessageID.isNotEmpty()){
+                mMediaController!!.currentAudioPosition = getMessageAudioPosition(mMediaController!!.currentAudioPlayMessageID)
+            }
             if (mMediaController!!.currentAudioPosition != -1 && position != mMediaController!!.currentAudioPosition) mMediaController!!.resetAudioPlayer(false)
             mMediaController!!.setMediaResource(filePath, chatMessage.mediaChatMessage.mediaDuration, playImage, doesSentMessage)
+            mMediaController!!.setListener(this@StarredMessagesAdapter)
+            mMediaController!!.setmainList(starredMessageData as ArrayList<ChatMessage>)
             mMediaController!!.setMediaSeekBar(seekBar)
             mMediaController!!.setMediaTimer(durationView)
             mMediaController!!.currentAudioPosition = position
+            mMediaController!!.currentAudioPlayMessageID = chatMessage.messageId
             mMediaController!!.handlePlayer(doesSentMessage)
         }
         setAudioSeekBarListener(chatMessage, holder, playImage, seekBar, durationView)
     }
+
+    private fun getMessageAudioPosition(messageId: String) =
+        starredMessageData.indexOfFirst { it.messageId == messageId }
+
 
     /**
      * Handle the audio seekbar click
@@ -1476,9 +1488,28 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     progress: Int,
                     fromUser: Boolean
                 ) {
-                        mMediaController?.updateSeekbarChangesForStarredMsg(progress,layoutPosition,
-                            media.mediaLocalStoragePath,fromUser,durationView,
-                            starredMsgSeekBar, playImage)
+
+                    if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION) {
+
+                        if(mMediaController?.currentAudioPlayMessageID!!.isNotEmpty()) {
+                            mMediaController?.currentAudioPosition = getMessageAudioPosition(
+                                mMediaController?.currentAudioPlayMessageID!!)
+                        }
+
+                        LogMessage.d("AUDIO_SEEKBAR","seekbar change currentAudioPosition ${mMediaController?.currentAudioPosition}")
+
+                        if(holder.absoluteAdapterPosition == mMediaController?.currentAudioPosition) {
+
+                            mMediaController?.updateSeekbarChangesForStarredMsg(
+                                progress, layoutPosition,
+                                media.getMediaLocalStoragePath(), fromUser, durationView,
+                                starredMsgSeekBar, playImage
+                            )
+                        }
+
+                    } else {
+                        starredMsgSeekBar.progress = 0
+                    }
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -1876,5 +1907,41 @@ class StarredMessagesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 
     override fun setStarredCaptionStatus(isStarred: Boolean, imageView: ImageView) {
         if (isStarred) imageView.show() else imageView.gone()
+    }
+
+
+    override fun currentlyPlayItem(position: Int, progress: Int, playduration: String) {
+        try {
+            com.mirrorflysdk.flycommons.LogMessage.d("AUDIO_CHECKING","currentlyPlayItem() listerner called position $position progress $progress playduration $playduration")
+            var holder = listChats.findViewHolderForAdapterPosition(position)
+            if(holder != null) {
+                if(holder is AudioSentViewHolder) {
+                    LogMessage.d("AUDIO_CHECKING","currentlyPlayItem() AudioSentViewHolder is playing...")
+                    holder.audioMirrorFlySeekBar.progress = progress
+                    holder.txtAudioDuration.text = playduration
+                } else if(holder is AudioReceivedViewHolder) {
+                    LogMessage.d("AUDIO_CHECKING","currentlyPlayItem() AudioReceivedViewHolder is playing...")
+                    holder.audioMirrorFlySeekBar.progress = progress
+                    holder.txtAudioDuration.text = playduration
+                }
+            }
+
+        } catch(e: Exception) {
+            com.mirrorflysdk.flycommons.LogMessage.e("AUDIO_CHECKING","Exception $e")
+        }
+    }
+
+    /**
+     * Stop the player of the Media player.
+     */
+    fun pauseMediaPlayer() {
+        try {
+            mMediaController?.mediaPlayer?.let {
+                if (it.isPlaying)
+                    mMediaController?.pausePlayer()
+            }
+        } catch(e: Exception){
+            LogMessage.e("Error",e.toString())
+        }
     }
 }

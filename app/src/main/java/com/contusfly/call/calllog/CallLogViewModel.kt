@@ -1,5 +1,6 @@
 package com.contusfly.call.calllog
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -56,8 +57,9 @@ constructor(private val repository: CallLogRepository, private val apiCalls: Api
         }
     }
 
-    public fun resetPagination() {
-        callLogAdapterList.clear()
+    public fun resetPagination(context: Context) {
+        if (com.contusfly.isInternetAvailable(context))
+            callLogAdapterList.clear()
         isFetching = false
         currentPage = 0
         totalPages = 1
@@ -112,8 +114,8 @@ constructor(private val repository: CallLogRepository, private val apiCalls: Api
         removeLoader.postValue(true)
     }
 
-    fun addLoaderToTheList(fromCallLog : Boolean = false) {
-        resetPagination()
+    fun addLoaderToTheList(fromCallLog : Boolean = false,context: Context?=null) {
+        resetPagination(context!!)
         fromCallLogScreen = fromCallLog
     }
 

@@ -118,7 +118,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     private var smartReply:String ?= null
 
-    private var forwardClickedPostition:Int = -1
+    private var forwardClickedItem:ChatMessage?=null
 
     private var selectedReportMessage = Constants.EMPTY_STRING
 
@@ -286,7 +286,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             ) {
                 removeUnReadMsgSeparatorOnMessageReceiver()
                 loadNextData()
-                playForgroundNotificationSound(this)
+                playForegroundNotificationSound(this)
             }
         }
     }
@@ -544,14 +544,17 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     private fun initChatAdapter() {
-        chatAdapter = ChatAdapter(mainList, clickedMessages, chat.chatType, this, userJid)
+        chatAdapter = ChatAdapter(mainList, clickedMessages, chat.chatType, this, userJid, listChats =  listChats)
         chatAdapter.hasStableIds()
         listChats.setHasFixedSize(true)
         listChats.adapter = chatAdapter
         chatAdapter.setOnDownloadClickListener(this)
         val messageSwipeController = MessageSwipeController(this, object : MessageSwipeController.SwipeControllerActions {
             override fun showSwipeInReplyUI(position: Int) {
-                if (profileDetails.isBlocked || profileDetails.isAdminBlocked)
+                if (profileDetails.isBlocked || profileDetails.isAdminBlocked || (chatType == ChatType.TYPE_GROUP_CHAT && !parentViewModel.isGroupUserExist(
+                        chat.toUser,
+                        SharedPreferenceManager.getCurrentUserJid()
+                    )))
                     return
                 Handler(Looper.getMainLooper()).postDelayed({
                     isReplyTagged = true
@@ -654,11 +657,21 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     private fun highlightGivenMessage() {
-        if (mainList.isNotEmpty()) {
-            if (messageId.isNotEmpty() && messageId != unreadMessageTypeMessageId)
-                highlightGivenMessageId(messageId)
-            else
-                listChats.scrollToPosition(mainList.size - 1)
+        try {
+            if (mainList.isNotEmpty()) {
+                if (messageId.isNotEmpty() && messageId != unreadMessageTypeMessageId)
+                    highlightGivenMessageId(messageId)
+                else {
+                    val tempMessage = mainList.lastOrNull()
+                    if (tempMessage != null) {
+                        scrollPosition(tempMessage)
+                    } else {
+                        listChats.scrollToPosition(mainList.size - 1)
+                    }
+                }
+            }
+        }catch (e:Exception){
+            LogMessage.e(TAG,e.toString())
         }
     }
 
@@ -1452,7 +1465,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 clickDone = true
             }
             R.id.action_reply -> {
-                if (!profileDetails.isAdminBlocked) {
+                if (isAdminAndUserProfileNotBlocked()) {
                     isReplyTagged = true
                     replyMessageActionMenuClicked()
                     chatMessageEditText.showSoftKeyboard()
@@ -1470,6 +1483,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             else -> clickDone = false
         }
         return clickDone
+    }
+
+    private fun isAdminAndUserProfileNotBlocked(): Boolean {
+        return !profileDetails.isAdminBlocked && !profileDetails.isBlocked
     }
 
     private fun launchEditMessageActivity(){
@@ -1801,7 +1818,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 if (clickedMessages.isNotEmpty())
                     forwardMessageActionMenuClicked(clickedMessages)
                 else
-                    senderMediaForward(forwardClickedPostition)
+                    senderMediaForward(forwardClickedItem)
             } else {
                 CustomToast.show(context, data.getMessage())
             }
@@ -1850,9 +1867,13 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             handleCommonDeleteOperation(isRecalled)
             smartReplyForPreviousMessage()
         } else if (position == 2) {
-            isRecalled = true
-            recallSelectedMessages()
-            handleCommonDeleteOperation(isRecalled)
+            if(isGroupUserAvailableInGroupChatOrSingleChat()) {
+                isRecalled = true
+                recallSelectedMessages()
+                handleCommonDeleteOperation(isRecalled)
+            }else{
+                actionMode?.finish()
+            }
         }
     }
 
@@ -2008,13 +2029,13 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 onItemClick(position)
             return
         }else{
-            forwardClickedPostition = position
+            forwardClickedItem = item
         }
 
         if (SystemClock.elapsedRealtime() - lastClickTime > 1000) {
             try {
                 hideKeyboard()
-                senderMediaForward(position)
+                senderMediaForward(item)
             } catch (e: Exception) {
                 LogMessage.e(Constants.TAG, e)
             }
@@ -2022,10 +2043,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         lastClickTime = SystemClock.elapsedRealtime()
     }
 
-    private fun senderMediaForward(position: Int) {
+    private fun senderMediaForward(item: ChatMessage?=null) {
         val forwardMediaMessageSelected: ChatMessage
-        if (position.isValidIndex()) {
-            forwardMediaMessageSelected = mainList[position]
+        if (item!=null) {
+            forwardMediaMessageSelected = item
             if (clickedMessages.contains(forwardMediaMessageSelected.messageId))
                 return
             if (!forwardMediaMessageSelected.isNotificationMessage() && (!FlyCore.isBusyStatusEnabled() || chat.getChatType().name == ChatType.TYPE_GROUP_CHAT)) {
@@ -2437,8 +2458,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
         if (!videoMessage.first)
             showAudioVideoDurationValidationDialog(videoDuration.toString(), Constants.MSG_TYPE_VIDEO)
+        else if(!videoMessage.second)
+            showUploadAlert(Constants.MAX_VIDEO_UPLOAD_SIZE)
         else
-            validateAndSendMessage(videoMessage.second!!)
+            validateAndSendMessage(videoMessage.third!!)
     }
 
     private fun sendImageFromGallery(intent: Intent) {
@@ -2665,6 +2688,9 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             leftUserJid=removedMemberJid
             viewModel.getProfileDetails()
             handleOnResume()
+            if (removedMemberJid == SharedPreferenceManager.getCurrentUserJid()) {
+                invalidateActionMode() // to update the action items.
+            }
         }
     }
 
@@ -3048,7 +3074,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
 
     private fun setMentionPopupBackground(){
-        if( groupTagAdapter.itemCount > 0 && isSoftKeyboardShown && isMentionTriggered) {
+        if( groupTagAdapter.itemCount > 0 && isSoftKeyboardShown && chatMessageEditText.text.toString().isNotEmpty()) {
             viewChat.background = ContextCompat.getDrawable(
                 this@ChatActivity,
                 R.drawable.bg_chat_footer_shape_mention

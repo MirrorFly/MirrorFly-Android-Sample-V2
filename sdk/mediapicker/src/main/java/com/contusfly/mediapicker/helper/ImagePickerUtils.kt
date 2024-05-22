@@ -1,7 +1,10 @@
 package com.contusfly.mediapicker.helper
 
 import android.text.TextUtils
+import android.util.Log
 import android.webkit.MimeTypeMap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -63,10 +66,13 @@ object ImagePickerUtils {
      *
      * @param path Path of the folder
      */
-     fun createFolderIfNotExist(path: String?) {
+    fun createFolderIfNotExist(path: String?): Boolean {
         val folder = File(path)
-        if (!folder.exists())
-            folder.mkdirs()
+        if (!folder.exists()) {
+            return folder.mkdirs()
+        }
+
+        return true
     }
 
     /**
@@ -82,6 +88,31 @@ object ImagePickerUtils {
         var bytesRead: Int
         while (input.read(buffer).also { bytesRead = it } != -1) {
             output.write(buffer, 0, bytesRead)
+        }
+    }
+
+
+    /**
+     * Copy stream from the input stream.
+     *
+     * @param input  Instance of InputStream
+     * @param output Instance of OutputStream
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Throws(IOException::class)
+    suspend fun copyStream(input: InputStream, output: OutputStream, isDocument: Boolean) {
+        withContext(Dispatchers.IO) {
+            try {
+                val buffer = ByteArray(8 * 1024)
+                var bytesRead: Int
+                while (input.read(buffer).also { bytesRead = it } != -1) {
+                    output.write(buffer, 0, bytesRead)
+                }
+            } catch (e:Exception) {
+                Log.e("copyStream","copyStream ${e.message}")
+            } finally {
+
+            }
         }
     }
 }

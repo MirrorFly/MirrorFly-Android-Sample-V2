@@ -141,10 +141,10 @@ class QuickShareActivity : BaseActivity(),
 
     private var commonAlertDialog: CommonAlertDialog? = null
 
-    private var videoLimit: Long = 0
-    private var audioLimit: Long = 0
-    private var fileLimit: Long = 0
-    private var imageLimit: Long = 0
+    private var videoLimit: Int = Constants.MAX_VIDEO_UPLOAD_SIZE
+    private var audioLimit: Int = Constants.MAX_AUDIO_SIZE_LIMIT
+    private var fileLimit: Int = Constants.MAX_DOCUMENT_UPLOAD_SIZE
+    private var imageLimit: Int = Constants.MAX_DOCUMENT_UPLOAD_SIZE
 
     internal lateinit var intent: Intent
 
@@ -206,7 +206,6 @@ class QuickShareActivity : BaseActivity(),
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        setLimitValues()
         fileList = ArrayList()
         initViews()
         setUpAlertDialogListeners()
@@ -701,19 +700,6 @@ class QuickShareActivity : BaseActivity(),
         return finalTimerString
     }
 
-    private fun setLimitValues() {
-        val videoLimitString: String =
-            SharedPreferenceManager.getString(Constants.VIDEO_LIMIT)
-        val audioLimitString: String =
-            SharedPreferenceManager.getString(Constants.AUDIO_LIMIT)
-        val fileLimitString: String =
-            SharedPreferenceManager.getString("fileSizeLimit")
-        videoLimit = if (videoLimitString.isEmpty()) 30000000 else java.lang.Long.valueOf(videoLimitString)
-        audioLimit = if (audioLimitString.isEmpty()) 30000000 else java.lang.Long.valueOf(audioLimitString) * 1000
-        fileLimit = if (fileLimitString.isEmpty()) 20000000 else java.lang.Long.valueOf(fileLimitString) * 1024
-        imageLimit = 10000000
-    }
-
     private fun parseVcard(uri: Uri): ArrayList<ContactMessage> {
         val contactMessages = ArrayList<ContactMessage>()
         val cr = contentResolver
@@ -902,6 +888,11 @@ class QuickShareActivity : BaseActivity(),
         }
     }
 
+    private fun convertInMb(fileSize: Long): Long {
+        val fileInKb = fileSize / 1024
+        return fileInKb / 1024
+    }
+
     private fun getFileNameSizeType(
         absolutePath: String,
         uri: Uri,
@@ -920,6 +911,9 @@ class QuickShareActivity : BaseActivity(),
             if (metaCursor.moveToFirst()) {
                 fileName = metaCursor.getString(0)
                 fileSize = metaCursor.getLong(1)
+            }else{
+                val file = File(absolutePath)
+                fileSize = file.length()
             }
         }
 
@@ -983,7 +977,7 @@ class QuickShareActivity : BaseActivity(),
 
     private fun validateVideoObject(fileObject: FileObject, fileValidation: HashMap<String, Boolean>) {
         if (fileObject.fileMimeType == FileMimeType.VIDEO) {
-            val size: Long = fileObject.size
+            val size: Long = convertInMb(fileObject.size)
             if (size > videoLimit) {
                 fileValidation[FileValidation.SIZE] = false
             }
@@ -993,7 +987,7 @@ class QuickShareActivity : BaseActivity(),
 
     private fun validateAudioObject(fileObject: FileObject, fileValidation: HashMap<String, Boolean>) {
         if (fileObject.fileMimeType == FileMimeType.AUDIO) {
-            val size: Long = fileObject.size
+            val size: Long = convertInMb(fileObject.size)
             if (size > audioLimit) {
                 fileValidation[FileValidation.SIZE] = false
             }
@@ -1004,7 +998,7 @@ class QuickShareActivity : BaseActivity(),
 
     private fun validateFileObject(fileObject: FileObject, fileValidation: HashMap<String, Boolean>) {
         if (fileObject.fileMimeType == FileMimeType.APPLICATION) {
-            val size: Long = fileObject.size
+            val size: Long = convertInMb(fileObject.size)
             if (size > fileLimit) {
                 fileValidation[FileValidation.SIZE] = false
             }
@@ -1013,7 +1007,7 @@ class QuickShareActivity : BaseActivity(),
 
     private fun validateImageObject(fileObject: FileObject, fileValidation: HashMap<String, Boolean>) {
         if (fileObject.fileMimeType == FileMimeType.IMAGE) {
-            val size: Long = fileObject.size
+            val size: Long =convertInMb(fileObject.size)
             if (size > imageLimit) {
                 fileValidation[FileValidation.SIZE] = false
             }

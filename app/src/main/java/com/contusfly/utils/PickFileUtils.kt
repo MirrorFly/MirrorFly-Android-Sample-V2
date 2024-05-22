@@ -123,7 +123,7 @@ object PickFileUtils {
     fun checkFileSize(filePath: String?, maxSize: Int): Boolean {
         if (filePath.isNullOrEmpty()) return true
         val file = File(filePath)
-        val fileInKb = file.length().toInt() / 1024
+        val fileInKb = file.length() / 1024
         val fileInMb = fileInKb / 1024
         return maxSize > fileInMb
     }

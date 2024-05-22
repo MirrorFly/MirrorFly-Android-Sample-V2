@@ -6,7 +6,7 @@ import android.os.Build
 import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationManagerCompat
 import com.contusfly.BuildConfig
-import com.contusfly.call.CallNotificationUtils
+import com.contusfly.call.MissedCallNotificationUtils
 import com.contusfly.utils.Constants
 import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SharedPreferenceManager
@@ -66,7 +66,7 @@ object AppNotificationManager {
             NotificationManagerCompat.from(context).cancel(Constants.NOTIFICATION_ID)
             NotificationBuilderBelow24.cancelNotifications()
         }
-        CallNotificationUtils.cancelNotifications()
+        MissedCallNotificationUtils.cancelNotifications()
     }
 
     fun clearConversationOnNotification(context: Context, jId:String) {

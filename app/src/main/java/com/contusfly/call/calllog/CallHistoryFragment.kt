@@ -257,7 +257,7 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
         callLogListener()
         setObservers()
         setListeners()
-        viewModel.addLoaderToTheList()
+        viewModel.addLoaderToTheList(context = context)
         viewModel.getCallLogsList(CallUtils.isCallsTabToBeShown())
         CallUtils.setCallsTabToBeShown(false)
     }
@@ -441,7 +441,7 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
 
             override fun onCallLogsUpdated() {
                 mAdapter.clearCallLogs()
-                viewModel.addLoaderToTheList()
+                viewModel.addLoaderToTheList(context = context)
                 viewModel.getCallLogsList(false)
                 Log.d(TAG, "Call Logs Updated")
                 (activity as DashboardActivity).validateMissedCallsCount()

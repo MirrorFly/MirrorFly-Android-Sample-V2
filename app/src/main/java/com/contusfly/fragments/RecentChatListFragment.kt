@@ -53,6 +53,7 @@ import com.contusfly.helpers.RecentChatPaginationScrollListener
 import com.contusfly.interfaces.PrivateChatReleaseListener
 import com.contusfly.privateChat.PrivateChatListActivity
 import com.contusfly.utils.SharedPreferenceManager
+import com.mirrorflysdk.activities.FlyBaseActivity
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import kotlinx.coroutines.launch
@@ -560,6 +561,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     private fun launchChatPage(){
+        FlyBaseActivity.hideSoftKeyboard(requireActivity())
         requireContext().launchActivity<ChatActivity> {
             putExtra(LibConstants.JID, mRecentSearchList[(activity as DashboardActivity).searchItemClickedPosition].jid.returnEmptyIfNull())
             putExtra(Constants.CHAT_TYPE, mRecentSearchList[(activity as DashboardActivity).searchItemClickedPosition].chatType)

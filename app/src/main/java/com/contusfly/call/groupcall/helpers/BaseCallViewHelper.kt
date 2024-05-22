@@ -778,6 +778,11 @@ class BaseCallViewHelper(
         durationHandler.removeCallbacks(hideOptionsRunnable)
         durationHandler.removeCallbacks(updateTimerThread)
         releaseSurfaceViews()
+        resetAnswerRejectCallButtonState()
+    }
+
+    private fun resetAnswerRejectCallButtonState(){
+        incomingCallViewHelper.resetButtonState()
     }
 
     /**
@@ -841,6 +846,8 @@ class BaseCallViewHelper(
             }
             animation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {
+                    if (callStatus == CallStatus.DISCONNECTED) // while disconnecting the call, simultaneously new call receives which showing the ui without closing the group call activity. so pre-set variables doesnt reset and which causes the issue couldnt able to accept the call.
+                        activity.finish()
                     /* not needed */
                 }
 

@@ -393,11 +393,11 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
      * @param itemView      the child item inside the view.
      */
     private fun doOnClick(view: View, message: ChatMessage?, itemView: View) {
-        if (MessageType.AUDIO == message!!.getMessageType()) {
-            val filePath = Utils.returnEmptyStringIfNull(message.getMediaChatMessage().getMediaLocalStoragePath())
-            audioPlayClick(filePath, message.getMediaChatMessage().getMediaDuration(), itemView.findViewById(R.id.image_audio_action),
+        if (MessageType.AUDIO == message!!.messageType) {
+            val filePath = Utils.returnEmptyStringIfNull(message.mediaChatMessage.mediaLocalStoragePath)
+            audioPlayClick(filePath, message.mediaChatMessage.mediaDuration, itemView.findViewById(R.id.image_audio_action),
                     itemView.findViewById(R.id.seek_audio_progress),
-                    itemView.findViewById(R.id.text_audio_duration), message.isMessageSentByMe())
+                    itemView.findViewById(R.id.text_audio_duration), message.isMessageSentByMe,message)
         } else view.setOnClickListener { chatClickUtils!!.handleOnListClick(message, this) }
     }
 
@@ -650,13 +650,48 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
      * chat activity.
      */
     private fun audioPlayClick(filePath: String, duration: Long, playImage: ImageView, seekBar: SeekBar,
-                               durationView: AppCompatTextView, doesSentMessage: Boolean) {
+                               durationView: AppCompatTextView, doesSentMessage: Boolean, message: ChatMessage) {
         playImage.setOnClickListener {
             mMediaController!!.setMediaResource(filePath, duration, playImage, doesSentMessage)
             mMediaController!!.setMediaSeekBar(seekBar)
             mMediaController!!.setMediaTimer(durationView)
+            mMediaController!!.currentAudioPosition = 0
+            mMediaController!!.currentAudioPlayMessageID = message.messageId
             mMediaController!!.handlePlayer(doesSentMessage)
         }
+        setAudioSeekBarListener(message,playImage,seekBar,durationView)
+
+    }
+
+    private fun setAudioSeekBarListener(
+        item: ChatMessage,
+        playImage: ImageView,
+        seekbar: SeekBar,
+        durationView: TextView
+    ) {
+        val media = item.mediaChatMessage
+        seekbar.setOnSeekBarChangeListener((object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar?,
+                progress: Int,
+                fromUser: Boolean
+            ) {
+
+                mMediaController?.updateSeekbarChanges(
+                    progress, 0,
+                    media.mediaLocalStoragePath, fromUser, durationView,
+                    seekbar, playImage
+                )
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                /*No Implementation Needed*/
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                mMediaController?.onStopTrackingTouch(seekBar, media.mediaLocalStoragePath)
+            }
+        }))
     }
 
     private fun replyView(layout: View, txtUsername: CustomTextView,

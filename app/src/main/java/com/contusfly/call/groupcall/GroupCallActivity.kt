@@ -176,10 +176,12 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     override fun onStart() {
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
-        LogMessage.d(TAG, "$CALL_UI onStart()")
+        LogMessage.d(TAG, "$CALL_UI onStart() GroupCallUtils.getIsCallAgain()${GroupCallUtils.getIsCallAgain()}")
 
         super.onStart()
         CallManager.bindCallService()
+        if (GroupCallUtils.getIsCallAgain())
+            return
         setUpCallUI()
         if (CallManager.isInComingCall()) {
             notificationPermissionChecking()
@@ -542,6 +544,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             setResult(if (CallManager.isAudioCall()) CallConstants.AUDIO_CALL_REQUEST_CODE else CallConstants.VIDEO_CALL_REQUEST_CODE)
             dialogViewHelper.disconnectCall()
             callViewHelper.disconnectCall()
+            isAnswerCalled.set(false)
             CallUtils.resetValues()
             if (isNotFromRetry)
                 callViewHelper.updateDisconnectedStatus(callStatus)
@@ -807,6 +810,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 CallStatus.DISCONNECTED -> disconnectCall(true, callEvent)
                 CallStatus.CONNECTING -> {
                     callViewHelper.updateStatusAdapter(userJid)
+                    setUpCallUI()
                 }
                 CallStatus.OUTGOING_CALL_TIME_OUT -> {
                     LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CALL_TIME_OUT userJid:${CallStatus.OUTGOING_CALL_TIME_OUT}")

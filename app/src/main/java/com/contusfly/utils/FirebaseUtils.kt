@@ -14,6 +14,7 @@ import com.contusfly.notification.NotificationBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.installations.FirebaseInstallations
 import com.mirrorflysdk.api.ChatActionListener
+import com.mirrorflysdk.api.ChatEventsManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.notification.NotificationEventListener
@@ -82,6 +83,7 @@ class FirebaseUtils : CoroutineScope {
      * @param context          Context of the service
      * @param firebaseData     The notification data read from the Firebase
      */
+    @SuppressWarnings("kotlin:S3776")
     fun handleReceivedMessage(context: Context, firebaseData: Map<String, String>?) {
         notificationData = firebaseData
         notificationData?.let {
@@ -94,6 +96,12 @@ class FirebaseUtils : CoroutineScope {
                         if ((it.containsKey("user_jid") && !ProfileDetailsUtils.getProfileDetails(it["user_jid"].toString())?.isMuted!!) ||
                             (messageType == com.mirrorflysdk.flycommons.Constants.RECALL)) {
                             AppNotificationManager.createNotification(MobileApplication.getContext(), chatMessage)
+                        }
+                        try {
+                            val listener =  ChatEventsManager.getMessageEventListener()
+                            listener?.onMessageReceived(chatMessage)
+                        } catch (e:Exception) {
+                            LogMessage.e(TAG,e.toString())
                         }
                     }
 

@@ -192,11 +192,20 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
         fileUploadStatus: String
     ) {
         with(imgViewHolder) {
-            val progressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaProgressStatus()))
+            val progressPercentage = Utils.returnZeroIfStringEmpty(
+                Utils.returnEmptyStringIfNull(
+                    messageItem.getMediaChatMessage().getMediaProgressStatus()
+                )
+            )
             if (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
-                viewUploadProgress.gone()
-                progressSender.gone()
-                progressSenderRotation.gone()
+                if (messageItem.mediaChatMessage.mediaLocalStoragePath != null && messageItem.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
+                        messageItem.mediaChatMessage.mediaLocalStoragePath
+                    )
+                ) {
+                    viewUploadProgress.gone()
+                    progressSender.gone()
+                    progressSenderRotation.gone()
+                }
             } else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
                 && progressPercentage > 0 && progressPercentage < 100) {
                 progressSender.show()
@@ -283,9 +292,13 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
         with(imageReceivedViewHolder) {
             val filePath = com.mirrorflysdk.utils.Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaLocalStoragePath())
 
-            val fileStatus = if (messageItem.isMessageSentByMe()) Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaUploadStatus().toString())
-            else Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaDownloadStatus().toString())
-            if (fileStatus.isNotEmpty()){
+            val fileStatus = if (messageItem.isMessageSentByMe()) Utils.returnEmptyStringIfNull(
+                messageItem.getMediaChatMessage().getMediaUploadStatus().toString()
+            )
+            else Utils.returnEmptyStringIfNull(
+                messageItem.getMediaChatMessage().getMediaDownloadStatus().toString()
+            )
+            if (fileStatus.isNotEmpty()) {
                 val mediaStatus = MediaStatus(txtRetryView, viewDownload, progressRev,
                     MessageUtils.getMediaStatus(fileStatus, filePath, false),
                     messageItem, null, cancelDownload,  receivedImageForward,viewDownloadProgress,downloadProgressBuffer)
@@ -313,9 +326,14 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
                 messageItem.getMediaChatMessage().getMediaDownloadStatus().toString()
             )
             if (fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
-                viewDownloadProgress.gone()
-                downloadProgressBuffer.gone()
-                progressRev.gone()
+                if (messageItem.mediaChatMessage.mediaLocalStoragePath != null && messageItem.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
+                        messageItem.mediaChatMessage.mediaLocalStoragePath
+                    )
+                ) {
+                    viewDownloadProgress.gone()
+                    downloadProgressBuffer.gone()
+                    progressRev.gone()
+                }
             }else if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING && progressPercentage in 1..99) {
                 downloadProgressBuffer.gone()
                 progressRev.show()
