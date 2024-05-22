@@ -35,8 +35,16 @@ object MentionUtils {
         mentionClickable: Boolean
     ): SpannableStringBuilder {
         val texts = context.getString(R.string.chat_text)
-        val textMessage = message.getMessageTextContent() + texts + texts
+        val textMessage = (message.messageTextContent) + texts + texts
         return convertMessageToMentionFormat(message, textMessage, mentionClickable, context)
+    }
+
+    fun formatReplyMentionText(
+        context: Context,
+        message: ReplyParentChatMessage,
+        mentionClickable: Boolean
+    ): SpannableStringBuilder {
+        return formatMentionTextForReplyParent(context, message, mentionClickable)
     }
 
 
@@ -92,7 +100,8 @@ object MentionUtils {
         mentionClickable: Boolean
     ): SpannableStringBuilder {
         val texts = context.getString(R.string.chat_text)
-        val mediaCaption = caption + texts + texts
+
+        val mediaCaption =  (caption) + texts + texts
         return convertMessageToMentionFormat(message, mediaCaption, mentionClickable, context)
     }
 
@@ -194,7 +203,7 @@ object MentionUtils {
     ): SpannableStringBuilder {
         var count = 0
         val texts = context.getString(R.string.chat_text)
-        val replyMentionText = replyParentMessage.getMessageTextContent() + texts + texts
+        val replyMentionText = replyParentMessage.messageTextContent + texts + texts
         var displayText = SpannableStringBuilder(replyMentionText)
         if (!replyParentMessage.mentionedUsersIds.isEmpty()) {
             val replyMentionSpannableString = SpannableString(replyMentionText)
@@ -247,9 +256,9 @@ object MentionUtils {
         message: ChatMessage
     ): SpannableStringBuilder {
         var count = 0
-        val text = SpannableString(message.getMessageTextContent())
+        val text = SpannableString(message.messageTextContent)
         var displayableText = SpannableStringBuilder(text)
-        if (!message.mentionedUsersIds.isEmpty()) {
+        if (message.mentionedUsersIds.isNotEmpty()) {
             val mentionSpannableString = SpannableString(text)
             val matchers = MENTION1.matcher(mentionSpannableString)
             val recentChatSources: MutableList<String> = ArrayList()

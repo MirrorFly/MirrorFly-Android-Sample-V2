@@ -38,7 +38,7 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
      *
      * @param messageId Reply message id
      */
-    fun showReplyMessageToSend(messageId: String, parentViewmodel: ChatParentViewModel, suggestionLayout: LinearLayout, jid: String) {
+    fun showReplyMessageToSend(messageId: String, parentViewmodel: ChatParentViewModel, suggestionLayout: LinearLayout, jid: String, isEditMessage:Boolean = false) {
         try {
             messageTypeIcon.gone()
             messageImageOrVideoThumb.gone()
@@ -48,7 +48,7 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
                 parentViewmodel.addMessage(replyMessage, jid)
                 when (replyMessage.messageType) {
                     MessageType.TEXT,MessageType.AUTO_TEXT,MessageType.MEET ->
-                        showReplyTextMessage(replyMessage)
+                        showReplyTextMessage(replyMessage, isEditMessage)
                     MessageType.IMAGE, MessageType.VIDEO ->
                         showReplyImageVideoMessage(replyMessage)
                     MessageType.LOCATION -> showReplyLocationMessage(replyMessage)
@@ -72,7 +72,7 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
      *
      * @param replyMessage       Reply message item
      */
-    private fun showReplyTextMessage(replyMessage: ChatMessage) {
+    private fun showReplyTextMessage(replyMessage: ChatMessage, isEditMessage: Boolean=false) {
         if (replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted())
             showRecalledReplyMessage(replyMessage)
         else {
@@ -88,7 +88,7 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
                         ChatUtils.getSpannedText(context, replyMessage.messageTextContent)
                     }
             }
-            messageSenderName.text = replyMessage.getSenderName()
+            messageSenderName.text = if(isEditMessage) context.getText(R.string.edit_message_tag) else replyMessage.getSenderName()
         }
     }
 
@@ -125,7 +125,7 @@ class ReplyViewHandler(val context: Context, replyLayout: View) {
             messageContent.text = if(replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
                 MentionUtils.formatMentionText(context,replyMessage,false)
             } else {
-                replyMessage.mediaChatMessage.getMediaCaptionText()
+               replyMessage.mediaChatMessage.mediaCaptionText
             }
     }
 

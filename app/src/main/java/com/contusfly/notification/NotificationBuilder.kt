@@ -45,7 +45,7 @@ object NotificationBuilder {
      * @param context Context of the application
      * @param message Instance of the ChatMessage
      */
-    fun createNotification(context: Context, message: ChatMessage) {
+    fun createNotification(context: Context, message: ChatMessage, isFromDelete:Boolean = false, deletedChatUserJid:List<String> = arrayListOf()) {
         var lastMessageTime: Long = 0
         val chatJid = message.getChatUserJid()
         val lastMessageContent = StringBuilder()
@@ -64,13 +64,17 @@ object NotificationBuilder {
         val notificationModel = chatNotifications[notificationId]
 
         val isMessageRecalled = message.isMessageRecalled()
+        if(isFromDelete) {
+            clearNotificationTray(deletedChatUserJid, context)
+            return
+        }
 
         notificationModel?.let {
-            if (isMessageRecalled) { //if message was recalled then rebuild the message style
+            if (isMessageRecalledOrEditedMessage(isMessageRecalled, message)) { //if message was recalled then rebuild the message style
                 val oldMessages = notificationModel.messages.toMutableList()
                 notificationModel.messages.clear()
                 oldMessages.forEach { chatMessage ->
-                    notificationModel.messages.add(if (chatMessage.messageId == message.messageId) message else chatMessage)
+                    notificationModel.messages.add(addMessagesInNotificationModel(message, chatMessage))
                     appendChatMessageInMessageStyle(
                         context,
                         lastMessageContent,
@@ -110,6 +114,23 @@ object NotificationBuilder {
             message
         )
        displaySummaryNotification(context, lastMessageContent)
+    }
+
+    private fun addMessagesInNotificationModel(message: ChatMessage, chatMessage: ChatMessage):ChatMessage{
+       return if (chatMessage.messageId == message.messageId) message else chatMessage
+    }
+
+    private fun clearNotificationTray(deletedChatUserJid:List<String>,context: Context){
+        deletedChatUserJid.forEach {
+            AppNotificationManager.clearConversationOnNotification(context,it)
+        }
+        if(chatNotifications.size == 0){
+            AppNotificationManager.cancelNotifications(context)
+        }
+    }
+
+    private fun isMessageRecalledOrEditedMessage(isMessageRecalled:Boolean,message: ChatMessage):Boolean{
+        return isMessageRecalled || message.isEdited
     }
 
     /**

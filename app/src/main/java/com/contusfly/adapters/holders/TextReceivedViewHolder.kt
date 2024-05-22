@@ -35,6 +35,9 @@ class TextReceivedViewHolder(mainView: View) : SenderNameHolder(mainView) {
      */
     val viewDiver: View? = mainView.findViewById(R.id.view_divider)
 
+    val txtEdited:AppCompatTextView = mainView.findViewById(R.id.edit_txt_id)
+
+
     /*
      * Join Link Meeting View */
     val receiverJoinLinkView: LinearLayout = mainView.findViewById(R.id.row_join_link_view)

@@ -33,7 +33,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationData: Map<String, String> = remoteMessage.data
         if (notificationData.isNotEmpty()) {
             LogMessage.d(TAG, "RemoteMessage:$notificationData")
-            CallLogger().callLog(TAG,"RemoteMessage notification:$notificationData")
+            CallLogger.callLog(TAG,"RemoteMessage notification:$notificationData")
             firebaseUtils.handleReceivedMessage(this, notificationData)
         }
     }

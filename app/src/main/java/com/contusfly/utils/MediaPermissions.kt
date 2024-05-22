@@ -2,19 +2,29 @@ package com.contusfly.utils
 
 import android.Manifest
 import android.app.Activity
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
+import android.os.RemoteException
 import android.provider.Settings
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.R
+import com.contusfly.chat.AndroidUtils
+import com.contusfly.databinding.NotificationPermissionDialogBinding
 import com.contusfly.interfaces.PermissionDialogListener
 import com.contusfly.views.PermissionAlertDialog
 import com.google.android.material.snackbar.Snackbar
@@ -171,6 +181,179 @@ object MediaPermissions {
             activity,
             Manifest.permission.POST_NOTIFICATIONS
         )
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun isFullScreenNotificationPermissionNotEnabled(activity: Activity):Boolean{
+        val notificationManager =  activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        var canUseFullScreenIntent = false
+        try {
+            canUseFullScreenIntent =  notificationManager.canUseFullScreenIntent()
+        } catch (e: RemoteException) {
+            LogMessage.d("MediaPermissions", "isFullScreenNotificationPermissionNotEnabled: exception")
+            e.printStackTrace()
+        }
+        LogMessage.d("MediaPermissions", "#fullscreen isFullScreenNotificationPermissionNotEnabled: $canUseFullScreenIntent")
+        return canUseFullScreenIntent
+    }
+
+    fun requestFullScreenNotificationPermission(
+        activity: Activity,
+        permissionAlertDialog: PermissionAlertDialog,
+        permissionsLauncher: ActivityResultLauncher<Array<String>>,
+        isCall: Boolean = false,
+        permissionDialogListener: PermissionDialogListener? = null,
+    ) {
+
+        if (SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && !isFullScreenNotificationPermissionNotEnabled(activity)) {
+            val permissionsToRequest = mutableListOf<String>()
+            permissionsToRequest.add(Manifest.permission.USE_FULL_SCREEN_INTENT)
+            if (permissionsToRequest.isNotEmpty()) {
+                when {
+                    ActivityCompat.shouldShowRequestPermissionRationale(
+                        activity,
+                        Manifest.permission.USE_FULL_SCREEN_INTENT
+                    ) -> {
+                        if (isCall) {
+
+                            fullScreenNotificationDialogShow(activity)
+
+                        } else {
+                            showPermissionPopUpForFullScreenNotification(
+                                permissionsLauncher,
+                                permissionsToRequest,
+                                permissionAlertDialog,
+                                isCall,
+                                permissionDialogListener,activity
+                            )
+                        }
+                    }
+
+                    SharedPreferenceManager.getBoolean(Constants.FULLSCREEN_NOTIFICATION_PERMISSION_ASKED) -> {
+                        fullScreenNotificationPermissionAsked(activity, permissionAlertDialog, isCall, permissionDialogListener)
+                    }
+
+                    else -> {
+                        showPermissionPopUpForFullScreenNotification(
+                            permissionsLauncher,
+                            permissionsToRequest,
+                            permissionAlertDialog,
+                            isCall,
+                            permissionDialogListener,activity
+                        )
+                    }
+                }
+            }
+        }
+
+    }
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun fullScreenNotificationDialogShow(activity: Activity) {
+
+        try {
+            var dialogBinding: ViewBinding? = null
+            var dialogBuilder: AlertDialog.Builder
+            dialogBuilder = AlertDialog.Builder(activity, R.style.TrasparentAlertDialog)
+            val inflater: LayoutInflater = activity.layoutInflater
+            dialogBinding = NotificationPermissionDialogBinding.inflate(inflater)
+            dialogBuilder.apply {
+                setCancelable(false)
+                setView((dialogBinding)!!.root)
+            }
+            val alertDialog = dialogBuilder.create()
+            alertDialog.show()
+            alertDialogWidth(activity,alertDialog)
+            dialogBinding.closeIcon.visibility = View.INVISIBLE
+            dialogBinding.titleTv.text = activity.resources.getString(R.string.notification_full_screen_title)
+            dialogBinding.dialogDescription.text = activity.resources.getString(R.string.notification_full_intent_permission_denied_alert_label)
+            dialogBinding.turnOnTv.setOnClickListener {
+                SharedPreferenceManager.setBoolean(Constants.ASK_FULL_SCREEN_INTENT_PERMISSION, true)
+                openSettingsForFullScreenNotificationPermissionWithoutSmackBar(activity)
+                alertDialog.dismiss()
+            }
+
+            dialogBinding.notNowTv.setOnClickListener {
+                SharedPreferenceManager.setBoolean(Constants.ASK_FULL_SCREEN_INTENT_PERMISSION, true)
+                alertDialog.dismiss()
+            }
+
+        } catch (e:Exception) {
+            Log.e("TAG", "showPermissionInstructionDialog: $e")
+        }
+
+    }
+
+    private fun alertDialogWidth(activity: Activity, alertDialog: AlertDialog) {
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(alertDialog.window!!.attributes)
+        layoutParams.width = (AndroidUtils.getScreenWidth(activity) * 0.80).toInt()
+        alertDialog.window!!.attributes = layoutParams
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun openSettingsForFullScreenNotificationPermissionWithoutSmackBar(activity: Activity) {
+        val intent = Intent(
+            Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+            Uri.fromParts("package", activity.packageName, null)
+        )
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        activity.startActivity(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun showPermissionPopUpForFullScreenNotification(
+        permissionsLauncher: ActivityResultLauncher<Array<String>>,
+        permissionsToRequest: MutableList<String>,
+        permissionAlertDialog: PermissionAlertDialog,
+        isCall: Boolean,
+        permissionDialogListener: PermissionDialogListener?,
+        activity: Activity
+    ) {
+        if(isCall) {
+            SharedPreferenceManager.setBoolean(Constants.FULLSCREEN_NOTIFICATION_PERMISSION_ASKED, true)
+            fullScreenNotificationDialogShow(activity)
+        } else {
+            permissionAlertDialog.showPermissionInstructionDialog(PermissionAlertDialog.FULLSCREEN_NOTIFICATION_PERMISSION_DENIED,
+                object : PermissionDialogListener {
+                    override fun onPositiveButtonClicked() {
+                        SharedPreferenceManager.setBoolean(Constants.FULLSCREEN_NOTIFICATION_PERMISSION_ASKED, true)
+                        permissionsLauncher.launch(permissionsToRequest.toTypedArray())
+                    }
+
+                    override fun onNegativeButtonClicked() {
+                        permissionDialogListener?.onNegativeButtonClicked()
+                    }
+                })
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun fullScreenNotificationPermissionAsked(
+        activity: Activity,
+        permissionAlertDialog: PermissionAlertDialog,
+        isCall: Boolean,
+        permissionDialogListener: PermissionDialogListener?,
+    ) {
+        if (isCall) {
+            fullScreenNotificationDialogShow(activity)
+        } else {
+            permissionAlertDialog.showPermissionInstructionDialog(
+                PermissionAlertDialog.FULLSCREEN_NOTIFICATION_PERMISSION_DENIED,
+                object : PermissionDialogListener {
+                    override fun onPositiveButtonClicked() {
+                        openSettingsForFullScreenNotificationPermissionWithoutSmackBar(activity)
+                    }
+
+                    override fun onNegativeButtonClicked() {
+                        permissionDialogListener?.onNegativeButtonClicked()
+                    }
+                }
+            )
+        }
     }
 
     fun requestNotificationPermission(

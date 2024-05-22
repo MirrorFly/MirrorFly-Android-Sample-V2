@@ -54,6 +54,7 @@ import com.contusfly.groupmention.MentionUser
 import com.contusfly.interfaces.OnChatItemClickListener
 import com.contusfly.interfaces.PermissionDialogListener
 import com.contusfly.models.Chat
+import com.contusfly.models.EditMessageParams
 import com.contusfly.models.MediaPreviewModel
 import com.contusfly.models.MeetMessageParams
 import com.contusfly.models.MessageObject
@@ -71,6 +72,7 @@ import com.mirrorflysdk.views.CustomToast
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import com.mirrorflysdk.api.contacts.ProfileDetails
+
 import dagger.android.AndroidInjection
 import io.github.rockerhieu.emojicon.EmojiconGridFragment
 import io.github.rockerhieu.emojicon.EmojiconsFragment
@@ -289,7 +291,27 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         }
     }
 
+    override fun onMessageEdited(editedMessage: ChatMessage) {
+        LogMessage.d("TAG","#chat onEditedMessageReceived")
+        refreshEditedMessages(editedMessage)
+    }
 
+    private fun refreshEditedMessages(editedMessage: ChatMessage){
+        val editedMessageId = editedMessage.messageId
+        getMessageAndPosition(editedMessageId).let { messageAndPosition ->
+            if (messageAndPosition.first != -1) {
+                refreshEditedMessageUpdated(editedMessageId, messageAndPosition)
+            } else {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    parentViewModel.getMessageAndPosition(editedMessageId).let { messageAndPosition2 ->
+                        if (messageAndPosition2.first != -1) {
+                            refreshEditedMessageUpdated(editedMessageId, messageAndPosition2)
+                        }
+                    }
+                }, 500)
+            }
+        }
+    }
 
     private fun removeUnReadMsgSeparatorOnMessageReceiver() {
         try {
@@ -1149,6 +1171,14 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         } else if (isUserCanSendMessage())
             sendMessage(messageObject)
     }
+    private fun validateAndSendEditedMessage(editedMessage: EditMessageParams) {
+        if (isBlocked) {
+            showBlockedAlert(true)
+        } else if (FlyCore.isBusyStatusEnabled() && chat.isSingleChat()) {
+            showBusyAlert(isEditMessage = true)
+        } else if (isUserCanSendMessage())
+            messagingClient.sendEditedMessage(editedMessage, this@ChatActivity)
+    }
 
     private fun sendTextMessage() {
         isReplyTagged = false
@@ -1348,6 +1378,19 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         }
     }
 
+    private fun refreshEditedMessageUpdated(
+        mid: String,
+        messageAndPosition: Pair<Int, ChatMessage?>
+    ) {
+        refreshMessageAndUpdateAdapter(mid, Constants.NOTIFY_EDITED_MESSAGES)
+        invalidateActionMode()
+        if (messageAndPosition.second != null && messageAndPosition.second!!.isMessageRecalled) {
+            updateRecallMessageReplyView(messageAndPosition.second!!.messageId)
+            handleUnreadMessageSeparator(true)
+            addMessagesforSmartReply()
+        }
+    }
+
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         actionModeMenu = configureMenuActionMode(mode, menu)
         return true
@@ -1371,6 +1414,20 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             }
             R.id.action_copy -> {
                 copyMessagesActionMenuClicked(clickedMessages)
+                actionMode?.finish()
+                clickDone = true
+            }
+            R.id.action_edit->{
+                clickedMessageToEdit = clickedMessages[0]
+                if (profileDetails.isBlocked) {
+                    showBlockedAlert(true)
+                } else if (!profileDetails.isAdminBlocked) {
+                    if (FlyCore.isBusyStatusEnabled() && chat.isSingleChat()) {
+                        showBusyAlert(isEditMessage = true)
+                    } else {
+                        launchEditMessageActivity()
+                    }
+                }
                 actionMode?.finish()
                 clickDone = true
             }
@@ -1415,6 +1472,40 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         return clickDone
     }
 
+    private fun launchEditMessageActivity(){
+        val intent = Intent(this, EditMessageActivity::class.java).apply {
+            putExtra(LibConstants.JID, chat.toUser)
+            putExtra(Constants.CHAT_TYPE, chat.chatType)
+            putExtra(Constants.MESSAGE_ID, clickedMessageToEdit)
+        }
+        editMessageCallback.launch(intent)
+    }
+
+    private val editMessageCallback = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            try {
+                val data: Intent? = result.data
+                data?.let {
+                    val editedData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) //getParcelableExtra(@Nullable String name, @NonNull Class<T> clazz) doesn't support for below android 13
+                        it.getParcelableExtra(
+                            Constants.EDITED_RESULT_DATA,
+                            EditMessageParams::class.java
+                        )
+                    else
+                        it.getParcelableExtra(Constants.EDITED_RESULT_DATA)
+
+                    editedData?.let {
+                        validateAndSendEditedMessage(editedData)
+                    }
+                }
+            } catch (e: Exception) {
+                com.contusfly.utils.LogMessage.e(TAG, e)
+            }
+        }
+    }
+
     private fun showReportMessagePopup() {
         val isUserNotAvailable = profileDetails.isAdminBlocked || profileDetails.isDeletedContact()
         if (chat.chatType == ChatType.TYPE_CHAT && isUserNotAvailable) {
@@ -1446,28 +1537,30 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     override fun onResume() {
         super.onResume()
-            setSecureFlag()
-            keyboardHeightProvider?.onResume()
-            try {
-                registerReceiver(dateChangedBroadcastReceiver, IntentFilter(Intent.ACTION_TIME_CHANGED))
-            } catch (e: Exception) {
-                LogMessage.e(e)
-            }
-            viewModel.getProfileDetails()
-            addMessagesforSmartReply()
-            handleOnResume()
-            showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
-            removeUnReadMsgSeparator()
-            if (mainList.isNotEmpty() && !parentViewModel.getFetchingIsInProgress())
-                parentViewModel.loadNextData()
-            if (SharedPreferenceManager.getBoolean(Constants.SHOW_LABEL))
-                netConditionalCall(
-                    { chatXmppConnectionStatusLayout.gone() },
-                    { chatXmppConnectionStatusLayout.show() })
-            getRecalledMessagesForThisUser()
-            handleCursorAndKeyboardVisibility()
-            clearNotification()
-            showPausedOngoingRecording()
+        setSecureFlag()
+        keyboardHeightProvider?.onResume()
+        try {
+            registerReceiver(dateChangedBroadcastReceiver, IntentFilter(Intent.ACTION_TIME_CHANGED))
+        } catch (e: Exception) {
+            LogMessage.e(e)
+        }
+        viewModel.getProfileDetails()
+        addMessagesforSmartReply()
+        handleOnResume()
+        showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
+        removeUnReadMsgSeparator()
+        if (mainList.isNotEmpty() && !parentViewModel.getFetchingIsInProgress())
+            parentViewModel.loadNextData()
+        else if (mainList.isEmpty() && !parentViewModel.getFetchingIsInProgress())
+            parentViewModel.loadInitialData(messageId)
+        if (SharedPreferenceManager.getBoolean(Constants.SHOW_LABEL))
+            netConditionalCall(
+                { chatXmppConnectionStatusLayout.gone() },
+                { chatXmppConnectionStatusLayout.show() })
+        getRecalledMessagesForThisUser()
+        handleCursorAndKeyboardVisibility()
+        clearNotification()
+        showPausedOngoingRecording()
     }
 
     private fun checkIsGroupAdminBlocked() {
@@ -1674,10 +1767,17 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 isBlockUnblockCalled = true
                 unblockContact()
             }
-
+            CommonAlertDialog.DialogAction.EDIT_MESSAGE_UNBLOCK->{
+                isBlockUnblockCalled = true
+                unblockContact(true)
+            }
             CommonAlertDialog.DialogAction.STATUS_BUSY_SCHEDULE -> {
                 onShowScheduleBottomSheetAfterDisableBusyStatus()
             }
+            CommonAlertDialog.DialogAction.EDIT_MESSAGES_DISABLE_BUSY_STATUS -> {
+                navigateToEditMessageActivityAfterDisableBusyStatus()
+            }
+
             else -> {
                 /*No Implementation needed*/
             }
@@ -1727,6 +1827,17 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             }
         }
     }
+
+    private fun navigateToEditMessageActivityAfterDisableBusyStatus(){
+        FlyCore.enableDisableBusyStatus(false) { isSuccess, _, data ->
+            if (isSuccess) {
+               launchEditMessageActivity()
+            } else {
+                CustomToast.show(context, data.getMessage())
+            }
+        }
+    }
+
 
     private fun deleteChat(dialogType: CommonAlertDialog.DIALOGTYPE, position: Int) {
         if(!ChatManager.getAvailableFeatures().isDeleteMessageEnabled){
@@ -1790,7 +1901,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     /**
      * Block the Current user
      */
-    private fun unblockContact() {
+    private fun unblockContact(isFromEditMessage:Boolean = false) {
         val feature=ChatManager.getAvailableFeatures()
         if(!feature.isBlockEnabled){
             context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
@@ -1808,7 +1919,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 val jid = data["data"] as String
                 UIKitContactUtils.checkContactForBlockAndUnblockUser(jid, false)
                 runOnUiThread {
-                    onBlockUserResponse(!isSuccess, false)
+                    onBlockUserResponse(!isSuccess, false, isFromEditMessage)
                 }
             }
             dialog.onNext(ConstantActions.UNBLOCK_USER)
@@ -1820,7 +1931,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         onBlockUserResponse(isError = false, isBlockedStatus = false)
     }
 
-    private fun onBlockUserResponse(isError: Boolean, isBlockedStatus: Boolean) {
+    private fun onBlockUserResponse(isError: Boolean, isBlockedStatus: Boolean, isFromEditMessage: Boolean = false) {
         dismissProgress()
         if(!ChatManager.getAvailableFeatures().isBlockEnabled){
             return
@@ -1836,7 +1947,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             } else {
                 showToast(String.format(getString(R.string.msg_user_unblocked), getUserNickname()))
                 isBlocked = false
-                sendQueuedUpMessages()
+                if (isFromEditMessage)
+                    launchEditMessageActivity()
+                else
+                    sendQueuedUpMessages()
             }
             hideEmojiKeyboard()
         }
@@ -2051,6 +2165,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     override fun onCancelUploadClicked(messageItem: ChatMessage) {
+        LogMessage.d("FILE_UPLOAD_TAG","Cancel Uploading.......")
         if (!messageItem.isMediaUploaded() || !messageItem.isMediaDownloaded())
             handleCancelClickedOnMediaMessage(messageItem)
         else {
@@ -2076,6 +2191,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     override fun onRetryClicked(item: ChatMessage?) {
+        LogMessage.d("FILE_UPLOAD_TAG","Resume Uploading.......")
         netConditionalCall({
             item?.let {
                 FlyMessenger.uploadMedia(it.messageId)
@@ -2125,6 +2241,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 listChats.scrollToPosition(mainList.size - 1)
         } catch (e: java.lang.Exception) {
             LogMessage.e(e)
+            LogMessage.e("FILE_UPLOAD_TAG","Clear Chat Error $e")
         }
     }
 
@@ -2228,6 +2345,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
         toUser = intent.getStringExtra(LibConstants.JID) ?: Constants.EMPTY_STRING
         chatType = intent.getStringExtra(Constants.CHAT_TYPE) ?: Constants.EMPTY_STRING
+        var isFromMediaPreviewActivity = intent.getBooleanExtra(Constants.IS_FROM_MEDIA_PREVIEW_ACTIVITY,false)
 
         chat = Chat(chatType, toUser)
 
@@ -2240,8 +2358,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
         if (externalCall) {
             clickedMessages.clear()
-            //reloadUserChat()
-            parentViewModel.loadNextData(Constants.EMPTY_STRING,false)
+            if (isFromMediaPreviewActivity)
+                parentViewModel.loadNextData(Constants.EMPTY_STRING, false)
+            else
+                reloadUserChat()
         }
 
         updateReplyMessageAction()
@@ -2622,7 +2742,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             SharedPreferenceManager.setString(Constants.REPLY_MESSAGE_USER, Constants.EMPTY_STRING)
         } else ReplyHashMap.saveReplyId(chat.toUser, selectedMessageIdForReply)
         sendTypingGone()
-        viewModel.deleteUnreadMessageSeparator(chat.toUser)
+        handleUnreadMessageSeparator(true)
         ChatManager.setOnGoingChatUser("")
         try {
             unregisterReceiver(dateChangedBroadcastReceiver)

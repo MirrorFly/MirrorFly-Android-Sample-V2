@@ -2,6 +2,7 @@ package com.contusfly.adapters.viewhelpers
 
 import android.content.Context
 import android.text.SpannableStringBuilder
+import androidx.appcompat.widget.AppCompatTextView
 import com.mirrorflysdk.flycommons.MediaDownloadStatus
 import com.mirrorflysdk.flycommons.MediaUploadStatus
 import com.contusfly.*
@@ -121,16 +122,18 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
                 messageItemListener.setStarredCaptionStatus(messageItem.isMessageStarred(), imgSentCaptionStar)
                 imgSentStarred.gone()
                 imgSentBalloon.gone()
+                ChatUtils.txtEditedVisibility(messageItem.isEdited,txtEdited)
                 if(messageItem.mentionedUsersIds != null && messageItem.mentionedUsersIds.size > 0) {
                     val mentionText =  MentionUtils.formatMentionText(context, messageItem,false)
                     val mentionUserNames=MentionUtils.getMentionedUserId(context,messageItem,false)
                     val caption= MediaCaption(mentionText,videoSenderViewHolder.txtChatSentCaption,searchEnabled,searchKey,mentionUserNames,messageItem)
                     messageItemListener.setMediaCaption(caption)
                 } else {
-                    val caption=MediaCaption(getSpannedText(messageItem.getMediaChatMessage().getMediaCaptionText()),videoSenderViewHolder.txtChatSentCaption,searchEnabled,searchKey,SpannableStringBuilder(),messageItem)
+                    val caption=MediaCaption(getSpannedText(messageItem.mediaChatMessage.mediaCaptionText),videoSenderViewHolder.txtChatSentCaption,searchEnabled,searchKey,SpannableStringBuilder(),messageItem)
                     messageItemListener.setMediaCaption(caption)
                 }
             } else {
+                txtEdited.gone()
                 viewSendImageCaption.gone()
                 showViews(txtSendTime, imgSenderStatus)
                 txtSendTime.text = time
@@ -170,7 +173,11 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
     private fun uploadImgProgressView(messageItem: ChatMessage, videoViewHolder: VideoSentViewHolder, fileUploadStatus: String) {
         with(videoViewHolder) {
             val videoProgressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(messageItem.getMediaChatMessage().getMediaProgressStatus()))
-            if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
+            if (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
+                viewUploadProgress.gone()
+                progressSender.gone()
+                progressSenderRotation.gone()
+            }else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
                 && videoProgressPercentage > 0 && videoProgressPercentage < 100) {
                 progressSender.show()
                 progressSenderRotation.gone()
@@ -221,6 +228,7 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
                 txtRevCaptionTime.text = model.time
                 imgStarred.gone()
                 viewRevImageBalloon.gone()
+                ChatUtils.txtEditedVisibility(model.messageItem.isEdited,txtEdited)
                 messageItemListener.setStarredCaptionStatus(model.messageItem.isMessageStarred(), txtRevCaptionStar)
                 if(model.messageItem.mentionedUsersIds != null && model.messageItem.mentionedUsersIds.size > 0) {
                     val videoMentionText =  MentionUtils.formatMentionText(context, model.messageItem,false)
@@ -228,10 +236,11 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
                     val caption=MediaCaption(videoMentionText,videoReceiverViewHolder.txtRevChatCaption,model.searchEnabled,model.searchKey,mentionUserNames,model.messageItem)
                     messageItemListener.setMediaCaption(caption)
                 } else {
-                    val caption=MediaCaption(getSpannedText(model.messageItem.getMediaChatMessage().getMediaCaptionText()),videoReceiverViewHolder.txtRevChatCaption,model.searchEnabled,model.searchKey,SpannableStringBuilder(),model.messageItem)
+                    val caption=MediaCaption(getSpannedText(model.messageItem.mediaChatMessage.mediaCaptionText),videoReceiverViewHolder.txtRevChatCaption,model.searchEnabled,model.searchKey,SpannableStringBuilder(),model.messageItem)
                     messageItemListener.setMediaCaption(caption)
                 }
             } else {
+                txtEdited.gone()
                 viewRevImageCaption.gone()
                 txtRevTime.show()
                 txtRevTime.text = model.time
@@ -287,8 +296,11 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
                 )
             )
 
-
-            if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING && progressPercentage in 1..99) {
+            if (fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
+                viewDownloadProgress.gone()
+                downloadProgressBuffer.gone()
+                progressRev.gone()
+            }else if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING && progressPercentage in 1..99) {
                 progressRev.show()
                 downloadProgressBuffer.gone()
                 progressRev.max = 100

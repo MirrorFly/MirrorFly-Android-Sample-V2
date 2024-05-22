@@ -43,6 +43,7 @@ import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.flycommons.Result
+import com.mirrorflysdk.flycommons.exception.FlyException
 import com.mirrorflysdk.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
@@ -82,7 +83,7 @@ open class BaseActivity : FlyBaseActivity() {
             AppNotificationManager.cancelNotifications(this)
             if (checkIsUserInCall()) {
                 CallManager.disconnectCall(object : CallActionListener {
-                    override fun onResponse(isSuccess: Boolean, message: String) {
+                    override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                         startShowStopperActivity()
                     }
                 })
@@ -346,7 +347,7 @@ open class BaseActivity : FlyBaseActivity() {
         otherUserHandler?.postDelayed({
             if (CallManager.getGroupID() == jid && adminBlockedOtherUserStatus && checkIsUserInCall()) {
                 CallManager.disconnectCall(object : CallActionListener {
-                    override fun onResponse(isSuccess: Boolean, message: String) {
+                    override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                         startDashboardActivity()
                     }
                 })

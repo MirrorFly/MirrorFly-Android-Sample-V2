@@ -192,7 +192,6 @@ class MobileApplication : Application(), HasAndroidInjector {
     }
 
     private fun initializeCallSdk(){
-        CallManager.init(this)
         CallManager.setCallActivityClass(GroupCallActivity::class.java)
         CallManager.setMissedCallListener(object : MissedCallListener {
             override fun onMissedCall(
@@ -229,6 +228,7 @@ class MobileApplication : Application(), HasAndroidInjector {
             }
         })
         CallManager.enableCallLogExport(true)
+        CallManager.enableDebugLogs(true)
     }
 
     private fun getMissedCallNotificationContent( isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,

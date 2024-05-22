@@ -129,7 +129,7 @@ object NotifyRefererUtils {
         val channelId = getNotificationChannelId(isSummaryNotification,chatChannelId)
         val cImportance = if (isVibrate) NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_LOW
         val channelDescription = packageContext.resources.getString(R.string.channel_description)
-        val channelImportance = if (isRing && !isLastMessageRecalled) NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_LOW
+        val channelImportance = if (isRing && !isLastMessageRecalled && !isLastMessageEdited) NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_LOW
         if (isRing) {
             val highPriorityChannel = NotificationChannel(channelId, channelName, channelImportance)
             highPriorityChannel.setShowBadge(true)
@@ -293,5 +293,9 @@ object NotifyRefererUtils {
     private val isLastMessageRecalled: Boolean
         get() {
             return FlyMessenger.getLastUnreadMessage()?.isMessageRecalled() ?: false
+        }
+    private val isLastMessageEdited: Boolean
+        get() {
+            return FlyMessenger.getLastUnreadMessage()?.isEdited == true
         }
 }

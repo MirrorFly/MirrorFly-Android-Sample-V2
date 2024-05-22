@@ -36,6 +36,7 @@ class Constants {
         const val NOTIFY_MESSAGE_PROGRESS_CHANGED = "notify_message_progress_changed"
         const val NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED = "notify_message_media_status_changed"
         const val NOTIFY_MESSAGE_STATUS_CHANGED = "notify_message_status_changed"
+        const val NOTIFY_EDITED_MESSAGES= "notify_edited_messages"
         const val NOTIFY_USER_NAME = "notify_user_name"
         const val NOTIFY_PROFILE_ICON = "notify_profile_icon"
         const val NOTIFY_MSG_TYPING = "notify_msg_typing"
@@ -140,8 +141,8 @@ class Constants {
         const val EMAIL = "email"
         const val ASK_PERMISSION = "ask_permission"
         const val USER_PROFILE_NAME = "profile_name"
-        const val EMAIL_PATTERN = ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,3})$")
+        const val EMAIL_PATTERN = ("^[_A-Za-z0-9-%+!$&#\\+]+(\\.[_A-Za-z0-9-%+!$&#\\+]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,6})$")
         const val FROM_SETTINGS_PROFILE = "from_settings_profile"
         const val FROM_LOGIN_PROFILE = "from_login_profile"
         const val REGISTER_END_POINT = "/api/v1/sandbox/register"
@@ -188,6 +189,7 @@ class Constants {
         const val REPLY_MESSAGE_USER = "reply_message_user"
         const val CHAT_TYPE = "chat_type"
         const val FROM_QUICK_SHARE = "quick_share"
+        const val EDITED_RESULT_DATA = "edited_result_data"
         const val FORWARD = "forward"
         const val DELETE = "delete"
         const val REPLY = "reply"
@@ -215,6 +217,7 @@ class Constants {
         const val MEET_SCHEDULED_ON="Meet scheduled on"
         const val IS_FROM_NOTIFICATION = "is_from_notification"
         const val JID = "jid"
+        const val IS_FROM_MEDIA_PREVIEW_ACTIVITY = "isFromMediaPreviewActivity"
         const val NOTIFICATION_CHANNEL_ID = (BuildConfig.APPLICATION_ID + ".notification")
         const val GROUP_CHAT = "groupchat"
         const val ROSTER_JID = "roster_jid"
@@ -422,6 +425,11 @@ class Constants {
 
         const val MAX_DOCUMENT_UPLOAD_SIZE = 2048 // 2 GB
         const val MAX_AUDIO_SIZE_LIMIT = 2048 // 2 GB
+
+        //Full Screen Intent Permission
+        const val ASK_FULL_SCREEN_INTENT_PERMISSION = "ask_full_screen_notification_permission"
+        const val FULLSCREEN_NOTIFICATION_PERMISSION_ASKED = "fullscreen_notification_permission_asked_before"
+
 
     }
 }

@@ -822,13 +822,13 @@ class BaseCallViewHelper(
     fun updateDisconnectedStatus(callStatus: String) {
         LogMessage.d(
             TAG,
-            "$CALL_UI #JOIN_CALL callViewHelper updateDisconnectedStatus: isCallUIVisible():${isCallUIVisible()} GroupCallUtils.isCallLinkBehaviourMeet(): ${GroupCallUtils.isCallLinkBehaviourMeet()}"
+            "$CALL_UI #JOIN_CALL #disconnect callViewHelper updateDisconnectedStatus: isCallUIVisible():${isCallUIVisible()} GroupCallUtils.isCallLinkBehaviourMeet(): ${GroupCallUtils.isCallLinkBehaviourMeet()}"
         )
         if (isCallUIVisible()) {
             val animation = AnimationUtils.loadAnimation(activity, R.anim.blink)
             LogMessage.d(
                 TAG,
-                "$CALL_UI #JOIN_CALL callViewHelper updateDisconnectedStatus: callDuration.isNotBlank() :${callDuration.isNotBlank()} CallManager.isCallConnected(): ${CallManager.isCallConnected()}"
+                "$CALL_UI #JOIN_CALL #disconnect callViewHelper updateDisconnectedStatus: callDuration.isNotBlank() :${callDuration.isNotBlank()} CallManager.isCallConnected(): ${CallManager.isCallConnected()}"
             )
             if (callDuration.isNotBlank() || CallManager.isCallConnected()) {
                 updateCallConnectedLayout(callStatus, animation)
@@ -1075,7 +1075,8 @@ class BaseCallViewHelper(
     }
 
     fun onUserSpeaking(userJid: String, audioLevel: Int) {
-        if (CallManager.isCallConnected()) {
+        val userStatus = GroupCallUtils.getCallStatus(userJid)
+        if (CallManager.isCallConnected() && !userStatus.equals(CallStatus.RECONNECTING,false)) {
             CallUtils.onUserSpeaking(userJid, audioLevel)
             if (activity.isInPIPMode())
                 pipViewHelper.onUserSpeaking(userJid, audioLevel)

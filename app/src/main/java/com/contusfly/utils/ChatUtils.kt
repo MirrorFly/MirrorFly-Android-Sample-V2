@@ -12,6 +12,9 @@ import android.text.Spanned
 import android.text.format.DateUtils
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.contus.call.CallConstants
 import com.contusfly.BuildConfig
@@ -22,8 +25,10 @@ import com.contusfly.call.CallPermissionUtils
 import com.contusfly.call.groupcall.GroupCallActivity
 import com.contusfly.call.groupcall.OnGoingCallPreviewActivity
 import com.contusfly.caption
+import com.contusfly.gone
 import com.contusfly.groupmention.MentionUser
 import com.contusfly.groupmention.MentionUtils
+import com.contusfly.show
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.MessageTextView
 import com.google.gson.Gson
@@ -31,6 +36,7 @@ import com.google.gson.reflect.TypeToken
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.api.models.ReplyParentChatMessage
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
@@ -86,6 +92,37 @@ object ChatUtils {
         stream.close()
     }
 
+    fun setMarginBottom(view: TextView, item: ChatMessage){
+        with(view) {
+            val params = view.layoutParams as LinearLayout.LayoutParams
+            if(item.isEdited && !item.isMessageRecalled) {
+                params.bottomMargin = resources.getDimensionPixelSize(R.dimen.margin_6)
+            }else{
+                params.bottomMargin = 0
+            }
+            view.layoutParams = params
+        }
+    }
+
+    fun setReceiverMarginBottom(view: TextView, item: ChatMessage){
+        with(view) {
+            val params = view.layoutParams as LinearLayout.LayoutParams
+            if(item.isEdited && !item.isMessageRecalled) {
+                params.bottomMargin = resources.getDimensionPixelSize(R.dimen.margin_6)
+            }else{
+                params.bottomMargin = 0
+            }
+            view.layoutParams = params
+        }
+    }
+
+    fun txtEditedVisibility(isEdited:Boolean,txtView: AppCompatTextView){
+        if (isEdited)
+            txtView.show()
+        else
+            txtView.gone()
+    }
+
     /**
      * Copies file from source to destination
      *
@@ -119,6 +156,16 @@ object ChatUtils {
             }
         }
     }
+
+    fun checkFullScreenNotificationPermissionEnabled(): Boolean {
+        val minSdk34 = Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU
+        var needToRequestFullScreenPermission = minSdk34
+        if(needToRequestFullScreenPermission){
+            return CallManager.canUseFullScreenIntent()
+        }
+        return  minSdk34
+    }
+
 
     fun checkNotificationPermission(context: Context, permission: String): Boolean {
         return MediaPermissions.isPermissionAllowed(context, permission)
@@ -362,10 +409,11 @@ object ChatUtils {
         context: Context,
         textView: MessageTextView,
         messageMediaCaption: String,
-        isMediaMessage: Boolean
+        isMediaMessage: Boolean,
+        replyParent:ReplyParentChatMessage
     ) {
-        if (replyMessage.mentionedUsersIds != null && replyMessage.mentionedUsersIds.size > 0) {
-            val formattedSpanText = MentionUtils.formatMentionText(context, replyMessage, false)
+        if (replyParent.mentionedUsersIds != null && replyParent.mentionedUsersIds.size > 0) {
+            val formattedSpanText = MentionUtils.formatReplyMentionText(context, replyParent, false)
             textView.text = formattedSpanText
         } else {
             if (isMediaMessage) {
@@ -385,7 +433,7 @@ object ChatUtils {
                     ).toString()
                 )
             } else {
-                setReplyParentMessage(replyMessage, textView, context)
+                setReplyParentMessage(textView, context,messageMediaCaption)
             }
         }
     }
@@ -397,15 +445,15 @@ object ChatUtils {
      * @param context Context
      */
     private fun setReplyParentMessage(
-        replyMessage: ChatMessage,
         textView: MessageTextView,
-        context: Context
-    ) {
+        context: Context,
+        parentContent: String = Constants.EMPTY_STRING,
+        ) {
         EmojiUtils.setMessageTextWithEllipsis(
             textView,
             getSpannedText(
                 context,
-                replyMessage.messageTextContent
+                parentContent
             ).toString()
         )
     }

@@ -166,19 +166,22 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         val imgIcon: AppCompatImageView = replyLayout.findViewById(R.id.msg_item_icon)
         val txtChat: MessageTextView = replyLayout.findViewById(R.id.text_reply_chat)
         val imgImageVideo: AppCompatImageView = replyLayout.findViewById(R.id.msg_image_video)
+        val txtEdited:AppCompatTextView = view.findViewById(R.id.edit_txt_id)
         ChatMessageUtils.setFavouriteStatus(imgFav, message!!.isMessageStarred())
         if (message.isThisAReplyMessage())
             replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
         else
             replyLayout.gone()
         loadMessageTime(message, txtTime)
+        ChatUtils.txtEditedVisibility(message.isEdited, txtEdited)
         ChatMessageUtils.setChatStatus(imgChatStatus, message.getMessageStatus())
+        ChatUtils.setMarginBottom(txtMessage,message)
         txtMessage.maxWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
         if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
             val mentionText = MentionUtils.formatMentionText(context!!, message,  false)
             txtMessage.text = mentionText
         } else {
-            txtMessage.text = getSpannedText(message.getMessageTextContent())
+            txtMessage.text = getSpannedText(message.messageTextContent)
         }
 
     }
@@ -207,7 +210,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         ChatMessageUtils.setChatStatus(imgChatStatus, message.messageStatus)
         meetTxtMessage.maxWidth =
             SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
-        meetTxtMessage.text = getSpannedText(message.meetingChatMessage.link)
+        meetTxtMessage.text = message.meetingChatMessage.link
         meetTxtMessage.setTextColor(ContextCompat.getColor(this, R.color.light_blue))
         meetTxtMessage.setLinkTextColor(ContextCompat.getColor(this, R.color.light_blue))
         scheduledDateTextView.text = ChatUserTimeUtils.scheduledDateTimeFormat(message.meetingChatMessage.scheduledDateTime.toLong())
@@ -424,6 +427,8 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
             val imgIcon: AppCompatImageView = replyLayout.findViewById(R.id.msg_item_icon)
             val txtChat: MessageTextView = replyLayout.findViewById(R.id.text_reply_chat)
             val imgImageVideo: AppCompatImageView = replyLayout.findViewById(R.id.msg_image_video)
+            val txtEdited:AppCompatTextView = captionContent.findViewById(R.id.edit_txt_id)
+            ChatUtils.txtEditedVisibility(message!!.isEdited, txtEdited)
             val calculatedDimension = ChatUtils.getMobileWidthAndHeight(message!!.getMediaChatMessage().getMediaFileWidth(), message.getMediaChatMessage().getMediaFileHeight())
             layoutSenderImg.setWidthAndHeight(calculatedDimension.second, calculatedDimension.first)
             if (message.isThisAReplyMessage()) {
@@ -445,7 +450,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                     val mentionText = MentionUtils.formatMentionText(context!!, message,  false)
                     caption.text = mentionText
                 } else {
-                    caption.text = getSpannedText(message.getMediaChatMessage().getMediaCaptionText())
+                    caption.text = getSpannedText(message.mediaChatMessage.mediaCaptionText)
                 }
 
             } else {
@@ -490,7 +495,9 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
         val imgIcon: AppCompatImageView = replyLayout.findViewById(R.id.msg_item_icon)
         val txtChat: MessageTextView = replyLayout.findViewById(R.id.text_reply_chat)
         val imgImageVideo: AppCompatImageView = replyLayout.findViewById(R.id.msg_image_video)
+        val txtEdited:AppCompatTextView = captionContent.findViewById(R.id.edit_txt_id)
         val calculatedDimension = ChatUtils.getMobileWidthAndHeight(message!!.getMediaChatMessage().getMediaFileWidth(), message.getMediaChatMessage().getMediaFileHeight())
+        ChatUtils.txtEditedVisibility(message.isEdited, txtEdited)
         layoutSenderVideo.setWidthAndHeight(calculatedDimension.second, calculatedDimension.first)
         if (message.isThisAReplyMessage()) {
             replyView(replyLayout, txtUsername, imgIcon, txtChat, imgImageVideo, message)
@@ -508,7 +515,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                 val mentionText = MentionUtils.formatMentionText(context!!, message,  false)
                 captionText.text = mentionText
             } else {
-               captionText.text = getSpannedText(message.getMediaChatMessage().getMediaCaptionText())
+               captionText.text = getSpannedText(message.mediaChatMessage.mediaCaptionText)
             }
         } else {
             txtTime.show()
@@ -667,7 +674,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                 when (replyMessage.getMessageType()) {
                     MessageType.TEXT,MessageType.AUTO_TEXT -> {
                         txtChat.maxWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
-                        replyChatMessage?.let { setReplyViewMessageFormat(it,context!!,txtChat!!,"",false) }
+                        replyChatMessage?.let { setReplyViewMessageFormat(it,context!!,txtChat!!,replyMessage.messageTextContent,false,replyMessage) }
                         imgImageVideo.gone()
                         layout.show()
                     }
@@ -728,7 +735,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                     messageCaption = if (TextUtils.isEmpty(mediaDetail.getMediaCaptionText())) getString(R.string.title_video) else mediaDetail.getMediaCaptionText()
                     imgIcon.setImageResource(R.drawable.ic_video_reply)
                 }
-                replyChatMessage.let { setReplyViewMessageFormat(it,context!!,txtChat,messageCaption,true) }
+                replyChatMessage.let { setReplyViewMessageFormat(it,context!!,txtChat,messageCaption,true,replyMessage) }
 
                 imgIcon.show()
                 imgImageVideo.show()

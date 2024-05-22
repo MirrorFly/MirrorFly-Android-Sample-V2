@@ -118,7 +118,7 @@ class MessageinfoExpandadapter(private val context: Context, chattype: ChatTypeE
             readby.text = header
         }
         if (headerTitle == READ_BY) {
-            val header = headerTitle + getChildrenCount(groupPosition) + " of " + count
+            val header = headerTitle + getChildrenCount(groupPosition) + " of " +  count
             readby.text = header
         }
         if (isExpanded) {

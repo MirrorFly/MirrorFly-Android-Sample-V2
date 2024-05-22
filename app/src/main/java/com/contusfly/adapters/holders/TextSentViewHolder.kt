@@ -10,9 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.emoji.widget.EmojiAppCompatTextView
 import com.contusfly.R
-import io.github.rockerhieu.emojicon.EmojiconTextView
 
 /**
  * View holder class for the Chat message view to prepare the recycler view
@@ -36,6 +34,13 @@ class TextSentViewHolder(mainView: View) : SenderNameHolder(mainView) {
      * Name of the chat
      */
     val txtChatSender: TextView = mainView.findViewById(R.id.text_send_chat)
+
+
+    /**
+     * edited label
+     */
+
+    val txtEdited:AppCompatTextView = mainView.findViewById(R.id.edit_txt_id)
 
     /**
      * Time of the chat

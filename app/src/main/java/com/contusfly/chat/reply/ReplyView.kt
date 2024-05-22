@@ -52,7 +52,7 @@ class ReplyView {
                 MessageType.TEXT,MessageType.AUTO_TEXT -> {
                     with(replyMessageViewHolder) {
                         txtChatReply?.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
-                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReply!!,"",false) }
+                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReply!!,replyMessage.messageTextContent,false,replyMessage) }
                         makeViewsGone(imgSenderImageVideoPreview!!, imgSenderMessageType!!)
                     }
                 }
@@ -60,7 +60,7 @@ class ReplyView {
                     val decodeImageUtils by lazy { DecodeImageUtils() }
                     val mediaDetail = replyMessage.getMediaChatMessage()
                     with(replyMessageViewHolder) {
-                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReply!!,"",true) }
+                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReply!!,mediaDetail.mediaCaptionText,true,replyMessage) }
                         imgSenderMessageType?.setImageResource(if (replyMessage.isImageMessage()) R.drawable.ic_camera_reply
                         else R.drawable.ic_video_reply)
                         imgSenderImageVideoPreview?.show()
@@ -140,7 +140,7 @@ class ReplyView {
      * @param replyMessage              the reply message object of specific message that possessing the reply information.
      */
     fun showReceiverReplyView(context: Context, replyMessageViewHolder: ReplyMessageViewHolder, messageItem: ChatMessage, isGroupMessage: Boolean) {
-        val replyMessage = messageItem.getReplyParentChatMessage()
+        val replyMessage = messageItem.replyParentChatMessage
         with(replyMessageViewHolder) {
             showViews(imgReceivedReplyMessageType!!)
             makeViewsGone(imgReceivedReplyImageVideoPreview!!)
@@ -164,7 +164,7 @@ class ReplyView {
                 MessageType.TEXT,MessageType.AUTO_TEXT -> {
                     with(replyMessageViewHolder) {
                         txtChatReceivedReply?.maxWidth = SharedPreferenceManager.getInt(Constants.DEVICE_WIDTH)
-                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReceivedReply!!,"",false) }
+                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReceivedReply!!,replyMessage.messageTextContent,false,replyMessage) }
                         makeViewsGone(imgReceivedReplyImageVideoPreview!!, imgReceivedReplyMessageType!!)
                     }
                 }
@@ -172,7 +172,7 @@ class ReplyView {
                     val decodeImageUtils by lazy { DecodeImageUtils() }
                     val mediaDetail = replyMessage.getMediaChatMessage()
                     with(replyMessageViewHolder) {
-                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReceivedReply!!,"",true) }
+                        replyMsg?.let { setReplyViewMessageFormat(it,context,txtChatReceivedReply!!,mediaDetail.mediaCaptionText,true,replyMessage) }
                         imgReceivedReplyMessageType?.setImageResource(if (replyMessage.isImageMessage()) R.drawable.ic_camera_reply
                         else R.drawable.ic_video_receiver_reply)
                         imgReceivedReplyImageVideoPreview?.show()

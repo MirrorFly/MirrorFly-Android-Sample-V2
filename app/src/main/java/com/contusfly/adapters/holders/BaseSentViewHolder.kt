@@ -108,6 +108,9 @@ open class BaseSentViewHolder(view: View) : SenderNameHolder(view) {
      */
     val imgSentCaptionStar: ImageView = viewSendImageCaption.findViewById(R.id.ic_star)
 
+    val txtEdited: AppCompatTextView = viewSendImageCaption.findViewById(R.id.edit_txt_id)
+
+
     /**
      * The view sent carbon media download.
      */

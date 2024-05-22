@@ -31,6 +31,7 @@ import com.mirrorflysdk.flycall.webrtc.CallType
 import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.flycommons.exception.FlyException
 
 class CallOptionsViewHelper(
     private val activity: AppCompatActivity,
@@ -333,7 +334,7 @@ class CallOptionsViewHelper(
         }
         CallManager.muteVideo(!binding.imageMuteVideo.isActivated,
             object : CallActionListener {
-                override fun onResponse(isSuccess: Boolean, message: String) {
+                override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
 
                     LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper muteVideo onResponse()")
                     if (binding.imageMuteVideo.isActivated) {

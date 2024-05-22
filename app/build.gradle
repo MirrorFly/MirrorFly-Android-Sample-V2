@@ -32,10 +32,10 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 33
-        compileSdk(33)
+        targetSdkVersion 34
+        compileSdk(34)
         versionCode 16
-        versionName "7.10.0"
+        versionName "7.12.0"
         multiDexEnabled true
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         vectorDrawables.useSupportLibrary = true
@@ -45,7 +45,6 @@ android {
 
     buildTypes {
         debug {
-            initWith debug
             buildConfigField 'Boolean', 'IS_QA_BUILD', 'true'
             buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
@@ -112,7 +111,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "androidx.core:core-ktx:1.3.2"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -203,7 +202,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.10.0'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.12.0'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'

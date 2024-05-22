@@ -49,7 +49,7 @@ object GetMsgNotificationUtils {
             if (message.isMessageRecalled())
                 deleted_message
             else {
-                var lastMessageMentionContent = ChatUtils.getSpannedText(message.getMessageTextContent())
+                var lastMessageMentionContent = ChatUtils.getSpannedText(message.messageTextContent)
                 if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
                     lastMessageMentionContent = com.contusfly.utils.ChatUtils.setMentionFormattedTextForRecentChat(context, message).toString()
                 }

@@ -34,6 +34,7 @@ import com.contusfly.views.DoProgressDialog
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyCore.unblockUser
+import com.mirrorflysdk.flycommons.exception.FlyException
 import com.mirrorflysdk.views.CustomToast
 import java.util.*
 
@@ -212,8 +213,8 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
                 CustomAlertDialog().showFeatureRestrictionAlert(activity)
             } else {
                 makeVoiceCall(jidList[0], object : CallActionListener {
-                    override fun onResponse(isSuccess: Boolean, message: String) {
-                        LogMessage.i(TAG, "$CALL_UI makeVoiceCall: $message")
+                    override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
+                        LogMessage.i(TAG, "$CALL_UI makeVoiceCall: ${flyException?.message}")
                     }
                 })
             }
@@ -227,8 +228,8 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
             CustomAlertDialog().showFeatureRestrictionAlert(activity)
         } else {
             CallManager.makeGroupVoiceCall(jidList, groupId, object : CallActionListener {
-                override fun onResponse(isSuccess: Boolean, message: String) {
-                    LogMessage.i(TAG, "$CALL_UI makeVoiceCall: $message")
+                override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
+                    LogMessage.i(TAG, "$CALL_UI makeVoiceCall: ${flyException?.message}")
                 }
             })
             closeScreen()
@@ -266,8 +267,8 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
                 CustomAlertDialog().showFeatureRestrictionAlert(activity)
             } else {
                 makeVideoCall(jidList[0], object : CallActionListener {
-                    override fun onResponse(isSuccess: Boolean, message: String) {
-                        LogMessage.i(TAG, "$CALL_UI makeVideoCall: $message")
+                    override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
+                        LogMessage.i(TAG, "$CALL_UI makeVideoCall: ${flyException?.message}")
                     }
                 })
             }
@@ -279,8 +280,8 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
             CustomAlertDialog().showFeatureRestrictionAlert(activity)
         } else {
             CallManager.makeGroupVideoCall(jidList, groupId, object : CallActionListener {
-                override fun onResponse(isSuccess: Boolean, message: String) {
-                    LogMessage.i(TAG, "$CALL_UI makeVideoCall: $message")
+                override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
+                    LogMessage.i(TAG, "$CALL_UI makeVideoCall: ${flyException?.message}")
                 }
             })
             closeScreen()
