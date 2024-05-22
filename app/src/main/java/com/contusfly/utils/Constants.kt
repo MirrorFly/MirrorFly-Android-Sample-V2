@@ -31,6 +31,7 @@ class Constants {
         const val AUDIO_DURATION_LIMIT = 300
         const val MAX_CAPTION_LENGTH = 1024
         const val EMPTY_TIME = ""
+        const val RECENT_CHAT_FETCHED_PAGE_NUMBER="recentChatPageNumber"
         const val NOTIFY_MESSAGE_HIGHLIGHT = "notify_message_highlight"
         const val NOTIFY_MESSAGE_UNHIGHLIGHT = "notify_message_unhighlight"
         const val NOTIFY_MESSAGE_PROGRESS_CHANGED = "notify_message_progress_changed"
@@ -425,6 +426,10 @@ class Constants {
 
         const val MAX_DOCUMENT_UPLOAD_SIZE = 2048 // 2 GB
         const val MAX_AUDIO_SIZE_LIMIT = 2048 // 2 GB
+        const val MAX_VIDEO_UPLOAD_SIZE = 2048 // 2 GB
+
+        const val MESSAGE_LOAD_LIMIT = 50
+
 
         //Full Screen Intent Permission
         const val ASK_FULL_SCREEN_INTENT_PERMISSION = "ask_full_screen_notification_permission"

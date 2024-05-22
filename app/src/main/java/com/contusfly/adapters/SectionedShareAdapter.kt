@@ -173,6 +173,9 @@ class SectionedShareAdapter(private val context: Context, private val commonAler
             val item = profileDetailsList[position]
             setUserInfo(holder, item)
             val onClickListener = View.OnClickListener { handleContactSelection(item, holder, position) }
+            holder.viewBinding.viewSectionHeader.setOnClickListener {
+                //do nothing.
+            }
             holder.viewBinding.centerLayout.setOnClickListener(onClickListener)
             holder.viewBinding.contactItem.setOnClickListener(onClickListener)
             holder.viewBinding.checkSelection.setOnClickListener(onClickListener)
@@ -192,6 +195,7 @@ class SectionedShareAdapter(private val context: Context, private val commonAler
      */
     private fun handleContactSelection(item: ProfileDetailsShareModel, holder: ShareViewHolder, position: Int) {
         if (item.profileDetails.isGroupProfile && ChatManager.getAvailableFeatures().isGroupChatEnabled && !GroupManager.isMemberOfGroup(item.profileDetails.jid, SharedPreferenceManager.getCurrentUserJid())) {
+            holder.viewBinding.checkSelection.isChecked = false
             CustomToast.show(context, context.getString(R.string.user_no_longer_error_message))
             return
         }

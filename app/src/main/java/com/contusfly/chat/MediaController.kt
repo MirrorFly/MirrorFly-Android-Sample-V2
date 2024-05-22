@@ -21,9 +21,10 @@ import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
 import com.contusfly.TAG
+import com.contusfly.interfaces.AudioPlayItemViewSetListener
 import com.contusfly.utils.ChatMessageUtils.getFormattedTime
 import com.contusfly.utils.MediaDetailUtils.getMediaDuration
-import com.contusfly.views.MirrorFlySeekBar
+import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.utils.Utils
 import java.io.File
 import java.util.*
@@ -40,6 +41,9 @@ class MediaController(private val context: Context) {
      */
     private val mAudioManager: AudioManager
     private var isSender = false
+    private var mainList =  ArrayList<ChatMessage>()
+    private var currentItemPlayListener: AudioPlayItemViewSetListener?=null
+
 
     /**
      * Local file path
@@ -125,8 +129,12 @@ class MediaController(private val context: Context) {
         override fun initialValue(): Runnable {
             return Runnable {
                 timeConsumed = mediaPlayer!!.currentPosition / progressMilliSeconds
-                seekBar!!.progress = timeConsumed
-                txtTimer!!.text = getFormattedTime(timeConsumed / 10)
+                if(currentItemPlayListener != null) {
+                    currentItemPlayListener?.currentlyPlayItem(getMessagePosition(currentAudioPlayMessageID),timeConsumed,getFormattedTime(timeConsumed / 10))
+                } else {
+                    seekBar!!.progress = timeConsumed
+                    txtTimer!!.text = getFormattedTime(timeConsumed / 10)
+                }
                 mHandler!!.postDelayed(this.get()!!, progressMilliSeconds.toLong())
             }
         }
@@ -138,6 +146,9 @@ class MediaController(private val context: Context) {
      * message in the chat adapter view.
      */
     var currentAudioPosition = -1
+
+    var currentAudioPlayMessageID:String = ""
+
 
     /**
      * The file path of the last view media.
@@ -167,6 +178,13 @@ class MediaController(private val context: Context) {
         LogMessage.v(TAG, "#audio duration: duration:${duration}")
     }
 
+    fun setListener(currentItemPlayListener: AudioPlayItemViewSetListener){
+        this.currentItemPlayListener = currentItemPlayListener
+    }
+
+    fun setmainList(mainList: ArrayList<ChatMessage>) {
+        this.mainList = mainList
+    }
     /**
      * Gets the seeker time in seconds
      * @param filePath
@@ -235,7 +253,15 @@ class MediaController(private val context: Context) {
      * chat activity.
      */
     fun checkStateOfPlayer(imgPlay: ImageView, seekBar: SeekBar, txtTimer: TextView?,
-                           position: Int) {
+                           position: Int, mainList: ArrayList<ChatMessage> = ArrayList(),messageId:String = com.contusfly.utils.Constants.EMPTY_STRING) {
+
+        if (currentAudioPlayMessageID.isNotEmpty()) {
+            this.mainList = mainList
+            currentAudioPosition = getMessagePosition(currentAudioPlayMessageID)
+        }
+
+       LogMessage.d("AUDIO_SEEKBAR","checkStateOfPlayer position $position currentAudioPosition $currentAudioPosition")
+
         try {
             if (mediaPlayer != null && mediaPlayer!!.isPlaying
                 && position == currentAudioPosition) {
@@ -249,11 +275,19 @@ class MediaController(private val context: Context) {
                     mHandler!!.removeCallbacks(songHandler.get()!!)
                     mHandler!!.post(songHandler.get()!!)
                 }
+            } else {
+                LogMessage.d("AUDIO_SEEKBAR","checkStateOfPlayer Play icon set seekbar progress ${seekBar.progress}")
+                imgPlay.setImageResource(R.drawable.ic_play_audio_recipient)
+                seekBar.progress = 0
             }
         } catch (e: Exception) {
             LogMessage.e(Constants.TAG, e)
+            LogMessage.d("AUDIO_SEEKBAR","checkStateOfPlayer Exception $e")
         }
     }
+
+    private fun getMessagePosition(messageId: String) =
+        mainList.indexOfFirst { it.messageId == messageId }
 
     /**
      * Stop the player of the Media player.
@@ -307,8 +341,11 @@ class MediaController(private val context: Context) {
             imgPlay!!.setImageResource(R.drawable.ic_play_audio_recipient)
             mHandler!!.removeCallbacks(songHandler.get()!!)
         } else if (!mediaPlayer!!.isPlaying && lastUsedMedia.equals(filePath, ignoreCase = true)) {
-            if (requestAudioFocus(focusChangeListener, AudioManager.USE_DEFAULT_STREAM_TYPE,
-                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)) {
+            if (requestAudioFocus(
+                    focusChangeListener, AudioManager.USE_DEFAULT_STREAM_TYPE,
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
+                )
+            ) {
                 mHandler!!.post(songHandler.get()!!)
                 mediaPlayer!!.start()
                 mediaPlayer!!.seekTo(currentPosition)
@@ -321,7 +358,7 @@ class MediaController(private val context: Context) {
             mediaPlayer!!.release()
             mediaPlayer = null
             timeConsumed = 0
-            mHandler!!.removeCallbacks(songHandler.get()!!)
+            mHandler?.removeCallbacks(songHandler.get()!!)
         }
     }
 
@@ -412,6 +449,10 @@ class MediaController(private val context: Context) {
         }
     }
 
+    fun unplayedSeekbarProgress( progress: Int) {
+        tempProgress = progress
+    }
+
     /**
      * Handle the audio seekbar progressbarchange listener for chat screen
      *
@@ -425,7 +466,7 @@ class MediaController(private val context: Context) {
      */
     fun updateSeekbarChanges(progress: Int,layoutPosition: Int,path: String?,
                              fromUser: Boolean,durationView: TextView,
-                             mirrorFlySeekBar: MirrorFlySeekBar,
+                             mirrorFlySeekBar: SeekBar,
                              imgPlayer: ImageView) {
 
      if (filePath.isNullOrBlank() || filePath == path) {

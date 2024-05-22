@@ -13,6 +13,7 @@ import com.contusfly.isMediaMessage
 import com.contusfly.isMessageSent
 import com.contusfly.utils.MediaUtils.openMediaFile
 import com.mirrorflysdk.AppUtils
+import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.helpers.LocationUtils
 import com.mirrorflysdk.views.CustomToast
@@ -106,25 +107,31 @@ class ChatClickUtils {
          *
          */
         message?.let {
-            val isMediaFileAvailable = MediaChecker.isMediaFileAvailable(message.getMessageType(), message)
-            if (isMediaFileAvailable && (message.getMediaChatMessage().getMediaDownloadStatus()
-                            == MediaDownloadStatus.MEDIA_DOWNLOADED || (message.getMediaChatMessage().getMediaUploadStatus()
+            val isMediaFileAvailable = MediaChecker.isMediaFileAvailable(message.messageType, message)
+            if (isMediaFileAvailable && (message.mediaChatMessage.getMediaDownloadStatus()
+                            == MediaDownloadStatus.MEDIA_DOWNLOADED || (message.mediaChatMessage.getMediaUploadStatus()
                         == MediaUploadStatus.MEDIA_UPLOADED && !message.isMessageSent()))) {
-                if (isMediaExists(message.getMediaChatMessage().getMediaLocalStoragePath())) {
-                    if (MessageType.IMAGE == message.getMessageType()) {
+                if (isMediaExists(message.mediaChatMessage.mediaLocalStoragePath)) {
+                    if (MessageType.IMAGE == message.messageType) {
                         context.startActivity(Intent(context, MediaSlideActivity::class.java)
-                                .putExtra(Constants.MESSAGE_ID, message.getMessageId())
-                                .putExtra(Constants.USER_JID, message.getChatUserJid()))
-                    } else if (message.getMediaChatMessage().getMediaDownloadStatus()
-                            == MediaDownloadStatus.MEDIA_DOWNLOADED || message.getMediaChatMessage()
-                                    .getMediaUploadStatus() == MediaUploadStatus.MEDIA_UPLOADED) {
-                        openMediaFile(context, message.getMediaChatMessage().getMediaLocalStoragePath())
+                                .putExtra(Constants.MESSAGE_ID, message.messageId)
+                                .putExtra(Constants.USER_JID, message.chatUserJid))
+                    } else if (canAbleToOpenMedia(message)) {
+                        openMediaFile(context, message.mediaChatMessage.mediaLocalStoragePath)
                     }
-                } else CustomToast.showShortToast(context, context.getString(R.string.msg_media_does_not_exists))
+                } else {
+                    FlyMessenger.downloadMedia(message.messageId)
+                }
             } else if(isMediaFileNotAvailable(isMediaFileAvailable,message)) {
-                CustomToast.showShortToast(context, context.getString(R.string.msg_media_does_not_exists))
+                FlyMessenger.downloadMedia(message.messageId)
             }
         }
+    }
+
+    private fun canAbleToOpenMedia(message: ChatMessage): Boolean {
+        return (message.mediaChatMessage.getMediaDownloadStatus()
+                == MediaDownloadStatus.MEDIA_DOWNLOADED || message.mediaChatMessage
+            .getMediaUploadStatus() == MediaUploadStatus.MEDIA_UPLOADED)
     }
 
     private fun isMediaFileNotAvailable(isMediaFileAvailable:Boolean,message:ChatMessage):Boolean{

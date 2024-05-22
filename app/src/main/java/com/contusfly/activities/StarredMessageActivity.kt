@@ -145,7 +145,7 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
         initStarredMessageViews()
         selectedStarredMessagesList = java.util.ArrayList()
         clickedStarredMessages = java.util.ArrayList()
-        starredMessageAdapter = StarredMessagesAdapter()
+        starredMessageAdapter = StarredMessagesAdapter(listStarredMessages)
         starredMessageAdapter!!.setAdapterData(this)
         chat = Chat("", "")
         listStarredMessages.adapter=starredMessageAdapter
@@ -582,6 +582,7 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
     }
 
     private fun launchChatPage(clickedMessage: ChatMessage,isStarredMediaMessage:Boolean,registeredJid:String){
+        starredMessageAdapter?.pauseMediaPlayer()
         if(isStarredMediaMessage){
             startActivity(
                 Intent(this, ChatActivity::class.java)

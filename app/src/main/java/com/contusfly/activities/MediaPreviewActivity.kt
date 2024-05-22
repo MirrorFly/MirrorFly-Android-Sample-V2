@@ -802,32 +802,39 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     }
 
     private fun maintainAddedMentionUser(position:Int) {
-        if (selectedImageList[position].mentionedUsersIds != null && selectedImageList[position].mentionedUsersIds.size > 0 && selectedImageList[position].caption.isNotEmpty()) {
-            val texts = context!!.getString(R.string.chat_text)
-            val textMessage = selectedImageList[position].caption + texts + texts
-            val unSentMentionedUserIdList=ArrayList<ProfileDetails?>()
-            val mentionIdList=selectedImageList[position].mentionedUsersIds
-            for(mentionUser in mentionIdList){
-                val jidFormation= FlyUtils.getJid(mentionUser)
-                val profile= FlyCore.getUserProfile(jidFormation)
-                if (profile != null) {
-                    unSentMentionedUserIdList.add(profile)
+        try {
+            if (selectedImageList.size == 0) return
+            if (selectedImageList[position].mentionedUsersIds != null && selectedImageList[position].mentionedUsersIds.size > 0 && selectedImageList[position].caption.isNotEmpty()) {
+                val texts = context!!.getString(R.string.chat_text)
+                val textMessage = selectedImageList[position].caption + texts + texts
+                val unSentMentionedUserIdList = ArrayList<ProfileDetails?>()
+                val mentionIdList = selectedImageList[position].mentionedUsersIds
+                for (mentionUser in mentionIdList) {
+                    val jidFormation = FlyUtils.getJid(mentionUser)
+                    val profile = FlyCore.getUserProfile(jidFormation)
+                    if (profile != null) {
+                        unSentMentionedUserIdList.add(profile)
+                    }
                 }
-            }
-            var text = MentionUtils.formatUnSentMentionText(
-                unSentMentionedUserIdList,
-                textMessage,
-                this,
-                emojiEditText!!
-            )
-            emojiEditText!!.setText(TextUtils.concat(text.trim(), " "))
-        } else {
-            emojiEditText!!.setText(
-                if (Utils.returnEmptyStringIfNull(selectedImageList[position].caption)
-                        .isNotEmpty()
+                var text = MentionUtils.formatUnSentMentionText(
+                    unSentMentionedUserIdList,
+                    textMessage,
+                    this,
+                    emojiEditText!!
                 )
-                    selectedImageList[position].caption else ""
-            )
+                emojiEditText!!.setText(TextUtils.concat(text.trim(), " "))
+            } else {
+                emojiEditText!!.setText(
+                    if (Utils.returnEmptyStringIfNull(selectedImageList[position].caption)
+                            .isNotEmpty()
+                    )
+                        selectedImageList[position].caption else ""
+                )
+            }
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            LogMessage.e(TAG, e.toString())
+        } catch (e: Exception) {
+            LogMessage.e(TAG, e.toString())
         }
     }
 
@@ -1066,7 +1073,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
 
             CoroutineScope(Dispatchers.IO).launch {
                 val messageObject = messagingClient.composeVideoMessage(toUser, intent.getStringExtra(Constants.FILE_PATH)!!,
-                    sendTextMessageWithMentionFormat.toString(), replyMessageId, mentionedUsersIds).second
+                    sendTextMessageWithMentionFormat.toString(), replyMessageId, mentionedUsersIds).third
 
                 messageObject?.let {
                     messagingClient.sendMessage(it, object : MessageListener {
@@ -1130,7 +1137,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                         mediaPreviewBinding.sendMedia.isEnabled = true
                         break
                     }
-                    messageObject = messagingClient.composeVideoMessage(toUser, item.path, item.caption, replyMessageId,item.mentionedUsersIds).second
+                    messageObject = messagingClient.composeVideoMessage(toUser, item.path, item.caption, replyMessageId,item.mentionedUsersIds).third
                 }
                 sendGalleryAttachmentFiles(messageObject,sentMessages,toUser,errorMessageList)
 

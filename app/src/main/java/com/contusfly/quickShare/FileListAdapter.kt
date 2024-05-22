@@ -70,7 +70,7 @@ class FileListAdapter(context: Context) : RecyclerView.Adapter<FileListAdapter.F
         if (!fileObject.fileValidation!![FileValidation.SIZE]!!) {
             val errorMessage = context!!.getString(R.string.file_size_error_message)
             holder.viewBinding.fileSize.setTextColor(ContextCompat.getColor(context!!, R.color.invalid_red))
-            invalidTextMessage = errorMessage + " " + getFileMimeTypeMessage(fileObject.fileMimeType)
+            invalidTextMessage = errorMessage + " " + getFileMimeTypeMessage()
         } else holder.viewBinding.fileSize.setTextColor(ContextCompat.getColor(context!!, R.color.color_black))
 
         if (!fileObject.fileValidation!![FileValidation.DURATION]!!) {
@@ -90,8 +90,8 @@ class FileListAdapter(context: Context) : RecyclerView.Adapter<FileListAdapter.F
         holder.viewBinding.invalidText.text = invalidTextMessage
     }
 
-    private fun getFileMimeTypeMessage(fileMimeType: String): String {
-        return if (fileMimeType == IMAGE) "10MB" else if (fileMimeType == VIDEO || fileMimeType == AUDIO) "30MB" else "20MB"
+    private fun getFileMimeTypeMessage(): String {
+        return "2Gb"
     }
 
     private fun handleMimeType(fileObject: FileObject, holder: FileShareViewHolder) {

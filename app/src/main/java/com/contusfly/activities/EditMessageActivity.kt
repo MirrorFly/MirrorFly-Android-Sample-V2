@@ -86,7 +86,7 @@ class EditMessageActivity : EditChatParent(), View.OnTouchListener,
         val message = getMessage()
         if (message != null) {
             mainList.add(message)
-            chatAdapter = ChatAdapter(mainList, arrayListOf(), chat.chatType, this, toUser,true)
+            chatAdapter = ChatAdapter(mainList, arrayListOf(), chat.chatType, this, toUser,true, listChats)
             chatAdapter.hasStableIds()
             listChats.adapter = chatAdapter
             setMessageInEditText(message)

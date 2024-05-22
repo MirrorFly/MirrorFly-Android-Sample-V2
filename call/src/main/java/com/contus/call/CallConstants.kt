@@ -6,6 +6,8 @@ object CallConstants {
 
     const val JOIN_CALL = "#joinCall"
 
+    const val CALL_FLOW_TAG: String =" #callflow "
+
     /**
      * Video call request code
      */

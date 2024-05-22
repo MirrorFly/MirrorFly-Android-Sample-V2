@@ -1,5 +1,6 @@
 package com.contusfly.adapters.viewhelpers
 
+import android.view.View
 import com.mirrorflysdk.flycommons.MediaDownloadStatus
 import com.mirrorflysdk.flycommons.MediaUploadStatus
 import com.contusfly.R
@@ -11,6 +12,7 @@ import com.contusfly.gone
 import com.contusfly.interfaces.MessageItemListener
 import com.contusfly.makeViewsGone
 import com.contusfly.show
+import com.contusfly.utils.ChatMessageUtils
 import com.contusfly.utils.Utils
 import com.mirrorflysdk.api.models.ChatMessage
 
@@ -49,7 +51,8 @@ class AudioItemView(private val messageItemListener: MessageItemListener) {
             val fileUploadStatus = Utils.returnEmptyStringIfNull(message.getMediaChatMessage().getMediaUploadStatus().toString())
             val fileDownloadStatus = Utils.returnEmptyStringIfNull(message.getMediaChatMessage().getMediaDownloadStatus().toString())
             val fileStatus = if (message.isItCarbonMessage()) fileDownloadStatus else fileUploadStatus
-
+            if(!message.isItCarbonMessage)
+                viewCarbonRetry?.visibility = View.GONE
             if (fileStatus.isNotEmpty()) {
                 AudioHandler.setAudioStatus(if (message.isItCarbonMessage()) viewCarbonRetry else viewRetry, progressSender, fileStatus.toInt(), imgAudioPlay, message.messageId, sentAudioForwardImage, progressUploadDownloadLayout)
                 messageItemListener.setMediaDuration(txtAudioDuration, fileStatus.toInt(), message, null)
@@ -73,10 +76,15 @@ class AudioItemView(private val messageItemListener: MessageItemListener) {
 
         val progressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(message.mediaChatMessage.mediaProgressStatus))
         with(audioSentViewHolder) {
-            if (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
-                progressUploadDownloadLayout.gone()
-                progressSender.gone()
-                progressUploadDownloadBuffer.gone()
+            if (fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
+                if (message.mediaChatMessage.mediaLocalStoragePath != null && message.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
+                        message.mediaChatMessage.mediaLocalStoragePath
+                    )
+                ) {
+                    progressUploadDownloadLayout.gone()
+                    progressSender.gone()
+                    progressUploadDownloadBuffer.gone()
+                }
             }else if ((fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING) && progressPercentage > 0 && progressPercentage < 100) {
                 progressSender.show()
                 progressUploadDownloadBuffer.gone()
@@ -137,9 +145,14 @@ class AudioItemView(private val messageItemListener: MessageItemListener) {
 
         with(audioReceiverViewHolder) {
             if (fileStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
-                progressUploadDownloadLayout.gone()
-                progressSender.gone()
-                progressUploadDownloadBuffer.gone()
+                if (message.mediaChatMessage.mediaLocalStoragePath != null && message.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
+                        message.mediaChatMessage.mediaLocalStoragePath
+                    )
+                ) {
+                    progressUploadDownloadLayout.gone()
+                    progressSender.gone()
+                    progressUploadDownloadBuffer.gone()
+                }
             }else if (fileStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING && progressPercentage > 0 && progressPercentage < 100) {
                 progressSender.show()
                 progressUploadDownloadBuffer.gone()

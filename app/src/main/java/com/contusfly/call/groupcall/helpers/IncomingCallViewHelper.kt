@@ -45,6 +45,11 @@ class IncomingCallViewHelper(
             hideIncomingCallLayout()
     }
 
+    fun resetButtonState(){
+        binding.imageCallAnswer.isEnabled = true
+        binding.imageCallReject.isEnabled = true
+    }
+
     /*
     * Set up method for incoming call
     * */

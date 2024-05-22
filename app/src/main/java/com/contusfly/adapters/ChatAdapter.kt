@@ -33,6 +33,7 @@ import com.contusfly.chat.MediaController
 import com.contusfly.chat.MessageUtils
 import com.contusfly.chat.reply.ReplyViewUtils
 import com.contusfly.groupmention.MentionUtils
+import com.contusfly.interfaces.AudioPlayItemViewSetListener
 import com.contusfly.interfaces.MessageItemListener
 import com.contusfly.interfaces.OnChatItemClickListener
 import com.contusfly.models.ChatItemRowModel
@@ -72,8 +73,10 @@ class ChatAdapter(
     private val chatType: String,
     val activity: Context,
     val userJid: String,
-    val isFromEditScreen:Boolean = false
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), MessageItemListener {
+    val isFromEditScreen:Boolean = false,
+    val listChats: RecyclerView
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), MessageItemListener,
+    AudioPlayItemViewSetListener {
 
     var isLinkLongClick: Boolean = false
 
@@ -345,8 +348,7 @@ class ChatAdapter(
                     isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, imgSenderStatus)
                     replyViewUtils.showSenderReplyWindow(this, item, context)
-                    if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
-                        imgForwardLocation?.show()
+                    imgForwardLocationVisibility(item,locationSentViewHolder)
                     imgForwardLocation?.setOnClickListener {
                         listener?.onSenderMediaForward(
                             item,
@@ -355,6 +357,15 @@ class ChatAdapter(
                     }
                 }
             }
+        }
+    }
+
+    private fun imgForwardLocationVisibility(
+        item: ChatMessage,
+        locationSentViewHolder: LocationSentViewHolder,
+    ) {
+        if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen()) {
+            locationSentViewHolder.imgForwardLocation?.show()
         }
     }
 
@@ -466,8 +477,11 @@ class ChatAdapter(
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
                 fileItemView.handleSenderFileItemProgressUpdate(item, this)
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED)
+            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
+                val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
                 setFileMediaStatusSenderView(this, item)
+                fileItemView.fileSenderItemView(fileSentViewHolder,  time, item)
+            }
             else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
                 if (item.isMessageRecalled)
                     getFileView(this, item, position)
@@ -497,8 +511,11 @@ class ChatAdapter(
                 )
             } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
                 fileItemView.handleReceiverFileItemProgressUpdate(item, this)
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED)
+            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
                 setFileMediaStatusReceiverView(this, item)
+                val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+                fileItemView.fileReceiverItemView(this,  time, item)
+            }
             else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
                 if (item.isMessageRecalled)
                     getFileView(this, item, position)
@@ -524,8 +541,10 @@ class ChatAdapter(
                     isHighLighted,
                     context
                 )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
+            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED) {
                 audioItemView.handleSenderAudioItemProgressUpdate(item, this)
+                getAudioMediaStatus(item, sentAudioForwardImage)
+            }
             else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
                 audioItemView.setAudioSenderMediaStatus(this, item)
                 if (item.isMediaDownloaded())
@@ -537,6 +556,8 @@ class ChatAdapter(
                         txtAudioDuration,
                         true
                     )
+                 getAudioMediaStatus(item, sentAudioForwardImage)
+
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
                 if (item.isMessageRecalled)
                     getAudioView(this, item, position)
@@ -544,9 +565,30 @@ class ChatAdapter(
                     isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, imgSenderStatus)
                     replyViewUtils.showSenderReplyWindow(this, item, context)
+                    getAudioMediaStatus(item, sentAudioForwardImage)
+
                 }
             }
         }
+    }
+    private fun getAudioMediaStatus(message: ChatMessage, sentAudioForwardImage: ImageView?) {
+        val fileUploadStatus = com.contusfly.utils.Utils.returnEmptyStringIfNull(
+            message.mediaChatMessage.getMediaUploadStatus().toString()
+        )
+        val fileDownloadStatus = com.contusfly.utils.Utils.returnEmptyStringIfNull(
+            message.mediaChatMessage.getMediaDownloadStatus().toString()
+        )
+        val fileStatus =
+            if (message.isItCarbonMessage) fileDownloadStatus else fileUploadStatus
+        when (fileStatus.toInt()) {
+            MediaDownloadStatus.MEDIA_DOWNLOADED, MediaUploadStatus.MEDIA_UPLOADED -> {
+               sentAudioForwardImage!!.show()
+            }
+            else->{
+                sentAudioForwardImage!!.gone()
+            }
+        }
+
     }
 
     private fun handlePayloadsAudioReceived(
@@ -577,6 +619,8 @@ class ChatAdapter(
                         txtAudioDuration,
                         false
                     )
+                 getAudioMediaStatus(item, sentAudioForwardImage)
+
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
                 if (item.isMessageRecalled)
                     getAudioView(this, item, position)
@@ -602,8 +646,9 @@ class ChatAdapter(
                     isHighLighted,
                     context
                 )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
+            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED) {
                 imageItemViewHelper.handleSenderImageItemProgressUpdate(item, this)
+            }
             else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
                 handleImageMediaStatusChanged(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
@@ -612,6 +657,7 @@ class ChatAdapter(
                 else {
                     isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
+                    forwardImgVisibilityForSentImageItem(imageSentViewHolder, item)
                     setStaredStatus(
                         item.isMessageStarred,
                         getStarIcon(item, imgSentStarred, imgSentCaptionStar)
@@ -619,6 +665,22 @@ class ChatAdapter(
                 }
             }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
                 bindSenderImageView(this, item, position)
+            }
+        }
+    }
+
+    private fun forwardImgVisibilityForSentImageItem(
+        imageSentViewHolder: ImageSentViewHolder,
+        item: ChatMessage,
+    ) {
+        with(imageSentViewHolder) {
+            imgSentForward?.let {
+                if (canShowForwardImg(item)
+                ) {
+                    imgSentForward.show()
+                } else {
+                    imgSentForward.gone()
+                }
             }
         }
     }
@@ -699,8 +761,9 @@ class ChatAdapter(
                     isHighLighted,
                     context
                 )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
+            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED) {
                 videoItemViewHelper.handleSenderVideoItemProgressUpdate(item, videoSentViewHolder)
+            }
             else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
                 handleVideoMediaStatusChanged(this, item)
             } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
@@ -709,6 +772,7 @@ class ChatAdapter(
                 else {
                     isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
                     setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
+                    forwardImgVisibilityForSentVideoItem(videoSentViewHolder,item)
                     setStaredStatus(
                         item.isMessageStarred,
                         getStarIcon(item, imgSentStarred, imgSentCaptionStar)
@@ -718,6 +782,29 @@ class ChatAdapter(
                 bindSenderVideoView(this, item, position)
             }
         }
+    }
+
+    private fun forwardImgVisibilityForSentVideoItem(
+        videoSentViewHolder: VideoSentViewHolder,
+        item: ChatMessage,
+    ) {
+        with(videoSentViewHolder) {
+            imgSentForward?.let {
+                if (canShowForwardImg(item)
+                ) {
+                    imgSentForward.show()
+                } else {
+                    imgSentForward.gone()
+                }
+            }
+        }
+    }
+
+    private fun canShowForwardImg(item: ChatMessage): Boolean {
+        return ((item.isMessageAcknowledged() || item.isMessageDelivered()
+                || item.isMessageSeen()) && MessageUtils.isMediaExists(
+            item.mediaChatMessage.mediaLocalStoragePath
+        ))
     }
 
     private fun handleVideoMediaStatusChanged(
@@ -2042,7 +2129,8 @@ class ChatAdapter(
                     imgAudioPlay,
                     audioMirrorFlySeekBar,
                     txtAudioDuration,
-                    layoutPosition
+                    layoutPosition, mainList,
+                    item.messageId
                 )
                 replyViewUtils.showSenderReplyWindow(this, item, context)
                 /*new AudioReplyViewUtils().showSenderReplyWindow(audioViewHolder, item, context, messageDetail);*/
@@ -2050,6 +2138,7 @@ class ChatAdapter(
                 setListenersForAudioMessages(this, item)
                 uploadClick(viewRetry, viewCarbonRetry, progressUploadDownloadLayout, item)
                 audioMirrorFlySeekBar.isEnabled = selectedMessages.isEmpty()
+                sentAudioForwardImgVisibility(item,audioViewHolder)
                 sentAudioForwardImage?.setOnClickListener {
                     listener?.onSenderMediaForward(
                         item,
@@ -2081,7 +2170,7 @@ class ChatAdapter(
                     imgAudioPlay,
                     audioMirrorFlySeekBar,
                     txtAudioDuration,
-                    layoutPosition
+                    layoutPosition,  mainList, item.messageId
                 )
                 audRevStarred.visibility = if (item.isMessageStarred) View.VISIBLE else View.GONE
                 replyViewUtils.showReceiverReplyWindow(this, item, context)
@@ -2101,6 +2190,23 @@ class ChatAdapter(
                 } else {
                     audioReceiverViewHolder.imgAudioType.setImageResource(R.drawable.ic_audio_music_icon)
                 }
+            }
+        }
+    }
+
+    private fun sentAudioForwardImgVisibility(
+        item: ChatMessage,
+        audioSentViewHolder: AudioSentViewHolder,
+    ) {
+        audioSentViewHolder.sentAudioForwardImage?.let {
+            if ((item.isMessageAcknowledged() || item.isMessageDelivered()
+                        || item.isMessageSeen()) && MessageUtils.isMediaExists(
+                    item.mediaChatMessage.mediaLocalStoragePath
+                )
+            ) {
+                audioSentViewHolder.sentAudioForwardImage.show()
+            } else {
+                audioSentViewHolder.sentAudioForwardImage.gone()
             }
         }
     }
@@ -2141,8 +2247,9 @@ class ChatAdapter(
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
                 setListenersForSenderLocationMessages(this, item)
                 senderItemClick(this, imageSendLocation, item)
-                if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
+                if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen()) {
                     imgForwardLocation?.show()
+                }
                 imgForwardLocation?.setOnClickListener {
                     listener?.onSenderMediaForward(
                         item,
@@ -2189,7 +2296,6 @@ class ChatAdapter(
                 ChatUtils.setSelectedChatItem(viewRowItem, item, selectedMessages, context)
                 setListenersForReceiverLocationMessages(this, item)
                 receiverItemClick(this, imageReceiveLocation, item)
-                imgForwardLocation?.show()
                 imgForwardLocation?.setOnClickListener {
                     listener?.onSenderMediaForward(
                         item,
@@ -2539,8 +2645,9 @@ class ChatAdapter(
                 setSearchContactText(txtSendName, SpannableStringBuilder(contactName))
                 setListenersForReceivedContactMessages(this, item, registeredJid)
                 receiverItemClick(this, viewRowItem, item)
-                if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
+                if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen()) {
                     imgForwardContact?.show()
+                }
                 imgForwardContact?.setOnClickListener {
                     listener?.onSenderMediaForward(
                         item,
@@ -2573,8 +2680,9 @@ class ChatAdapter(
             setSelectedChatItem(viewRowItem, item)
             setListenersForContactMessages(this, item, registeredJid)
             senderItemClick(this, viewRowItem, item)
-            if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen())
-                imgForwardContact?.show()
+            if (item.isMessageAcknowledged() || item.isMessageDelivered() || item.isMessageSeen()) {
+                    imgForwardContact?.show()
+            }
             imgForwardContact?.setOnClickListener {
                 listener?.onSenderMediaForward(
                     item,
@@ -3153,6 +3261,9 @@ class ChatAdapter(
                     )
                 ) {
                     with(mediaController) {
+                        if(currentAudioPlayMessageID.isNotEmpty()){
+                            currentAudioPosition = getMessageAudioPosition(currentAudioPlayMessageID)
+                        }
                         if (currentAudioPosition != -1 && layoutPosition != currentAudioPosition)
                             resetAudioPlayer(false)
                         setMediaResource(
@@ -3161,9 +3272,12 @@ class ChatAdapter(
                             playImage,
                             doesSentMessage
                         )
+                        setListener(this@ChatAdapter)
+                        setmainList(mainList)
                         setMediaSeekBar(mirrorFlySeekBar)
                         setMediaTimer(durationView)
                         currentAudioPosition = layoutPosition
+                        currentAudioPlayMessageID = item.messageId
                         handlePlayer(doesSentMessage)
                         listener?.onAudioPlayed()
                     }
@@ -3201,19 +3315,27 @@ class ChatAdapter(
                     progress: Int,
                     fromUser: Boolean
                 ) {
-                    if (selectedMessages.isEmpty()) {
+                    if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION) {
 
-                        mediaController.updateSeekbarChanges(
-                            progress, layoutPosition,
-                            media.mediaLocalStoragePath, fromUser, durationView,
-                            mirrorFlySeekBar, playImage
+                        if (mediaController.currentAudioPlayMessageID.isNotEmpty()) {
+                            mediaController.currentAudioPosition =
+                                getMessageAudioPosition(mediaController.currentAudioPlayMessageID)
+                        }
+
+                        LogMessage.d(
+                            "AUDIO_SEEKBAR",
+                            "seekbar change currentAudioPosition ${mediaController.currentAudioPosition}"
                         )
+
+                        updateSeekbarChanges(holder, playImage, durationView, progress, fromUser, mirrorFlySeekBar, item)
 
                     } else {
                         mirrorFlySeekBar.progress = 0
-                        listener?.onSenderItemLongClick(item, layoutPosition)
                     }
+
+
                 }
+
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                     /*No Implementation Needed*/
@@ -3230,6 +3352,31 @@ class ChatAdapter(
                 }
             })
         }
+    }
+    private fun updateSeekbarChanges(
+        holder: RecyclerView.ViewHolder,
+        playImage: ImageView, durationView: TextView, progress: Int, fromUser: Boolean,
+        mirrorFlySeekBar: MirrorFlySeekBar, item: ChatMessage
+
+    ) {
+        with(holder) {
+            if (holder.absoluteAdapterPosition == mediaController.currentAudioPosition) {
+                if (selectedMessages.isEmpty()) {
+
+                    mediaController.updateSeekbarChanges(
+                        progress, layoutPosition,
+                        item.mediaChatMessage.mediaLocalStoragePath, fromUser, durationView,
+                        mirrorFlySeekBar, playImage
+                    )
+
+                } else {
+                    mirrorFlySeekBar.progress = 0
+                    listener?.onSenderItemLongClick(item, layoutPosition)
+                }
+
+            }
+        }
+
     }
 
     /**
@@ -3684,6 +3831,9 @@ class ChatAdapter(
     private fun getMessagePosition(messageId: String) =
         mainList.reversed().indexOfFirst { it.messageId == messageId }
 
+    private fun getMessageAudioPosition(messageId: String) =
+        mainList.indexOfFirst { it.messageId == messageId }
+
     companion object {
         /**
          * Type of Text chat sender
@@ -3837,6 +3987,27 @@ class ChatAdapter(
             SharedPreferenceManager.getBoolean(Constants.GOOGLE_TRANSLATION_CHECKED)
         googleTranslatedKey = BuildConfig.GOOGLE_TRANSLATE_KEY
         doublePRESSINTERVAL = 500 // in millis
+    }
+
+    override fun currentlyPlayItem(position: Int, progress: Int, playduration: String) {
+        try {
+            LogMessage.d("AUDIO_CHECKING","currentlyPlayItem() listerner called position $position progress $progress playduration $playduration")
+            var holder = listChats.findViewHolderForAdapterPosition(position)
+            if(holder != null) {
+                if(holder is AudioSentViewHolder) {
+                    LogMessage.d("AUDIO_CHECKING","currentlyPlayItem() AudioSentViewHolder is playing...")
+                    holder.audioMirrorFlySeekBar.progress = progress
+                    holder.txtAudioDuration.text = playduration
+                } else if(holder is AudioReceivedViewHolder) {
+                    LogMessage.d("AUDIO_CHECKING","currentlyPlayItem() AudioReceivedViewHolder is playing...")
+                    holder.audioMirrorFlySeekBar.progress = progress
+                    holder.txtAudioDuration.text = playduration
+                }
+            }
+
+        } catch(e: Exception) {
+            LogMessage.e("AUDIO_CHECKING","Exception $e")
+        }
     }
 
 }

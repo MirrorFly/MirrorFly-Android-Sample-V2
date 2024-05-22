@@ -23,6 +23,7 @@ import com.contusfly.utils.Constants
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.FilePathUtils
 import com.mirrorflysdk.utils.MemoryInfoHelper
+import kotlinx.coroutines.runBlocking
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -244,29 +245,35 @@ object RealPathUtil {
      * @return The value of the _data column, which is typically a file path.
      */
     private fun getDataColumn(context: ContextWrapper, uri: Uri?, fileUri: Uri?, selection: String?, selectionArgs: Array<String>?): String? {
-
             var cursor: Cursor? = null
             val column = MediaStore.Images.Media.DATA
             val projection = arrayOf(column)
             try {
-                cursor =
-                    context.contentResolver.query(uri!!, projection, selection, selectionArgs, null)
+                if (uri != null) {
+                    cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs, null)
+                }
                 if (cursor != null && cursor.moveToFirst()) {
                     val index: Int
                     return try {
                         index = cursor.getColumnIndexOrThrow(column)
                         cursor.getString(index)
                     } catch (e: Exception) {
+                        e.printStackTrace()
                         getNewFilePath(context, uri)
                     }
                 }
-            } finally {
-                cursor?.close()
+            }  finally {
+                try {
+                    cursor?.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
            try {
-               return getCopyFilePath(context,fileUri)
+               return getCopyFilePath(context,fileUri, false)
            } catch(e:Exception) {
+               e.printStackTrace()
                com.contusfly.utils.LogMessage.d(TAG,e.toString())
            }
 
@@ -274,10 +281,11 @@ object RealPathUtil {
 
     }
 
-    private fun getCopyFilePath(context: ContextWrapper,fileUri: Uri?): String? {
+    private fun getCopyFilePath(context: ContextWrapper,fileUri: Uri?, isDocument:Boolean): String? {
+        var finalPath:String? = ""
         if (fileUri == null)
             return null
-        val directoryName = (FilePathUtils.getFileSentExternalStorage(context)).toString() + File.separator + Constants.LOCAL_PATH
+        var directoryName = (FilePathUtils.getFileSentExternalStorage(context)).toString() + File.separator + Constants.LOCAL_PATH
             .replace(" ", "") +
                 File.separator + Constants.FILE_LOCAL_PATH + File.separator + Constants.MSG_SENT_PATH
 
@@ -287,30 +295,43 @@ object RealPathUtil {
             return null
         }
 
-        var fileName =  documentFile!!.name
-        ImagePickerUtils.createFolderIfNotExist(directoryName)
+        var fileName =  documentFile.name
+        if(!ImagePickerUtils.createFolderIfNotExist(directoryName)) {
+            directoryName = (FilePathUtils.getExternalStorage()).toString() + File.separator + Constants.LOCAL_PATH
+                .replace(" ", "") +
+                    File.separator + Constants.FILE_LOCAL_PATH + File.separator + Constants.MSG_SENT_PATH
+            ImagePickerUtils.createFolderIfNotExist(directoryName)
+        }
+
         val mimeType = getMimeTypeFromFilePath(context, fileUri)
         if(fileName == null) fileName = Constants.TEMP_FILE_NAME
         val filePath = getFilePath(fileName, mimeType, directoryName)
-        return checkFilePath(filePath,context,fileUri)
+        runBlocking {
+            finalPath = checkFilePath(filePath,context,fileUri, isDocument)!!
+        }
+        return finalPath
     }
 
-    private fun checkFilePath(filePath: File?,context: Context,fileUri: Uri?): String?  {
-        if(filePath!=null){
-            if (filePath!!.exists())
-                return filePath.path
-            val inputStream = context.contentResolver.openInputStream(fileUri!!)
-            val fileOutputStream = FileOutputStream(filePath)
-            return if (inputStream != null) {
-                ImagePickerUtils.copyStream(inputStream, fileOutputStream)
-                fileOutputStream.close()
-                inputStream.close()
-                filePath.path
-            } else
-                null
-        } else {
-            return null
+    private suspend fun checkFilePath(filePath: File?, context: Context, fileUri: Uri?, isDocument: Boolean): String?  {
+        var finalPath:String? = null
+        try {
+            if(filePath!=null) {
+                if (filePath.exists()) finalPath = filePath.path
+                val inputStream = context.contentResolver.openInputStream(fileUri!!)
+                val fileOutputStream = FileOutputStream(filePath)
+                finalPath =  if (inputStream != null) {
+                    ImagePickerUtils.copyStream(inputStream, fileOutputStream, isDocument)
+                    fileOutputStream.close()
+                    inputStream.close()
+                    filePath.path
+                } else null
+            } else {
+                finalPath =  null
+            }
+        } catch (e:Exception) {
+            LogMessage.e(e)
         }
+        return finalPath
     }
 
     private fun getFilePath(fileName: String?, mimeType: String, directoryName: String): File? {
@@ -358,12 +379,17 @@ object RealPathUtil {
                 LogMessage.d("fileName :", getFileName(uri))
             }
         }
-        val directoryName = (FilePathUtils.getFileSentExternalStorage(context).toString() + File.separator
+        var directoryName = (FilePathUtils.getFileSentExternalStorage(context).toString() + File.separator
                 + Constants.LOCAL_PATH + File.separator + "temp")
         if (!TextUtils.isEmpty(fileName)) {
-            val directory = File(directoryName)
-            if (!directory.exists())
+            var directory = File(directoryName)
+            if (!directory.exists() && !directory.mkdirs()) {
+                directoryName = (FilePathUtils.getExternalStorage().toString() + File.separator
+                        + Constants.LOCAL_PATH + File.separator + "temp")
+                directory = File(directoryName)
                 directory.mkdirs()
+            }
+
             val copyFile = File(directoryName + File.separator + fileName)
             copyUriToFile(context, uri, copyFile)
             return copyFile.absolutePath

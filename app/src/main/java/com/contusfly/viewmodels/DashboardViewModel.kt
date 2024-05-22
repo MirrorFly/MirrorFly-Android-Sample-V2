@@ -30,7 +30,7 @@ import com.mirrorflysdk.api.RecentChatListBuilder
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
-import com.mirrorflysdk.flycommons.SharedPreferenceManager.Companion.RECENT_CHAT_FETCHED_PAGE_NUMBER
+import com.contusfly.utils.Constants.Companion.RECENT_CHAT_FETCHED_PAGE_NUMBER
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import com.mirrorflysdk.models.RecentChatListParams
 import kotlinx.coroutines.*
@@ -286,16 +286,8 @@ constructor() : ViewModel() {
                             LogMessage.d(TAG, "#recent #dashboard getInitialChatList PIN_SCREEN not enabled ")
                             recentChatList.value =
                                 LinkedList(data[SDK_DATA] as MutableList<RecentChat>)
-                            recentChatList.value!!.add(0, RecentChat()) // Private Chat Header
-                            recentChatList.value!!.add(1, RecentChat()) // Recent Chat Header
-                            recentChatList.value!!.add(
-                                recentChatList.value!!.size,
-                                RecentChat()
-                            ) // Recent Chat Footer
-                            recentChatList.value!!.add(
-                                recentChatList.value!!.size,
-                                RecentChat()
-                            ) // Recent Chat Pagination Loader
+                            headerDataAdd(recentChatList)
+                            footerDataAdd(recentChatList)
                             recentChatAdapter.clear()
                             recentChatAdapter.addAll(recentChatList.value!!)
                             recentChatDiffResult.value = null
@@ -303,19 +295,12 @@ constructor() : ViewModel() {
                             LogMessage.d(TAG, "#recent #dashboard loadRecentChatList failed ")
                             recentChatList.value =
                                 LinkedList(data[SDK_DATA] as MutableList<RecentChat>)
-                            recentChatList.value!!.add(0, RecentChat()) // Private Chat Header
-                            recentChatList.value!!.add(1, RecentChat()) // Recent Chat Header
-                            recentChatList.value!!.add(
-                                recentChatList.value!!.size,
-                                RecentChat()
-                            ) // Recent Chat Footer
-                            recentChatList.value!!.add(
-                                recentChatList.value!!.size,
-                                RecentChat()
-                            ) // Recent Chat Pagination Loader
+                            headerDataAdd(recentChatList)
+                            footerDataAdd(recentChatList)
                             getRecentChatDiffResult()
                         }
                         checkArchiveChatStatus()
+                        updateUnReadChatCount()
                     } else {
                         LogMessage.d(TAG, "#recent #dashboard getInitialChatList loadRecentChatList failed!!")
                         failureDataHandle(data)
@@ -331,6 +316,24 @@ constructor() : ViewModel() {
                 setRecentChatListFetching(false)
                 setSwipeLoader(false)
             }
+        }
+    }
+
+    private fun headerDataAdd(recentChatList: MutableLiveData<LinkedList<RecentChat>>) {
+        try {
+            recentChatList.value!!.add(0, RecentChat()) // Private Chat Header
+            recentChatList.value!!.add(1, RecentChat()) // Recent Chat Header - Archieve Chat
+        } catch(e: Exception) {
+            LogMessage.e(TAG,e.toString())
+        }
+    }
+
+    private fun footerDataAdd(recentChatList: MutableLiveData<LinkedList<RecentChat>>) {
+        try {
+            recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Footer - Archieve Chat
+            recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Pagination Loader
+        } catch(e: Exception) {
+            LogMessage.e(TAG,e.toString())
         }
     }
 
@@ -388,10 +391,8 @@ constructor() : ViewModel() {
     fun getRecentChatListBasedOnTagData(jidList:ArrayList<String>) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             recentChatList.value = LinkedList(FlyCore.getRecentChatListByChatTag(jidList))
-            recentChatList.value!!.add(0, RecentChat()) // Private Chat Header
-            recentChatList.value!!.add(1, RecentChat()) // Recent Chat Header
-            recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Footer
-            recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Pagination Loader item
+            headerDataAdd(recentChatList)
+            footerDataAdd(recentChatList)
             recentChatAdapter.clear()
             recentChatAdapter.addAll(recentChatList.value!!)
             recentChatDiffResult.value = null
@@ -420,6 +421,7 @@ constructor() : ViewModel() {
                     }
                     setRecentChatListFetching(false)
                     paginationLoaderShowHide(false)
+                    updateUnReadChatCount()
                 }
             } catch(e:Exception) {
                 LogMessage.e(TAG, "Recent Chat List loading issue in nextSetOfRecentChatList() ==> Exception: ${e.message}")
@@ -970,10 +972,8 @@ constructor() : ViewModel() {
             FlyCore.getArchivedChatList(FlyCallback { isSuccess, _, data ->
                 if (isSuccess) {
                     chatList.value = LinkedList(data["data"] as MutableList<RecentChat>)
-                    chatList.value!!.add(0, RecentChat()) // Private Chat Header
-                    chatList.value!!.add(1, RecentChat()) // Recent Chat Header
-                    chatList.value!!.add(chatList.value!!.size, RecentChat()) // Recent Chat Footer
-                    chatList.value!!.add(chatList.value!!.size, RecentChat()) // Recent Chat Pagination Loader
+                    headerDataAdd(chatList)
+                    footerDataAdd(chatList)
                     LogMessage.v(TAG, "#dashboard #chat #group getArchivedChatList ${chatList.value!!.size}")
                     getChatDiffResult()
                 }
@@ -1148,10 +1148,8 @@ constructor() : ViewModel() {
             ChatManager.getPrivateChatList(FlyCallback { isSuccess, _, data ->
                 if (isSuccess) {
                     chatList.value = LinkedList(data["data"] as MutableList<RecentChat>)
-                    chatList.value!!.add(0, RecentChat()) // Private Chat Header
-                    chatList.value!!.add(1, RecentChat()) // Recent Chat Header
-                    chatList.value!!.add(chatList.value!!.size, RecentChat()) // Recent Chat Footer
-                    chatList.value!!.add(chatList.value!!.size, RecentChat()) // Recent Chat Pagination Loader
+                    headerDataAdd(chatList)
+                    footerDataAdd(chatList)
                     getChatDiffResult()
                 }
             })

@@ -108,9 +108,9 @@ constructor(private val messagingClient: MessagingClient){
 
     }
 
-    private fun addVideoMessage(videoMessage: Pair<Boolean, MessageObject?>, messageObjectList: ArrayList<MessageObject>){
-        if (videoMessage.first)
-            messageObjectList.add(videoMessage.second!!)
+    private fun addVideoMessage(videoMessage: Triple<Boolean,Boolean, MessageObject?>, messageObjectList: ArrayList<MessageObject>){
+        if (videoMessage.first && videoMessage.second)
+            messageObjectList.add(videoMessage.third!!)
     }
 
     private fun addAudioMessage( audioMessage: Triple<Boolean, Boolean, MessageObject?>, messageObjectList: ArrayList<MessageObject>){

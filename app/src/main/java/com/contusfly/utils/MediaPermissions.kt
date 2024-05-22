@@ -153,7 +153,7 @@ object MediaPermissions {
                             override fun onNegativeButtonClicked() {
                                 //Not Needed
                             }
-                        })
+                        }, true)
                 }
                 else -> {
                     showPermissionPopUpForStorage(permissionsLauncher, permissionsToRequest, permissionAlertDialog)

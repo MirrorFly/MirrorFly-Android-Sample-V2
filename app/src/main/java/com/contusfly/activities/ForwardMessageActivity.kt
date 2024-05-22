@@ -479,7 +479,8 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
             val intent = Intent(context, ChatActivity::class.java)
             startActivity(intent.putExtra(LibConstants.JID,  selectedUsersWithNames.keys.first())
                 .putExtra(Constants.CHAT_TYPE, ProfileDetailsUtils.getProfileDetails(selectedUsersWithNames.keys.first())?.getChatType())
-                .putExtra("externalCall", true))
+                .putExtra("externalCall", true)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
             finish()
         }
     }

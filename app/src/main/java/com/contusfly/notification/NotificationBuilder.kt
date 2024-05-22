@@ -21,7 +21,7 @@ import com.contusfly.*
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycommons.PendingIntentHelper
 import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
-import com.contusfly.call.CallNotificationUtils
+import com.contusfly.call.MissedCallNotificationUtils
 import com.contusfly.utils.*
 import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.ChatManager
@@ -676,7 +676,7 @@ object NotificationBuilder {
     }
 
     private fun getTotalUnReadMessageCount(notificationId: Int): Int {
-        return if (CallNotificationUtils.unReadCallCount == 0) FlyMessenger.getUnreadMessageCountExceptMutedChat() + CallLogManager.getUnreadMissedCallCount() else chatNotifications[notificationId]?.unReadMessageCount ?: 1
+        return if (MissedCallNotificationUtils.unReadCallCount == 0) FlyMessenger.getUnreadMessageCountExceptMutedChat() + CallLogManager.getUnreadMissedCallCount() else chatNotifications[notificationId]?.unReadMessageCount ?: 1
     }
 
     // A unique identifier string for creating the group notification.

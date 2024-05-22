@@ -168,8 +168,15 @@
                     android:drawablePadding="@dimen/padding_15"
                     android:gravity="center_vertical"
                     android:paddingTop="@dimen/padding_16"
+                    android:visibility="gone"
                     android:paddingBottom="@dimen/padding_16"
                     android:text="@string/label_participants" />
+                <ProgressBar
+                    android:id="@+id/progress_spinner"
+                    android:layout_width="@dimen/margin_24"
+                    android:layout_height="@dimen/margin_24"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible" />
 
                 <View
                     android:id="@+id/addParticipantsDivider"

@@ -312,6 +312,8 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
         SharedPreferenceManager.setString(com.contusfly.utils.Constants.ON_GOING_CHAT_USER,groupProfileDetails.jid)
         commonAlertDialog = CommonAlertDialog(this)
         commonAlertDialog!!.setOnDialogCloseListener(this)
+        enableCollapsingToolbar(false)
+        showLoader(true)
         checkPrivateChatAvailable()
         onClickFunction()
         groupMembersAdapter.setHasStableIds(true)
@@ -1177,6 +1179,22 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
             showOrHideAddParticipant(false)
         }
     }
+    private fun enableCollapsingToolbar(enable: Boolean) {
+        binding.collapsingToolbar.setScrimsShown(enable)
+        val params = binding.collapsingToolbar.layoutParams as AppBarLayout.LayoutParams
+        if (enable) {
+            params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
+                    AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+
+        }
+        else {
+            params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+        }
+    }
+
+    private fun showLoader(show:Boolean){
+        binding.progressSpinner.visibility = if(show) View.VISIBLE else View.GONE
+    }
 
     /**
      * Loads the Group adapter data into the list
@@ -1205,6 +1223,8 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
                 groupMembersList.addAll(usersList)
                 groupMembersAdapter.notifyDataSetChanged()
                 invalidateOptionsMenu()
+                enableCollapsingToolbar(true)
+                showLoader(false)
             }
         }
     }
