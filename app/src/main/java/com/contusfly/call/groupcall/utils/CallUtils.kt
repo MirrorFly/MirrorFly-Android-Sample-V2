@@ -85,6 +85,11 @@ object CallUtils {
 
     private val speakingLevelMap by lazy { HashMap<String, Int>() }
 
+    /**
+     * Flag to update list view options
+     */
+    private var isFromPoorInternetUpdate = false
+
     fun setVideoViewInitialization(enabled: Boolean) {
         isVideoViewInitialized = enabled
     }
@@ -452,6 +457,14 @@ object CallUtils {
         isAddUsersToTheCall = isAddUsers
     }
 
+    fun setIsFromPoorInternetUpdate(isUpdatedFromPoorInternet:Boolean){
+        isFromPoorInternetUpdate = isUpdatedFromPoorInternet
+    }
+
+    fun getIsFromPoorInternetUpdate():Boolean
+    {
+        return isFromPoorInternetUpdate
+    }
     fun resetValues() {
         setIsGridViewEnabled(false)
         setIsBackCameraCapturing(false)
@@ -462,6 +475,7 @@ object CallUtils {
         setIsCallStarted(null)
         setIsAddUsersToTheCall(false)
         setPeakSpeakingUser(Constants.EMPTY_STRING, 0)
+        setIsFromPoorInternetUpdate(false)
     }
 }
 

@@ -1119,4 +1119,12 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
+    <style name="poor_connection_text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="try_moving">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#B3B3B3</item>
+    </style>
 </resources>

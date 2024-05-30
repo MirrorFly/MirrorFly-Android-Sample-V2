@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -32,6 +33,7 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.mirrorflysdk.flycall.webrtc.CallStatus
 import com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycall.webrtc.api.ConnectionQuality
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
@@ -92,6 +94,7 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
         updateGridConnectionStatus(holder, position)
         updateGridPinnedPosition(holder, position)
         updateUserSpeaking(holder, position, CallUtils.getUserSpeakingLevel(gridCallUserList[position]))
+        updatePoorNetworkIndicator(holder,position)
 
         holder.binding.rootLayout.clicks().throttleFirst(500, TimeUnit.MILLISECONDS).subscribe {
             onTapOnRecyclerView()
@@ -312,6 +315,10 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
                 CallActions.NOTIFY_USER_PROFILE -> {
                     setUserInfo(holder, position)
                 }
+
+                CallActions.NOTIFY_USER_POOR_CONNECTION -> {
+                    updatePoorNetworkIndicator(holder,position)
+                }
             }
         }
     }
@@ -476,6 +483,14 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
 
     override fun getItemCount(): Int {
         return gridCallUserList.size
+    }
+
+    private fun updatePoorNetworkIndicator(holder: CallUserGridViewHolder, position: Int){
+        if(CallManager.getCallConnectionQuality()== ConnectionQuality.POOR && gridCallUserList[position] == CallManager.getCurrentUserId() && !CallManager.getCallStatus(CallManager.getCurrentUserId()).equals(CallStatus.RECONNECTING)){
+            holder.binding.imageGridPoorNetworkIndicator.visibility = View.VISIBLE
+        }else{
+            holder.binding.imageGridPoorNetworkIndicator.visibility = View.GONE
+        }
     }
 
     inner class CallUserGridViewHolder(val binding: CallGridUserItemBinding) : BaseViewHolder(binding.root)

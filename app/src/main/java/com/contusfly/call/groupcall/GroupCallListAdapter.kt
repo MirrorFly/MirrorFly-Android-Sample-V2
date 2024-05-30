@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -32,6 +33,7 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.mirrorflysdk.flycall.webrtc.CallStatus
 import com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycall.webrtc.api.ConnectionQuality
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
@@ -110,6 +112,7 @@ class GroupCallListAdapter(val context: Context) :
         updateConnectionStatus(holder, position)
         updateListPinnedPosition(holder, position)
         updateUserSpeaking(holder, position, CallUtils.getUserSpeakingLevel(callUserList[position]))
+        updatePoorNetworkIndicator(holder,position)
 
         holder.binding.rootLayout.clicks().throttleFirst(500, TimeUnit.MILLISECONDS).subscribe {
             onTapOnRecyclerView()
@@ -392,6 +395,10 @@ class GroupCallListAdapter(val context: Context) :
                     CallActions.NOTIFY_USER_PROFILE -> {
                         setUserInfo(holder, position)
                     }
+
+                    CallActions.NOTIFY_USER_POOR_CONNECTION -> {
+                        updatePoorNetworkIndicator(holder,position)
+                    }
                 }
             }
         }
@@ -590,6 +597,14 @@ class GroupCallListAdapter(val context: Context) :
             }
         })
         setUpAudioMuted(holder, position)
+    }
+
+    private fun updatePoorNetworkIndicator(holder: CallUserViewHolder, position: Int){
+        if(CallManager.getCallConnectionQuality()== ConnectionQuality.POOR && callUserList[position] == CallManager.getCurrentUserId() && !CallManager.getCallStatus(CallManager.getCurrentUserId()).equals(CallStatus.RECONNECTING)){
+            holder.binding.imagePoorNetworkIndicatorList.visibility = View.VISIBLE
+        }else{
+            holder.binding.imagePoorNetworkIndicatorList.visibility = View.GONE
+        }
     }
 
     inner class CallUserViewHolder(val binding: CallUserItemBinding) : BaseViewHolder(binding.root)
