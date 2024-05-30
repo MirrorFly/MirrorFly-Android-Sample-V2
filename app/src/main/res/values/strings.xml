@@ -1014,5 +1014,8 @@
     <string name="share_call_link">Share</string>
     <string name="invite_contacts_call_link">Invite Contacts</string>
     <string name="insufficient_memory_error">Not enough storage space on your device. Please free up space in your phone\'s memory.</string>
+    <string name="poor_connection">Poor Connection</string>
+    <string name="try_moving_to_get_better_signal">Try moving to another place for better signal</string>
+    <string name="close_poor_connection_layout">close poor connection layout</string>
 
 </resources>

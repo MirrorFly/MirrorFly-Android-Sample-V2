@@ -31,6 +31,7 @@ fun CallManager.isVideoCallUICanShow() = isVideoCall() && !isRemoteVideoMuted(ge
 
 fun CallManager.isAudioCall() = getCallType() == CallType.AUDIO_CALL
 
+fun CallManager.isCallAttended() = isCallAnswered() && !isCallConnected()
 fun CallManager.isCallNotConnected() = !isCallConnected() && !isCallAnswered()
 
 fun CallManager.isLocalTileCanResize() =
@@ -68,7 +69,7 @@ fun CallManager.getCallConnectedStatus(context: Context): String {
             CallStatus.RECONNECTING -> context.getString(R.string.reconnecting)
             else -> {
                 when (val remoteCallStatus = getCallStatus(getEndCallerJid())) {
-                    CallStatus.CALLING, CallStatus.RINGING, CallStatus.ON_HOLD,CallStatus.RECONNECTING -> remoteCallStatus
+                    CallStatus.CALLING, CallStatus.RINGING, CallStatus.ON_HOLD,CallStatus.RECONNECTING,CallStatus.CONNECTING -> remoteCallStatus
                     else -> Constants.EMPTY_STRING
                 }
             }
@@ -79,21 +80,25 @@ fun CallManager.getCallConnectedStatus(context: Context): String {
 
 fun CallManager.getOutGoingCallStatus(context: Context): String {
     val localCallStatus = getCallStatus(getCurrentUserId())
-    LogMessage.d(TAG, "${CallConstants.CALL_UI} ${CallConstants.JOIN_CALL} ${CallConstants.CALL_FLOW_TAG} getOutGoingCallStatus : $localCallStatus")
+    LogMessage.d(TAG, "${CallConstants.CALL_UI} ${CallConstants.JOIN_CALL}  getOutGoingCallStatus : $localCallStatus")
     return when {
         isCallTryingToConnect(localCallStatus) -> context.getString(R.string.trying_to_connect)
         isCallTimeOut(localCallStatus) -> context.getString(R.string.call_try_again_info)
-        isCallConnecting(localCallStatus) -> CallStatus.RINGING
+        isCallRinging(localCallStatus) -> CallStatus.RINGING
+        isCallConnecting(localCallStatus) -> CallStatus.CONNECTING
         else -> localCallStatus
     }
 }
 
+
 fun CallManager.isReconnecting() = getCallStatus(getCurrentUserId()) == CallStatus.RECONNECTING
 
 fun isCallTryingToConnect(callStatus: String) = callStatus.isEmpty()
-        || callStatus == CallStatus.DISCONNECTED || callStatus == CallStatus.CONNECTING
+        || callStatus == CallStatus.DISCONNECTED
 
-fun isCallConnecting(callStatus: String) = callStatus == CallStatus.RINGING
+fun isCallConnecting(callStatus: String) = callStatus == CallStatus.CONNECTING
+
+fun isCallRinging(callStatus: String) = callStatus == CallStatus.RINGING
 
 fun isCallTimeOut(callStatus: String) =
     callStatus.isNotBlank() && (callStatus == CallStatus.CALL_TIME_OUT || callStatus == CallStatus.OUTGOING_CALL_TIME_OUT)

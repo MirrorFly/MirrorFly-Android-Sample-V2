@@ -163,6 +163,16 @@
                     android:padding="@dimen/margin_8"
                     android:visibility="visible" />
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/view_poor_network_local_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/single_user_view_speaking_indicator_helper"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="@dimen/margin_10"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_poor_connection_snackbar_alert" />
+
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>

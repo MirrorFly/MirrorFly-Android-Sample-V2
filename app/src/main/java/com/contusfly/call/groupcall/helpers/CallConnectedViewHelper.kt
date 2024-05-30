@@ -17,13 +17,34 @@ import com.contus.call.CallConstants.CALL_UI
 import com.contus.call.CallConstants.JOIN_CALL
 import com.contus.call.CallGridSpacingItemDecoration
 import com.contus.call.SpeakingIndicatorListener
-import com.contusfly.*
-import com.contusfly.call.groupcall.*
+import com.contusfly.BuildConfig
+import com.contusfly.R
+import com.contusfly.TAG
+import com.contusfly.call.groupcall.GroupCallGridAdapter
+import com.contusfly.call.groupcall.GroupCallListAdapter
+import com.contusfly.call.groupcall.getCallConnectedStatus
+import com.contusfly.call.groupcall.getEndCallerJid
+import com.contusfly.call.groupcall.getUserAvailableForReconnection
+import com.contusfly.call.groupcall.isAudioCall
+import com.contusfly.call.groupcall.isCallNotConnected
+import com.contusfly.call.groupcall.isInPIPMode
+import com.contusfly.call.groupcall.isNull
+import com.contusfly.call.groupcall.isUserAudioMuted
+import com.contusfly.call.groupcall.isUserVideoMuted
+import com.contusfly.call.groupcall.isVideoCall
+import com.contusfly.call.groupcall.isVideoCallUICanShow
 import com.contusfly.call.groupcall.listeners.ActivityOnClickListener
 import com.contusfly.call.groupcall.listeners.BaseViewOnClickListener
 import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.call.groupcall.utils.UserMuteStatus
 import com.contusfly.databinding.LayoutCallConnectedBinding
+import com.contusfly.gone
+import com.contusfly.hide
+import com.contusfly.isValidIndex
+import com.contusfly.loadUserProfileImage
+import com.contusfly.makeViewsGone
+import com.contusfly.show
+import com.contusfly.showViews
 import com.contusfly.utils.Constants
 import com.contusfly.utils.MediaUtils
 import com.contusfly.utils.ProfileDetailsUtils
@@ -33,12 +54,13 @@ import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 import com.mirrorflysdk.flycall.webrtc.CallStatus
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycall.webrtc.api.ConnectionQuality
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
 import kotlinx.android.synthetic.main.layout_call_connected.view.single_user_text_call_status
 import org.webrtc.RendererCommon
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.atomic.AtomicBoolean
 
 
@@ -294,6 +316,7 @@ class CallConnectedViewHelper(
         bundle.putInt(CallActions.NOTIFY_CONNECT_TO_SINK, 1)
         bundle.putInt(CallActions.NOTIFY_PINNED_USER_VIEW, 1)
         bundle.putInt(CallActions.NOTIFY_VIEW_SIZE_UPDATED, 1)
+        bundle.putInt(CallActions.NOTIFY_USER_POOR_CONNECTION, 1)
 
         if (CallUtils.getIsGridViewEnabled()) {
             LogMessage.i(
@@ -347,6 +370,7 @@ class CallConnectedViewHelper(
             }
             updatePinnedUserVideoMuteStatus()
             checkAndShowLocalVideoView()
+            checkAndShowPoorConnectionQuality()
             updateCallStatus()
         }
         updateRemoteAudioMuteStatus()
@@ -589,11 +613,12 @@ class CallConnectedViewHelper(
         val connectedStatus =
             if (CallManager.isOneToOneCall()) CallManager.getCallConnectedStatus(activity)
             else CallManager.getCallStatus(pinnedUser)
-        LogMessage.i(TAG, "$CALL_UI CallConnectedViewHelper connectedStatus:$connectedStatus")
+        LogMessage.i(TAG, "$CALL_UI CallConnectedViewHelper connectedStatus:$connectedStatus pinnedUser:$pinnedUser")
         if (connectedStatus in arrayOf(
                 CallStatus.ON_HOLD,
                 CallStatus.RECONNECTING,
-                activity.getString(R.string.reconnecting)
+                activity.getString(R.string.reconnecting),
+                CallStatus.CONNECTING
             )
         ) {
             LogMessage.e(TAG, "$CALL_UI Call Status $connectedStatus Jid == $pinnedUser")
@@ -859,6 +884,7 @@ class CallConnectedViewHelper(
                 bundle.putInt(CallActions.NOTIFY_VIEW_STATUS_UPDATED, 1)
                 bundle.putInt(CallActions.NOTIFY_CONNECT_TO_SINK, 1)
                 bundle.putInt(CallActions.NOTIFY_PINNED_USER_VIEW, 1)
+                bundle.putInt(CallActions.NOTIFY_USER_POOR_CONNECTION, 1)
                 if (CallUtils.getIsGridViewEnabled())
                     callUserGridAdapter.notifyItemRangeChanged(
                         0,
@@ -1045,6 +1071,61 @@ class CallConnectedViewHelper(
                 bundle.putInt(CallActions.NOTIFY_USER_PROFILE, 1)
                 callUserGridAdapter.notifyItemChanged(index, bundle)
             }
+        }
+    }
+
+    private fun handleConnectionQualityForSingleUserInCall() {
+        if (CallManager.getCallConnectionQuality() == ConnectionQuality.POOR && GroupCallUtils.isCallLinkBehaviourMeet() && !CallManager.getCallStatus(CallManager.getCurrentUserId()).equals(CallStatus.RECONNECTING)) {
+            binding.viewPoorNetworkLocalUser.visibility = View.VISIBLE
+        } else {
+            binding.viewPoorNetworkLocalUser.visibility = View.GONE
+        }
+    }
+
+    private fun handleConnectionQualityForOneToOneCall() {
+        if (CallManager.getCallConnectionQuality() == ConnectionQuality.POOR && !CallManager.getCallStatus(CallManager.getCurrentUserId()).equals(CallStatus.RECONNECTING)) {
+            binding.viewPoorNetworkLocalUser.visibility = View.VISIBLE
+        } else {
+            binding.viewPoorNetworkLocalUser.visibility = View.GONE
+        }
+    }
+
+    private fun handleConnectionQualityForGrid(bundle: Bundle) {
+        val gridIndex =
+                callUserGridAdapter.gridCallUserList.indexOf(CallManager.getCurrentUserId())
+        LogMessage.d(
+                TAG,
+                "$CALL_UI #callconnectionquality onQualityUpdated checkAndUpdateGridViewEnabled gridIndex:$gridIndex"
+        )
+        if (gridIndex.isValidIndex()) {
+            callUserGridAdapter.notifyItemChanged(gridIndex, bundle)
+        }
+    }
+
+    private fun handleConnectionQualityForList(bundle: Bundle) {
+        val index = callUsersListAdapter.callUserList.indexOf(CallManager.getCurrentUserId())
+        LogMessage.d(
+                TAG,
+                "$CALL_UI #callconnectionquality onQualityUpdated checkAndUpdateListView index:$index"
+        )
+        if (index.isValidIndex()) {
+            callUsersListAdapter.notifyItemChanged(index, bundle)
+        }
+    }
+
+    fun checkAndShowPoorConnectionQuality() {
+        val bundle = Bundle()
+        bundle.putInt(CallActions.NOTIFY_USER_POOR_CONNECTION, 1)
+        if (CallUtils.getIsGridViewEnabled()) {
+            handleConnectionQualityForGrid(bundle = bundle)
+        } else {
+            handleConnectionQualityForList(bundle = bundle)
+        }
+
+        if (GroupCallUtils.isSingleUserInCall()) {
+            handleConnectionQualityForSingleUserInCall()
+        } else if (CallManager.isOneToOneCall()) {
+            handleConnectionQualityForOneToOneCall()
         }
     }
 }

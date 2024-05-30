@@ -17,4 +17,5 @@ object CallActions {
     const val NOTIFY_USER_STOPPED_SPEAKING = "notify_user_stopped_speaking"
     const val NOTIFY_USER_SPEAKING = "notify_user_speaking"
     const val NOTIFY_USER_PROFILE = "notify_user_profile"
+    const val NOTIFY_USER_POOR_CONNECTION = "notify_user_poor_connection"
 }

@@ -39,6 +39,8 @@ import com.mirrorflysdk.flycall.webrtc.WebRtcCallService.Companion.setupVideoCap
 import com.mirrorflysdk.flycall.webrtc.api.CallActionListener
 import com.mirrorflysdk.flycall.webrtc.api.CallEventsListener
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycall.webrtc.api.ConnectionQuality
+import com.mirrorflysdk.flycall.webrtc.api.ConnectionQualityListener
 import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycommons.exception.FlyException
@@ -225,6 +227,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         //register for call events
         CallManager.setCallEventsListener(customCallEventsListener)
         CallManager.setupCallActionListener(customCallEventsListener)
+        CallManager.setConnectionQualityListener(customCallEventsListener)
 
         initClickListeners()
         setUpCallDataAndUI()
@@ -681,6 +684,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         LogMessage.d(TAG, "$CALL_UI onDestroy  called()")
         CallManager.removeCallEventsListener(customCallEventsListener)
         CallManager.removeCallActionListener(customCallEventsListener)
+        CallManager.removeConnectionQualityListener(customCallEventsListener)
         CallUtils.setVideoViewInitialization(false)
         super.onDestroy()
     }
@@ -753,7 +757,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
     }
 
-    private inner class CustomCallEventsListener : CallEventsListener,CallActionListener{
+    private inner class CustomCallEventsListener : CallEventsListener,CallActionListener,ConnectionQualityListener{
         override fun onCallStatusUpdated(callStatus: String, userJid: String) {
             handleCallStatusMessages(callStatus, userJid)
         }
@@ -809,8 +813,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 CallStatus.CONNECTED -> handleCallStatusConnected(userJid)
                 CallStatus.DISCONNECTED -> disconnectCall(true, callEvent)
                 CallStatus.CONNECTING -> {
-                    callViewHelper.updateStatusAdapter(userJid)
-                    setUpCallUI()
+                    if (CallManager.isCallAttended()) callViewHelper.updateCallStatus()
+                    else callViewHelper.updateStatusAdapter(userJid)
                 }
                 CallStatus.OUTGOING_CALL_TIME_OUT -> {
                     LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CALL_TIME_OUT userJid:${CallStatus.OUTGOING_CALL_TIME_OUT}")
@@ -843,13 +847,18 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 CallStatus.ON_RESUME -> handleCallStatusResume(userJid)
                 CallStatus.RECONNECTING, CallStatus.ON_HOLD -> {
                     LogMessage.d(TAG, "$CALL_UI $JOIN_CALL #reconnecting  userJid:$userJid")
-                    setUpCallUI()
-                    if(callEvent.equals(CallStatus.RECONNECTING,true)){
-                        CallUtils.clearPeakSpeakingUser(userJid)
-                        onUserStoppedSpeaking(userJid)
-                        durationHandler.postDelayed({checkAndUpdateStatusForUser(userJid)},1200)
+                    if (CallManager.isCallAttended()) {
+                        callViewHelper.updateCallStatus()
                     }else{
-                        checkAndUpdateStatusForUser(userJid)
+                        checkAndDismissPoorConnection()
+                        setUpCallUI()
+                        if(callEvent.equals(CallStatus.RECONNECTING,true)){
+                            CallUtils.clearPeakSpeakingUser(userJid)
+                            onUserStoppedSpeaking(userJid)
+                            durationHandler.postDelayed({checkAndUpdateStatusForUser(userJid)},1200)
+                        }else{
+                            checkAndUpdateStatusForUser(userJid)
+                        }
                     }
                 }
 
@@ -969,6 +978,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             runOnUiThread {
                 if(!isSuccess)
                     Toast.makeText(this@GroupCallActivity, errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onQualityUpdated(quality: ConnectionQuality) {
+            LogMessage.d(TAG, "$CALL_UI onQualityUpdated received quality:$quality isInPIPMode:${isInPIPMode()}")
+            if(!isInPIPMode()){
+                checkAndShowPoorConnection(quality)
             }
         }
     }
@@ -1276,6 +1292,48 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         ActivityResultContracts.RequestMultiplePermissions()) { _ ->
         if(ChatUtils.checkFullScreenNotificationPermissionEnabled()){
             com.contusfly.utils.LogMessage.d(TAG,"#fullscreen fullScreenNotificationPermission Launcher enabled!!")
+        }
+    }
+
+    private fun dismissPoorConnectionLayout() {
+        activityBinding.layoutCallOptions.layoutSlowNetwork.poorConnectionRoot.visibility =
+            View.GONE
+        callViewHelper.updatePoorConnectionLayout()
+        checkAndUpdateUiForPoorConnection()
+    }
+
+    private fun checkAndShowPoorConnection(connectionQuality: ConnectionQuality) {
+        LogMessage.d(
+            TAG,
+            "$CALL_UI #callconnectionquality checkAndShowPoorConnection connectionQuality: $connectionQuality"
+        )
+        if(connectionQuality == ConnectionQuality.POOR){
+            activityBinding.layoutCallOptions.layoutSlowNetwork.poorConnectionRoot.visibility =
+                View.VISIBLE
+            activityBinding.layoutCallOptions.layoutSlowNetwork.closeSnack.setOnClickListener(1000) {
+                dismissPoorConnectionLayout()
+            }
+            callViewHelper.updatePoorConnectionLayout()
+            activityBinding.layoutCallOptions.layoutSlowNetwork.poorConnectionRoot.postDelayed({
+                dismissPoorConnectionLayout()
+            }, 5000)
+        }else{
+            checkAndUpdateUiForPoorConnection()
+        }
+
+    }
+
+    private fun checkAndUpdateUiForPoorConnection() {
+        callViewHelper.updateUiForCallConnectionQuality()
+    }
+
+    private fun checkAndDismissPoorConnection(){
+        if(activityBinding.layoutCallOptions.layoutSlowNetwork.poorConnectionRoot.visibility == View.VISIBLE){
+            LogMessage.d(
+                    TAG,
+                    "$CALL_UI #callconnectionquality checkAndDismissPoorConnection"
+            )
+            dismissPoorConnectionLayout()
         }
     }
 }

@@ -219,7 +219,7 @@ class BaseCallViewHelper(
     }
 
     fun updateCallStatus() {
-        if (CallManager.isCallNotConnected())
+        if (CallManager.isCallNotConnected() || CallManager.isCallAttended())
             callNotConnectedViewHelper.updateCallStatus()
         else {
             callConnectedViewHelper.updateCallStatus()
@@ -440,6 +440,11 @@ class BaseCallViewHelper(
      */
     override fun onCallOptionsHidden() {
         LogMessage.d(TAG, "$CALL_UI callViewHelper onCallOptionsHidden()")
+
+        if(binding.layoutCallOptions.layoutSlowNetwork.poorConnectionRoot.visibility == View.VISIBLE){
+            LogMessage.d(TAG, "$CALL_UI skip callViewHelper onCallOptionsHidden() poorConnectionRoot VISIBLE")
+            return
+        }
         val bottomMarginStart =
             binding.layoutCallOptions.layoutCallOptions.height // margin start value
         if (CallManager.isOneToOneCall()) {
@@ -556,6 +561,10 @@ class BaseCallViewHelper(
 
     private fun showListViewAboveCallOptions() {
         LogMessage.d(TAG, "$CALL_UI callViewHelper showListViewAboveCallOptions()")
+        LogMessage.i(
+            TAG,
+            "$CALL_UI #callconnectionquality  showListViewAboveCallOptions()"
+        )
         val bottomMarginTo =
             binding.layoutCallOptions.layoutCallOptions.height // where to animate to
         val layoutMargin = CommonUtils.convertDpToPixel(activity, 10) // margin value
@@ -977,7 +986,7 @@ class BaseCallViewHelper(
         } else {
             LogMessage.i(
                 TAG,
-                "$CALL_UI callViewHelper resizeLocalTile skip one to one call tile update"
+                "$CALL_UI #callconnectionquality callViewHelper resizeLocalTile skip one to one call tile update getIsListViewAnimated:${CallUtils.getIsListViewAnimated()}"
             )
             if (!CallUtils.getIsListViewAnimated())
                 animateListViewWithCallOptions()
@@ -995,9 +1004,9 @@ class BaseCallViewHelper(
         if (!CallUtils.getIsGridViewEnabled() && CallManager.isCallConnected())
             binding.layoutCallOptions.layoutCallOptions.post {
                 CallUtils.setIsListViewAnimated(true)
-                if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE) {
+                if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE ) {
                     val layoutMargin = CommonUtils.convertDpToPixel(activity, 20)
-                    if (layoutMargin >= binding.layoutCallConnected.callUsersRecyclerview.marginBottom)
+                    if (layoutMargin >= binding.layoutCallConnected.callUsersRecyclerview.marginBottom || CallUtils.getIsFromPoorInternetUpdate())
                         showListViewAboveCallOptions()
                 } else
                     showListViewAtBottom()
@@ -1094,5 +1103,15 @@ class BaseCallViewHelper(
 
     fun updateFeatureActions() {
         callConnectedViewHelper.checkAddParticipantsAvailable()
+    }
+
+    fun updatePoorConnectionLayout(){
+        showCallOptions()
+        CallUtils.setIsFromPoorInternetUpdate(true)
+        CallUtils.setIsListViewAnimated(false)
+        resizeLocalTile()
+    }
+    fun updateUiForCallConnectionQuality(){
+        callConnectedViewHelper.checkAndShowPoorConnectionQuality()
     }
 }
