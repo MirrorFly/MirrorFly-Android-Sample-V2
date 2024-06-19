@@ -533,7 +533,13 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
                 progress.setMessage(resources.getString(R.string.please_wait_label))
                 progress.show()
                 setOtpTextViewEmpty(getOtpEditText())
-                otpViewPresenter.validateAndSendOtp()
+                if(AppConstants.OTP_ENABLE) {
+                    otpViewPresenter.validateAndSendOtp()
+                } else {
+                    val mobileEditText = otpBinding.edtMobileNo
+                    setMobileNumber(mobileEditText.text.toString())
+                    registerAccount()
+                }
                 val imm: InputMethodManager =
                     getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)

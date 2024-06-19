@@ -12,6 +12,7 @@ import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycall.call.utils.CallConstants
 
 object AppNotificationManager {
 
@@ -59,14 +60,15 @@ object AppNotificationManager {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val barNotifications: Array<StatusBarNotification> = notificationManager.activeNotifications
             for (notification in barNotifications) {
-                NotificationManagerCompat.from(context).cancel(notification.id)
+                if(notification.id != CallConstants.CALL_NOTIFICATION_ID) {
+                    NotificationManagerCompat.from(context).cancel(notification.id)
+                }
             }
             NotificationBuilder.cancelNotifications()
         } else {
             NotificationManagerCompat.from(context).cancel(Constants.NOTIFICATION_ID)
             NotificationBuilderBelow24.cancelNotifications()
         }
-        MissedCallNotificationUtils.cancelNotifications()
     }
 
     fun clearConversationOnNotification(context: Context, jId:String) {

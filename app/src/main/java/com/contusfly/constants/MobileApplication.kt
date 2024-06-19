@@ -64,11 +64,6 @@ class MobileApplication : Application(), HasAndroidInjector {
     }
     private var defaultUncaughtHandler: Thread.UncaughtExceptionHandler? = null
     private var mediaCaptionMentionList: MediaCaptionMentionList? = null
-    private var missedCallNotificationCount = 0
-    private var missedCallNotificationUserJidList = ArrayList<String>()
-    private var missedCallNotificationUserNames = emptyString()
-    private var missedCallTypeList = ArrayList<String>()
-    private var missedCallNotificationCallType = emptyString()
 
 
     override fun onCreate() {
@@ -131,7 +126,6 @@ class MobileApplication : Application(), HasAndroidInjector {
             }
         })
 
-
         //initialize call sdk
         initializeCallSdk()
         Logger.enableDebugLogging(true)
@@ -142,13 +136,6 @@ class MobileApplication : Application(), HasAndroidInjector {
 
     fun getMediaCaptionObject(): MediaCaptionMentionList? {
         return mediaCaptionMentionList
-    }
-    fun clearMissedCallNotificationDetails(){
-        missedCallNotificationCount = 0
-        missedCallNotificationUserJidList.clear()
-        missedCallNotificationUserNames = emptyString()
-        missedCallTypeList.clear()
-        missedCallNotificationCallType = emptyString()
     }
 
     fun clearMediaCaptionObject(){
@@ -203,94 +190,19 @@ class MobileApplication : Application(), HasAndroidInjector {
         }
     }
 
-    private fun addMissedCallNotificationUsers(isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String) {
-        if (!missedCallTypeList.contains(callType))
-            missedCallTypeList.add(callType)
-        if (isOneToOneCall) {
-            if (!missedCallNotificationUserJidList.contains(userJid)) {
-                missedCallNotificationUserJidList.add(userJid)
-            }
-            sortMissedCallList(userJid)
-        } else {
-            if (!missedCallNotificationUserJidList.contains(groupId)) {
-                missedCallNotificationUserJidList.add(groupId!!)
-            }
-            sortMissedCallList(groupId!!)
-        }
-        missedCallNotificationCallType = " " + identifyCallType(missedCallTypeList)
-    }
-
-   private fun identifyCallType(missedCallTypeList: List<String>): String {
-        var hasAudio = false
-        var hasVideo = false
-
-        // Check if "audio" & "video" is present in the list
-        for (callType in missedCallTypeList) {
-            when (callType) {
-                CallType.AUDIO_CALL -> hasAudio = true
-                CallType.VIDEO_CALL -> hasVideo = true
-            }
-            if (hasAudio && hasVideo) {
-                return "missed calls"
-            }
-        }
-
-        // Determine the call type ("audio" or "video") present in the list
-        return when {
-            hasAudio -> "missed audio calls"
-            hasVideo -> "missed video calls"
-            else -> "missed calls"
-        }
-    }
-
-    private fun sortMissedCallList(userJid: String) {
-        val index = missedCallNotificationUserJidList.indexOf(userJid)
-        if (index != -1 && index != 0) {
-            // Remove the userJid from its current position and add it to the first position
-            missedCallNotificationUserJidList.removeAt(index)
-            missedCallNotificationUserJidList.add(0, userJid)
-        }
-        missedCallNotificationUserNames =
-            getSortedUserNames().joinToString(separator = ", ")
-    }
-
-    private fun getSortedUserNames(): List<String> {
-        val sortedNames = mutableListOf<String>()
-        for (userJid in missedCallNotificationUserJidList) {
-            val displayName = ProfileDetailsUtils.getProfileDetails(userJid)?.getDisplayName()
-            if (displayName != null) {
-                sortedNames.add(displayName)
-            }
-        }
-        return sortedNames
-    }
-
     private fun initializeCallSdk(){
         CallManager.setCallActivityClass(GroupCallActivity::class.java)
         CallManager.setMissedCallListener(object : MissedCallListener {
             override fun onMissedCall(
                 isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
-                userList: ArrayList<String>
-            ) {
+                userList: ArrayList<String>) {
                 //show missed call notification
-                com.mirrorflysdk.flycommons.LogMessage.d(TAG, "onMissedCall")
-                missedCallNotificationCount += 1
-                addMissedCallNotificationUsers(isOneToOneCall, userJid, groupId,callType)
-                val notificationContent = getMissedCallNotificationContent(isOneToOneCall, userJid, groupId, callType, userList)
-                if (missedCallNotificationCount > 1){
-                    MissedCallNotificationUtils.createNotification(
-                        getContext(),
-                        " $missedCallNotificationCount $missedCallNotificationCallType", //Title Missed call Notification
-                        missedCallNotificationUserNames //Message Content Missed call from whom
-                    )
-                }else{
-                    MissedCallNotificationUtils.createNotification(
-                        getContext(),
-                        notificationContent.first, //Title Missed call Notification
-                        notificationContent.second //Message Content Missed call from whom
-                    )
-                }
-
+                MissedCallNotificationUtils.createMissCallNotification(
+                    isOneToOneCall,
+                    userJid,
+                    groupId,
+                    callType,
+                    userList)
             }
         })
 

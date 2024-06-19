@@ -9,14 +9,12 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycall.call.utils.CallConstants
-import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
-import com.mirrorflysdk.flycommons.PendingIntentHelper
+import com.contusfly.BuildConfig
 import com.contusfly.R
 import com.contusfly.TAG
 import com.contusfly.activities.DashboardActivity
 import com.contusfly.call.groupcall.utils.CallUtils
+import com.contusfly.constants.MobileApplication
 import com.contusfly.emptyString
 import com.contusfly.getDisplayName
 import com.contusfly.notification.NotificationBuilder
@@ -24,8 +22,13 @@ import com.contusfly.utils.Constants
 import com.contusfly.utils.NotifyRefererUtils
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.flycall.call.utils.CallConstants
 import com.mirrorflysdk.flycall.webrtc.CallType
+import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.flycommons.PendingIntentHelper
 import java.security.SecureRandom
 
 object MissedCallNotificationUtils {
@@ -48,7 +51,7 @@ object MissedCallNotificationUtils {
         val bound = 1000
         val channelId = randomNumberGenerator.nextInt(bound).toString()
         val notificationManager = context
-                .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         unReadCallCount += 1
         unReadCallCount = if (NotificationBuilder.chatNotifications.size == 0) getTotalUnReadCount() else unReadCallCount
@@ -149,7 +152,58 @@ object MissedCallNotificationUtils {
         unReadCallCount = 0
     }
 
-    fun clearMissedCallNotificationDetails(){
+    fun createMissCallNotification( isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
+                                    userList: ArrayList<String>){
+        try {
+            LogMessage.d(TAG, "onMissedCall")
+            missedCallNotificationCount += 1
+            addMissedCallNotificationUsers(isOneToOneCall, userJid, groupId,callType)
+            val notificationContent = getMissedCallNotificationContent(isOneToOneCall, userJid, groupId, callType, userList)
+            if (missedCallNotificationCount > 1) {
+                createNotification(
+                    MobileApplication.getContext(),
+                    " $missedCallNotificationCount $missedCallNotificationCallType", //Title Missed call Notification
+                    missedCallNotificationUserNames //Message Content Missed call from whom
+                )
+            } else {
+                createNotification(
+                    MobileApplication.getContext(),
+                    notificationContent.first, //Title Missed call Notification
+                    notificationContent.second //Message Content Missed call from whom
+                )
+            }
+        } catch(e: Exception){
+            LogMessage.e(TAG,e.toString())
+        }
+    }
+
+    private fun getMissedCallNotificationContent(isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
+                                                 userList: ArrayList<String>): Pair<String, String> {
+        var messageContent : String
+        val missedCallMessage = StringBuilder()
+        missedCallMessage.append(ChatManager.applicationContext.resources.getString(R.string.you_missed_call))
+        if (isOneToOneCall && groupId.isNullOrEmpty()) {
+            if (callType == CallType.AUDIO_CALL) {
+                missedCallMessage.append("an ")
+            } else {
+                missedCallMessage.append("a ")
+            }
+            missedCallMessage.append(callType).append(" call")
+            messageContent = ProfileDetailsUtils.getProfileDetails(userJid)?.getDisplayName()!!
+        } else {
+            missedCallMessage.append("a group ").append(callType).append(" call")
+            messageContent = if (!groupId.isNullOrBlank()) {
+                ProfileDetailsUtils.getProfileDetails(groupId)?.getDisplayName()!!
+            } else {
+                CallUtils.getCallUsersName(userList).toString()
+            }
+        }
+        if (BuildConfig.HIPAA_COMPLIANCE_ENABLED)
+            messageContent = ChatManager.applicationContext.resources.getString(R.string.new_missed_call)
+        return Pair(missedCallMessage.toString(), messageContent)
+    }
+
+    fun clearMissedCallNotificationDetails() {
         missedCallNotificationCount = 0
         missedCallNotificationUserJidList.clear()
         missedCallNotificationUserNames = emptyString()
@@ -158,7 +212,6 @@ object MissedCallNotificationUtils {
     }
 
     fun addMissedCallNotificationUsers(isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String) {
-        missedCallNotificationCount += 1
         if (!missedCallTypeList.contains(callType))
             missedCallTypeList.add(callType)
         if (isOneToOneCall) {

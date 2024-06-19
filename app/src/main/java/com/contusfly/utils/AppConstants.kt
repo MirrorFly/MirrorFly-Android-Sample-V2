@@ -47,4 +47,6 @@ object AppConstants {
      * Notifying the initiation of auto backup
      */
     const val AUTO_BACKUP_INITIATED = "com.contus.chat.auto.backup.initiated"
+
+    const val OTP_ENABLE = true
 }

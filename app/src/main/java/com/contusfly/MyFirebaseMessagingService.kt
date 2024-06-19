@@ -4,6 +4,8 @@ import com.contusfly.utils.FirebaseUtils
 import com.contusfly.utils.LogMessage
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mirrorflysdk.flycall.webrtc.CallLogger
 import dagger.android.AndroidInjection
 import javax.inject.Inject
@@ -30,8 +32,22 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
         // Data messages are handled here in onMessageReceived whether the app is in the foreground
         // or background. Data messages are the type traditionally used with GCM.
-        val notificationData: Map<String, String> = remoteMessage.data
+        var notificationData: Map<String, String> = remoteMessage.data
         if (notificationData.isNotEmpty()) {
+            try {
+                val messageDataString = notificationData["message"]
+                if (messageDataString != null) {
+                    notificationData = Gson().fromJson<Map<String, String>>(messageDataString, object : TypeToken<Map<String, Any>>() {}.type)
+                    if(notificationData.containsKey("android")) {
+                        val dataMap = notificationData["data"] as? Map<String, String>
+                        dataMap?.let { data ->
+                            notificationData = data
+                        }
+                    }
+                }
+            } catch(e: Exception) {
+                LogMessage.e("Fcm_parsing_Error",e)
+            }
             LogMessage.d(TAG, "RemoteMessage:$notificationData")
             CallLogger.callLog(TAG,"RemoteMessage notification:$notificationData")
             firebaseUtils.handleReceivedMessage(this, notificationData)

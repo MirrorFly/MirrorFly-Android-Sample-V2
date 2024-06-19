@@ -11,6 +11,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -203,16 +205,21 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                     1 -> {
                         swipeRefreshLayout.isEnabled = false
                         dashboardBinding.newChatFab.visibility = View.GONE
-                        clearMissedCallNotificationDetails()
-                        //mark missed calls as read
-                        CallLogManager.markAllUnreadMissedCallsAsRead()
-                        validateMissedCallsCount()
+                        clearMissedCall()
                     }
                 }
                 setUpTabColors(position)
                 searchKey = Constants.EMPTY_STRING
             }
         })
+    }
+
+    private fun clearMissedCall() {
+        clearMissedCallNotificationDetails()
+        //mark missed calls as read
+        CallLogManager.markAllUnreadMissedCallsAsRead()
+        validateMissedCallsCount()
+
     }
 
     @SuppressLint("InflateParams")
@@ -649,7 +656,28 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
             callLogMenuShowHide()
         }
 
+        viewModel.launchArchiveactivity.observe(this) {
+
+            launchArchiveChat()
+
+        }
+
     }
+
+    private fun launchArchiveChat() {
+
+        val intent = Intent(this, ArchivedChatsActivity::class.java)
+
+        archieveActivityResultLauncher.launch(intent)
+
+    }
+
+    private var archieveActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result->
+            if (result.resultCode == RESULT_OK) {
+                viewModel.isNeedFetchNextPage = true
+            }
+        }
 
     /**
      * Update the recent chat unread users count

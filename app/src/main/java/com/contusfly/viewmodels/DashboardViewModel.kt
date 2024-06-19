@@ -30,7 +30,6 @@ import com.mirrorflysdk.api.RecentChatListBuilder
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
-import com.contusfly.utils.Constants.Companion.RECENT_CHAT_FETCHED_PAGE_NUMBER
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import com.mirrorflysdk.models.RecentChatListParams
 import kotlinx.coroutines.*
@@ -52,6 +51,7 @@ constructor() : ViewModel() {
         println("Coroutine Exception ${TAG}:  ${exception.printStackTrace()}")
     }
 
+    var isNeedFetchNextPage: Boolean = false
     /**
      * List to add position of the clicked chats for pinning
      */
@@ -192,6 +192,14 @@ constructor() : ViewModel() {
     // = = = = = = = = Language Data = = = = = = = =
     val updateLanguageSearch = MutableLiveData<String>()
 
+    val launchArchiveactivity = MutableLiveData<Boolean>()
+
+    fun launchArchive(){
+
+        launchArchiveactivity.value = true
+
+    }
+
     /*
     * Get Profile List */
     fun getProfileDetailsList() {
@@ -244,9 +252,9 @@ constructor() : ViewModel() {
     }
 
     fun chatHistoryMigration() {
-        var fetchedPageNumber=
-            com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.getInt(RECENT_CHAT_FETCHED_PAGE_NUMBER)
-        if(recentChatAdapter.size == 0 && fetchedPageNumber == 0) {
+        val lastChatTimeStamp: String = com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.getString(
+            com.mirrorflysdk.flycommons.SharedPreferenceManager.RECENT_CHAT_LAST_FETCHED_TIMESTAMP)
+        if(recentChatAdapter.size == 0 && lastChatTimeStamp.isEmpty()) {
             getInitialChatList()
         }
     }
@@ -274,8 +282,9 @@ constructor() : ViewModel() {
         setSwipeLoader(true)
         setRecentChatListFetching(true)
         val isChatHistoryEnabled = ChatManager.getAvailableFeatures().isChatHistoryEnabled && ChatManager.chatHistoryEnabled()
-        val fetchedPageNumber = com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.getInt(RECENT_CHAT_FETCHED_PAGE_NUMBER)
-        viewModelScope.launch(if (isChatHistoryEnabled && fetchedPageNumber == 0) IO else Main.immediate) {
+        val lastChatTimeStamp: String = com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.getString(
+            com.mirrorflysdk.flycommons.SharedPreferenceManager.RECENT_CHAT_LAST_FETCHED_TIMESTAMP)
+        viewModelScope.launch(if (isChatHistoryEnabled && lastChatTimeStamp.isEmpty()) IO else Main.immediate) {
             try {
                 recentChatListParams = RecentChatListParams().apply { limit = recentChatLimit }
                 recentChatListBuilder = RecentChatListBuilder(recentChatListParams)
@@ -307,7 +316,9 @@ constructor() : ViewModel() {
                     }
                     setRecentChatListFetching(false)
                     setSwipeLoader(false)
+                    nextDataChecking()
                 }
+
             } catch (e: Exception) {
                 LogMessage.e(
                     TAG,
@@ -317,6 +328,18 @@ constructor() : ViewModel() {
                 setSwipeLoader(false)
             }
         }
+    }
+
+    private fun nextDataChecking(){
+
+        if(isNeedFetchNextPage) {
+
+            isNeedFetchNextPage = false
+
+            nextSetOfRecentChatList()
+
+        }
+
     }
 
     private fun headerDataAdd(recentChatList: MutableLiveData<LinkedList<RecentChat>>) {

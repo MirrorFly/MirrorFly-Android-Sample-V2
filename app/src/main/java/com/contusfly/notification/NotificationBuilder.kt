@@ -189,7 +189,7 @@ object NotificationBuilder {
             if (profileDetails!!.isGroupProfile) {
                 modifiedTitle = "$title ($messagesCount$appendMessagesLabel"
                 messagingStyle.setGroupConversation(true).conversationTitle = modifiedTitle
-            } else if (chatNotifications.size <= 1) {
+            } else if (chatNotifications.size >= 1) {
                 modifiedTitle = " ($messagesCount$appendMessagesLabel"
                 messagingStyle.conversationTitle = modifiedTitle
             }
