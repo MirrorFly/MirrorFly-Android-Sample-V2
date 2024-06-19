@@ -1,5 +1,6 @@
 package com.contusfly.activities
 
+import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -345,8 +346,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             val bundle = Bundle()
             bundle.putInt(Constants.NOTIFY_SELECTION, 4)
             val selectedChats = viewModel.chatList.value!![position]
-            if (viewModel.selectedChats.contains(selectedChats)) {
-                viewModel.selectedChats.remove(selectedChats)
+            if (viewModel.selectedChats.any { it.jid == selectedChats.jid }) {
+                viewModel.selectedChats.remove(viewModel.selectedChats.first { it.jid == selectedChats.jid })
             } else if (!selectedChats.isGroup && !viewModel.selectedChats[0].isGroup
                 || viewModel.selectedChats.isNotEmpty())
                 viewModel.selectedChats.add(selectedChats)
@@ -621,7 +622,10 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                 if (isSuccess) selectedJids.add(recent.jid)
                 else failedCount++
                 isAdapterNeedSync = (selectedJids.size > 0 && selectedCount == (selectedJids.size + failedCount))
-                if (isAdapterNeedSync) updateArchiveChatsData(selectedJids, failedCount)
+                if (isAdapterNeedSync){
+                    updateArchiveChatsData(selectedJids, failedCount)
+                    setResult(Activity.RESULT_OK)
+                }
             })
         }
     }

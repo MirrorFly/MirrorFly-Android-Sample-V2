@@ -227,7 +227,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         if(position == 0){
             launchPinActivity(false)
         } else {
-            startActivity(Intent(context, ArchivedChatsActivity::class.java))
+            viewModel.launchArchive()
         }
     }
 

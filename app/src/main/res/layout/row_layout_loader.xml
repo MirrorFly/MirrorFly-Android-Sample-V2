@@ -12,7 +12,7 @@
         android:paddingTop="@dimen/padding_15"
         android:paddingEnd="@dimen/padding_10"
         android:paddingBottom="@dimen/padding_15"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ProgressBar
             android:layout_width="@dimen/margin_30"

@@ -46,7 +46,7 @@ android {
     buildTypes {
         debug {
             buildConfigField 'Boolean', 'IS_QA_BUILD', 'true'
-            buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
+            buildConfigField 'String', 'LICENSE', '"fBSGlLSjOZXsrAuaqaHPqeO9f0J4JU"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
             buildConfigField "String", "SUPPORT_MAIL", '"contussupport@gmail.com"'
             resValue("string", "app_name", "UI Kit")
@@ -56,7 +56,6 @@ android {
             signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
 
         release {
             initWith debug
@@ -203,7 +202,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.13.0'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.13.2'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
