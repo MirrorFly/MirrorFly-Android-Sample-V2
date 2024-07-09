@@ -1017,5 +1017,10 @@
     <string name="poor_connection">Poor Connection</string>
     <string name="try_moving_to_get_better_signal">Try moving to another place for better signal</string>
     <string name="close_poor_connection_layout">close poor connection layout</string>
+    <string name="audio_call">Audio Call</string>
+    <string name="video_call">Video Call</string>
+    <string name="anonymous_audio_call">Anonymous Audio Call</string>
+    <string name="anonymous_video_call">Anonymous Video Call</string>
+
 
 </resources>

@@ -41,8 +41,8 @@ ext {
     buildToolsVersion = '30.0.2'
     targetSdkVersion = 34
     minSdkVersion = 21
-    versionCode = 8
-    versionName = "2.2"
-    repoVersion = '7.13.2'
+    versionCode = 9
+    versionName = "2.3"
+    repoVersion = '7.13.4'
     uatVersion = '_pre_1'
 }

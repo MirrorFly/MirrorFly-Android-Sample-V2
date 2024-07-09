@@ -19,22 +19,13 @@ import android.util.Log
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mirrorflysdk.flycall.webrtc.CallType
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.mirrorflysdk.flycall.webrtc.api.CallManager.isOnTelephonyCall
-import com.mirrorflysdk.flycall.call.utils.CallConstants
-import com.mirrorflysdk.flycommons.models.MessageType
-import com.mirrorflysdk.flycommons.*
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.*
-import com.contusfly.R
-import com.contusfly.BuildConfig
 import com.contusfly.activities.parent.ChatParent
 import com.contusfly.adapters.ChatAdapter
 import com.contusfly.adapters.GroupTagAdapter
@@ -46,7 +37,6 @@ import com.contusfly.chat.InviteContactUtils
 import com.contusfly.chat.RealPathUtil
 import com.contusfly.chat.ReplyHashMap
 import com.contusfly.chat.reply.MessageSwipeController
-import com.contusfly.checkInternetAndExecute
 import com.contusfly.constants.MobileApplication
 import com.contusfly.databinding.ActivityChatBinding
 import com.contusfly.fragments.ScheduleBottomSheetFragment
@@ -60,19 +50,27 @@ import com.contusfly.models.MeetMessageParams
 import com.contusfly.models.MessageObject
 import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.notification.AppNotificationManager
-import com.contusfly.returnEmptyIfNull
 import com.contusfly.utils.*
 import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.*
-import com.mirrorflysdk.api.*
-import com.mirrorflysdk.api.models.ChatMessage
-import com.mirrorflysdk.utils.ConstantActions
-import com.mirrorflysdk.views.CustomToast
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
+import com.mirrorflysdk.api.*
 import com.mirrorflysdk.api.contacts.ProfileDetails
-
+import com.mirrorflysdk.api.models.ChatMessage
+import com.mirrorflysdk.flycall.call.utils.CallConstants
+import com.mirrorflysdk.flycall.webrtc.CallType
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycall.webrtc.api.CallManager.isOnTelephonyCall
+import com.mirrorflysdk.flycommons.*
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.flycommons.models.CallMetaData
+import com.mirrorflysdk.flycommons.models.MessageType
+import com.mirrorflysdk.utils.ConstantActions
+import com.mirrorflysdk.views.CustomToast
+import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import dagger.android.AndroidInjection
 import io.github.rockerhieu.emojicon.EmojiconGridFragment
 import io.github.rockerhieu.emojicon.EmojiconsFragment
@@ -132,6 +130,8 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private var mentionFilterKey: String = emptyString()
     private lateinit var gestureDetector: GestureDetector
 
+    private var callMetaDataList:List<CallMetaData> = emptyList()
+
     private val contactSavePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         val contactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_CONTACTS)
@@ -164,16 +164,90 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun launchAudioCall(){
         if(CallManager.isNotificationPermissionsGranted()){
             CallPermissionUtils(
-                this,
-                profileDetails.isBlocked,
-                profileDetails.isAdminBlocked,
-                arrayListOf(profileDetails.jid),
-                "",
-                false
+                    this,
+                    profileDetails.isBlocked,
+                    profileDetails.isAdminBlocked,
+                    arrayListOf(profileDetails.jid),
+                    "",
+                    false,
+                    emptyArray()
             ).audioCall()
         } else {
             notificationPermissionChecking(true)
         }
+    }
+
+    private fun makeCallWithCallPermissionUtils(isAudioCall: Boolean, callMetaDataArray: Array<CallMetaData>? = emptyArray<CallMetaData>()){
+        LogMessage.d(TAG,"#callflow makeCallWithCallPermissionUtils isAudioCall:$isAudioCall callMetaDataList:${callMetaDataArray}")
+        if(isAudioCall){
+            CallPermissionUtils(
+                    this,
+                    profileDetails.isBlocked,
+                    profileDetails.isAdminBlocked,
+                    arrayListOf(profileDetails.jid),
+                    "",
+                    false,
+                    callMetaDataArray
+            ).audioCall()
+        }else{
+            CallPermissionUtils(
+                    this,
+                    profileDetails.isBlocked,
+                    profileDetails.isAdminBlocked,
+                    arrayListOf(profileDetails.jid),
+                    "",
+                    false,
+                    callMetaDataArray
+            ).videoCall()
+        }
+
+    }
+
+    @SuppressWarnings("kotlin:1144")
+    private fun checkAndCreateAnonymousCall(isAudioCall:Boolean){
+        LogMessage.d(TAG,"#callflow checkAndCreateAnonymousCall")
+        val callDialog = BottomSheetDialog(this)
+        // on below line we are inflating a layout file which we have created.
+        val callDialogView = layoutInflater.inflate(R.layout.layout_anonymous_call, null)
+        val callOption = callDialogView.findViewById<AppCompatButton>(R.id.call_option)
+        val callOptionAnonymous = callDialogView.findViewById<AppCompatButton>(R.id.call_option_anonymous)
+
+        val callMetaData = CallMetaData("isAnonymous", 1.toString())
+        val callMetaData1 = CallMetaData("AnonymousUsername","VIP User")
+        val callMetaDataList:Array<CallMetaData> = arrayOf(callMetaData,callMetaData1)
+        if(isAudioCall){
+            callOption.text = getString(R.string.audio_call)
+            callOptionAnonymous.text = getString(R.string.anonymous_audio_call)
+            callOption.setOnClickListener {
+                LogMessage.d(TAG,"#callflow checkAndCreateAnonymousCall audioCall ")
+                makeCallWithCallPermissionUtils(true)
+                callDialog.dismiss()
+            }
+            callOptionAnonymous.setOnClickListener {
+                LogMessage.d(TAG,"#callflow checkAndCreateAnonymousCall audioCall callMetaDataList $callMetaDataList")
+                makeCallWithCallPermissionUtils(true,callMetaDataList)
+                callDialog.dismiss()
+            }
+        }else{
+            callOption.text = getString(R.string.video_call)
+            callOptionAnonymous.text = getString(R.string.anonymous_video_call)
+
+            callOption.setOnClickListener {
+                LogMessage.d(TAG,"#callflow checkAndCreateAnonymousCall videoCall ")
+                makeCallWithCallPermissionUtils(isAudioCall = false)
+                callDialog.dismiss()
+            }
+            callOptionAnonymous.setOnClickListener {
+                LogMessage.d(TAG,"#callflow checkAndCreateAnonymousCall videoCall callMetaDataList $callMetaDataList")
+                makeCallWithCallPermissionUtils(isAudioCall = false,callMetaDataList)
+                callDialog.dismiss()
+            }
+        }
+
+        callDialog.setCancelable(false)
+        callDialog.setContentView(callDialogView)
+        callDialog.show()
+
     }
 
     private fun notificationPermissionChecking(isCall:Boolean){
@@ -222,12 +296,13 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun launchVideoCall(){
         if(CallManager.isNotificationPermissionsGranted()){
             CallPermissionUtils(
-                this,
-                profileDetails.isBlocked,
-                profileDetails.isAdminBlocked,
-                arrayListOf(profileDetails.jid),
-                "",
-                false
+                    this,
+                    profileDetails.isBlocked,
+                    profileDetails.isAdminBlocked,
+                    arrayListOf(profileDetails.jid),
+                    "",
+                    false,
+                    emptyArray()
             ).videoCall()
         } else {
             notificationPermissionChecking(true)

@@ -29,6 +29,7 @@ import com.mirrorflysdk.flycall.webrtc.CallType
 import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycommons.PendingIntentHelper
+import com.mirrorflysdk.flycommons.models.CallMetaData
 import java.security.SecureRandom
 
 object MissedCallNotificationUtils {
@@ -152,33 +153,33 @@ object MissedCallNotificationUtils {
         unReadCallCount = 0
     }
 
-    fun createMissCallNotification( isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
-                                    userList: ArrayList<String>){
+    fun createMissCallNotification(isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
+                                   userList: ArrayList<String>, callMeta: Array<CallMetaData>?) {
         try {
             LogMessage.d(TAG, "onMissedCall")
             missedCallNotificationCount += 1
-            addMissedCallNotificationUsers(isOneToOneCall, userJid, groupId,callType)
-            val notificationContent = getMissedCallNotificationContent(isOneToOneCall, userJid, groupId, callType, userList)
+            addMissedCallNotificationUsers(isOneToOneCall, userJid, groupId, callType)
+            val notificationContent = getMissedCallNotificationContent(isOneToOneCall, userJid, groupId, callType, userList,callMeta)
             if (missedCallNotificationCount > 1) {
                 createNotification(
-                    MobileApplication.getContext(),
-                    " $missedCallNotificationCount $missedCallNotificationCallType", //Title Missed call Notification
-                    missedCallNotificationUserNames //Message Content Missed call from whom
+                        MobileApplication.getContext(),
+                        " $missedCallNotificationCount $missedCallNotificationCallType", //Title Missed call Notification
+                        missedCallNotificationUserNames //Message Content Missed call from whom
                 )
             } else {
                 createNotification(
-                    MobileApplication.getContext(),
-                    notificationContent.first, //Title Missed call Notification
-                    notificationContent.second //Message Content Missed call from whom
+                        MobileApplication.getContext(),
+                        notificationContent.first, //Title Missed call Notification
+                        notificationContent.second //Message Content Missed call from whom
                 )
             }
-        } catch(e: Exception){
-            LogMessage.e(TAG,e.toString())
+        } catch (e: Exception) {
+            LogMessage.e(TAG, e.toString())
         }
     }
 
     private fun getMissedCallNotificationContent(isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
-                                                 userList: ArrayList<String>): Pair<String, String> {
+                                                 userList: ArrayList<String>,callMeta: Array<CallMetaData>?): Pair<String, String> {
         var messageContent : String
         val missedCallMessage = StringBuilder()
         missedCallMessage.append(ChatManager.applicationContext.resources.getString(R.string.you_missed_call))
