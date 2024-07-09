@@ -35,6 +35,7 @@ import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyCore.unblockUser
 import com.mirrorflysdk.flycommons.exception.FlyException
+import com.mirrorflysdk.flycommons.models.CallMetaData
 import com.mirrorflysdk.views.CustomToast
 import java.util.*
 
@@ -42,7 +43,7 @@ import java.util.*
  * This class is used to start the video call audio call activity. Here checking the audio and video
  * permissions are checked before make a call.And also check whether the user is blocked or not.
  */
-class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked: Boolean, jidList: ArrayList<String>, groupId: String?, isCloseScreen: Boolean) : CommonDialogClosedListener {
+class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked: Boolean, jidList: ArrayList<String>, groupId: String?, isCloseScreen: Boolean, callMetaDataArray: Array<CallMetaData>? = emptyArray<CallMetaData>()) : CommonDialogClosedListener {
     /**
      * Instance for the activity
      */
@@ -77,6 +78,12 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
      * The progress dialog to display the progress bar When the background operations has been doing
      */
     private var doProgressDialog: DoProgressDialog? = null
+
+
+    /**
+     * list of call meta data value being passed.
+     */
+    private var callMetaDataArray: Array<CallMetaData>? = null
 
     /**
      * Check the jid has blocked or not. If JID has blocked then show the alert and call after unblock
@@ -212,7 +219,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
             if (!ChatManager.getAvailableFeatures().isOneToOneCallEnabled) {
                 CustomAlertDialog().showFeatureRestrictionAlert(activity)
             } else {
-                makeVoiceCall(jidList[0], object : CallActionListener {
+                makeVoiceCall(jidList[0], callMetaDataArray, object : CallActionListener {
                     override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                         LogMessage.i(TAG, "$CALL_UI makeVoiceCall: ${flyException?.message}")
                     }
@@ -227,7 +234,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
         if (!ChatManager.getAvailableFeatures().isGroupCallEnabled) {
             CustomAlertDialog().showFeatureRestrictionAlert(activity)
         } else {
-            CallManager.makeGroupVoiceCall(jidList, groupId, object : CallActionListener {
+            CallManager.makeGroupVoiceCall(jidList, groupId,callMetaDataArray, object : CallActionListener {
                 override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                     LogMessage.i(TAG, "$CALL_UI makeVoiceCall: ${flyException?.message}")
                 }
@@ -266,7 +273,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
             if (!ChatManager.getAvailableFeatures().isOneToOneCallEnabled) {
                 CustomAlertDialog().showFeatureRestrictionAlert(activity)
             } else {
-                makeVideoCall(jidList[0], object : CallActionListener {
+                makeVideoCall(jidList[0], callMetaDataArray, object : CallActionListener {
                     override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                         LogMessage.i(TAG, "$CALL_UI makeVideoCall: ${flyException?.message}")
                     }
@@ -279,7 +286,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
         if (!ChatManager.getAvailableFeatures().isGroupCallEnabled) {
             CustomAlertDialog().showFeatureRestrictionAlert(activity)
         } else {
-            CallManager.makeGroupVideoCall(jidList, groupId, object : CallActionListener {
+            CallManager.makeGroupVideoCall(jidList, groupId,callMetaDataArray, object : CallActionListener {
                 override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
                     LogMessage.i(TAG, "$CALL_UI makeVideoCall: ${flyException?.message}")
                 }
@@ -371,5 +378,6 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
         this.jidList = jidList
         this.groupId = groupId
         this.isCloseScreen = isCloseScreen
+        this.callMetaDataArray = callMetaDataArray
     }
 }

@@ -30,12 +30,14 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.mirrorflysdk.api.*
 import com.mirrorflysdk.api.utils.NameHelper
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 import com.mirrorflysdk.flycall.webrtc.*
 import com.mirrorflysdk.flycall.webrtc.api.CallHelper
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycall.webrtc.api.CallNameHelper
 import com.mirrorflysdk.flycall.webrtc.api.MissedCallListener
 import com.mirrorflysdk.flycommons.PendingIntentHelper
+import com.mirrorflysdk.flycommons.models.CallMetaData
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -190,37 +192,37 @@ class MobileApplication : Application(), HasAndroidInjector {
         }
     }
 
-    private fun initializeCallSdk(){
+    private fun initializeCallSdk() {
         CallManager.setCallActivityClass(GroupCallActivity::class.java)
         CallManager.setMissedCallListener(object : MissedCallListener {
-            override fun onMissedCall(
-                isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
-                userList: ArrayList<String>) {
+            override fun onMissedCall(isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String, userList: ArrayList<String>, callMeta: Array<CallMetaData>?) {
                 //show missed call notification
                 MissedCallNotificationUtils.createMissCallNotification(
-                    isOneToOneCall,
-                    userJid,
-                    groupId,
-                    callType,
-                    userList)
+                        isOneToOneCall,
+                        userJid,
+                        groupId,
+                        callType,
+                        userList, callMeta)
             }
         })
 
         CallManager.setCallHelper(object : CallHelper {
-            override fun getNotificationContent(callDirection: String): String {
+            override fun getNotificationContent(callDirection: String, callMetaDataArray: Array<CallMetaData>?): String {
                 return if (BuildConfig.HIPAA_COMPLIANCE_ENABLED) {
                     when (callDirection) {
                         CallDirection.INCOMING_CALL -> resources.getString(R.string.new_incoming_call)
                         CallDirection.OUTGOING_CALL -> resources.getString(R.string.new_outgoing_call)
                         else -> resources.getString(R.string.new_ongoing_call)
                     }
-                } else
+                }else{
                     getNotificationMessage()
+                }
+
             }
         })
 
         CallManager.setCallNameHelper(object : CallNameHelper {
-            override fun getDisplayName(jid: String): String {
+            override fun getDisplayName(jid: String, callMetaDataArray: Array<CallMetaData>?): String {
                 return if (ProfileDetailsUtils.getProfileDetails(jid) != null) ProfileDetailsUtils.getProfileDetails(jid)!!.getDisplayName() else Constants.EMPTY_STRING
             }
         })

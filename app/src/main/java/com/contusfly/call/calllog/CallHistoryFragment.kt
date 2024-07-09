@@ -704,7 +704,10 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
                 || callLog.callState == CallState.MISSED_CALL
             )
                 callLog.fromUser else callLog.toUser
-
+            val callMetaData = callLog.callMetaData
+            val roomId = callLog.roomId
+            LogMessage.d(TAG,"#callflow roomId :$roomId")
+            LogMessage.d(TAG,"#callflow callMetaData :$callMetaData")
             if (!callLog.groupId.isNullOrEmpty() || (!callLog.userList.isNullOrEmpty() && callLog.userList!!.filter { it != CallManager.getCurrentUserId() }.size > 1)) {
                 openGroupChatView(callLog, view)
             } else {

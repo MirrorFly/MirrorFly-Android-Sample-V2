@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
@@ -52,6 +53,7 @@ import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.mirrorflysdk.flycall.webrtc.CallDirection
 import com.mirrorflysdk.flycall.webrtc.CallStatus
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycall.webrtc.api.ConnectionQuality
@@ -111,7 +113,9 @@ class CallConnectedViewHelper(
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.image_add_users -> activityOnClickListener.addUsersInCall()
+            R.id.image_add_users -> {
+                activityOnClickListener.addUsersInCall()
+            }
             R.id.view_video_local -> if (!GroupCallUtils.isSingleUserInCall() && CallManager.isCallConnected()) setSwappedFeeds(
                 !isSwappedFeeds
             )
