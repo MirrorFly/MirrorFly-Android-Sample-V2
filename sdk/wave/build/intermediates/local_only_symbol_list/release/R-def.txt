@@ -1,0 +1,26 @@
+R_DEF: Internal format may change without notice
+local
+attr? marker_color
+attr? marker_text_color
+attr? marker_text_padding
+attr? marker_text_size
+attr? marker_width
+attr? wave_background_color
+attr? wave_corner_radius
+attr? wave_gap
+attr? wave_gravity
+attr? wave_max_progress
+attr? wave_min_height
+attr? wave_padding_Bottom
+attr? wave_padding_left
+attr? wave_padding_right
+attr? wave_padding_top
+attr? wave_progress
+attr? wave_progress_color
+attr? wave_visible_progress
+attr? wave_width
+id bottom
+id center
+id top
+string app_name
+styleable WaveformSeekBar wave_progress wave_max_progress wave_visible_progress wave_width wave_gap wave_padding_top wave_padding_Bottom wave_padding_left wave_padding_right wave_min_height wave_corner_radius wave_background_color wave_progress_color wave_gravity marker_width marker_color marker_text_size marker_text_color marker_text_padding

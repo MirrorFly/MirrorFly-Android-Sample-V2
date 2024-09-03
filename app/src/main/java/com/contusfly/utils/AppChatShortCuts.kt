@@ -25,10 +25,10 @@ import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.PendingIntentHelper
 import com.contusfly.*
 import com.mirrorflysdk.api.ChatManager
-import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.media.MediaUploadHelper
 
 object AppChatShortCuts {
+    val installShortCutAction = "com.android.launcher.action.INSTALL_SHORTCUT"
 
     @TargetApi(25)
     fun dynamicAppShortcuts(context: Context, toUser: String, chatType: String) {
@@ -46,7 +46,7 @@ object AppChatShortCuts {
             }
 
             if (contactImageUrl != null && contactImageUrl.isNotEmpty()) {
-                val imgURL = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+                val imgURL = Uri.parse(ChatManager.getImageUrl()).buildUpon()
                         .appendPath(Uri.parse(contactImageUrl).lastPathSegment).build().toString()
                 Glide.with(context).asBitmap().load(imgURL)
                         .override(128, 128)
@@ -93,11 +93,12 @@ object AppChatShortCuts {
         pinShortCut(context, shortcut, getPendingIntent(context).intentSender)
     }
 
-    private fun getIntent(context: Context, toUser: String, chatType: String): Intent{
-        var isPrivateChatUser = ChatManager.isPrivateChat(toUser)
-        var intent=Intent(context.applicationContext, StartActivity::class.java)
-        intent.setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+    private fun getIntent(context: Context, toUser: String, chatType: String): Intent {
+        val isPrivateChatUser = ChatManager.isPrivateChat(toUser)
+        val intent = Intent(context.applicationContext, StartActivity::class.java)
+        intent.action = Intent.ACTION_MAIN
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra(Constants.IS_FROM_CHAT_SHORTCUT, chatType)
         intent.putExtra(LibConstants.JID, toUser)
         if(isPrivateChatUser) {
@@ -113,21 +114,30 @@ object AppChatShortCuts {
 
     private fun getAppShortCutIntent(context: Context): Intent {
         val chatShortCutSuccessIntent: Intent
-        if (Build.VERSION.SDK_INT > 25) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent?) {
+                    context.unregisterReceiver(this)
+                }
+            }, IntentFilter("ACTION_CREATE_SHORTCUT"), Context.RECEIVER_EXPORTED)
 
+            chatShortCutSuccessIntent = Intent("ACTION_CREATE_SHORTCUT")
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.registerReceiver(object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent?) {
                     context.unregisterReceiver(this)
                 }
             }, IntentFilter("ACTION_CREATE_SHORTCUT"))
-            chatShortCutSuccessIntent = Intent("ACTION_CREATE_SHORTCUT")
+
+            chatShortCutSuccessIntent = Intent(installShortCutAction)
         } else {
             context.registerReceiver(object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent?) {
                     context.unregisterReceiver(this)
                 }
-            }, IntentFilter("com.android.launcher.action.INSTALL_SHORTCUT"))
-            chatShortCutSuccessIntent = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
+            }, IntentFilter(installShortCutAction))
+
+            chatShortCutSuccessIntent = Intent(installShortCutAction)
 
         }
 

@@ -225,6 +225,7 @@ class Constants {
         const val MUTE_NOTIFY = "mute_notification"
         const val UN_MUTE_NOTIFY = "unmute_notification"
         const val IS_FROM_CHAT_SHORTCUT = "is_from_chat_shortcut"
+        const val IS_SKIP_OTP = "is_skip_otp"
         const val YESTERDAY = "Yesterday"
         const val FRAGMENT_TYPE = "fragment_type"
         const val TYPE_NOTIFICATION = 3

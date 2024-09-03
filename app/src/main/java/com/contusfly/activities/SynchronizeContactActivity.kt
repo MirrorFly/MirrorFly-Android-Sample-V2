@@ -174,18 +174,13 @@ class SynchronizeContactActivity : BaseActivity(), CoroutineScope {
     private fun initiateUserData() {
         try {
             if (AppUtils.isNetConnected(this)) {
-                FlyCore.getRegisteredUsers(true) { isSuccess, _, _ ->
-                    if (isSuccess)
-                        FlyCore.getUsersIBlocked(true) { _, _, _ ->
-                            runOnUiThread { redirectToDashBoard() }
-                        }
-                    else
-                        runOnUiThread { redirectToDashBoard() }
-                }
+                getUsersContact()
                 if(!SharedPreferenceManager.getBoolean(Constants.ADMIN_BLOCKED)) {
                     callLogviewModel.uploadUnSyncedCallLogs()
                 }
-                GroupManager.getAllGroups(true) { _, _, _ -> }
+                if (!ChatManager.chatHistoryEnabled() || !ChatManager.getAvailableFeatures().isChatHistoryEnabled) {
+                    GroupManager.getAllGroups(true) { _, _, _ -> }
+                }
             } else {
                 hideProgressDialog()
                 CustomToast.show(this, getString(R.string.msg_no_internet))
@@ -193,6 +188,22 @@ class SynchronizeContactActivity : BaseActivity(), CoroutineScope {
             }
         } catch (e: Exception) {
             LogMessage.e(TAG, e)
+        }
+    }
+
+    private fun getUsersContact() {
+        FlyCore.getRegisteredUsers(true) { isSuccess, _, _ ->
+            if (isSuccess)
+                if (!ChatManager.chatHistoryEnabled() || !ChatManager.getAvailableFeatures().isChatHistoryEnabled) {
+                    FlyCore.getUsersIBlocked(true) { _, _, _ ->
+                        runOnUiThread { redirectToDashBoard() }
+                    }
+                } else {
+                    runOnUiThread { redirectToDashBoard() }
+                }
+
+            else
+                runOnUiThread { redirectToDashBoard() }
         }
     }
 

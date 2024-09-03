@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">lib</string>
+    <declare-styleable name="WaveformSeekBar">
+        <attr format="float" name="wave_progress"/>
+        <attr format="float" name="wave_max_progress"/>
+        <attr format="float" name="wave_visible_progress"/>
+        <attr format="dimension" name="wave_width"/>
+        <attr format="dimension" name="wave_gap"/>
+        <attr format="dimension" name="wave_padding_top"/>
+        <attr format="dimension" name="wave_padding_Bottom"/>
+        <attr format="dimension" name="wave_padding_left"/>
+        <attr format="dimension" name="wave_padding_right"/>
+        <attr format="dimension" name="wave_min_height"/>
+        <attr format="dimension" name="wave_corner_radius"/>
+        <attr format="color" name="wave_background_color"/>
+        <attr format="color" name="wave_progress_color"/>
+        <attr format="enum" name="wave_gravity">
+            <enum name="top" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="bottom" value="2"/>
+        </attr>
+        <attr format="dimension" name="marker_width"/>
+        <attr format="color" name="marker_color"/>
+        <attr format="dimension" name="marker_text_size"/>
+        <attr format="color" name="marker_text_color"/>
+        <attr format="dimension" name="marker_text_padding"/>
+    </declare-styleable>
+</resources>

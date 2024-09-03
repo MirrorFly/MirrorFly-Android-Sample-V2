@@ -29,6 +29,7 @@ import com.contusfly.*
 import com.contusfly.activities.ChatActivity.Companion.addMoreMediaClicked
 import com.contusfly.activities.ChatActivity.Companion.unSentMentionedUserIdList
 import com.contusfly.activities.parent.ChatParent
+import com.contusfly.activities.parent.ChatParent.Companion.isComingFromFilePicker
 import com.contusfly.adapters.GroupTagAdapter
 import com.contusfly.adapters.MediaPreviewAdapter
 import com.contusfly.adapters.MediaPreviewPagerAdapter
@@ -965,6 +966,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
                 mediaPreviewBinding.sendMedia.isEnabled = true
             }
         } else {
+            ChatParent.isComingFromFilePicker = true
             mediaUpload()
         }
     }

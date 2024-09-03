@@ -15,6 +15,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.installations.FirebaseInstallations
 import com.mirrorflysdk.api.ChatActionListener
 import com.mirrorflysdk.api.ChatEventsManager
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.notification.NotificationEventListener
@@ -62,7 +63,7 @@ class FirebaseUtils : CoroutineScope {
         val image  = if (!profileDetails?.thumbImage.isNullOrEmpty()) {
             profileDetails?.thumbImage
         } else profileDetails?.image ?: Constants.EMPTY_STRING
-        val imgUrl = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+        val imgUrl = Uri.parse(ChatManager.getImageUrl()).buildUpon()
             .appendPath(Uri.parse(image).lastPathSegment).build().toString()
         NotificationBuilder.file = Glide.with(context).asFile().load(imgUrl).submit().get()
     }
@@ -71,7 +72,7 @@ class FirebaseUtils : CoroutineScope {
         val image  = if (!profileDetails?.thumbImage.isNullOrEmpty()) {
             profileDetails?.thumbImage
         } else profileDetails?.image ?: Constants.EMPTY_STRING
-        val imgUrl = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+        val imgUrl = Uri.parse(ChatManager.getImageUrl()).buildUpon()
             .appendPath(Uri.parse(image).lastPathSegment).build().toString()
         if (chatMessage.getChatType() == ChatType.TYPE_GROUP_CHAT)
             NotificationBuilder.groupFile = Glide.with(context).asFile().load(imgUrl).submit().get()
@@ -98,10 +99,10 @@ class FirebaseUtils : CoroutineScope {
                             AppNotificationManager.createNotification(MobileApplication.getContext(), chatMessage)
                         }
                         try {
-                            val listener =  ChatEventsManager.getMessageEventListener()
+                            val listener = ChatEventsManager.getMessageEventListener()
                             listener?.onMessageReceived(chatMessage)
-                        } catch (e:Exception) {
-                            LogMessage.e(TAG,e.toString())
+                        } catch (e: Exception) {
+                            LogMessage.e(TAG, e.toString())
                         }
                     }
 

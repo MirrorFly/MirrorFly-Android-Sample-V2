@@ -6,6 +6,7 @@ import com.contus.call.CallConstants.JOIN_CALL
 import com.contusfly.TAG
 import com.contusfly.call.groupcall.getEndCallerJid
 import com.contusfly.call.groupcall.getOnGoingCallStatus
+import com.contusfly.call.groupcall.isAudioCall
 import com.contusfly.call.groupcall.isCallNotConnected
 import com.contusfly.call.groupcall.isOutgoingCall
 import com.contusfly.call.groupcall.utils.CallUtils
@@ -55,13 +56,13 @@ class CallNotConnectedViewHelper(
         LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CallNotConnectedViewHelper showCallerImage:")
         if (CallManager.isOneToOneCall() || CallManager.getGroupID().isNotBlank()) {
             binding.layoutGroupCallMembersImage.layoutMembersImage.gone()
-            if (CallManager.isOutgoingCall()) {
+            if (CallManager.isOutgoingCall() && CallManager.isAudioCall()) {
                 binding.layoutOutgoingProfile.show()
                 binding.rippleBg.startRippleAnimation()
                 binding.callerProfileImage.gone()
             } else {
                 binding.layoutOutgoingProfile.gone()
-                binding.callerProfileImage.show()
+                binding.callerProfileImage.gone()
             }
             if (CallManager.getGroupID().isNotBlank() && !CallManager.isOneToOneCall())
                 binding.textParticipantsName.show()

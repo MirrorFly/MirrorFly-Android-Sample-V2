@@ -24,6 +24,7 @@ import com.bumptech.glide.request.target.Target
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
 import com.contusfly.views.DoProgressDialog
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.ChatManager.fileProviderAuthority
 import com.mirrorflysdk.media.MediaUploadHelper
 import com.mirrorflysdk.utils.FilePathUtils
@@ -49,7 +50,7 @@ object MediaUtils {
         var options = RequestOptions().placeholder(imageView.drawable ?: defaultImage).error(defaultImage).priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
         if (imageUrl != null && imageUrl.isNotEmpty()) {
-            val imgURL = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+            val imgURL = Uri.parse(ChatManager.getImageUrl()).buildUpon()
                     .appendPath(Uri.parse(imageUrl).lastPathSegment).build().toString()
             val requestBuilder = Glide.with(context).asDrawable().sizeMultiplier(0.1f)
             Glide.with(context).load(imgURL).thumbnail(requestBuilder).apply(options)
@@ -90,9 +91,9 @@ object MediaUtils {
                 options = RequestOptions().placeholder(imageView.drawable).error(imageView.drawable).priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
             }
-            val imgURL = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+            val imgURL = Uri.parse(ChatManager.getImageUrl()).buildUpon()
                 .appendPath(Uri.parse(imageUrl).lastPathSegment).build().toString()
-            val thumbUrl=Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+            val thumbUrl=Uri.parse(ChatManager.getImageUrl()).buildUpon()
                 .appendPath(Uri.parse(thumbImageUrl).lastPathSegment).build().toString()
 
             val requestBuilder = Glide.with(context).load(thumbUrl)
@@ -239,7 +240,7 @@ object MediaUtils {
                 options = RequestOptions().placeholder(imageView.drawable).error(imageView.drawable).priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
             }
-            val imgURL = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT).buildUpon()
+            val imgURL = Uri.parse(ChatManager.getImageUrl()).buildUpon()
                     .appendPath(Uri.parse(imageUrl).lastPathSegment).build().toString()
             val requestBuilder = Glide.with(context).asDrawable().sizeMultiplier(0.1f)
             Glide.with(context).load(imgURL).thumbnail(requestBuilder).apply(options)
@@ -284,7 +285,7 @@ object MediaUtils {
     fun loadImageWithGlideSecure(context: Context?, imgUrl: String?,
                                  imgView: ImageView, errorImg: Drawable?) {
         if (imgUrl != null && imgUrl.isNotEmpty()) {
-            val imageUrl = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT)
+            val imageUrl = Uri.parse(ChatManager.getImageUrl())
                     .buildUpon().appendPath(Uri.parse(imgUrl).lastPathSegment).build().toString()
             val options = RequestOptions().placeholder(errorImg).error(errorImg)
                     .priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL)

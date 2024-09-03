@@ -12,11 +12,12 @@ import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.module.AppGlideModule;
-import com.mirrorflysdk.flycommons.RequestTokenInterceptor;
-import com.mirrorflysdk.flycommons.TokenAuthenticator;
+import com.contusfly.network.UikitRequestTokenInterceptor;
+import com.contusfly.network.UikitTokenAuthenticator;
 
 import java.io.InputStream;
 
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
 /**
@@ -40,9 +41,9 @@ public class GlideTokenModule extends AppGlideModule {
     public void registerComponents(
             @NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new RequestTokenInterceptor())
-                .authenticator(new TokenAuthenticator())
+                .addInterceptor(new UikitRequestTokenInterceptor())
+                .authenticator(new UikitTokenAuthenticator())
                 .build();
-        registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(client));
+        registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory((Call.Factory) client));
     }
 }

@@ -1,9 +1,9 @@
 package com.contusfly.di.modules
 
 import android.content.Context
+import com.contusfly.network.UikitRequestTokenInterceptor
+import com.contusfly.network.UikitTokenAuthenticator
 import com.mirrorflysdk.flycommons.Constants
-import com.mirrorflysdk.flycommons.RequestTokenInterceptor
-import com.mirrorflysdk.flycommons.TokenAuthenticator
 import com.mirrorflysdk.flynetwork.ApiCalls
 import com.mirrorflysdk.flynetwork.BackupApiCalls
 import com.mirrorflysdk.BuildConfig
@@ -47,10 +47,10 @@ class NetworkModule {
     fun providesGson(): Gson = GsonBuilder().create()
 
     @Provides
-    fun providesRequestTokenInterceptor(): RequestTokenInterceptor = RequestTokenInterceptor()
+    fun providesRequestTokenInterceptor(): UikitRequestTokenInterceptor = UikitRequestTokenInterceptor()
 
     @Provides
-    fun providesTokenAuthenticator(): TokenAuthenticator = TokenAuthenticator()
+    fun providesTokenAuthenticator(): UikitTokenAuthenticator = UikitTokenAuthenticator()
 
     @Provides
     fun providesNetworkInterceptor(): StethoInterceptor = StethoInterceptor()
@@ -61,8 +61,8 @@ class NetworkModule {
     @Provides
     @Named("auth")
     fun providesOkhttpClientWithAuthentication(okhttpBuilder: OkHttpClient.Builder, stethoInterceptor: StethoInterceptor,
-                                               loggingInterceptor: HttpLoggingInterceptor, requestTokenInterceptor: RequestTokenInterceptor,
-                                               tokenAuthenticator: TokenAuthenticator): OkHttpClient {
+                                               loggingInterceptor: HttpLoggingInterceptor, requestTokenInterceptor: UikitRequestTokenInterceptor,
+                                               tokenAuthenticator: UikitTokenAuthenticator): OkHttpClient {
         return okhttpBuilder.addNetworkInterceptor(stethoInterceptor).addInterceptor(requestTokenInterceptor)
                 .authenticator(tokenAuthenticator).connectTimeout(15, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS).followRedirects(false).build()

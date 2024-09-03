@@ -947,15 +947,10 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 CallAction.ACTION_INVITE_USERS -> {
                     for (inviteUserJid in CallManager.getInvitedUsersList()) {
                         if (CallManager.getCallStatus(inviteUserJid) != CallStatus.DISCONNECTED) {
-                            callUsersListAdapter.addUser(inviteUserJid)
+                            checkAndAddPinnedUser(inviteUserJid)
+                            checkAndAddNotPinnedUserInListAdapter(inviteUserJid)
                             callUserGridAdapter.addUser(inviteUserJid)
-                            if (::participantListFragment.isInitialized) {
-                                LogMessage.d(
-                                    TAG,
-                                    "$CALL_UI invite user added in participant fragment::$inviteUserJid"
-                                )
-                                participantListFragment.updateUserJoined(inviteUserJid)
-                            }
+                            checkAndUpdateUserJoinedForInvitedUser(inviteUserJid)
                         }
                     }
                     CallUtils.setIsAddUsersToTheCall(false)
@@ -989,7 +984,31 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
     }
 
+    private fun checkAndAddPinnedUser(userJid:String){
+        if (CallUtils.getPinnedUserJid().isBlank() && userJid != CallManager.getCurrentUserId()){
+            LogMessage.d(
+                TAG,
+                "$CALL_UI checkAndAddPinnedUser  userJid: $userJid"
+            )
+            CallUtils.setIsUserTilePinned(true)
+            CallUtils.setPinnedUserJid(userJid)
+        }
+    }
 
+    private fun checkAndAddNotPinnedUserInListAdapter(userJid: String){
+        if (CallUtils.getPinnedUserJid() != userJid)
+            callUsersListAdapter.addUser(userJid)
+    }
+
+    private fun checkAndUpdateUserJoinedForInvitedUser(userJid: String){
+        if (::participantListFragment.isInitialized) {
+            LogMessage.d(
+                TAG,
+                "$CALL_UI checkAndUpdateUserJoined added in participant fragment::$userJid"
+            )
+            participantListFragment.updateUserJoined(userJid)
+        }
+    }
 
     private fun handleCallEngagedBasedOnCallSize(userJid: String) {
         LogMessage.d(TAG, "$CALL_UI handleCallEngagedBasedOnCallSize userJid:$userJid ")

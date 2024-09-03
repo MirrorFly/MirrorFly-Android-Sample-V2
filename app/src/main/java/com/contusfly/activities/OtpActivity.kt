@@ -45,15 +45,14 @@ import com.mirrorflysdk.utils.ChatUtilsOperations
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import dagger.android.AndroidInjection
-import io.michaelrocks.libphonenumber.android.NumberParseException
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import io.michaelrocks.libphonenumber.android.Phonenumber
+import com.contusfly.libPhone.NumberParseException
+import com.contusfly.libPhone.PhoneNumberUtil
+import com.contusfly.libPhone.Phonenumber
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.lang.Runnable
 import java.math.BigInteger
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -533,7 +532,7 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
                 progress.setMessage(resources.getString(R.string.please_wait_label))
                 progress.show()
                 setOtpTextViewEmpty(getOtpEditText())
-                if(AppConstants.OTP_ENABLE) {
+                if (!BuildConfig.IS_SKIP_OTP) {
                     otpViewPresenter.validateAndSendOtp()
                 } else {
                     val mobileEditText = otpBinding.edtMobileNo

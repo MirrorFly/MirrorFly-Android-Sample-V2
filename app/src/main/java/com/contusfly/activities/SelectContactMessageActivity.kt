@@ -22,7 +22,7 @@ import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.PermissionAlertDialog
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.contacts.ProfileDetails
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import com.contusfly.libPhone.PhoneNumberUtil
 
 class SelectContactMessageActivity : BaseActivity(), ContactChatOnClickListener,
     CommonAlertDialog.CommonDialogClosedListener {
