@@ -22,8 +22,11 @@ class RecentChatDiffCallback(private val oldList: List<RecentChat>, private val 
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        if (oldList.size <= oldItemPosition || newList.size <= newItemPosition)
-            return false
+        // Ensure that the item positions are valid and the lists are not empty.
+        if (oldItemPosition < 0 || newItemPosition < 0) return false
+        if (oldList.isEmpty() || newList.isEmpty()) return false
+        if (oldItemPosition >= oldList.size || newItemPosition >= newList.size) return false
+
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
 
@@ -32,13 +35,13 @@ class RecentChatDiffCallback(private val oldList: List<RecentChat>, private val 
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         if (oldList.size > oldItemPosition && newList.size > newItemPosition) {
-            val oldItem = oldList[oldItemPosition]
-            val newItem = newList[newItemPosition]
-
-            val bundle = getChangePayloadAsBundle(oldItem, newItem)
-
-            if (bundle.keySet().isNotEmpty())
-                return bundle
+            val oldItem = oldList.getOrNull(oldItemPosition)
+            val newItem = newList.getOrNull(newItemPosition)
+            if(oldItem!=null && newItem!=null) {
+                val bundle = getChangePayloadAsBundle(oldItem, newItem)
+                if (bundle.keySet().isNotEmpty())
+                    return bundle
+            }
         }
         return super.getChangePayload(oldItemPosition, newItemPosition)
     }
@@ -52,7 +55,7 @@ class RecentChatDiffCallback(private val oldList: List<RecentChat>, private val 
             bundle.putInt(Constants.NOTIFY_USER_NAME, 1)
         if (oldItem.isBlockedMe != newItem.isBlockedMe || oldItem.profileImage != newItem.profileImage)
             bundle.putInt(Constants.NOTIFY_PROFILE_ICON, 1)
-        if (oldItem.unreadMessageCount != newItem.unreadMessageCount)
+        if (oldItem.unreadMessageCount != newItem.unreadMessageCount || oldItem.isConversationUnRead != newItem.isConversationUnRead)
             bundle.putInt(Constants.NOTIFY_UNREAD_ICON, 1)
         if (oldItem.isMuted != newItem.isMuted)
             bundle.putInt(Constants.NOTIFY_MUTE_UNMUTE, 1)
@@ -80,7 +83,7 @@ fun isRecentObjEqual(oldItem: RecentChat, newItem: RecentChat): Boolean {
             && oldItem.isBlocked == newItem.isBlocked && oldItem.isBlockedMe == newItem.isBlockedMe
             && oldItem.isChatPinned == newItem.isChatPinned && oldItem.isGroupInOfflineMode == newItem.isGroupInOfflineMode
             && oldItem.contactType == newItem.contactType
-            && oldItem.isLastMessageEdited ==newItem.isLastMessageEdited
+            && oldItem.isLastMessageEdited == newItem.isLastMessageEdited && oldItem.isConversationUnRead == newItem.isConversationUnRead
 }
 
 private fun isJidEqual(oldRecentChat: RecentChat, newRecentChat: RecentChat): Boolean {

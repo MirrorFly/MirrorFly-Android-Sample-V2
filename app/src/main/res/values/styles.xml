@@ -1127,4 +1127,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">#B3B3B3</item>
     </style>
+    <style name="Widget.Design.MultilineCollapsingToolbar"
+        parent="@style/Widget.Design.CollapsingToolbar"/>
+    <style name="ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
 </resources>

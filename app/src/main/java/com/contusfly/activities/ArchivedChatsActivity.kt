@@ -30,6 +30,7 @@ import com.contusfly.utils.*
 import com.contusfly.viewmodels.DashboardViewModel
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.CustomRecyclerView
+import com.contusfly.views.DoProgressDialog
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.ChatActionListener
 import com.mirrorflysdk.api.ChatManager
@@ -94,6 +95,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private var cabOpen = false
     private var actionMode: ActionMode? = null
     private lateinit var actionModeMenu: Menu
+    private var doProgressDialog: DoProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -240,6 +242,9 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
 
     private fun setAndFetchData() {
         setListeners()
+        if (viewModel.chatAdapter.size == 0) {
+            archivedChatsBinding.dataLoader.visibility = View.VISIBLE
+        }
         viewModel.getArchivedChats()
     }
 
@@ -502,6 +507,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             diffUtilResult.dispatchUpdatesTo(mAdapter)
             archivedListRecent.layoutManager?.onRestoreInstanceState(previousState)
         }
+        archivedChatsBinding.dataLoader.visibility = View.GONE
         mAdapter.notifyDataSetChanged()
         setEmptyView(if (viewModel.chatAdapter.size <= 4) View.VISIBLE else View.GONE)
     }
@@ -614,22 +620,35 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             CustomToast.show(this, getString(R.string.error_check_internet))
             return
         }
+        doProgressDialog = DoProgressDialog(this)
+        doProgressDialog!!.showProgress()
         val selectedJids: MutableList<String> = mutableListOf()
         var failedCount = 0
         val selectedCount = viewModel.selectedChats.size
         for (recent in viewModel.selectedChats) {
-            FlyCore.updateArchiveUnArchiveChat(recent.jid, false, FlyCallback { isSuccess, _, _ ->
-                if (isSuccess) selectedJids.add(recent.jid)
-                else failedCount++
+            FlyCore.updateArchiveUnArchiveChat(recent.jid, false, FlyCallback { isSuccess, _, data ->
+                if (isSuccess)
+                    selectedJids.add(recent.jid)
+                else {
+                    if (failedCount == 0) CustomToast.showShortToast(
+                        context,
+                        data.getMessage()
+                    )
+                    failedCount++
+                    dismissProgress()
+                }
                 isAdapterNeedSync = (selectedJids.size > 0 && selectedCount == (selectedJids.size + failedCount))
                 if (isAdapterNeedSync){
                     updateArchiveChatsData(selectedJids, failedCount)
                     setResult(Activity.RESULT_OK)
+                    dismissProgress()
                 }
             })
         }
     }
-
+    private fun dismissProgress() {
+        if (doProgressDialog != null && doProgressDialog!!.isShowing) doProgressDialog!!.dismiss()
+    }
     private fun updateArchiveChatsData(selectedJids: MutableList<String>, failedCount: Int) {
         updateArchiveChatsList(selectedJids)
         val chatsSize = selectedJids.size

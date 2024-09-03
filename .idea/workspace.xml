@@ -1,0 +1,1055 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1fa258f2-435e-4f12-973a-09e55dd704aa" name="Changes" comment="V7.13.2 Recent chat pagination issue fixed">
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/checksums/checksums.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/dependencies-accessors/dependencies-accessors.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/dependencies-accessors/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/executionHistory/executionHistory.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/executionHistory/executionHistory.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/fileChanges/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/fileHashes/fileHashes.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/7.6/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/config.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/7z898mjwegxwr6d0z5yesx8bg/buildfingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/7z898mjwegxwr6d0z5yesx8bg/entry.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/7z898mjwegxwr6d0z5yesx8bg/projectfingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/7z898mjwegxwr6d0z5yesx8bg/work.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/configuration-cache.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/ebat0ic20yl0wuq0cnfxiw8w/buildfingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/ebat0ic20yl0wuq0cnfxiw8w/entry.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/ebat0ic20yl0wuq0cnfxiw8w/projectfingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/ebat0ic20yl0wuq0cnfxiw8w/work.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/configuration-cache/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/libs/mirrorflysdk.aar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_255" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_27" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_30" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_31" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_34" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_350" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_351" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_352" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_358" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_359" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_36" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_372" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_373" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_375" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_380" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_381" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_385" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_39" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_43" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_44" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_49" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_505" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_506" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_52" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_54" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_55" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_58" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_595" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_61" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_62" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_63" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_64" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_66" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_675" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_676" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_679" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_7" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_81" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_84" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_855" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_856" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_90" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_91" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_94" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_95" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_971" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_972" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberAlternateFormatsProto_995" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_800" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_808" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_870" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_878" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_881" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_882" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_883" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_888" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_979" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AX" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_AZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BB" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BQ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_BZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CX" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_CZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_DE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_DJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_DK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_DM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_DO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_DZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_EC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_EE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_EG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_EH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ER" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ET" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_FI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_FJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_FK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_FM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_FO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_FR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GB" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GQ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_GY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_HK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_HN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_HR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_HT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_HU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ID" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IQ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_IT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_JE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_JM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_JO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_JP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_KZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LB" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_LY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ME" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ML" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MQ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MX" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_MZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_NZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_OM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_PY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_QA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_RE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_RO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_RS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_RU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_RW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SB" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ST" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SX" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_SZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_TZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_UA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_UG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_US" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_UY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_UZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_VA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_VC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_VE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_VG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_VI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_VN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_VU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_WF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_WS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_XK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_YE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_YT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ZA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ZM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/PhoneNumberMetadataProto_ZW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AX" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_AZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BB" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BQ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_BZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CX" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_CZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_DE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_DJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_DK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_DM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_DO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_DZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_EC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_EE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_EG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_EH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ER" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ET" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_FI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_FJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_FK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_FM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_FO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_FR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GB" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_GY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_HK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_HN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_HR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_HT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_HU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ID" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_IE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_IL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_IM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_IN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_IQ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_IR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_IS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_IT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_JE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_JM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_JO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_JP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_KZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LB" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_LY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ME" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ML" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MQ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MX" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_MZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_NZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_OM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_PY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_QA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_RE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_RO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_RS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_RU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_RW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SB" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ST" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SX" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_SZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TJ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_TZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_UA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_UG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_US" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_UY" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_UZ" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_VA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_VC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_VE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_VG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_VI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_VN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_VU" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_WF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_WS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_XK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_YE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_YT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ZA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ZM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/com/contusfly/libPhone/data/ShortNumberMetadataProto_ZW" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/collapsingToolbar/AnimationUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/collapsingToolbar/CollapsingTextHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/collapsingToolbar/CollapsingToolbarLayout.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/collapsingToolbar/ThemeUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/collapsingToolbar/ViewOffsetHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/AlternateFormatsCountryCodeSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/AsYouTypeFormatter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/CountryCodeToRegionCodeMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/MetadataLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/MissingMetadataException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/NumberParseException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/PhoneNumberMatch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/PhoneNumberMatcher.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/PhoneNumberUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/Phonemetadata.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/Phonenumber.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/ShortNumberInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/ShortNumbersRegionCodeSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/internal/GeoEntityUtility.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/internal/MatcherApi.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/internal/RegexBasedMatcher.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/internal/RegexCache.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/DefaultMetadataDependenciesProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/init/ClassPathResourceMetadataLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/init/MetadataParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/AssetsMetadataLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/BlockingMetadataBootstrappingGuard.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/CompositeMetadataContainer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/FormattingMetadataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/FormattingMetadataSourceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/MapBackedMetadataContainer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/MetadataBootstrappingGuard.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/MetadataContainer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/MetadataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/MetadataSourceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/MultiFileModeFileNameProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/NonGeographicalEntityMetadataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/PhoneMetadataFileNameProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/RegionMetadataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/RegionMetadataSourceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/libPhone/metadata/source/SingleFileModeFileNameProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/network/UikitRequestTokenInterceptor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/network/UikitTokenAuthenticator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/collapsing_toolbar_attrs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/reports/configuration-cache/7z898mjwegxwr6d0z5yesx8bg/c5ys6gechygf6zmovc5zt6sly/configuration-cache-report.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/reports/configuration-cache/ebat0ic20yl0wuq0cnfxiw8w/9z09ffkacw7k5xs9r43vcm7jy/configuration-cache-report.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/results.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/desugar_graph.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/BuildConfig.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/SeekBarOnProgressChanged.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/WaveformSeekBar$WhenMappings.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$1.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$2.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$3.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/WaveformSeekBar.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/utils/ThreadBlocking.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/utils/Utils.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/utils/UtilsKt.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/utils/WaveGravity.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/365434f4f5c5ae1b5644d50fa0a07951/transformed/release/com/masoudss/lib/utils/WaveformOptions.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/43cbf6bb7ffad119f4cc9d6a987f6613/results.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/4b0ce1e7088c57e2c1020780b73fcf8d/results.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/results.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/desugar_graph.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/BuildConfig.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/SeekBarOnProgressChanged.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/WaveformSeekBar$WhenMappings.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$1.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$2.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$3.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/WaveformSeekBar.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/utils/ThreadBlocking.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/utils/Utils.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/utils/UtilsKt.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/utils/WaveGravity.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/.transforms/89d164f918ec9a49548c47871259fe20/transformed/release/com/masoudss/lib/utils/WaveformOptions.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/generated/source/buildConfig/release/com/masoudss/lib/BuildConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/aapt_friendly_merged_manifests/release/aapt/AndroidManifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/aapt_friendly_merged_manifests/release/aapt/output-metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/aar_metadata/release/aar-metadata.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/annotation_processor_list/release/annotationProcessors.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/compile_library_classes_jar/release/classes.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/compile_r_class_jar/release/R.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/compile_symbol_list/release/R.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/incremental/mergeReleaseShaders/merger.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/incremental/packageReleaseAssets/merger.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/incremental/release/packageReleaseResources/merged.dir/values/values.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/incremental/release/packageReleaseResources/merger.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/javac/release/classes/com/masoudss/lib/BuildConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/library_java_res/release/res.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/local_only_symbol_list/release/R-def.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/manifest_merge_blame_file/release/manifest-merger-blame-release-report.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/merged_manifest/release/AndroidManifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/navigation_json/release/navigation.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/packaged_manifests/release/output-metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/packaged_res/release/values/values.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/META-INF/wave_release.kotlin_module" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/BuildConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/SeekBarOnProgressChanged.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/WaveformSeekBar$WhenMappings.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/WaveformSeekBar.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/utils/ThreadBlocking.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/utils/Utils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/utils/UtilsKt.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/utils/WaveGravity.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/runtime_library_classes_dir/release/com/masoudss/lib/utils/WaveformOptions.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/intermediates/symbol_list_with_package_name/release/package-aware-r.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/inputs/source-to-output.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/inputs/source-to-output.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/inputs/source-to-output.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/counters.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/file-to-id.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/file-to-id.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/file-to-id.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/id-to-file.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/lookups.tab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/lookups.tab.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/lookups.tab_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/caches-jvm/lookups/lookups.tab_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/cacheable/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/kotlin/compileReleaseKotlin/localstate/build-history.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/outputs/logs/manifest-merger-release-report.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/compileReleaseJavaWithJavac/previous-compilation-data.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/META-INF/wave_release.kotlin_module" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/SeekBarOnProgressChanged.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/WaveformSeekBar$WhenMappings.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/WaveformSeekBar$setSampleFrom$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/WaveformSeekBar.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/utils/ThreadBlocking.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/utils/Utils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/utils/UtilsKt.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/utils/WaveGravity.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk/wave/build/tmp/kotlin-classes/release/com/masoudss/lib/utils/WaveformOptions.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ArchivedChatsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ArchivedChatsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ChatActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/ChatActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/DashboardActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/DashboardActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/GroupInfoActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/GroupInfoActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/MediaPreviewActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/MediaPreviewActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/OtpActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/OtpActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/SelectContactMessageActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/SelectContactMessageActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/SynchronizeContactActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/SynchronizeContactActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/UserInfoActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/UserInfoActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/parent/ChatParent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/parent/ChatParent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/parent/DashboardParent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/activities/parent/DashboardParent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/MissedCallNotificationUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/MissedCallNotificationUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/AddParticipantFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/AddParticipantFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/GroupCallActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/GroupCallActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/OnGoingCallPreviewActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/OnGoingCallPreviewActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/CallNotConnectedViewHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/helpers/CallNotConnectedViewHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/utils/CustomMultiDrawable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/call/groupcall/utils/CustomMultiDrawable.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/chat/MessagingClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/chat/MessagingClient.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/constants/MobileApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/constants/MobileApplication.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/di/modules/NetworkModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/di/modules/NetworkModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/diffCallBacks/RecentChatDiffCallback.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/diffCallBacks/RecentChatDiffCallback.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/DeleteMyAccountFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/DeleteMyAccountFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/RecentChatListFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/fragments/RecentChatListFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/helpers/OtpPresenter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/helpers/OtpPresenter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/helpers/RecentChatPaginationScrollListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/helpers/RecentChatPaginationScrollListener.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/models/MeetMessageParams.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/models/MeetMessageParams.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/network/RetrofitClientNetwork.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/network/RetrofitClientNetwork.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/notification/AppNotificationManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/notification/AppNotificationManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/repository/MessageRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/repository/MessageRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/AppChatShortCuts.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/AppChatShortCuts.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/AppConstants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/AppConstants.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ChatUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/ChatUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/Constants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/Constants.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/FirebaseUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/FirebaseUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/GlideTokenModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/GlideTokenModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/MediaUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/utils/MediaUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/ChatParentViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/ChatParentViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/DashboardViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/contusfly/viewmodels/DashboardViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_archived_chats.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_archived_chats.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_group_info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_group_info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_user_info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_user_info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_call_not_connected.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_call_not_connected.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdk/biometric-auth/src/main/res/drawable/ic_fingerprint.xml" beforeDir="false" afterPath="$PROJECT_DIR$/sdk/biometric-auth/src/main/res/drawable/ic_fingerprint.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdk/cameraview/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/sdk/cameraview/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[710KPJP0270844]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="UI-Kit" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="release/V7.13.2" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2gore5xgbVNn86PTIaheKQd36Sr" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "last_opened_file_path": "/home/user/UikitRelease/SampleUikitGithub/MirrorFly-Android-Sample-V2"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="UI_Kit.app.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Auto>
+      <Bazel>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Bazel>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Hybrid>
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Native>
+      <NativeBazel>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </NativeBazel>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task id="LOCAL-00001" summary="V7.12.4 update">
+      <option name="closed" value="true" />
+      <created>1716371585818</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1716371585818</updated>
+    </task>
+    <task id="LOCAL-00002" summary="V7.12.4 latest code all update">
+      <option name="closed" value="true" />
+      <created>1716373011282</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1716373011282</updated>
+    </task>
+    <task id="LOCAL-00003" summary="V7.12.4 latest code all update">
+      <option name="closed" value="true" />
+      <created>1716373119717</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1716373119717</updated>
+    </task>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1fa258f2-435e-4f12-973a-09e55dd704aa" name="Changes" comment="V7.12.4 latest code all update" />
+      <created>1716374865829</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1716374865829</updated>
+    </task>
+    <task id="LOCAL-00004" summary="V7.12.4 latest code all update">
+      <option name="closed" value="true" />
+      <created>1716374975951</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1716374975952</updated>
+    </task>
+    <task id="LOCAL-00005" summary="V7.13.2 Recent chat pagination issue fixed">
+      <option name="closed" value="true" />
+      <created>1718803296358</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1718803296359</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="V7.12.4 update" />
+    <MESSAGE value="V7.12.4 latest code all update" />
+    <MESSAGE value="V7.13.2 Recent chat pagination issue fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="V7.13.2 Recent chat pagination issue fixed" />
+  </component>
+</project>

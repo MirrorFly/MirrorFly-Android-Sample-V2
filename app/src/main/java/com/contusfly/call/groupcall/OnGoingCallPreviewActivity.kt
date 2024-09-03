@@ -428,14 +428,6 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
                 handleOnFailure(error)
             }
 
-            override fun onConnectedToSignalServer() {
-                LogMessage.d(
-                    TAG,
-                    "#OnGngCall $JOIN_CALL  setJoinCallEventsListener onConnectedToSignalServer  "
-                )
-                subscribeCallEvents()
-            }
-
             override fun onLocalTrack(videoTrack: VideoTrack?) {
                 LogMessage.d(TAG, "#OnGngCall $JOIN_CALL setJoinCallEventsListener onLocalTrack  ")
                 handleLocalTrackAdded(videoTrack)
@@ -714,13 +706,16 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
     override fun onDialogClosed(dialogType: CommonAlertDialog.DIALOGTYPE?, isSuccess: Boolean) {
         if (isSuccess) {
             if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL) {
-                progressDialog!!.showProgress()
+
                 //Current call disconnect
                 CallManager.disconnectCall(object : CallActionListener {
                     override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
-                        joinCallPreviewInitialization()
+                        LogMessage.d(TAG,"#callflow disconnectCall success!!")
+                        CallManager.removeCallActionListener(this)
+                        runOnUiThread { joinCallPreviewInitialization() }
                     }
                 })
+                progressDialog!!.show()
             } else if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE) {
                 finish()
                 return

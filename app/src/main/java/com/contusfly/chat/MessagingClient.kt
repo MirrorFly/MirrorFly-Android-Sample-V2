@@ -393,7 +393,6 @@ constructor(val application: Application) : CoroutineScope {
                 title = messageObject.meetMessageParams?.title
                 link = messageObject.meetMessageParams?.link
                 scheduledDateTime = messageObject.meetMessageParams?.scheduleMeetDateTime
-                editMessageId = messageObject.meetMessageParams?.editMessageId
             }
             FlyMessenger.sendMeetMessage(sendMeetMessageParams, object : SendMessageCallback {
                 override fun onResponse(

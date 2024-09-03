@@ -55,6 +55,7 @@ import com.contusfly.privateChat.PrivateChatListActivity
 import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.activities.FlyBaseActivity
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import kotlinx.coroutines.launch
 
@@ -207,8 +208,10 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
             if (mRecentChatListType == DashboardParent.RecentChatListType.RECENT && position.isValidIndex())
                 if (position > 1 && position < viewModel.recentChatList.value!!.size - 2) // Header and Footer and Extra added item skip
                     handleOnItemClicked(position)
-                else
+                else if ((viewModel.archiveChatStatus.value!!.second && position < 2) || (!viewModel.archiveChatStatus.value!!.second && viewModel.archiveChatStatus.value!!.first && position == viewModel.recentChatList.value!!.size - 2) || (viewModel.privateChatStatus.value.isTrue() && position == 0)) {
+                    viewModel.paginationLoader.value = false // when navigate to archive archive chat paginate loader should be hide.
                     launchHeaderActivity(position)
+                }
         }
 
         clickSupport.setOnItemLongClickListener { _, position, _ ->
@@ -726,12 +729,20 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     private fun updateMessageUpdate(messageId: String) {
-        val index = viewModel.recentChatList.value?.indexOfFirst { it.lastMessageId == messageId }
-        if (index?.isValidIndex() == true) {
-            getRecentChatFor(
-                viewModel.recentChatList.value!![index].jid,
-                RecentChatEvent.MESSAGE_UPDATED
-            )
+        val recentChatList = viewModel.recentChatList.value
+        val messageIndex = recentChatList?.indexOfFirst { it.lastMessageId == messageId }
+
+        if (messageIndex != null && messageIndex != -1) {
+            recentChatList[messageIndex].jid?.let { jid ->
+                getRecentChatFor(jid, RecentChatEvent.MESSAGE_UPDATED)
+            }
+        } else {
+            FlyMessenger.getMessageOfId(messageId)?.chatUserJid?.let { jid ->
+                val position = recentChatList?.indexOfFirst { it.jid == jid }
+                if (position != null && position != -1) {
+                    getRecentChatFor(jid, RecentChatEvent.MESSAGE_UPDATED)
+                }
+            }
         }
     }
 

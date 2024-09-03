@@ -94,7 +94,6 @@ class MobileApplication : Application(), HasAndroidInjector {
         ChatManager.enableMobileNumberLogin(true)
         ChatManager.setMediaFolderName(Constants.LOCAL_PATH)
         ChatManager.enableChatHistory(true)
-
         //activity to open when use clicked from notification
         //activity to open when a user logout from the app.
         ChatManager.startActivity = StartActivity::class.java
@@ -228,32 +227,6 @@ class MobileApplication : Application(), HasAndroidInjector {
         })
         CallManager.enableCallLogExport(true)
         CallManager.enableDebugLogs(true)
-    }
-
-    private fun getMissedCallNotificationContent( isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
-                                                  userList: ArrayList<String>): Pair<String, String> {
-        var messageContent : String
-        val missedCallMessage = StringBuilder()
-        missedCallMessage.append(resources.getString(R.string.you_missed_call))
-        if (isOneToOneCall && groupId.isNullOrEmpty()) {
-            if (callType == CallType.AUDIO_CALL) {
-                missedCallMessage.append("an ")
-            } else {
-                missedCallMessage.append("a ")
-            }
-            missedCallMessage.append(callType).append(" call")
-            messageContent = ProfileDetailsUtils.getProfileDetails(userJid)?.getDisplayName()!!
-        } else {
-            missedCallMessage.append("a group ").append(callType).append(" call")
-            messageContent = if (!groupId.isNullOrBlank()) {
-                ProfileDetailsUtils.getProfileDetails(groupId)?.getDisplayName()!!
-            } else {
-                CallUtils.getCallUsersName(userList).toString()
-            }
-        }
-        if (BuildConfig.HIPAA_COMPLIANCE_ENABLED)
-            messageContent = resources.getString(R.string.new_missed_call)
-        return Pair(missedCallMessage.toString(), messageContent)
     }
 
     private fun getPendingIntent(toUsers: List<String>): PendingIntent {

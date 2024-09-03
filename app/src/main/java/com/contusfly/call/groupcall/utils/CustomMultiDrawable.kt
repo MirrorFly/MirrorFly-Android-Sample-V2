@@ -16,6 +16,7 @@ import com.contusfly.getDefaultDrawable
 import com.contusfly.getMoreUsersDrawable
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.views.CustomDrawable
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.media.MediaUploadHelper
 import java.util.*
@@ -231,7 +232,7 @@ class CustomMultiDrawable internal constructor(private val userList: ArrayList<S
         if (imgUrl.isBlank())
             items[index].bitmap = getCroppedBitmap(scaleCenterCrop(errorImg, bounds.width(), bounds.height()))
         else {
-            imgUrl = Uri.parse(MediaUploadHelper.UPLOAD_ENDPOINT)
+            imgUrl = Uri.parse(ChatManager.getImageUrl())
             .buildUpon().appendPath(Uri.parse(imgUrl).lastPathSegment).build().toString()
             val options = RequestOptions().priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

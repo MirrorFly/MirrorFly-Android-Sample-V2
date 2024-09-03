@@ -97,6 +97,8 @@ constructor() : ViewModel() {
     val clearallCallLog = MutableLiveData<Boolean>()
     val paginationLoader = MutableLiveData<Boolean>()
     val swipeRefreshLoader = MutableLiveData<Boolean>()
+    var isArchiveChatTriggered =false
+
 
     //Define the Recent Chat List Builder class
     private lateinit var recentChatListParams : RecentChatListParams
@@ -266,6 +268,16 @@ constructor() : ViewModel() {
         }
     }
 
+    fun setArchiveChatTriggeredStatus(isTriggered: Boolean) {
+        CoroutineScope(Dispatchers.Main).launch {
+            isArchiveChatTriggered = isTriggered
+        }
+    }
+
+    fun getArchivedTriggeredStatus():Boolean{
+        return isArchiveChatTriggered
+    }
+
     private fun setRecentChatListFetching(isfetching: Boolean) {
         CoroutineScope(Dispatchers.Main).launch {
            isFetching = isfetching
@@ -316,7 +328,7 @@ constructor() : ViewModel() {
                     }
                     setRecentChatListFetching(false)
                     setSwipeLoader(false)
-                    nextDataChecking()
+                    nextDataChecking(data)
                 }
 
             } catch (e: Exception) {
@@ -330,16 +342,20 @@ constructor() : ViewModel() {
         }
     }
 
-    private fun nextDataChecking(){
+    private fun nextDataChecking(data: HashMap<String, Any>) {
+        val recent = data.getData() as? MutableList<RecentChat>
+        if (recent != null) {
+            isNeedFetchNextPage =
+                (recent.size < 10 && recentChatListBuilder.hasNextRecentChat()) //for scrolling purpose minimum 10 recent chat should display in ui.
 
-        if(isNeedFetchNextPage) {
-
-            isNeedFetchNextPage = false
-
-            nextSetOfRecentChatList()
-
+        } else if (recentChatListBuilder.hasNextRecentChat()) {
+            isNeedFetchNextPage = true
         }
 
+        if (isNeedFetchNextPage) {
+            isNeedFetchNextPage = false
+            nextSetOfRecentChatList()
+        }
     }
 
     private fun headerDataAdd(recentChatList: MutableLiveData<LinkedList<RecentChat>>) {
@@ -445,6 +461,7 @@ constructor() : ViewModel() {
                     setRecentChatListFetching(false)
                     paginationLoaderShowHide(false)
                     updateUnReadChatCount()
+                    nextDataChecking(data)
                 }
             } catch(e:Exception) {
                 LogMessage.e(TAG, "Recent Chat List loading issue in nextSetOfRecentChatList() ==> Exception: ${e.message}")
@@ -458,6 +475,7 @@ constructor() : ViewModel() {
     private fun updateRecentChats(data: HashMap<String, Any>) {
         LogMessage.d(TAG, "#recent updateRecentChats")
         val recentChats = data[SDK_DATA] as MutableList<RecentChat>
+        getArchivedChatStatus()
         if(recentChats.size > 0){
             LogMessage.d(TAG, "#recent recentChats not empty!! ${recentChats.size}")
             LogMessage.d(TAG, "#recent recentChatAdapter  ${recentChatAdapter.size}")
@@ -474,7 +492,6 @@ constructor() : ViewModel() {
             recentChatList.value!!.add(recentChatList.value!!.size, RecentChat()) // Recent Chat Pagination item adding
             recentChatAdapter.add(recentChatAdapter.size, RecentChat()) // Recent Chat Pagination item adding
             notifyRecentChatInserted.postValue(Pair(recentChatSize, recentChats.size))
-            getArchivedChatStatus()
         }
     }
 
@@ -694,7 +711,7 @@ constructor() : ViewModel() {
 
     private fun getArchiveRecentPosition(recent: RecentChat): Int {
         val index = this.recentChatAdapter.indexOfFirst { !it.jid.isNullOrBlank() && it.lastMessageTime <= recent.lastMessageTime }
-        return if (index.isValidIndex()) index else 2 //Recent Chat private chat position 0 and Header position 1
+        return if (index.isValidIndex()) index else recentChatList.value!!.size - 2 //Recent Chat private chat position 0 and Header position 1
     }
 
     fun filterRecentChatList(searchKey: String) {
@@ -1132,7 +1149,7 @@ constructor() : ViewModel() {
     }
 
 
-    fun getArchivedChatStatus() {
+    fun getArchivedChatStatus(callbackFromUpdateArchive: Boolean = false) {
         LogMessage.d(TAG, "#dashboard #recent  getArchivedChatStatus!!")
         viewModelScope.launch(IO) {
             FlyCore.getArchivedChatList { isSuccess, _, data ->
@@ -1143,6 +1160,9 @@ constructor() : ViewModel() {
                         archiveChatStatus.postValue(Triple(first = true, second = isArchiveSettingsEnable, third = getArchivedChatCount(archiveChats, isArchiveSettingsEnable)))
                     } else {
                         archiveChatStatus.postValue(Triple(first = false, second = false, third = 0))
+                    }
+                    if (recentChatAdapter.size == 4 && callbackFromUpdateArchive) {
+                        paginationLoaderShowHide(false) // when all chats are archived, now archived label should show. so After archived label shows , the loader should be hide.
                     }
                 }
             }

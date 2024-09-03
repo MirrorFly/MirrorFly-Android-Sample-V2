@@ -2,6 +2,7 @@ package com.contusfly.viewmodels
 
 import androidx.lifecycle.*
 import com.contusfly.TAG
+import com.contusfly.activities.parent.ChatParent
 import com.contusfly.getData
 import com.contusfly.getDisplayName
 import com.contusfly.getMessage
@@ -20,6 +21,7 @@ import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage
 import com.google.firebase.ml.naturallanguage.smartreply.FirebaseTextMessage
 import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestion
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.chat.FetchMessageListParams
@@ -63,6 +65,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
     val searchKeyData = MutableLiveData<String>()
     val swipeRefreshLoader = MutableLiveData<Boolean>()
     val meetMessageData = MutableLiveData<MeetMessageParams>()
+    val unReadMessageAvailable = MutableLiveData<ArrayList<ChatMessage>>()
 
     private var toUser: String? = null
 
@@ -251,23 +254,22 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
             messageListParams = FetchMessageListParams().apply {
                 chatJid = toUserJid
                 limit = Constants.MESSAGE_LOAD_LIMIT
-                messageId = Constants.EMPTY_STRING
+                messageId = if(ChatParent.isFromStarredMessages) loadFromMessageId else Constants.EMPTY_STRING
                 inclusive = true
                 ascendingOrder = false
             }
             messageListQuery = FetchMessageListQuery(messageListParams)
-
             messageListQuery.loadMessages { isSuccess, _, data ->
                 if (isSuccess) {
-                    sendMessageSeenStatus()
                     val messageList = data.getData() as ArrayList<ChatMessage>
                     LogMessage.d("TAG","#chat #fetchmsg loadInitialData loadMessages isSuccess")
                     LogMessage.d("TAG","#chat #fetchmsg loadInitialData loadMessages messageList size:${messageList.size}")
                     paginationMessageList.clear()
                     paginationMessageList.addAll(messageRepository.getMessageListWithDate(messageList))
                     initialMessageList.postValue(paginationMessageList)
-                    if (loadFromMessageId.isNotBlank() && messageListQuery.isValidMessageId(loadFromMessageId)){
-                        loadprevORnextMessagesLoad(false)
+                    sendSeenReceipt()
+                    if (ChatParent.isFromStarredMessages) {
+                        loadNextMessage(Constants.EMPTY_STRING, false)
                     } else {
                         loadPreviousMessage()
                     }
@@ -279,15 +281,6 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
             }
         }
     }
-
-    private fun sendMessageSeenStatus() {
-        try {
-            FlyMessenger.deleteUnreadMessageSeparatorOfAConversation(toUserJid)
-        } catch(e: Exception){
-            LogMessage.e(TAG,e.toString())
-        }
-    }
-
 
     private fun loadprevORnextMessagesLoad(isReplyMessage:Boolean) {
         if(messageListParams.ascendingOrder) {
@@ -321,12 +314,11 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
             messageListQuery.loadMessages { isSuccess, _, data ->
                 if (isSuccess) {
                     LogMessage.d("TAG","#chat loadInitialMessages loadLocalMessages isSuccess loadFromMessageId:$loadFromMessageId")
-                    sendMessageSeenStatus()
                     val messageList = data.getData() as ArrayList<ChatMessage>
                     paginationMessageList.clear()
                     paginationMessageList.addAll(messageRepository.getMessageListWithDate(messageList))
                     initialMessageList.postValue(paginationMessageList)
-
+                    sendSeenReceipt()
                     if (loadFromMessageId.isNotBlank())
                         loadprevORnextMessagesLoad(true)
                     loadSuggestion.postValue(!isLoadNextAvailable())
@@ -389,12 +381,12 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
             messageListQuery.loadMessages { isSuccess, _, data ->
                 if (isSuccess) {
                     LogMessage.d("TAG","#chat loadInitialMessages loadLocalMessages isSuccess loadFromMessageId:$loadFromMessageId")
-                    sendMessageSeenStatus()
+
                     val messageList = data.getData() as ArrayList<ChatMessage>
                     paginationMessageList.clear()
                     paginationMessageList.addAll(messageRepository.getMessageListWithDate(messageList))
                     initialMessageList.postValue(paginationMessageList)
-
+                    sendSeenReceipt()
                     if (loadFromMessageId.isNotBlank())
                         loadPreviousData()
                     loadSuggestion.postValue(!isLoadNextAvailable())
@@ -429,6 +421,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         if(messageList!=null) {
             val nextMsgList = getNextMessageList(messageList)
             if (nextMsgList.isNotEmpty()) {
+                sendSeenReceipt()
                 processNextMessages(nextMsgList, isReplyMessage)
                 searchDataShare(searchedText, Constants.NEXT_LOAD)
             } else {
@@ -439,7 +432,6 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
 
     private fun getNextMessageList(messageList: ArrayList<ChatMessage>): ArrayList<ChatMessage> {
         val nextMsgList = ArrayList<ChatMessage>()
-        sendMessageSeenStatus()
         if (paginationMessageList.isNotEmpty()) {
             val idSet = paginationMessageList.map { it.messageId }.toHashSet()
             for (item in messageList) {
@@ -489,13 +481,14 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                     try {
                         val messageList = data.getData() as ArrayList<ChatMessage>
                         if (messageList.isNotEmpty()) {
-                            sendMessageSeenStatus()
                             val currentHeaderId: Long = messageRepository.getDateID(paginationMessageList.first())
                             val previousHeaderId: Long = messageRepository.getDateID(messageList.last())
                             removeTempDateHeader.postValue(currentHeaderId == previousHeaderId)
                             val previousMessages = messageRepository.getMessageListWithDate(messageList)
                             paginationMessageList.addAll(0, previousMessages)
                             previousMessageList.postValue(previousMessages)
+                            sendSeenReceipt()
+                            unReadMessageAvailable.postValue(messageList)
                             searchDataShare(searchedText,Constants.PREV_LOAD)
                         } else {
                             searchDataShare(searchedText,Constants.NO_DATA)
@@ -508,7 +501,6 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
             }
         }
     }
-
 
     fun loadPreviousData(searchedText: String="") {
 
@@ -523,7 +515,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                 if (isSuccess) {
                     val messageList = data.getData() as ArrayList<ChatMessage>
                     if (messageList.isNotEmpty()) {
-                        sendMessageSeenStatus()
+
                         LogMessage.d("TAG","#chat #fetchmsg loadLocalPreviousMessages  messageList:${messageList.size}")
 
                         val currentHeaderId: Long = messageRepository.getDateID(paginationMessageList.first())
@@ -566,6 +558,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                     LogMessage.d(TAG,"#chat #fetchmsg loadnextdata size--->"+messageList.size)
 
                     if (messageList.isNotEmpty()) {
+                        sendSeenReceipt()
                         var skipFirstMessage = false
                         if (paginationMessageList.isNotEmpty()) {
                             checkAndUpdateMessageList(messageList)
@@ -578,9 +571,14 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                     } else {
                         searchDataShare(searchedText,Constants.NO_DATA)
                     }
-
                 }
             }
+        }
+    }
+
+    private fun sendSeenReceipt(){
+        if (ChatManager.getOnGoingChatUser().equals(toUserJid, ignoreCase = true)) {
+            ChatManager.markAsRead(toUserJid)
         }
     }
 

@@ -21,7 +21,7 @@ import com.contusfly.utils.CountriesListObject
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CommonAlertDialog
 import com.mirrorflysdk.utils.Utils
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import com.contusfly.libPhone.PhoneNumberUtil
 import java.util.*
 
 class DeleteMyAccountFragment : Fragment(), View.OnClickListener {

@@ -297,7 +297,6 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
      * Chat type of the chat view
      */
     lateinit var chatType: String
-    var isFromStarredMessages = false
     private var isFromSearchIcon = false
 
     protected var isViewingRecentMessage = true
@@ -317,7 +316,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         layoutManager
     }
 
-    protected val unreadMessageTypeMessageId: String by lazy { "M${chat.toUser}" }
+    protected val unreadMessageTypeMessageId: String
+        get() = "M${chat.toUser}"
 
     protected var isLoadingMessageFromDB = false
 
@@ -371,6 +371,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         val TAG = ChatParent::class.java.simpleName
         var meetFabIconRetainPosition = 0f
         var meetFabIconMoved = false
+        var unreadMessageId:String? = null
+        var isFromStarredMessages = false
+        var isComingFromFilePicker: Boolean = false
+
+
 
         /**
          * Starts activity for user/group
@@ -2225,7 +2230,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         else null
     }
 
-    protected fun findIndexOfUnreadMessageType(): Triple<Boolean, Int, String> {
+    protected fun findIndexOfUnreadMessageType(nextMessageList: ArrayList<ChatMessage> = arrayListOf()): Triple<Boolean, Int, String> {
         Log.d(TAG, "findIndexOfUnreadMessageType $unreadMessageTypeMessageId")
         val position = getMessagePosition(unreadMessageTypeMessageId)
         var message = Constants.EMPTY_STRING
@@ -2234,7 +2239,9 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             if (position != -1) {
                 isUnreadSeparatorIsAvailable = true
                 message = mainList[position].messageTextContent
-                unReadMessageScrollPosition(position)
+                if (isViewingRecentMessage && nextMessageList.indexOfFirst { it.messageId == unreadMessageTypeMessageId } != -1 && !isFromStarredMessages) {
+                    unReadMessageScrollPosition(position)
+                }
             }
             if (position != -1 && lastCompletelyVisibleItemPosition == 0)
                 listChats.scrollToPosition(position + 1)
@@ -2268,12 +2275,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         }
     }
 
-    protected fun handleUnreadMessageSeparator(remove: Boolean) {
-        val (isUnreadSeparatorIsAvailable, separatorPosition) = findIndexOfUnreadMessageType()
+    protected fun handleUnreadMessageSeparator(remove: Boolean, nextMessageList: ArrayList<ChatMessage> = arrayListOf()) {
+        val (isUnreadSeparatorIsAvailable, separatorPosition) = findIndexOfUnreadMessageType(nextMessageList)
         if (isUnreadSeparatorIsAvailable && !mainList.isNullOrEmpty()) {
             if (remove) {
                 removeUnreadMessageSeparator(separatorPosition)
-            } else {
+            }
+            else {
                 displayUnreadMessageSeparator(separatorPosition)
             }
         }
@@ -2289,14 +2297,14 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private fun displayUnreadMessageSeparator(separatorPosition: Int) {
         val shouldNotCount = (separatorPosition + 1 until mainList.size)
-            .count { mainList[it].isMessageSentByMe }
+            .count { mainList[it].isMessageSentByMe || mainList[it].messageType == MessageType.NOTIFICATION }
         LogMessage.e(TAG, "should not count--->$shouldNotCount")
-
-        val defaultUnreadCountResult = mainList.size - separatorPosition - 1
+        val unreadCount = FlyCore.getRecentChatOf(toUser)?.unreadMessageCount?:0
+        val defaultUnreadCountResult = (mainList.size + unreadCount) - separatorPosition - 1
         val shouldNotCountResult = defaultUnreadCountResult - shouldNotCount
         LogMessage.e(TAG, "should Not Count Result--->$shouldNotCountResult")
 
-        val noOfItemsAfterUnreadMessageSeparator = if(shouldNotCountResult!=0) shouldNotCountResult else mainList.size - separatorPosition - 1
+        val noOfItemsAfterUnreadMessageSeparator = if(shouldNotCountResult!=0) shouldNotCountResult else defaultUnreadCountResult
         if (noOfItemsAfterUnreadMessageSeparator != 0) {
             val unreadMessageDetails = mainList[separatorPosition]
             if (mainList[separatorPosition].messageId == unreadMessageTypeMessageId) {
@@ -2313,10 +2321,6 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private fun sendMessageSeenStatus() {
         if(!ChatManager.chatHistoryEnabled() || !ChatManager.getAvailableFeatures().isChatHistoryEnabled){
             ChatManager.markAsRead(chat.toUser)
-        } else {
-            if(ChatManager.isChatHistoryFetchedFromServer(toUser)){
-                ChatManager.markAsRead(chat.toUser)
-            }
         }
     }
 

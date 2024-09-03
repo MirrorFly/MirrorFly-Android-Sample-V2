@@ -57,7 +57,7 @@ import com.mirrorflysdk.utils.VideoRecUtils
 import com.mirrorflysdk.views.CustomToast
 import com.google.android.material.appbar.AppBarLayout
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
-import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
+import com.contusfly.collapsingToolbar.CollapsingToolbarLayout
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

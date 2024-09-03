@@ -705,9 +705,9 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
             if (dialogType == CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL && mRecentChatListType == RecentChatListType.RECENT) {
                 val selectedJids = getJidFromList(viewModel.selectedRecentChats)
                 val recent=FlyCore.getRecentChatOf(selectedJids[0])
-                if(recent?.lastMessageId!=null) {
+                if (recent != null && !recent.lastMessageId.isNullOrEmpty()) {
                     val msg = FlyMessenger.getMessageOfId(recent.lastMessageId)
-                    AppNotificationManager.createNotification(context!!,msg!!,true,selectedJids)
+                    AppNotificationManager.createNotification(context!!, msg!!, true, selectedJids)
                 }
                 deleteSelectedRecent(getJidFromList(viewModel.selectedRecentChats))
             }

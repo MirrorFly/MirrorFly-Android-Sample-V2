@@ -48,5 +48,19 @@ object AppConstants {
      */
     const val AUTO_BACKUP_INITIATED = "com.contus.chat.auto.backup.initiated"
 
-    const val OTP_ENABLE = true
+    /**
+     * This method used to enable skip Otp
+     */
+
+    fun enableSkipOtp(isEnable: Boolean) {
+        SharedPreferenceManager.setBoolean(Constants.IS_SKIP_OTP, isEnable)
+    }
+
+    /**
+     * This method used to get the status of skip otp enabled or not.
+     */
+
+    fun isSkipOtpEnabled(): Boolean {
+        return SharedPreferenceManager.getBoolean(Constants.IS_SKIP_OTP)
+    }
 }

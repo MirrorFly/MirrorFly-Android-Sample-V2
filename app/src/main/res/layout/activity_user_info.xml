@@ -25,7 +25,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
+        <com.contusfly.collapsingToolbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -88,7 +88,7 @@
                 android:background="@android:color/transparent"
                 app:layout_collapseMode="pin" />
 
-        </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
+        </com.contusfly.collapsingToolbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 

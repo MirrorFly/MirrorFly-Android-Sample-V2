@@ -17,9 +17,9 @@ import com.contusfly.views.CustomTextView
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.helpers.ResourceHelper
 import com.mirrorflysdk.views.CustomToast
-import io.michaelrocks.libphonenumber.android.NumberParseException
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import io.michaelrocks.libphonenumber.android.Phonenumber
+import com.contusfly.libPhone.NumberParseException
+import com.contusfly.libPhone.PhoneNumberUtil
+import com.contusfly.libPhone.Phonenumber
 
 /**
  *

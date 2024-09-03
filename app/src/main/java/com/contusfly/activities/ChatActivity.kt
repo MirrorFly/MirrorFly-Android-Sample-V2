@@ -131,6 +131,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private lateinit var gestureDetector: GestureDetector
 
     private var callMetaDataList:List<CallMetaData> = emptyList()
+    private var isComingFromFilePicker: Boolean = false
 
     private val contactSavePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -350,16 +351,15 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     override fun onMessageReceived(message: ChatMessage) {
         LogMessage.d("TAG","#chat #fetchmsg onMessageReceived-> ")
+
         message.let {
-            if (message.isMessageSentByMe) {
-                handleUnreadMessageSeparator(true)
-                if (message.messageType == MessageType.AUTO_TEXT)
-                    loadNextData()
-            }
-            if (chat.toUser == message.chatUserJid && (!message.isMessageSentByMe || message.isItCarbonMessage)
+            if (!ChatManager.getOnGoingChatUser().equals(message.chatUserJid, ignoreCase = true)) {
+                return
+            }else if (message.isMessageSentByMe && message.messageType == MessageType.AUTO_TEXT) {
+                loadNextData()
+            }else if (chat.toUser == message.chatUserJid && (!message.isMessageSentByMe || message.isItCarbonMessage)
                 && !message.isMessageDeleted
             ) {
-                removeUnReadMsgSeparatorOnMessageReceiver()
                 loadNextData()
                 playForegroundNotificationSound(this)
             }
@@ -385,20 +385,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                     }
                 }, 500)
             }
-        }
-    }
-
-    private fun removeUnReadMsgSeparatorOnMessageReceiver() {
-        try {
-            if (mainList.count { it.messageId == unreadMessageTypeMessageId } >= 1) {
-                val position = mainList.size - mainList.reversed().indexOfLast { it.messageId == unreadMessageTypeMessageId } - 1
-                if (position != -1 && position < mainList.size) {
-                    mainList.removeAt(position)
-                    chatAdapter.notifyItemRemoved(position)
-                }
-            }
-        } catch (e: IndexOutOfBoundsException) {
-            e.printStackTrace()
         }
     }
 
@@ -676,6 +662,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             chatAdapter.notifyItemRangeInserted(0, messagesList.size)
         }
 
+         parentViewModel.unReadMessageAvailable.observe(this) { messagesList ->
+            loadPreviousMessageChekcingUnreadMessage(messagesList)
+        }
+
         parentViewModel.nextMessageList.observe(this) { messageList ->
             LogMessage.d(TAG, "#chat #observer nextMessageList")
             val index = mainList.size
@@ -683,10 +673,13 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             chatAdapter.notifyItemRangeInserted(index, messageList.size)
 
             canShowReceivedMessage = isViewingRecentMessage
+            showBottomMessage(messageList.size, messageList)
             Handler(Looper.getMainLooper()).postDelayed({
-                showBottomMessage()
-                if (chatMessageEditText.text.toString().trim().isEmpty() && !isReplyTagged && !attachmentDialog.isShowing)
-                    addMessagesforSmartReply() }, 100)
+                if (chatMessageEditText.text.toString().trim()
+                        .isEmpty() && !isReplyTagged && !attachmentDialog.isShowing
+                )
+                    addMessagesforSmartReply()
+            }, 100)
         }
 
         parentViewModel.replynextMessageList.observe(this) { messageList ->
@@ -731,12 +724,34 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     }
 
+    private fun loadPreviousMessageChekcingUnreadMessage(messagesList: ArrayList<ChatMessage>) {
+        try {
+            if(isUnreadMessageAvailableInDb() && isUnreadMessageAvailableIncomingList(messagesList)) {
+                var position = getMessagePosition(unreadMessageTypeMessageId)
+                listChats.scrollToPosition(position+1)
+            }
+        } catch(e: Exception) {
+            com.contusfly.utils.LogMessage.e(TAG,e.toString())
+        }
+    }
+
+    private fun isUnreadMessageAvailableIncomingList(messagesList: ArrayList<ChatMessage>): Boolean {
+        return messagesList.size > 0 && messagesList.indexOfFirst { it.messageId == unreadMessageTypeMessageId } != -1
+    }
+
     private fun highlightGivenMessage() {
         try {
             if (mainList.isNotEmpty()) {
                 if (messageId.isNotEmpty() && messageId != unreadMessageTypeMessageId)
                     highlightGivenMessageId(messageId)
-                else {
+                else if(isUnreadMessageAvailableInDb() && isUnreadMessageAvailableInList()){
+                    listChats.scrollToPosition(getMessagePosition(unreadMessageTypeMessageId))
+                    viewModel.deleteUnreadMessageSeparator(chat.toUser) // we remove the seperator when the user from group info to start chat option.
+                }else if(isUnreadMessageAvailableInDb() && !isUnreadMessageAvailableInList()){
+                    com.contusfly.utils.LogMessage.e("rko","dont scroll to last position-->")
+                    return
+                } else {
+                    com.contusfly.utils.LogMessage.e("rko","tempMessage scroll-->")
                     val tempMessage = mainList.lastOrNull()
                     if (tempMessage != null) {
                         scrollPosition(tempMessage)
@@ -749,6 +764,15 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             LogMessage.e(TAG,e.toString())
         }
     }
+
+    private fun isUnreadMessageAvailableInDb(): Boolean {
+        return FlyMessenger.getMessageOfId(unreadMessageTypeMessageId) != null
+    }
+
+    private fun isUnreadMessageAvailableInList(): Boolean {
+        return mainList.size > 0 && mainList.indexOfFirst { it.messageId == unreadMessageTypeMessageId } != -1
+    }
+
 
     private fun startObserving() {
         val rosterObservable = rosterObservable.observeOn(AndroidSchedulers.mainThread()).subscribe({ profileDetails ->
@@ -2318,23 +2342,26 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
                 return
             }
+            doProgressDialog = DoProgressDialog(this)
+            doProgressDialog!!.showProgress()
             ChatManager.clearChat(chat.toUser, chat.getChatType(), clearChatExceptStarredMessages, object : ChatActionListener {
                 override fun onResponse(isSuccess: Boolean, message: String) {
-                    /*No Implementation needed*/
+                    dismissProgress()
+                    unreadMessageCountView.gone()
+                    if (clearChatExceptStarredMessages) {
+                        val starredMessages = getStarredMessages()
+                        mainList.clear()
+                        mainList.addAll(starredMessages)
+                    } else {
+                        parentViewModel.removeMessages()
+                        mainList.clear()
+                    }
+                    chatAdapter.notifyDataSetChanged()
+                    if (mainList.isNotEmpty())
+                        listChats.scrollToPosition(mainList.size - 1)
                 }
             })
-            unreadMessageCountView.gone()
-            if (clearChatExceptStarredMessages) {
-                val starredMessages = getStarredMessages()
-                mainList.clear()
-                mainList.addAll(starredMessages)
-            } else {
-                parentViewModel.removeMessages()
-                mainList.clear()
-            }
-            chatAdapter.notifyDataSetChanged()
-            if (mainList.isNotEmpty())
-                listChats.scrollToPosition(mainList.size - 1)
+
         } catch (e: java.lang.Exception) {
             LogMessage.e(e)
             LogMessage.e("FILE_UPLOAD_TAG","Clear Chat Error $e")
@@ -2390,6 +2417,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        isComingFromFilePicker = true
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 RequestCode.TAKE_PHOTO -> {
@@ -2478,7 +2506,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         parentViewModel.clearChat()
         setUserJid()
         parentViewModel.loadInitialData(messageId)
-        viewModel.deleteUnreadMessageSeparator(chat.toUser)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -2584,21 +2611,22 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
      * Scroll to bottom
      *
      */
-    private fun showBottomMessage() {
+    private fun showBottomMessage(messageCount: Int, nextMessageList: ArrayList<ChatMessage> = arrayListOf()) {
         val tempMessage = mainList.lastOrNull()
         if(tempMessage == null || tempMessage.isNotificationMessage() && tempMessage.messageTextContent.contains(resources.getString(R.string.msg_you_changed_icon))|| (tempMessage.isAutoMessage() && tempMessage.isMessageSentByMe))
             return
         canShowReceivedMessage = false
         if (!isViewingRecentMessage) {
             if (!tempMessage.isMessageSentByMe)
-                unreadMessageCount++
+                unreadMessageCount = unreadMessageCount + messageCount
             showHideRedirectToLatest.onNext(true)
             if(tempMessage.isMessageSentByMe){
                 clearEditText()
             }
-        } else
+        } else {
             scrollPosition(tempMessage)
-        handleUnreadMessageSeparator(false)
+        }
+        handleUnreadMessageSeparator(false,nextMessageList)
     }
 
     private fun scrollPosition(tempMessage: ChatMessage) {
@@ -2965,8 +2993,15 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun smartReplySuggestionCallback() {
         parentViewModel.getSuggestions().observe(this) {
             suggestionCount = it.size
-            if (isProfileObjectInitialized() && !profileDetails.isAdminBlocked && !profileDetails.isDeletedContact() && it.isNotEmpty()) {
+            if (isProfileObjectInitialized() && !profileDetails.isAdminBlocked && !profileDetails.isDeletedContact() && it.isNotEmpty() && !isFromStarredMessages) {
                 suggestionLayout.show()
+                val unreadMessageIdPos  = getMessagePosition(unreadMessageTypeMessageId)
+                if (firstCompletelyVisibleItemPosition == -1 && unreadMessageIdPos == 1) {
+                    mManager.scrollToPositionWithOffset(1,1000)
+                }else if (unreadMessageIdPos != -1 && firstCompletelyVisibleItemPosition!=-1 && mainList.size > firstCompletelyVisibleItemPosition && mainList[firstCompletelyVisibleItemPosition+1].messageId == unreadMessageTypeMessageId) {
+                    // issue fixes for unread message label is showing half cut ,when suggest content shows
+                    listChats.scrollToPosition(firstCompletelyVisibleItemPosition)
+                }
                 replySuggestionAdapter.setSmartReplySuggestions(it)
             } else
                 suggestionLayout.gone()

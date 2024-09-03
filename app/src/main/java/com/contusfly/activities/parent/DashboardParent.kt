@@ -28,6 +28,7 @@ import com.contusfly.utils.*
 import com.contusfly.utils.Constants.Companion.CALLS_TAB_INDEX
 import com.contusfly.viewmodels.DashboardViewModel
 import com.contusfly.views.CommonAlertDialog
+import com.contusfly.views.DoProgressDialog
 import com.contusfly.views.PermissionAlertDialog
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.api.*
@@ -66,6 +67,7 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
     open lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var mAdapter: ViewPagerAdapter
     open lateinit var actionModeMenu: Menu
+    private var doProgressDialog: DoProgressDialog? = null
 
     open val commonAlertDialog: CommonAlertDialog by lazy { CommonAlertDialog(this) }
 
@@ -464,6 +466,7 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
                 return true
             }
             R.id.action_archive_chat -> {
+                viewModel.setArchiveChatTriggeredStatus(true)
                 archiveChats()
                 viewModel.updateUnReadChatCount()
                 actionMode?.finish()
@@ -555,17 +558,34 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
             CustomToast.show(this, getString(R.string.error_check_internet))
             return
         }
+        doProgressDialog = DoProgressDialog(this)
+        doProgressDialog!!.showProgress()
         val selectedJids: MutableList<String> = mutableListOf()
         var failedCount = 0
         val selectedCount = viewModel.selectedRecentChats.size
         for (recent in viewModel.selectedRecentChats) {
-            FlyCore.updateArchiveUnArchiveChat(recent.jid, true, FlyCallback { isSuccess, _, _ ->
-                if (isSuccess) selectedJids.add(recent.jid)
-                else failedCount++
+            FlyCore.updateArchiveUnArchiveChat(recent.jid, true, FlyCallback { isSuccess, _, data ->
+                if (isSuccess)
+                    selectedJids.add(recent.jid)
+                else {
+                    if (failedCount == 0) CustomToast.showShortToast(
+                        context,
+                        data.getMessage()
+                    )
+                    failedCount++
+                    dismissProgress()
+                }
                 val isAdapterNeedSync = (selectedJids.size > 0 && selectedCount == (selectedJids.size + failedCount))
-                if (isAdapterNeedSync) updateArchiveChatsData(selectedJids, failedCount)
+                if (isAdapterNeedSync) {
+                    updateArchiveChatsData(selectedJids, failedCount)
+                    dismissProgress()
+                }
             })
         }
+    }
+
+    private fun dismissProgress() {
+        if (doProgressDialog != null && doProgressDialog!!.isShowing) doProgressDialog!!.dismiss()
     }
 
     private fun updateArchiveChatsData(selectedJids: MutableList<String>, failedCount: Int) {
@@ -581,9 +601,17 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
     override fun updateArchiveUnArchiveChats(toUser: String?, archiveStatus: Boolean) {
         super.updateArchiveUnArchiveChats(toUser, archiveStatus)
         toUser?.let {
+            if(viewModel.recentChatAdapter.size == 4 && archiveStatus && viewModel.getArchivedTriggeredStatus() ){
+                viewModel.paginationLoader.value = true // recent chat contains 100+chats and now archive all the chats. the archived label is not updated instant. so we show loader until the archived label show
+            }
             viewModel.updateArchiveChatsStatus(toUser, archiveStatus)
-            viewModel.getArchivedChatStatus()
+            viewModel.getArchivedChatStatus(true)
             viewModel.unreadChatCountLiveData.value = FlyMessenger.getUnreadMessagesCount()
+            if (viewModel.recentChatAdapter.size <= 14 && !viewModel.getRecentChatListFetching() && viewModel.getArchivedTriggeredStatus()) {
+                //After archived, if data lesser than 14, need to fetch next set of data from api if data available.
+                viewModel.setArchiveChatTriggeredStatus(false)
+                viewModel.nextSetOfRecentChatList()
+            }
         }
     }
 

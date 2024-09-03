@@ -180,6 +180,7 @@ object MissedCallNotificationUtils {
 
     private fun getMissedCallNotificationContent(isOneToOneCall: Boolean, userJid: String, groupId: String?, callType: String,
                                                  userList: ArrayList<String>,callMeta: Array<CallMetaData>?): Pair<String, String> {
+        LogMessage.d(TAG, "#getMissedCallNotificationContent callMetadata Size : ${callMeta?.size}")
         var messageContent : String
         val missedCallMessage = StringBuilder()
         missedCallMessage.append(ChatManager.applicationContext.resources.getString(R.string.you_missed_call))

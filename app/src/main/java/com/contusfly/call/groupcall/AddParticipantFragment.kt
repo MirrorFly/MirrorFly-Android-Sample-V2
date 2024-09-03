@@ -357,7 +357,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
             itemAnimator = null
             adapter = mAdapter
 
-            if (!GroupCallUtils.isCallLinkBehaviourMeet() && isAddUsersToOneToOneCall){
+            if ( isAddUsersToOneToOneCall){
                 if (BuildConfig.CONTACT_SYNC_ENABLED) {
                     viewModel.getInviteUserList(callConnectedUserList)
                 } else {

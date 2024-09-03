@@ -1,7 +1,6 @@
 package com.contusfly.network
 
-import com.mirrorflysdk.flycommons.RequestTokenInterceptor
-import com.mirrorflysdk.flycommons.TokenAuthenticator
+
 import com.google.gson.GsonBuilder
 import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.SharedPreferenceManager
@@ -23,8 +22,8 @@ object RetrofitClientNetwork {
         logging.level = HttpLoggingInterceptor.Level.BODY
         val client: OkHttpClient = builder
                 .addInterceptor(logging)
-                .addInterceptor(RequestTokenInterceptor())
-                .authenticator(TokenAuthenticator())
+                .addInterceptor(UikitRequestTokenInterceptor())
+                .authenticator(UikitTokenAuthenticator())
                 .followRedirects(false)
                 .build()
         val gson = GsonBuilder().create()

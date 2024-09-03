@@ -46,8 +46,9 @@ class MessageRepository {
     fun getMessageListWithDate(messageList: List<ChatMessage>, skipFirstMessage: Boolean = false): ArrayList<ChatMessage> {
         val dateList = ArrayList<ChatMessage>()
         for (position in messageList.indices) {
-            if (skipFirstMessage && position == 0)
+              if (skipFirstMessage && position == 0)
                 continue
+
             if (position == 0 || isDateChanged(position, messageList)) {
                 val message = addDateHeaderMessage(messageList[position])
                 if (message.messageId != null)
