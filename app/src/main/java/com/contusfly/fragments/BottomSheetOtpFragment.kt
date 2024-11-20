@@ -237,7 +237,7 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
 
                     val mobileNUmber = com.contusfly.utils.SharedPreferenceManager.getString(com.contusfly.utils.Constants.USER_MOBILE_NUMBER).replace(" ", "").replace("+", "")
 
-                    val otpResponse = apiCalls.pinGetOtp(mobileNUmber).await()
+                    val otpResponse = apiCalls.pinGetOtp(mobileNUmber)
 
                     withContext(Dispatchers.Main.immediate) {
                         if (otpResponse.isSuccessful) {

@@ -300,6 +300,10 @@ class CircularImageView : AppCompatImageView {
             invalidate()
             return
         }
+        if (mBitmap!!.isRecycled) {
+            LogMessage.e("#circularImageView","bitmap is recycled--->")
+            return
+        }
         mBitmapShader = BitmapShader(mBitmap!!, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
         mBitmapPaint.isAntiAlias = true
         mBitmapPaint.shader = mBitmapShader

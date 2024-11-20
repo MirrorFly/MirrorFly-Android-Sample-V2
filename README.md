@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-      implementation 'com.mirrorfly.sdk:MirrorFlySDK:7.13.0'
+      implementation 'com.mirrorfly.sdk:MirrorFlySDK:7.13.9'
 }
    ```
 
