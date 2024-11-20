@@ -298,7 +298,7 @@ class PinSetting : AppCompatActivity(), BiometricCallback/*, CallLogListener*/, 
 
             launch(exceptionHandler) {
 
-                val logoutResponse = apiCalls.logout().await()
+                val logoutResponse = apiCalls.logout()
 
                 withContext(Dispatchers.Main.immediate) {
 
