@@ -49,7 +49,7 @@ android {
             buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
             buildConfigField "String", "SUPPORT_MAIL", '"contussupport@gmail.com"'
-            buildConfigField 'Boolean', 'IS_SKIP_OTP', 'false'
+            buildConfigField 'Boolean', 'IS_SKIP_OTP', 'true'
             resValue("string", "app_name", "UI Kit")
             shrinkResources false
             debuggable true
@@ -64,7 +64,7 @@ android {
             buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
             buildConfigField "String", "SUPPORT_MAIL", '"contussupport@gmail.com"'
-            buildConfigField 'Boolean', 'IS_SKIP_OTP', 'false'
+            buildConfigField 'Boolean', 'IS_SKIP_OTP', 'true'
             resValue("string", "app_name", "UI Kit")
             shrinkResources false
             debuggable false
