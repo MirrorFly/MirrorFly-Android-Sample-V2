@@ -1,0 +1,124 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".call.groupcall.AddParticipantFragment"
+    android:id="@+id/root_add_participant">
+
+    <LinearLayout
+        android:id="@+id/call_link_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/tool_bar"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/call_link_title_view"
+            style="@style/CallLinkView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/call_link"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginStart="@dimen/margin_15"
+            android:layout_marginEnd="@dimen/margin_15"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_15"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:id="@+id/link_circular_view"
+                android:layout_width="@dimen/margin_50"
+                android:layout_height="@dimen/margin_50"
+                android:background="@drawable/circular_shape"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/margin_18"
+                    android:layout_height="@dimen/margin_18"
+                    android:contentDescription="@string/image_content_description"
+                    app:srcCompat="@drawable/ic_join_link_meeting"/>
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/call_link"
+                style="@style/CallLinkView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_15"
+                android:layout_marginEnd="@dimen/margin_40"
+                android:layout_toEndOf="@id/link_circular_view"
+                android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:id="@+id/call_link_copy"
+                android:layout_width="@dimen/margin_20"
+                android:layout_height="@dimen/margin_20"
+                android:contentDescription="@string/image_content_description"
+                app:srcCompat="@drawable/ic_join_link_copy"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.75dp"
+            android:background="@color/color_list_divider_color" />
+
+    </LinearLayout>
+
+    <com.contusfly.views.CustomRecyclerView
+        android:id="@+id/view_contact_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/add_participants_layout"
+        android:layout_below="@+id/call_link_view"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:footerDividersEnabled="true"
+        android:listSelector="@drawable/selector_settings_opt" />
+
+    <include layout="@layout/view_empty_data" />
+
+    <RelativeLayout
+        android:id="@+id/add_participants_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blue"
+        android:visibility="gone"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/add_participants_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/padding_10"
+            android:layout_toStartOf="@+id/add_participants_text_view"
+            android:contentDescription="@string/title_image"
+            app:srcCompat="@drawable/ic_add_user_in_call" />
+
+        <TextView
+            android:id="@+id/add_participants_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:includeFontPadding="false"
+            android:textSize="@dimen/text_size_14"
+            android:text="@string/msg_add_participant"
+            android:textColor="@color/color_white"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
+</RelativeLayout>

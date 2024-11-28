@@ -1,0 +1,114 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_call_not_connected"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="200dp"
+    android:visibility="visible">
+
+    <TextView
+        android:id="@+id/text_call_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_30"
+        android:fontFamily="@font/sf_ui_display_light"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingStart="@dimen/padding_5"
+        android:paddingEnd="@dimen/padding_5"
+        android:textColor="@color/colorDivider"
+        android:textSize="@dimen/text_size_14" />
+
+    <TextView
+        android:id="@+id/text_caller_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_call_status"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_16"
+        android:ellipsize="end"
+        android:fontFamily="@font/sf_ui_display_medium"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:paddingStart="@dimen/padding_20"
+        android:paddingEnd="@dimen/padding_20"
+        android:textAlignment="center"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/text_size_18" />
+
+
+    <TextView
+        android:id="@+id/text_participants_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_caller_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_16"
+        android:ellipsize="end"
+        android:fontFamily="@font/sf_ui_display_light"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:paddingStart="@dimen/padding_20"
+        android:paddingEnd="@dimen/padding_20"
+        android:textAlignment="center"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/text_size_16" />
+
+    <com.contusfly.views.CircularImageView
+        android:id="@+id/caller_profile_image"
+        android:layout_width="@dimen/margin_120"
+        android:layout_height="@dimen/margin_120"
+        android:layout_below="@+id/text_participants_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_15"
+        android:gravity="center"
+        android:src="@drawable/ic_profile" />
+
+    <include
+        android:id="@+id/layout_group_call_members_image"
+        layout="@layout/layout_group_call_members_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_caller_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_13" />
+
+    <LinearLayout
+        android:id="@+id/layout_outgoing_profile"
+        android:layout_width="@dimen/margin_180"
+        android:layout_height="@dimen/margin_180"
+        android:layout_below="@+id/text_participants_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_10"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <com.contus.call.RippleBackgroundView
+            android:id="@+id/ripple_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            app:rb_color="@color/color_white"
+            app:rb_duration="2000"
+            app:rb_radius="@dimen/margin_50"
+            app:rb_rippleAmount="4"
+            app:rb_scale="1.5"
+            app:rb_strokeWidth="0dp"
+            app:rb_type="strokeRipple">
+
+            <com.contusfly.views.CircularImageView
+                android:id="@+id/receiver_profile_image"
+                android:layout_width="@dimen/margin_105"
+                android:layout_height="@dimen/margin_105"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_grp_bg" />
+
+        </com.contus.call.RippleBackgroundView>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2019 ContusFly LTD. All rights reserved.
+  ~ @licence http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_2"
+    android:layout_marginBottom="@dimen/margin_2"
+    android:elevation="0dp"
+    android:orientation="vertical"
+    tools:targetApi="LOLLIPOP">
+
+    <ViewStub
+        android:id="@+id/view_message_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/view_chat_date" />
+
+    <include layout="@layout/view_chat_space" />
+
+    <RelativeLayout
+        android:id="@+id/layout_file_received_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:gravity="top|start"
+        android:paddingStart="@dimen/padding_18"
+        android:paddingEnd="@dimen/padding_8">
+
+        <RelativeLayout
+            android:id="@+id/rl_header_receiver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/header_starred_message_sender"
+                layout="@layout/row_starred_message_header_receiver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/text_chat_date"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_chat_date"
+                style="@style/StarredMessageDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="@dimen/margin_5"
+                android:maxWidth="250dp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/send_img_forward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/margin_12"
+            android:layout_toEndOf="@+id/view_chat_receive_file"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@null"
+            android:padding="@dimen/padding_3"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_forward_media" />
+
+        <LinearLayout
+            android:id="@+id/view_chat_receive_file"
+            android:layout_width="@dimen/margin_250"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/rl_header_receiver"
+            android:background="@drawable/bg_chat_shape_receiver"
+            android:orientation="vertical">
+
+            <ViewStub
+                android:id="@+id/view_sender_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout="@layout/row_chat_sender_name" />
+
+            <include
+                android:id="@+id/view_text_sent_reply"
+                layout="@layout/list_chat_reply_received_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_3"
+                android:layout_marginTop="@dimen/margin_3"
+                android:layout_marginEnd="@dimen/margin_3" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/file_receive_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_3"
+                android:background="@drawable/drawable_file_message_background"
+                app:layout_constraintTop_toBottomOf="@+id/view_text_sent_reply">
+
+                <ImageView
+                    android:id="@+id/image_file_picture"
+                    android:layout_width="@dimen/margin_24.6"
+                    android:layout_height="@dimen/margin_31"
+                    android:layout_margin="@dimen/margin_8"
+                    android:contentDescription="@null"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_media_pdf" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_file_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_8"
+                    android:layout_marginEnd="@dimen/margin_5"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_ui_display_regular"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:maxLines="2"
+                    android:textColor="@color/color_selected_status"
+                    android:textSize="@dimen/text_size_13"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/layout_file_download"
+                    app:layout_constraintStart_toEndOf="@id/image_file_picture"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RelativeLayout
+                    android:id="@+id/layout_file_download"
+                    android:layout_width="@dimen/margin_28"
+                    android:layout_height="@dimen/margin_28"
+                    android:layout_margin="@dimen/margin_9"
+                    android:visibility="gone"
+                    android:background="@drawable/bg_download_progress"
+                    app:layout_constraintBottom_toBottomOf="@id/image_file_picture"
+                    app:layout_constraintEnd_toStartOf="@+id/layout_file_cancel"
+                    app:layout_constraintTop_toTopOf="@id/image_file_picture">
+
+                    <ImageView
+                        android:id="@+id/image_file_download"
+                        android:layout_width="@dimen/margin_14"
+                        android:layout_height="@dimen/margin_14"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:contentDescription="@string/content_not_downloaded"
+                        app:srcCompat="@drawable/ic_file_download_grey" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layout_file_cancel"
+                    android:layout_width="@dimen/margin_28"
+                    android:layout_height="@dimen/margin_28"
+                    android:layout_margin="@dimen/margin_9"
+                    android:visibility="gone"
+                    android:background="@drawable/bg_download_progress"
+                    app:layout_constraintBottom_toBottomOf="@id/image_file_picture"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/image_file_picture">
+
+                    <ProgressBar
+                        android:id="@+id/progress_file_download"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/margin_2"
+                        android:layout_alignParentBottom="true"
+                        android:contentDescription="@string/content_downloading"
+                        android:indeterminate="false"
+                        android:progressDrawable="@drawable/horizontal_file_receiver_progress_bar"
+                        android:scrollbarSize="@dimen/margin_2" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_file_download_buffer"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding_3"
+                        android:layout_alignParentBottom="true"
+                        android:contentDescription="@string/content_downloading"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/file_download_progress_tint_color"
+                        android:scaleY="2" />
+
+                    <ImageView
+                        android:id="@+id/image_file_download_cancel"
+                        android:layout_width="@dimen/margin_14"
+                        android:layout_height="@dimen/margin_14"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/content_downloading"
+                        app:srcCompat="@drawable/ic_cancel_grey" />
+                </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/margin_5"
+                android:paddingBottom="@dimen/margin_5">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_file_size"
+                    style="@style/TextRegularBlackStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:paddingStart="@dimen/padding_10"
+                    android:paddingEnd="0dp" />
+
+                <ImageView
+                    android:id="@+id/image_file_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/margin_5"
+                    android:layout_toStartOf="@+id/text_file_received_time"
+                    android:contentDescription="@null"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_star_receiver" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_file_received_time"
+                    style="@style/ChatTimeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/sf_ui_display_regular"
+                    android:includeFontPadding="false"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="@dimen/margin_5"
+                    android:textColor="@color/color_chat_list_time" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_divider"
+        style="@style/divider_starred_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:visibility="gone"/>
+
+</LinearLayout>

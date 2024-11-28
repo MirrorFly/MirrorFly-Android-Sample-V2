@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_list_bg"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:focusable="true">
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="15dp"
+        android:requiresFadingEdge="vertical">
+
+        <com.contusfly.views.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="@string/title_busy_status_msg"
+            android:textColor="@color/text_color_black"
+            android:textSize="16sp"
+            style="@style/ToolbarCollapsedTitleStyle" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_list_divider_color"
+            android:contentDescription="@string/title_content_description" />
+
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_edit_busy_status"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawablePadding="@dimen/padding_10"
+            android:drawableEnd="@drawable/ic_edit"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            app:emojiconSize="20sp" />
+    </LinearLayout>
+
+
+
+    <com.contusfly.views.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:padding="5dp"
+        android:text="@string/msg_busy_status_notification"
+        android:textColor="@color/color_dark_gray"
+        android:textSize="17sp" />
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:requiresFadingEdge="vertical">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_select_busy_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="@string/msg_select_status"
+            style="@style/ToolbarCollapsedTitleStyle"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/text_select_busy_status"
+            android:background="@color/color_list_divider_color"
+            android:contentDescription="@string/title_content_description" />
+
+        <ListView
+            android:id="@+id/list_busy_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/text_select_busy_status"
+            android:layout_margin="5dp"
+            android:divider="@color/color_light_gray"
+            android:dividerHeight="0.5dp"
+            android:paddingLeft="@dimen/margin_10dp"
+            android:paddingRight="@dimen/margin_10dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
+
+
+</LinearLayout>

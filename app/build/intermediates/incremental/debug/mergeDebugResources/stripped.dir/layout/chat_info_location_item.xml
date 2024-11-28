@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/row_chat_location"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_2"
+    android:layout_marginBottom="@dimen/margin_2"
+    android:elevation="0dp"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/padding_8"
+    android:paddingEnd="@dimen/padding_18"
+    tools:targetApi="LOLLIPOP">
+
+    <LinearLayout
+        android:id="@+id/view_chat_send_loc"
+        android:layout_width="@dimen/margin_200"
+        android:layout_height="@dimen/margin_171"
+        android:layout_gravity="end|center_vertical"
+        android:background="@drawable/bg_chat_shape_sender"
+        android:contentDescription="@string/content_sent_location"
+        android:gravity="center_vertical|end"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <include
+            layout="@layout/list_chat_reply_sent_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_3" />
+
+        <RelativeLayout
+            android:id="@+id/view_send_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:padding="@dimen/margin_3">
+
+            <com.contusfly.views.RoundRectCornerImageView
+                android:id="@+id/image_location_send"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_sent_location"
+                android:scaleType="centerCrop" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="bottom|end">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ic_balloon"
+                    android:layout_width="@dimen/margin_120"
+                    android:layout_height="@dimen/margin_75"
+                    android:contentDescription="@null"
+                    android:scaleType="fitEnd"
+                    app:shapeAppearanceOverlay="@style/roundedImageView"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:srcCompat="@drawable/ic_baloon" />
+
+                <ImageView
+                    android:id="@+id/ic_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_4"
+                    android:layout_marginLeft="@dimen/margin_4"
+                    android:layout_marginRight="@dimen/margin_4"
+                    android:paddingBottom="@dimen/margin_4"
+                    android:contentDescription="@null"
+                    android:visibility="visible"
+                    android:layout_toStartOf="@+id/image_loc_send_status"
+                    android:layout_alignTop="@+id/image_loc_send_status"
+                    android:layout_alignBottom="@+id/image_loc_send_status"
+                    android:layout_alignParentBottom="true"
+                    app:srcCompat="@drawable/ic_star" />
+
+                <ImageView
+                    android:id="@+id/image_loc_send_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_4"
+                    android:layout_marginEnd="@dimen/margin_4"
+                    android:paddingBottom="@dimen/margin_4"
+                    android:contentDescription="@string/acknowledge_content_description"
+                    android:layout_toStartOf="@+id/text_send_loc_time"
+                    android:layout_alignTop="@+id/text_send_loc_time"
+                    android:layout_alignBottom="@+id/text_send_loc_time"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/ic_message_unsent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_send_loc_time"
+                    style="@style/ChatTimeTextView"
+                    android:paddingBottom="@dimen/margin_4"
+                    android:paddingEnd="@dimen/margin_10"
+                    android:paddingStart="@dimen/margin_0"
+                    android:gravity="end"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/color_white"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/sf_ui_display_regular"  />
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

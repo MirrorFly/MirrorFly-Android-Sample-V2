@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC000000"
+    android:fitsSystemWindows="true"
+    tools:context=".activities.EditMessageActivity">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/edit_message_toolbar" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/items_swipe_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tool_bar">
+
+        <RelativeLayout
+            android:id="@+id/edit_screen_footer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/view_chat_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/view_chat_footer_layout"
+                android:paddingTop="@dimen/margin_0"
+                android:paddingBottom="@dimen/padding_5"
+                android:scrollbars="none" />
+
+            <LinearLayout
+                android:id="@+id/view_chat_footer_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/view_chat_footer"
+                    layout="@layout/edit_view_footer"
+                    android:visibility="visible" />
+
+                <FrameLayout
+                    android:id="@+id/emojicons"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_250"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

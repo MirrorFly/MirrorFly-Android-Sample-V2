@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @category ContusFly
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2019 ContusFly LTD. All rights reserved.
+  ~ @licence http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_settings_opt"
+    android:orientation="horizontal"
+    android:padding="@dimen/padding_15">
+
+    <com.contusfly.views.CustomTextView
+        android:id="@+id/text_country_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:maxLines="2"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_16"
+        android:fontFamily="@font/sf_ui_display_regular" />
+
+    <com.contusfly.views.CustomTextView
+        android:id="@+id/text_country_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_5"
+        android:textColor="@color/color_dark_gray"
+        android:textSize="@dimen/text_size_16"
+        android:fontFamily="@font/sf_ui_display_regular" />
+
+</LinearLayout>

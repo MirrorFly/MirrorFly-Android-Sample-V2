@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 3.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2018 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/caller_background">
+
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_black_transparent"
+        android:visibility="visible" />
+
+    <include
+        android:id="@+id/layout_call_connected"
+        layout="@layout/layout_call_connected" />
+
+    <include
+        android:id="@+id/layout_call_not_connected"
+        layout="@layout/layout_call_not_connected" />
+
+    <include
+        android:id="@+id/layout_incoming_call"
+        layout="@layout/layout_incoming_call"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_20" />
+
+    <include
+        android:id="@+id/layout_call_retry"
+        layout="@layout/layout_call_retry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <ImageView
+        android:id="@+id/call_options_up_arrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_30"
+        android:contentDescription="@null"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_call_options_up_arrow" />
+
+    <include
+        android:id="@+id/layout_call_options"
+        layout="@layout/layout_call_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/ic_call_header_overlay"
+        android:paddingBottom="@dimen/margin_100">
+
+        <ImageButton
+            android:id="@+id/image_minimize_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/margin_10"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@null"
+            android:padding="@dimen/margin_10"
+            app:srcCompat="@drawable/ic_minimize_group_call" />
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/layout_pip_mode"
+        layout="@layout/layout_pip_mode" />
+
+    <FrameLayout
+        android:id="@+id/view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

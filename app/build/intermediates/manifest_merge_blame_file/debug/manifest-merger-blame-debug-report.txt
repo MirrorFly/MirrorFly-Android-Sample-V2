@@ -1,0 +1,1606 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.mirrorfly.uikit"
+4    android:versionCode="17"
+5    android:versionName="7.13.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="34" />
+9-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:6:5-67
+11-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:6:22-64
+12    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+12-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:7:5-71
+12-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:7:22-68
+13    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+13-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:8:5-75
+13-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:8:22-72
+14    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+14-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:9:5-88
+14-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:9:22-85
+15    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+15-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:10:5-79
+15-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:10:22-76
+16    <uses-permission android:name="android.permission.CAMERA" />
+16-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:11:5-65
+16-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:11:22-62
+17    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+17-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:12:5-75
+17-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:12:22-72
+18    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+18-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:13:5-77
+18-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:13:22-74
+19    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+19-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:14:5-74
+19-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:14:22-71
+20    <uses-permission android:name="android.permission.WAKE_LOCK" />
+20-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:15:5-68
+20-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:15:22-65
+21    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+21-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:16:5-82
+21-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:16:22-79
+22    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+22-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:17:5-80
+22-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:17:22-77
+23    <uses-permission
+23-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:18:5-20:38
+24        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+24-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:19:9-65
+25        android:maxSdkVersion="29" />
+25-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:20:9-35
+26    <uses-permission
+26-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:21:5-23:38
+27        android:name="android.permission.WRITE_INTERNAL_STORAGE"
+27-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:22:9-65
+28        android:maxSdkVersion="29" />
+28-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:23:9-35
+29    <uses-permission android:name="android.permission.VIBRATE" />
+29-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:24:5-66
+29-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:24:22-63
+30    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+30-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:25:5-81
+30-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:25:22-78
+31    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+31-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:26:5-79
+31-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:26:22-76
+32    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+32-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:27:5-81
+32-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:27:22-78
+33    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+33-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:28:5-80
+33-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:28:22-77
+34    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+34-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:7:5-71
+34-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:7:22-68
+35    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+35-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:30:5-73
+35-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:30:22-70
+36    <uses-permission android:name="android.permission.READ_CONTACTS" />
+36-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:31:5-72
+36-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:31:22-69
+37    <uses-permission android:name="android.permission.BLUETOOTH" />
+37-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:32:5-68
+37-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:32:22-65
+38    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+38-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:33:5-76
+38-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:33:22-73
+39    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+39-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:34:5-71
+39-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:34:22-68
+40    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- android 13 permission -->
+40-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:35:5-77
+40-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:35:22-74
+41    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+41-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:36:5-76
+41-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:36:22-73
+42    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+42-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:37:5-75
+42-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:37:22-72
+43    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- Required to maintain app compatibility. -->
+43-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:38:5-75
+43-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:38:22-72
+44    <uses-permission
+44-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:39:5-41:38
+45        android:name="android.permission.READ_EXTERNAL_STORAGE"
+45-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:40:9-64
+46        android:maxSdkVersion="32" />
+46-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:41:9-35
+47    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+47-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:42:5-77
+47-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:42:22-74
+48
+49    <uses-feature android:name="android.hardware.camera" />
+49-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:44:5-60
+49-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:44:19-57
+50
+51    <!-- Android 14 permission changes -->
+52    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+52-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:47:5-83
+52-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:47:22-81
+53    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+53-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:48:5-93
+53-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:48:22-91
+54    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+54-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:49:5-87
+54-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:49:22-85
+55    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+55-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:50:5-91
+55-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:50:22-89
+56    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+56-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:51:5-93
+56-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:51:22-91
+57    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+57-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:52:5-86
+57-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:52:22-84
+58    <uses-permission android:name="android.permission.TURN_SCREEN_ON" />
+58-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:54:5-72
+58-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:54:22-70
+59
+60    <queries>
+60-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:56:5-62:15
+61        <intent>
+61-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:57:9-61:18
+62            <action android:name="android.intent.action.VIEW" />
+62-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:58:13-65
+62-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:58:21-62
+63
+64            <data android:mimeType="*/*" />
+64-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+64-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:19-41
+65        </intent>
+66        <intent>
+66-->[:sdk:mediapicker] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/mediapicker/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:9-28:18
+67            <action android:name="android.intent.action.PICK" />
+67-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:65:13-65
+67-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:65:21-62
+68
+69            <data android:mimeType="video/*, image/*" />
+69-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+69-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:19-41
+70        </intent> <!-- Needs to be explicitly declared on Android R+ -->
+71        <package android:name="com.google.android.apps.maps" />
+71-->[com.google.android.gms:play-services-maps:17.0.1] /home/user/.gradle/caches/transforms-3/71fe0c33bce75d9c03dfd487a43ae3ed/transformed/jetified-play-services-maps-17.0.1/AndroidManifest.xml:33:9-64
+71-->[com.google.android.gms:play-services-maps:17.0.1] /home/user/.gradle/caches/transforms-3/71fe0c33bce75d9c03dfd487a43ae3ed/transformed/jetified-play-services-maps-17.0.1/AndroidManifest.xml:33:18-61
+72    </queries>
+73    <queries>
+73-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:56:5-62:15
+74        <intent>
+74-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:64:9-68:18
+75            <action android:name="android.intent.action.PICK" />
+75-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:65:13-65
+75-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:65:21-62
+76
+77            <data android:mimeType="audio/*" />
+77-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+77-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:19-41
+78        </intent>
+79    </queries>
+80
+81    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+81-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:19:5-75
+81-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:19:22-72
+82    <uses-permission android:name="android.permission.READ_LOGS" />
+82-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:24:5-26:47
+82-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:25:9-52
+83    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+83-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:33:5-78
+83-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:33:22-75
+84    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+84-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:34:5-74
+84-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:34:22-71
+85    <uses-permission android:name="android.permission.CALL_PHONE" />
+85-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:38:5-69
+85-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:38:22-66
+86    <uses-permission android:name="android.permission.ACCESS_MEMORY" />
+86-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:51:5-72
+86-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:51:22-69
+87
+88    <uses-feature
+88-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:53:5-55:35
+89        android:glEsVersion="0x00020000"
+89-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:54:9-41
+90        android:required="true" />
+90-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:55:9-32
+91    <uses-feature android:name="android.hardware.camera.autofocus" />
+91-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:57:5-70
+91-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:57:19-67
+92    <uses-feature
+92-->[:sdk:cameraview] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/cameraview/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:5-27:36
+93        android:name="android.hardware.camera.front"
+93-->[:sdk:cameraview] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/cameraview/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:9-53
+94        android:required="false" />
+94-->[:sdk:cameraview] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/cameraview/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:9-33
+95    <uses-feature
+95-->[:sdk:cameraview] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/cameraview/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:5-30:36
+96        android:name="android.hardware.microphone"
+96-->[:sdk:cameraview] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/cameraview/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:9-51
+97        android:required="false" /> <!-- Step 1: Add the following permission to the app -->
+97-->[:sdk:cameraview] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/cameraview/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:9-33
+98    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+98-->[:sdk:biometric-auth] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/biometric-auth/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-72
+98-->[:sdk:biometric-auth] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/biometric-auth/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:22-69
+99    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+99-->[com.google.android.gms:play-services-measurement-api:21.1.1] /home/user/.gradle/caches/transforms-3/59914c6a894ff8c7798cbfd120557730/transformed/jetified-play-services-measurement-api-21.1.1/AndroidManifest.xml:25:5-79
+99-->[com.google.android.gms:play-services-measurement-api:21.1.1] /home/user/.gradle/caches/transforms-3/59914c6a894ff8c7798cbfd120557730/transformed/jetified-play-services-measurement-api-21.1.1/AndroidManifest.xml:25:22-76
+100    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+100-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:26:5-110
+100-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:26:22-107
+101    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+101-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:25:5-81
+101-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:25:22-78
+102
+103    <permission
+103-->[androidx.core:core:1.9.0] /home/user/.gradle/caches/transforms-3/8d9b967e67a3b058045bc5acc0392808/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+104        android:name="com.mirrorfly.uikit.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+104-->[androidx.core:core:1.9.0] /home/user/.gradle/caches/transforms-3/8d9b967e67a3b058045bc5acc0392808/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+105        android:protectionLevel="signature" />
+105-->[androidx.core:core:1.9.0] /home/user/.gradle/caches/transforms-3/8d9b967e67a3b058045bc5acc0392808/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+106
+107    <uses-permission android:name="com.mirrorfly.uikit.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+107-->[androidx.core:core:1.9.0] /home/user/.gradle/caches/transforms-3/8d9b967e67a3b058045bc5acc0392808/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+107-->[androidx.core:core:1.9.0] /home/user/.gradle/caches/transforms-3/8d9b967e67a3b058045bc5acc0392808/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+108
+109    <uses-feature
+109-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:36:5-38:36
+110        android:name="android.hardware.camera.flash"
+110-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:37:9-53
+111        android:required="false" />
+111-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:38:9-33
+112    <uses-feature
+112-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:39:5-41:36
+113        android:name="android.hardware.screen.landscape"
+113-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:40:9-57
+114        android:required="false" />
+114-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:41:9-33
+115    <uses-feature
+115-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:42:5-44:36
+116        android:name="android.hardware.wifi"
+116-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:43:9-45
+117        android:required="false" /> <!-- for android -->
+117-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:44:9-33
+118    <!-- <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/> -->
+119    <!-- <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS"/> -->
+120    <!-- <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" /> -->
+121    <!-- <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" /> -->
+122    <!-- for Samsung -->
+123    <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+123-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:19:5-86
+123-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:19:22-83
+124    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" /> <!-- for htc -->
+124-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:20:5-87
+124-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:20:22-84
+125    <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
+125-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:23:5-81
+125-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:23:22-78
+126    <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" /> <!-- for sony -->
+126-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:24:5-83
+126-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:24:22-80
+127    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
+127-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:27:5-88
+127-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:27:22-85
+128    <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE" /> <!-- for apex -->
+128-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:28:5-92
+128-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:28:22-89
+129    <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" /> <!-- for solid -->
+129-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:31:5-84
+129-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:31:22-81
+130    <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE" /> <!-- for huawei -->
+130-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:34:5-83
+130-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:34:22-80
+131    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+131-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:37:5-91
+131-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:37:22-88
+132    <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
+132-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:38:5-92
+132-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:38:22-89
+133    <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" /> <!-- for ZUK -->
+133-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:39:5-93
+133-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:39:22-90
+134    <uses-permission android:name="android.permission.READ_APP_BADGE" /> <!-- for OPPO -->
+134-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:42:5-73
+134-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:42:22-70
+135    <uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS" />
+135-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:45:5-82
+135-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:45:22-79
+136    <uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS" /> <!-- for EvMe -->
+136-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:46:5-83
+136-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:46:22-80
+137    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_READ" />
+137-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:49:5-88
+137-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:49:22-85
+138    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_WRITE" />
+138-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:50:5-89
+138-->[me.leolin:ShortcutBadger:1.1.22] /home/user/.gradle/caches/transforms-3/f55acf123708a02e6cf540105dc13f54/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:50:22-86
+139
+140    <application
+140-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:72:5-358:19
+141        android:name="com.contusfly.constants.MobileApplication"
+141-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:73:9-52
+142        android:allowBackup="false"
+142-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:74:9-36
+143        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+143-->[androidx.core:core:1.9.0] /home/user/.gradle/caches/transforms-3/8d9b967e67a3b058045bc5acc0392808/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+144        android:debuggable="true"
+145        android:icon="@mipmap/ic_launcher"
+145-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:75:9-43
+146        android:label="@string/app_name"
+146-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:76:9-41
+147        android:largeHeap="true"
+147-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:77:9-33
+148        android:requestLegacyExternalStorage="true"
+148-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:78:9-52
+149        android:roundIcon="@mipmap/ic_launcher_round"
+149-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:79:9-54
+150        android:supportsRtl="true"
+150-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:80:9-35
+151        android:testOnly="true"
+152        android:theme="@style/MyTheme"
+152-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:81:9-39
+153        android:usesCleartextTraffic="true" >
+153-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:82:9-44
+154        <activity
+154-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:84:9-88:58
+155            android:name="com.contusfly.activities.EditMessageActivity"
+155-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:85:13-59
+156            android:exported="false"
+156-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:86:13-37
+157            android:theme="@style/TransparentTheme"
+157-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:87:13-52
+158            android:windowSoftInputMode="adjustResize" />
+158-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:88:13-55
+159        <activity
+159-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:89:9-91:40
+160            android:name="com.contusfly.privateChat.PrivateChatListActivity"
+160-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:90:13-64
+161            android:exported="false" />
+161-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:91:13-37
+162        <activity
+162-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:92:9-95:52
+163            android:name="com.contusfly.privateChat.PrivateChatEnableDisableActivity"
+163-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:93:13-73
+164            android:exported="true"
+164-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:94:13-36
+165            android:screenOrientation="portrait" />
+165-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:95:13-49
+166        <activity
+166-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:96:9-98:52
+167            android:name="com.contusfly.activities.SynchronizeContactActivity"
+167-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:97:13-66
+168            android:screenOrientation="portrait" />
+168-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:98:13-49
+169        <activity
+169-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:99:9-102:52
+170            android:name="com.contusfly.activities.SelectContactMessageActivity"
+170-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:100:13-68
+171            android:exported="true"
+171-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:101:13-36
+172            android:screenOrientation="portrait" />
+172-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:102:13-49
+173        <activity
+173-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:103:9-105:40
+174            android:name="com.contusfly.chatTag.activities.AddPeopleActivity"
+174-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:104:13-65
+175            android:exported="false" />
+175-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:105:13-37
+176        <activity
+176-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:106:9-108:40
+177            android:name="com.contusfly.chatTag.activities.EditTagActivity"
+177-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:107:13-63
+178            android:exported="false" />
+178-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:108:13-37
+179        <activity
+179-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:109:9-111:40
+180            android:name="com.contusfly.chatTag.activities.CreateTagActivity"
+180-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:110:13-65
+181            android:exported="false" />
+181-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:111:13-37
+182        <activity
+182-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:112:9-114:40
+183            android:name="com.contusfly.chatTag.activities.ChatTagActivity"
+183-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:113:13-63
+184            android:exported="false" />
+184-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:114:13-37
+185
+186        <meta-data
+186-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:116:9-118:65
+187            android:name="com.google.firebase.messaging.default_notification_icon"
+187-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:117:13-83
+188            android:resource="@drawable/ic_notification_blue" />
+188-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:118:13-62
+189        <meta-data
+189-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:119:9-121:53
+190            android:name="com.google.firebase.messaging.default_notification_color"
+190-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:120:13-84
+191            android:resource="@color/colorAccent" />
+191-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:121:13-50
+192
+193        <activity
+193-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:123:9-141:20
+194            android:name="com.contusfly.quickShare.QuickShareActivity"
+194-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:124:13-58
+195            android:exported="true"
+195-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:125:13-36
+196            android:launchMode="singleTask"
+196-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:126:13-44
+197            android:screenOrientation="portrait"
+197-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:127:13-49
+198            android:theme="@style/SplashTheme" >
+198-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:128:13-47
+199            <intent-filter>
+199-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:129:13-140:29
+200                <action android:name="android.intent.action.SEND" />
+200-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:130:17-69
+200-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:130:25-66
+201                <action android:name="android.intent.action.SEND_MULTIPLE" />
+201-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:131:17-78
+201-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:131:25-75
+202
+203                <category android:name="android.intent.category.DEFAULT" />
+203-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:133:17-76
+203-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:133:27-73
+204
+205                <data android:mimeType="image/*" />
+205-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+205-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:19-41
+206                <data android:mimeType="audio/*" />
+206-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+206-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:19-41
+207                <data android:mimeType="video/*" />
+207-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+207-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:19-41
+208                <data android:mimeType="text/*" />
+208-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+208-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:19-41
+209                <data android:mimeType="application/*" />
+209-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+209-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:19-41
+210            </intent-filter>
+211        </activity>
+212        <activity
+212-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:142:9-146:48
+213            android:name="com.contusfly.activities.AdminBlockedActivity"
+213-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:143:13-60
+214            android:exported="false"
+214-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:144:13-37
+215            android:screenOrientation="portrait"
+215-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:145:13-49
+216            android:theme="@style/ChatTheme" />
+216-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:146:13-45
+217        <activity
+217-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:147:9-149:52
+218            android:name="com.contusfly.activities.QrResultActivity"
+218-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:148:13-56
+219            android:screenOrientation="portrait" />
+219-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:149:13-49
+220        <activity
+220-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:150:9-152:52
+221            android:name="com.contusfly.activities.QrCodeScannerActivity"
+221-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:151:13-61
+222            android:screenOrientation="portrait" />
+222-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:152:13-49
+223        <activity android:name="com.contusfly.activities.GroupMessageInfoActivity" />
+223-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:153:9-73
+223-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:153:19-70
+224        <activity
+224-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:154:9-157:52
+225            android:name="com.contusfly.activities.BiometricActivity"
+225-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:155:13-57
+226            android:launchMode="singleTask"
+226-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:156:13-44
+227            android:screenOrientation="portrait" />
+227-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:157:13-49
+228        <activity android:name="com.contusfly.activities.PinSetting" />
+228-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:158:9-59
+228-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:158:19-56
+229        <activity android:name="com.contusfly.activities.PinEntryChange" />
+229-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:159:9-63
+229-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:159:19-60
+230        <activity
+230-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:160:9-163:52
+231            android:name="com.contusfly.activities.PinActivity"
+231-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:161:13-51
+232            android:launchMode="singleTask"
+232-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:162:13-44
+233            android:screenOrientation="portrait" />
+233-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:163:13-49
+234        <activity
+234-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:164:9-166:52
+235            android:name="com.contusfly.activities.GroupInfoActivity"
+235-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:165:13-57
+236            android:screenOrientation="portrait" />
+236-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:166:13-49
+237        <activity
+237-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:167:9-169:52
+238            android:name="com.contusfly.activities.NewGroupActivity"
+238-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:168:13-56
+239            android:screenOrientation="portrait" />
+239-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:169:13-49
+240        <activity
+240-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:170:9-172:52
+241            android:name="com.contusfly.activities.UserInfoActivity"
+241-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:171:13-56
+242            android:screenOrientation="portrait" />
+242-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:172:13-49
+243        <activity
+243-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:173:9-193:20
+244            android:name="com.contusfly.activities.StartActivity"
+244-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:174:13-53
+245            android:exported="true"
+245-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:175:13-36
+246            android:screenOrientation="portrait"
+246-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:176:13-49
+247            android:theme="@style/SplashTheme" >
+247-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:177:13-47
+248            <intent-filter>
+248-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:178:13-182:29
+249                <action android:name="android.intent.action.MAIN" />
+249-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:179:17-69
+249-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:179:25-66
+250
+251                <category android:name="android.intent.category.LAUNCHER" />
+251-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:181:17-77
+251-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:181:27-74
+252            </intent-filter>
+253            <intent-filter>
+253-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:183:13-192:29
+254                <action android:name="android.intent.action.VIEW" />
+254-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:58:13-65
+254-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:58:21-62
+255
+256                <category android:name="android.intent.category.DEFAULT" />
+256-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:133:17-76
+256-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:133:27-73
+257                <category android:name="android.intent.category.BROWSABLE" />
+257-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:187:17-78
+257-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:187:27-75
+258                <!-- Accepts URIs that begin with "BuildConfig.WEB_CHAT_LOGIN” -->
+259                <data
+259-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+260                    android:host="webreact-qa19.mirrorfly.com"
+260-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:190:21-63
+261                    android:scheme="https" />
+261-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:191:21-43
+262            </intent-filter>
+263        </activity>
+264        <activity
+264-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:194:9-196:52
+265            android:name="com.contusfly.activities.ProfileStartStatusActivity"
+265-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:195:13-66
+266            android:screenOrientation="portrait" />
+266-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:196:13-49
+267        <activity
+267-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:197:9-199:52
+268            android:name="com.contusfly.activities.OtpActivity"
+268-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:198:13-51
+269            android:screenOrientation="portrait" />
+269-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:199:13-49
+270        <activity
+270-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:200:9-202:52
+271            android:name="com.contusfly.activities.CommonEditorActivity"
+271-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:201:13-60
+272            android:screenOrientation="portrait" />
+272-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:202:13-49
+273        <activity
+273-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:203:9-205:77
+274            android:name="com.contusfly.activities.ImageViewActivity"
+274-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:204:13-57
+275            android:configChanges="orientation|screenSize|keyboardHidden" />
+275-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:205:13-74
+276        <activity
+276-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:206:9-208:52
+277            android:name="com.contusfly.activities.NewContactsActivity"
+277-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:207:13-59
+278            android:screenOrientation="portrait" />
+278-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:208:13-49
+279        <activity
+279-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:209:9-211:52
+280            android:name="com.contusfly.activities.DashboardActivity"
+280-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:210:13-57
+281            android:screenOrientation="portrait" />
+281-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:211:13-49
+282        <activity
+282-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:212:9-214:52
+283            android:name="com.contusfly.activities.SettingsActivity"
+283-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:213:13-56
+284            android:screenOrientation="portrait" />
+284-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:214:13-49
+285        <activity
+285-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:215:9-217:52
+286            android:name="com.contusfly.activities.CountryListActivity"
+286-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:216:13-59
+287            android:screenOrientation="portrait" />
+287-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:217:13-49
+288        <activity
+288-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:218:9-220:52
+289            android:name="com.contusfly.activities.ForwardMessageActivity"
+289-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:219:13-62
+290            android:screenOrientation="portrait" />
+290-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:220:13-49
+291        <activity
+291-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:221:9-223:52
+292            android:name="com.contusfly.activities.ProfileStartActivity"
+292-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:222:13-60
+293            android:screenOrientation="portrait" />
+293-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:223:13-49
+294        <activity android:name="eu.janmuller.android.simplecropimage.CropImage" />
+294-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:224:9-83
+294-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:224:19-80
+295        <activity
+295-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:225:9-227:52
+296            android:name="com.contusfly.activities.UserProfileImageViewActivity"
+296-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:226:13-68
+297            android:screenOrientation="portrait" />
+297-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:227:13-49
+298        <activity
+298-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:228:9-230:52
+299            android:name="com.contusfly.activities.ArchivedChatsActivity"
+299-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:229:13-61
+300            android:screenOrientation="portrait" />
+300-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:230:13-49
+301        <activity
+301-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:231:9-233:52
+302            android:name="com.contusfly.activities.StarredMessageActivity"
+302-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:232:13-62
+303            android:screenOrientation="portrait" />
+303-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:233:13-49
+304        <!--
+305       Below activity has a launchMode of "SingleTop", In order to avoid recreating activity
+306       when media is attached or messages are forwarded, This activity will receive a new Intent in #onNewIntent()
+307        -->
+308        <activity
+308-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:238:9-244:58
+309            android:name="com.contusfly.activities.ChatActivity"
+309-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:239:13-52
+310            android:label="@string/title_activity_chat"
+310-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:240:13-56
+311            android:launchMode="singleTop"
+311-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:241:13-43
+312            android:screenOrientation="portrait"
+312-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:242:13-49
+313            android:theme="@style/ChatTheme"
+313-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:243:13-45
+314            android:windowSoftInputMode="adjustResize" />
+314-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:244:13-55
+315
+316        <service android:name="com.contusfly.services.NonStickyService" />
+316-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:246:9-62
+316-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:246:18-59
+317
+318        <activity
+318-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:248:9-250:52
+319            android:name="com.contusfly.activities.MediaSlideActivity"
+319-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:249:13-58
+320            android:screenOrientation="portrait" />
+320-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:250:13-49
+321        <activity
+321-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:251:9-254:58
+322            android:name="com.contusfly.call.groupcall.UsersSelectionActivity"
+322-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:252:13-66
+323            android:screenOrientation="portrait"
+323-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:253:13-49
+324            android:windowSoftInputMode="adjustResize" />
+324-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:254:13-55
+325        <!--
+326        To ensure a single activity is used for video call requests and
+327        switched into or out of PIP mode as needed,
+328        set the activity's android:launchMode to singleTask
+329        -->
+330        <activity
+330-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:260:9-276:34
+331            android:name="com.contusfly.call.groupcall.GroupCallActivity"
+331-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:261:13-61
+332            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+332-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:263:13-91
+333            android:excludeFromRecents="true"
+333-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:264:13-46
+334            android:exported="false"
+334-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:262:13-37
+335            android:hardwareAccelerated="true"
+335-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:275:13-47
+336            android:launchMode="singleTask"
+336-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:265:13-44
+337            android:lockTaskMode="if_whitelisted"
+337-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:266:13-50
+338            android:resizeableActivity="false"
+338-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:267:13-47
+339            android:screenOrientation="portrait"
+339-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:268:13-49
+340            android:showOnLockScreen="true"
+340-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:269:13-44
+341            android:showWhenLocked="true"
+341-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:270:13-42
+342            android:supportsPictureInPicture="true"
+342-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:271:13-52
+343            android:taskAffinity="call.video"
+343-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:272:13-46
+344            android:turnScreenOn="true"
+344-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:273:13-40
+345            android:windowSoftInputMode="stateHidden" />
+345-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:274:13-54
+346        <activity
+346-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:277:9-279:52
+347            android:name="com.contusfly.call.calllog.CallHistoryDetailActivity"
+347-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:278:13-67
+348            android:screenOrientation="portrait" /> <!-- <activity -->
+348-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:279:13-49
+349        <!-- android:name=".dashboard.calllog.CallHistoryDetailActivity" -->
+350        <!-- android:screenOrientation="portrait" /> -->
+351        <meta-data
+351-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:282:9-284:71
+352            android:name="com.google.android.geo.API_KEY"
+352-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:283:13-58
+353            android:value="AIzaSyCe4m08a3eMvInU8LBxAjAyEIyG-Kj_Ayw" />
+353-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:284:13-68
+354        <meta-data
+354-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:285:9-287:71
+355            android:name="com.google.android.geo.API_THUMP_KEY"
+355-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:286:13-64
+356            android:value="AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ" />
+356-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:287:13-68
+357
+358        <activity android:name="com.contusfly.activities.SelectMapViewActivity" />
+358-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:289:9-70
+358-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:289:19-67
+359        <activity
+359-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:290:9-292:52
+360            android:name="com.contusfly.activities.PickContactActivity"
+360-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:291:13-59
+361            android:screenOrientation="portrait" />
+361-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:292:13-49
+362        <activity
+362-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:293:9-297:71
+363            android:name="com.contusfly.activities.ImagePreviewActivity"
+363-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:294:13-60
+364            android:configChanges="orientation|screenSize|keyboardHidden"
+364-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:295:13-74
+365            android:screenOrientation="portrait"
+365-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:296:13-49
+366            android:windowSoftInputMode="stateVisible|adjustResize" />
+366-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:297:13-68
+367        <activity
+367-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:298:9-301:51
+368            android:name="com.contusfly.activities.MediaPreviewActivity"
+368-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:299:13-60
+369            android:screenOrientation="portrait"
+369-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:300:13-49
+370            android:theme="@style/PreviewTheme" />
+370-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:301:13-48
+371        <activity
+371-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:302:9-304:52
+372            android:name="com.contusfly.activities.MessageInfoActivity"
+372-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:303:13-59
+373            android:screenOrientation="portrait" />
+373-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:304:13-49
+374        <activity
+374-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:305:9-307:52
+375            android:name="com.contusfly.activities.ViewAllMediaActivity"
+375-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:306:13-60
+376            android:screenOrientation="portrait" />
+376-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:307:13-49
+377        <activity
+377-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:308:9-310:52
+378            android:name="com.contusfly.activities.ContactSelectionActivity"
+378-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:309:13-64
+379            android:screenOrientation="portrait" />
+379-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:310:13-49
+380        <activity
+380-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:311:9-313:52
+381            android:name="com.contusfly.activities.PreviewSendContactActivity"
+381-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:312:13-66
+382            android:screenOrientation="portrait" />
+382-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:313:13-49
+383        <activity
+383-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:314:9-318:63
+384            android:name="com.contusfly.call.groupcall.OnGoingCallPreviewActivity"
+384-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:315:13-70
+385            android:exported="false"
+385-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:316:13-37
+386            android:screenOrientation="portrait"
+386-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:317:13-49
+387            android:windowSoftInputMode="stateAlwaysHidden" />
+387-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:318:13-60
+388        <activity
+388-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:319:9-322:52
+389            android:name="com.contusfly.activities.UserListActivity"
+389-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:320:13-56
+390            android:exported="false"
+390-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:321:13-37
+391            android:screenOrientation="portrait" />
+391-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:322:13-49
+392        <activity
+392-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:323:9-326:52
+393            android:name="com.contusfly.activities.BackUpActivity"
+393-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:324:13-54
+394            android:exported="false"
+394-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:325:13-37
+395            android:screenOrientation="portrait" />
+395-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:326:13-49
+396        <activity
+396-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:327:9-330:52
+397            android:name="com.contusfly.activities.RestoreActivity"
+397-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:328:13-55
+398            android:exported="false"
+398-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:329:13-37
+399            android:screenOrientation="portrait" />
+399-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:330:13-49
+400
+401        <service
+401-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:332:9-341:19
+402            android:name="com.contusfly.MyFirebaseMessagingService"
+402-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:333:13-55
+403            android:directBootAware="true"
+403-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:334:13-43
+404            android:enabled="true"
+404-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:335:13-35
+405            android:exported="true" >
+405-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:336:13-36
+406            <intent-filter>
+406-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:338:13-340:29
+407                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+407-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:339:17-78
+407-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:339:25-75
+408            </intent-filter>
+409        </service>
+410        <service
+410-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:342:9-345:40
+411            android:name="com.contusfly.EmailContactSyncService"
+411-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:343:13-52
+412            android:enabled="true"
+412-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:344:13-35
+413            android:exported="false" />
+413-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:345:13-37
+414
+415        <receiver
+415-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:347:9-357:20
+416            android:name="com.contusfly.backup.broadcastreceivers.BootCompletedTimeChangedListener"
+416-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:348:13-87
+417            android:directBootAware="true"
+417-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:349:13-43
+418            android:enabled="true"
+418-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:350:13-35
+419            android:exported="true" >
+419-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:351:13-36
+420            <intent-filter>
+420-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:352:13-356:29
+421                <action android:name="android.intent.action.BOOT_COMPLETED" />
+421-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:353:17-79
+421-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:353:25-76
+422                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+422-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:354:17-86
+422-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:354:25-83
+423                <action android:name="android.intent.action.TIME_SET" />
+423-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:355:17-73
+423-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:355:25-70
+424            </intent-filter>
+425        </receiver>
+426
+427        <activity
+427-->[:sdk:mediapicker] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/mediapicker/build/intermediates/merged_manifest/debug/AndroidManifest.xml:32:9-36:58
+428            android:name="com.contusfly.mediapicker.ui.MediaPickerActivity"
+428-->[:sdk:mediapicker] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/mediapicker/build/intermediates/merged_manifest/debug/AndroidManifest.xml:33:13-76
+429            android:label="@string/title_activity_media_picker"
+429-->[:sdk:mediapicker] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/mediapicker/build/intermediates/merged_manifest/debug/AndroidManifest.xml:34:13-64
+430            android:screenOrientation="portrait"
+430-->[:sdk:mediapicker] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/mediapicker/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:13-49
+431            android:theme="@style/ef_ImagePickerTheme" />
+431-->[:sdk:mediapicker] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/mediapicker/build/intermediates/merged_manifest/debug/AndroidManifest.xml:36:13-55
+432        <activity
+432-->[:sdk:pix] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/pix/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:9-28:52
+433            android:name="com.fxn.pix.Pix"
+433-->[:sdk:pix] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/pix/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-43
+434            android:screenOrientation="portrait" />
+434-->[:sdk:pix] /home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/sdk/pix/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:13-49
+435
+436        <provider
+436-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:74:9-84:20
+437            android:name="com.mirrorflysdk.utils.ChatFileProvider"
+437-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:75:13-67
+438            android:authorities="com.mirrorfly.uikit.chat.file.provider"
+438-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:76:13-70
+439            android:exported="false"
+439-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:77:13-37
+440            android:grantUriPermissions="true" >
+440-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:78:13-47
+441            <meta-data
+441-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:80:13-83:38
+442                android:name="android.support.FILE_PROVIDER_PATHS"
+442-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:81:17-67
+443                android:resource="@xml/provider_paths" />
+443-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:82:17-55
+444        </provider>
+445
+446        <receiver
+446-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:86:9-92:20
+447            android:name="com.mirrorflysdk.ApplicationStateReceiver"
+447-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:87:13-69
+448            android:exported="false" >
+448-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:88:13-37
+449            <intent-filter>
+449-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:89:13-91:29
+450                <action android:name="com.time.action.APPLICATION_STATE_CHANGE" />
+450-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:90:17-83
+450-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:90:25-80
+451            </intent-filter>
+452        </receiver>
+453
+454        <meta-data
+454-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:94:9-97:45
+455            android:name="android.support.VERSION"
+455-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:95:13-51
+456            android:value="25.4.0" />
+456-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:96:13-35
+457
+458        <service
+458-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:99:9-102:56
+459            android:name="com.mirrorflysdk.media.MediaUploadService"
+459-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:100:13-69
+460            android:exported="false"
+460-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:101:13-37
+461            android:foregroundServiceType="dataSync" />
+461-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:102:13-53
+462        <service
+462-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:103:9-106:56
+463            android:name="com.mirrorflysdk.media.MediaDownloadService"
+463-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:104:13-71
+464            android:exported="false"
+464-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:105:13-37
+465            android:foregroundServiceType="dataSync" />
+465-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:106:13-53
+466        <service
+466-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:107:9-111:56
+467            android:name="com.mirrorflysdk.service.ContactSyncService"
+467-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:108:13-71
+468            android:enabled="true"
+468-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:109:13-35
+469            android:exported="false"
+469-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:110:13-37
+470            android:foregroundServiceType="dataSync" />
+470-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:111:13-53
+471        <service
+471-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:112:9-115:56
+472            android:name="com.mirrorflysdk.api.MarkReadService"
+472-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:113:13-64
+473            android:exported="false"
+473-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:114:13-37
+474            android:foregroundServiceType="dataSync" />
+474-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:115:13-53
+475
+476        <provider
+476-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:117:9-120:40
+477            android:name="com.mirrorflysdk.api.ChatSdkInitProvider"
+477-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:118:13-68
+478            android:authorities="com.mirrorfly.uikit.chat.sdk.initializationProvider"
+478-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:119:13-83
+479            android:exported="false" />
+479-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:120:13-37
+480
+481        <service
+481-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:122:9-124:124
+482            android:name="com.mirrorflysdk.flycall.webrtc.WebRtcCallService"
+482-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:123:13-77
+483            android:foregroundServiceType="microphone|camera|connectedDevice|shortService|mediaPlayback|remoteMessaging" />
+483-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:124:13-121
+484        <service
+484-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:125:9-127:56
+485            android:name="com.mirrorflysdk.service.MessageStatusService"
+485-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:126:13-73
+486            android:foregroundServiceType="dataSync" /> <!-- To receive call end action from headset -->
+486-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:127:13-53
+487        <receiver
+487-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:130:9-136:20
+488            android:name="com.mirrorflysdk.flycall.webrtc.MediaButtonIntentReceiver"
+488-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:131:13-85
+489            android:exported="false" >
+489-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:132:13-37
+490            <intent-filter>
+490-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:133:13-135:29
+491                <action android:name="android.intent.action.MEDIA_BUTTON" />
+491-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:134:17-77
+491-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:134:25-74
+492            </intent-filter>
+493        </receiver> <!-- Andorid 14 and above foreground notification can able to swipe to cancel, during incoming / outgoing call swipe call End Action triger this receiver based -->
+494        <receiver android:name="com.mirrorflysdk.flycall.call.utils.NotificationDismissedReceiver" />
+494-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:139:9-102
+494-->[com.mirrorfly.sdk:mirrorflysdk:7.13.11] /home/user/.gradle/caches/transforms-3/8e1caac73b097febb0b45c05b0224c91/transformed/jetified-mirrorflysdk-7.13.11/AndroidManifest.xml:139:19-99
+495
+496        <activity
+496-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:23:9-27:75
+497            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+497-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:24:13-93
+498            android:excludeFromRecents="true"
+498-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:25:13-46
+499            android:exported="false"
+499-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:26:13-37
+500            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+500-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:27:13-72
+501        <!--
+502            Service handling Google Sign-In user revocation. For apps that do not integrate with
+503            Google Sign-In, this service will never be started.
+504        -->
+505        <service
+505-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:33:9-37:51
+506            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+506-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:34:13-89
+507            android:exported="true"
+507-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:35:13-36
+508            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+508-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:36:13-107
+509            android:visibleToInstantApps="true" />
+509-->[com.google.android.gms:play-services-auth:20.3.0] /home/user/.gradle/caches/transforms-3/a1b4d2715c1ea811240b23d7f37165f4/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:37:13-48
+510
+511        <meta-data
+511-->[com.github.bumptech.glide:okhttp3-integration:4.11.0] /home/user/.gradle/caches/transforms-3/5a54dba4bb0e876d38086d25d6e8cd6d/transformed/jetified-okhttp3-integration-4.11.0/AndroidManifest.xml:11:9-13:43
+512            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+512-->[com.github.bumptech.glide:okhttp3-integration:4.11.0] /home/user/.gradle/caches/transforms-3/5a54dba4bb0e876d38086d25d6e8cd6d/transformed/jetified-okhttp3-integration-4.11.0/AndroidManifest.xml:12:13-84
+513            android:value="GlideModule" /> <!-- Needs to be explicitly declared on P+ -->
+513-->[com.github.bumptech.glide:okhttp3-integration:4.11.0] /home/user/.gradle/caches/transforms-3/5a54dba4bb0e876d38086d25d6e8cd6d/transformed/jetified-okhttp3-integration-4.11.0/AndroidManifest.xml:13:13-40
+514        <uses-library
+514-->[com.google.android.gms:play-services-maps:17.0.1] /home/user/.gradle/caches/transforms-3/71fe0c33bce75d9c03dfd487a43ae3ed/transformed/jetified-play-services-maps-17.0.1/AndroidManifest.xml:39:9-41:40
+515            android:name="org.apache.http.legacy"
+515-->[com.google.android.gms:play-services-maps:17.0.1] /home/user/.gradle/caches/transforms-3/71fe0c33bce75d9c03dfd487a43ae3ed/transformed/jetified-play-services-maps-17.0.1/AndroidManifest.xml:40:13-50
+516            android:required="false" />
+516-->[com.google.android.gms:play-services-maps:17.0.1] /home/user/.gradle/caches/transforms-3/71fe0c33bce75d9c03dfd487a43ae3ed/transformed/jetified-play-services-maps-17.0.1/AndroidManifest.xml:41:13-37
+517
+518        <receiver
+518-->[com.google.firebase:firebase-messaging-directboot:23.0.8] /home/user/.gradle/caches/transforms-3/de38d50f9e17170d0d99e9762e7aafbd/transformed/jetified-firebase-messaging-directboot-23.0.8/AndroidManifest.xml:32:9-40:20
+519            android:name="com.google.firebase.messaging.directboot.FirebaseMessagingDirectBootReceiver"
+519-->[com.google.firebase:firebase-messaging-directboot:23.0.8] /home/user/.gradle/caches/transforms-3/de38d50f9e17170d0d99e9762e7aafbd/transformed/jetified-firebase-messaging-directboot-23.0.8/AndroidManifest.xml:33:13-104
+520            android:directBootAware="true"
+520-->[com.google.firebase:firebase-messaging-directboot:23.0.8] /home/user/.gradle/caches/transforms-3/de38d50f9e17170d0d99e9762e7aafbd/transformed/jetified-firebase-messaging-directboot-23.0.8/AndroidManifest.xml:34:13-43
+521            android:exported="true"
+521-->[com.google.firebase:firebase-messaging-directboot:23.0.8] /home/user/.gradle/caches/transforms-3/de38d50f9e17170d0d99e9762e7aafbd/transformed/jetified-firebase-messaging-directboot-23.0.8/AndroidManifest.xml:35:13-36
+522            android:permission="com.google.android.c2dm.permission.SEND" >
+522-->[com.google.firebase:firebase-messaging-directboot:23.0.8] /home/user/.gradle/caches/transforms-3/de38d50f9e17170d0d99e9762e7aafbd/transformed/jetified-firebase-messaging-directboot-23.0.8/AndroidManifest.xml:36:13-73
+523            <intent-filter>
+523-->[com.google.firebase:firebase-messaging-directboot:23.0.8] /home/user/.gradle/caches/transforms-3/de38d50f9e17170d0d99e9762e7aafbd/transformed/jetified-firebase-messaging-directboot-23.0.8/AndroidManifest.xml:37:13-39:29
+524                <action android:name="com.google.firebase.messaging.RECEIVE_DIRECT_BOOT" />
+524-->[com.google.firebase:firebase-messaging-directboot:23.0.8] /home/user/.gradle/caches/transforms-3/de38d50f9e17170d0d99e9762e7aafbd/transformed/jetified-firebase-messaging-directboot-23.0.8/AndroidManifest.xml:38:17-92
+524-->[com.google.firebase:firebase-messaging-directboot:23.0.8] /home/user/.gradle/caches/transforms-3/de38d50f9e17170d0d99e9762e7aafbd/transformed/jetified-firebase-messaging-directboot-23.0.8/AndroidManifest.xml:38:25-89
+525            </intent-filter>
+526        </receiver>
+527        <receiver
+527-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:32:9-39:20
+528            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+528-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:33:13-78
+529            android:exported="true"
+529-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:34:13-36
+530            android:permission="com.google.android.c2dm.permission.SEND" >
+530-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:35:13-73
+531            <intent-filter>
+531-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:36:13-38:29
+532                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+532-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:37:17-81
+532-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:37:25-78
+533            </intent-filter>
+534        </receiver>
+535        <!--
+536             FirebaseMessagingService performs security checks at runtime,
+537             but set to not exported to explicitly avoid allowing another app to call it.
+538        -->
+539        <service
+539-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:45:9-52:19
+540            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+540-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:46:13-82
+541            android:directBootAware="true"
+541-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:47:13-43
+542            android:exported="false" >
+542-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:48:13-37
+543            <intent-filter android:priority="-500" >
+543-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:338:13-340:29
+544                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+544-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:339:17-78
+544-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:339:25-75
+545            </intent-filter>
+546        </service>
+547        <service
+547-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:53:9-59:19
+548            android:name="com.google.firebase.components.ComponentDiscoveryService"
+548-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:54:13-84
+549            android:directBootAware="true"
+549-->[com.google.firebase:firebase-common:20.1.2] /home/user/.gradle/caches/transforms-3/43aace12f529807f308362db71caec94/transformed/jetified-firebase-common-20.1.2/AndroidManifest.xml:35:13-43
+550            android:exported="false" >
+550-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:55:13-37
+551            <meta-data
+551-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:56:13-58:85
+552                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+552-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:57:17-119
+553                android:value="com.google.firebase.components.ComponentRegistrar" />
+553-->[com.google.firebase:firebase-messaging:23.0.8] /home/user/.gradle/caches/transforms-3/aad04c53a79bbd45dfc269b78d0a2aae/transformed/jetified-firebase-messaging-23.0.8/AndroidManifest.xml:58:17-82
+554            <meta-data
+554-->[com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.6] /home/user/.gradle/caches/transforms-3/be309489a7a8347e15420dfb204d2c86/transformed/jetified-firebase-ml-natural-language-smart-reply-model-20.0.6/AndroidManifest.xml:26:13-28:85
+555                android:name="com.google.firebase.components:com.google.android.gms.predictondevice.component.SmartReplyComponentRegistrar"
+555-->[com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.6] /home/user/.gradle/caches/transforms-3/be309489a7a8347e15420dfb204d2c86/transformed/jetified-firebase-ml-natural-language-smart-reply-model-20.0.6/AndroidManifest.xml:27:17-140
+556                android:value="com.google.firebase.components.ComponentRegistrar" />
+556-->[com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.6] /home/user/.gradle/caches/transforms-3/be309489a7a8347e15420dfb204d2c86/transformed/jetified-firebase-ml-natural-language-smart-reply-model-20.0.6/AndroidManifest.xml:28:17-82
+557            <meta-data
+557-->[com.google.firebase:firebase-auth-ktx:21.0.8] /home/user/.gradle/caches/transforms-3/fc9e2ee84406d36f589a6264f89b548c/transformed/jetified-firebase-auth-ktx-21.0.8/AndroidManifest.xml:11:13-13:85
+558                android:name="com.google.firebase.components:com.google.firebase.auth.ktx.FirebaseAuthKtxRegistrar"
+558-->[com.google.firebase:firebase-auth-ktx:21.0.8] /home/user/.gradle/caches/transforms-3/fc9e2ee84406d36f589a6264f89b548c/transformed/jetified-firebase-auth-ktx-21.0.8/AndroidManifest.xml:12:17-116
+559                android:value="com.google.firebase.components.ComponentRegistrar" />
+559-->[com.google.firebase:firebase-auth-ktx:21.0.8] /home/user/.gradle/caches/transforms-3/fc9e2ee84406d36f589a6264f89b548c/transformed/jetified-firebase-auth-ktx-21.0.8/AndroidManifest.xml:13:17-82
+560            <meta-data
+560-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:67:13-69:85
+561                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
+561-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:68:17-109
+562                android:value="com.google.firebase.components.ComponentRegistrar" />
+562-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:69:17-82
+563            <meta-data
+563-->[com.google.firebase:firebase-ml-natural-language:21.0.3] /home/user/.gradle/caches/transforms-3/92fe07c20564b0a006b5fc95884b2a59/transformed/jetified-firebase-ml-natural-language-21.0.3/AndroidManifest.xml:12:13-14:85
+564                android:name="com.google.firebase.components:com.google.firebase.ml.naturallanguage.NaturalLanguageRegistrar"
+564-->[com.google.firebase:firebase-ml-natural-language:21.0.3] /home/user/.gradle/caches/transforms-3/92fe07c20564b0a006b5fc95884b2a59/transformed/jetified-firebase-ml-natural-language-21.0.3/AndroidManifest.xml:13:17-126
+565                android:value="com.google.firebase.components.ComponentRegistrar" />
+565-->[com.google.firebase:firebase-ml-natural-language:21.0.3] /home/user/.gradle/caches/transforms-3/92fe07c20564b0a006b5fc95884b2a59/transformed/jetified-firebase-ml-natural-language-21.0.3/AndroidManifest.xml:14:17-82
+566            <meta-data
+566-->[com.google.firebase:firebase-ml-natural-language-translate:21.0.0] /home/user/.gradle/caches/transforms-3/fc1268f83d80d4683f4ebd697bd3472c/transformed/jetified-firebase-ml-natural-language-translate-21.0.0/AndroidManifest.xml:12:13-14:85
+567                android:name="com.google.firebase.components:com.google.firebase.ml.naturallanguage.translate.NaturalLanguageTranslateRegistrar"
+567-->[com.google.firebase:firebase-ml-natural-language-translate:21.0.0] /home/user/.gradle/caches/transforms-3/fc1268f83d80d4683f4ebd697bd3472c/transformed/jetified-firebase-ml-natural-language-translate-21.0.0/AndroidManifest.xml:13:17-145
+568                android:value="com.google.firebase.components.ComponentRegistrar" />
+568-->[com.google.firebase:firebase-ml-natural-language-translate:21.0.0] /home/user/.gradle/caches/transforms-3/fc1268f83d80d4683f4ebd697bd3472c/transformed/jetified-firebase-ml-natural-language-translate-21.0.0/AndroidManifest.xml:14:17-82
+569            <meta-data
+569-->[com.google.firebase:firebase-ml-common:21.0.0] /home/user/.gradle/caches/transforms-3/3ecd9bf36d0e869dd171e4407c19a53c/transformed/jetified-firebase-ml-common-21.0.0/AndroidManifest.xml:11:13-13:85
+570                android:name="com.google.firebase.components:com.google.firebase.ml.common.CommonComponentRegistrar"
+570-->[com.google.firebase:firebase-ml-common:21.0.0] /home/user/.gradle/caches/transforms-3/3ecd9bf36d0e869dd171e4407c19a53c/transformed/jetified-firebase-ml-common-21.0.0/AndroidManifest.xml:12:17-117
+571                android:value="com.google.firebase.components.ComponentRegistrar" />
+571-->[com.google.firebase:firebase-ml-common:21.0.0] /home/user/.gradle/caches/transforms-3/3ecd9bf36d0e869dd171e4407c19a53c/transformed/jetified-firebase-ml-common-21.0.0/AndroidManifest.xml:13:17-82
+572            <meta-data
+572-->[com.google.firebase:firebase-iid:21.1.0] /home/user/.gradle/caches/transforms-3/df486141512a4284cb4911c17e845a3f/transformed/jetified-firebase-iid-21.1.0/AndroidManifest.xml:32:13-34:85
+573                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+573-->[com.google.firebase:firebase-iid:21.1.0] /home/user/.gradle/caches/transforms-3/df486141512a4284cb4911c17e845a3f/transformed/jetified-firebase-iid-21.1.0/AndroidManifest.xml:33:17-96
+574                android:value="com.google.firebase.components.ComponentRegistrar" />
+574-->[com.google.firebase:firebase-iid:21.1.0] /home/user/.gradle/caches/transforms-3/df486141512a4284cb4911c17e845a3f/transformed/jetified-firebase-iid-21.1.0/AndroidManifest.xml:34:17-82
+575            <meta-data
+575-->[com.google.firebase:firebase-config-ktx:21.1.2] /home/user/.gradle/caches/transforms-3/608a95e9d92e05f340fb970b7e76b394/transformed/jetified-firebase-config-ktx-21.1.2/AndroidManifest.xml:15:13-17:85
+576                android:name="com.google.firebase.components:com.google.firebase.remoteconfig.ktx.FirebaseRemoteConfigKtxRegistrar"
+576-->[com.google.firebase:firebase-config-ktx:21.1.2] /home/user/.gradle/caches/transforms-3/608a95e9d92e05f340fb970b7e76b394/transformed/jetified-firebase-config-ktx-21.1.2/AndroidManifest.xml:16:17-132
+577                android:value="com.google.firebase.components.ComponentRegistrar" />
+577-->[com.google.firebase:firebase-config-ktx:21.1.2] /home/user/.gradle/caches/transforms-3/608a95e9d92e05f340fb970b7e76b394/transformed/jetified-firebase-config-ktx-21.1.2/AndroidManifest.xml:17:17-82
+578            <meta-data
+578-->[com.google.firebase:firebase-config:21.1.2] /home/user/.gradle/caches/transforms-3/4dd2e0cbc84b1ae28f1e6e8c7b8040b0/transformed/jetified-firebase-config-21.1.2/AndroidManifest.xml:32:13-34:85
+579                android:name="com.google.firebase.components:com.google.firebase.remoteconfig.RemoteConfigRegistrar"
+579-->[com.google.firebase:firebase-config:21.1.2] /home/user/.gradle/caches/transforms-3/4dd2e0cbc84b1ae28f1e6e8c7b8040b0/transformed/jetified-firebase-config-21.1.2/AndroidManifest.xml:33:17-117
+580                android:value="com.google.firebase.components.ComponentRegistrar" />
+580-->[com.google.firebase:firebase-config:21.1.2] /home/user/.gradle/caches/transforms-3/4dd2e0cbc84b1ae28f1e6e8c7b8040b0/transformed/jetified-firebase-config-21.1.2/AndroidManifest.xml:34:17-82
+581            <meta-data
+581-->[com.google.firebase:firebase-crashlytics-ktx:18.2.13] /home/user/.gradle/caches/transforms-3/f69f2456b4b8418ca02b3e3b15ca9175/transformed/jetified-firebase-crashlytics-ktx-18.2.13/AndroidManifest.xml:27:13-29:85
+582                android:name="com.google.firebase.components:com.google.firebase.crashlytics.ktx.FirebaseCrashlyticsKtxRegistrar"
+582-->[com.google.firebase:firebase-crashlytics-ktx:18.2.13] /home/user/.gradle/caches/transforms-3/f69f2456b4b8418ca02b3e3b15ca9175/transformed/jetified-firebase-crashlytics-ktx-18.2.13/AndroidManifest.xml:28:17-130
+583                android:value="com.google.firebase.components.ComponentRegistrar" />
+583-->[com.google.firebase:firebase-crashlytics-ktx:18.2.13] /home/user/.gradle/caches/transforms-3/f69f2456b4b8418ca02b3e3b15ca9175/transformed/jetified-firebase-crashlytics-ktx-18.2.13/AndroidManifest.xml:29:17-82
+584            <meta-data
+584-->[com.google.firebase:firebase-crashlytics:18.2.13] /home/user/.gradle/caches/transforms-3/95175bd3ce32e91851955ba877b1daf8/transformed/jetified-firebase-crashlytics-18.2.13/AndroidManifest.xml:18:13-20:85
+585                android:name="com.google.firebase.components:com.google.firebase.crashlytics.CrashlyticsRegistrar"
+585-->[com.google.firebase:firebase-crashlytics:18.2.13] /home/user/.gradle/caches/transforms-3/95175bd3ce32e91851955ba877b1daf8/transformed/jetified-firebase-crashlytics-18.2.13/AndroidManifest.xml:19:17-115
+586                android:value="com.google.firebase.components.ComponentRegistrar" />
+586-->[com.google.firebase:firebase-crashlytics:18.2.13] /home/user/.gradle/caches/transforms-3/95175bd3ce32e91851955ba877b1daf8/transformed/jetified-firebase-crashlytics-18.2.13/AndroidManifest.xml:20:17-82
+587            <meta-data
+587-->[com.google.firebase:firebase-analytics-ktx:21.1.1] /home/user/.gradle/caches/transforms-3/a85558ff8a3aeefc4253e3e1b6413f78/transformed/jetified-firebase-analytics-ktx-21.1.1/AndroidManifest.xml:11:13-13:85
+588                android:name="com.google.firebase.components:com.google.firebase.analytics.ktx.FirebaseAnalyticsKtxRegistrar"
+588-->[com.google.firebase:firebase-analytics-ktx:21.1.1] /home/user/.gradle/caches/transforms-3/a85558ff8a3aeefc4253e3e1b6413f78/transformed/jetified-firebase-analytics-ktx-21.1.1/AndroidManifest.xml:12:17-126
+589                android:value="com.google.firebase.components.ComponentRegistrar" />
+589-->[com.google.firebase:firebase-analytics-ktx:21.1.1] /home/user/.gradle/caches/transforms-3/a85558ff8a3aeefc4253e3e1b6413f78/transformed/jetified-firebase-analytics-ktx-21.1.1/AndroidManifest.xml:13:17-82
+590            <meta-data
+590-->[com.google.android.gms:play-services-measurement-api:21.1.1] /home/user/.gradle/caches/transforms-3/59914c6a894ff8c7798cbfd120557730/transformed/jetified-play-services-measurement-api-21.1.1/AndroidManifest.xml:31:13-33:85
+591                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+591-->[com.google.android.gms:play-services-measurement-api:21.1.1] /home/user/.gradle/caches/transforms-3/59914c6a894ff8c7798cbfd120557730/transformed/jetified-play-services-measurement-api-21.1.1/AndroidManifest.xml:32:17-139
+592                android:value="com.google.firebase.components.ComponentRegistrar" />
+592-->[com.google.android.gms:play-services-measurement-api:21.1.1] /home/user/.gradle/caches/transforms-3/59914c6a894ff8c7798cbfd120557730/transformed/jetified-play-services-measurement-api-21.1.1/AndroidManifest.xml:33:17-82
+593            <meta-data
+593-->[com.google.firebase:firebase-installations:17.0.3] /home/user/.gradle/caches/transforms-3/219d59bef90b8909b3f0278061f62b1d/transformed/jetified-firebase-installations-17.0.3/AndroidManifest.xml:18:13-20:85
+594                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+594-->[com.google.firebase:firebase-installations:17.0.3] /home/user/.gradle/caches/transforms-3/219d59bef90b8909b3f0278061f62b1d/transformed/jetified-firebase-installations-17.0.3/AndroidManifest.xml:19:17-127
+595                android:value="com.google.firebase.components.ComponentRegistrar" />
+595-->[com.google.firebase:firebase-installations:17.0.3] /home/user/.gradle/caches/transforms-3/219d59bef90b8909b3f0278061f62b1d/transformed/jetified-firebase-installations-17.0.3/AndroidManifest.xml:20:17-82
+596            <meta-data
+596-->[com.google.firebase:firebase-datatransport:18.1.6] /home/user/.gradle/caches/transforms-3/ac6620f830e805e0746deced917546cf/transformed/jetified-firebase-datatransport-18.1.6/AndroidManifest.xml:28:13-30:85
+597                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+597-->[com.google.firebase:firebase-datatransport:18.1.6] /home/user/.gradle/caches/transforms-3/ac6620f830e805e0746deced917546cf/transformed/jetified-firebase-datatransport-18.1.6/AndroidManifest.xml:29:17-115
+598                android:value="com.google.firebase.components.ComponentRegistrar" />
+598-->[com.google.firebase:firebase-datatransport:18.1.6] /home/user/.gradle/caches/transforms-3/ac6620f830e805e0746deced917546cf/transformed/jetified-firebase-datatransport-18.1.6/AndroidManifest.xml:30:17-82
+599            <meta-data
+599-->[com.google.firebase:firebase-abt:21.0.2] /home/user/.gradle/caches/transforms-3/3894908a5bab38637ff95296058b646d/transformed/jetified-firebase-abt-21.0.2/AndroidManifest.xml:13:13-15:85
+600                android:name="com.google.firebase.components:com.google.firebase.abt.component.AbtRegistrar"
+600-->[com.google.firebase:firebase-abt:21.0.2] /home/user/.gradle/caches/transforms-3/3894908a5bab38637ff95296058b646d/transformed/jetified-firebase-abt-21.0.2/AndroidManifest.xml:14:17-109
+601                android:value="com.google.firebase.components.ComponentRegistrar" />
+601-->[com.google.firebase:firebase-abt:21.0.2] /home/user/.gradle/caches/transforms-3/3894908a5bab38637ff95296058b646d/transformed/jetified-firebase-abt-21.0.2/AndroidManifest.xml:15:17-82
+602            <meta-data
+602-->[com.google.firebase:firebase-common-ktx:20.1.2] /home/user/.gradle/caches/transforms-3/5607cbefcbbc8b599752ae8e569048d3/transformed/jetified-firebase-common-ktx-20.1.2/AndroidManifest.xml:15:13-17:85
+603                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonKtxRegistrar"
+603-->[com.google.firebase:firebase-common-ktx:20.1.2] /home/user/.gradle/caches/transforms-3/5607cbefcbbc8b599752ae8e569048d3/transformed/jetified-firebase-common-ktx-20.1.2/AndroidManifest.xml:16:17-113
+604                android:value="com.google.firebase.components.ComponentRegistrar" />
+604-->[com.google.firebase:firebase-common-ktx:20.1.2] /home/user/.gradle/caches/transforms-3/5607cbefcbbc8b599752ae8e569048d3/transformed/jetified-firebase-common-ktx-20.1.2/AndroidManifest.xml:17:17-82
+605        </service>
+606
+607        <activity
+607-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:27:9-44:20
+608            android:name="com.google.firebase.auth.internal.GenericIdpActivity"
+608-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:28:13-80
+609            android:excludeFromRecents="true"
+609-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:29:13-46
+610            android:exported="true"
+610-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:30:13-36
+611            android:launchMode="singleTask"
+611-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:31:13-44
+612            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+612-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:32:13-72
+613            <intent-filter>
+613-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:33:13-43:29
+614                <action android:name="android.intent.action.VIEW" />
+614-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:58:13-65
+614-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:58:21-62
+615
+616                <category android:name="android.intent.category.DEFAULT" />
+616-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:133:17-76
+616-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:133:27-73
+617                <category android:name="android.intent.category.BROWSABLE" />
+617-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:187:17-78
+617-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:187:27-75
+618
+619                <data
+619-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+620                    android:host="firebase.auth"
+620-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:190:21-63
+621                    android:path="/"
+622                    android:scheme="genericidp" />
+622-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:191:21-43
+623            </intent-filter>
+624        </activity>
+625        <activity
+625-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:45:9-62:20
+626            android:name="com.google.firebase.auth.internal.RecaptchaActivity"
+626-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:46:13-79
+627            android:excludeFromRecents="true"
+627-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:47:13-46
+628            android:exported="true"
+628-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:48:13-36
+629            android:launchMode="singleTask"
+629-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:49:13-44
+630            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+630-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:50:13-72
+631            <intent-filter>
+631-->[com.google.firebase:firebase-auth:21.0.8] /home/user/.gradle/caches/transforms-3/323217b8ad3e3c4406d5b7d805f76620/transformed/jetified-firebase-auth-21.0.8/AndroidManifest.xml:51:13-61:29
+632                <action android:name="android.intent.action.VIEW" />
+632-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:58:13-65
+632-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:58:21-62
+633
+634                <category android:name="android.intent.category.DEFAULT" />
+634-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:133:17-76
+634-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:133:27-73
+635                <category android:name="android.intent.category.BROWSABLE" />
+635-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:187:17-78
+635-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:187:27-75
+636
+637                <data
+637-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:60:13-44
+638                    android:host="firebase.auth"
+638-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:190:21-63
+639                    android:path="/"
+640                    android:scheme="recaptcha" />
+640-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:191:21-43
+641            </intent-filter>
+642        </activity>
+643        <activity
+643-->[com.google.android.gms:play-services-base:18.0.1] /home/user/.gradle/caches/transforms-3/2ad23e978d89e1b46d5b23b2c56cb1bb/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:20:9-22:45
+644            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+644-->[com.google.android.gms:play-services-base:18.0.1] /home/user/.gradle/caches/transforms-3/2ad23e978d89e1b46d5b23b2c56cb1bb/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:20:19-85
+645            android:exported="false"
+645-->[com.google.android.gms:play-services-base:18.0.1] /home/user/.gradle/caches/transforms-3/2ad23e978d89e1b46d5b23b2c56cb1bb/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:22:19-43
+646            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+646-->[com.google.android.gms:play-services-base:18.0.1] /home/user/.gradle/caches/transforms-3/2ad23e978d89e1b46d5b23b2c56cb1bb/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:21:19-78
+647
+648        <provider
+648-->[com.google.firebase:firebase-common:20.1.2] /home/user/.gradle/caches/transforms-3/43aace12f529807f308362db71caec94/transformed/jetified-firebase-common-20.1.2/AndroidManifest.xml:26:9-31:39
+649            android:name="com.google.firebase.provider.FirebaseInitProvider"
+649-->[com.google.firebase:firebase-common:20.1.2] /home/user/.gradle/caches/transforms-3/43aace12f529807f308362db71caec94/transformed/jetified-firebase-common-20.1.2/AndroidManifest.xml:27:13-77
+650            android:authorities="com.mirrorfly.uikit.firebaseinitprovider"
+650-->[com.google.firebase:firebase-common:20.1.2] /home/user/.gradle/caches/transforms-3/43aace12f529807f308362db71caec94/transformed/jetified-firebase-common-20.1.2/AndroidManifest.xml:28:13-72
+651            android:directBootAware="true"
+651-->[com.google.firebase:firebase-common:20.1.2] /home/user/.gradle/caches/transforms-3/43aace12f529807f308362db71caec94/transformed/jetified-firebase-common-20.1.2/AndroidManifest.xml:29:13-43
+652            android:exported="false"
+652-->[com.google.firebase:firebase-common:20.1.2] /home/user/.gradle/caches/transforms-3/43aace12f529807f308362db71caec94/transformed/jetified-firebase-common-20.1.2/AndroidManifest.xml:30:13-37
+653            android:initOrder="100" />
+653-->[com.google.firebase:firebase-common:20.1.2] /home/user/.gradle/caches/transforms-3/43aace12f529807f308362db71caec94/transformed/jetified-firebase-common-20.1.2/AndroidManifest.xml:31:13-36
+654
+655        <receiver
+655-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:29:9-33:20
+656            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+656-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:30:13-85
+657            android:enabled="true"
+657-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:31:13-35
+658            android:exported="false" >
+658-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:32:13-37
+659        </receiver>
+660
+661        <service
+661-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:35:9-38:40
+662            android:name="com.google.android.gms.measurement.AppMeasurementService"
+662-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:36:13-84
+663            android:enabled="true"
+663-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:37:13-35
+664            android:exported="false" />
+664-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:38:13-37
+665        <service
+665-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:39:9-43:72
+666            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+666-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:40:13-87
+667            android:enabled="true"
+667-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:41:13-35
+668            android:exported="false"
+668-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:42:13-37
+669            android:permission="android.permission.BIND_JOB_SERVICE" />
+669-->[com.google.android.gms:play-services-measurement:21.1.1] /home/user/.gradle/caches/transforms-3/2ce914d9b34fcef906950f8fa5cb1a91/transformed/jetified-play-services-measurement-21.1.1/AndroidManifest.xml:43:13-69
+670
+671        <meta-data
+671-->[com.google.android.gms:play-services-basement:18.1.0] /home/user/.gradle/caches/transforms-3/31ae26b5b33742d228627620f872ccd1/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:21:9-23:69
+672            android:name="com.google.android.gms.version"
+672-->[com.google.android.gms:play-services-basement:18.1.0] /home/user/.gradle/caches/transforms-3/31ae26b5b33742d228627620f872ccd1/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:22:13-58
+673            android:value="@integer/google_play_services_version" />
+673-->[com.google.android.gms:play-services-basement:18.1.0] /home/user/.gradle/caches/transforms-3/31ae26b5b33742d228627620f872ccd1/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:23:13-66
+674
+675        <provider
+675-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:29:9-37:20
+676            android:name="androidx.startup.InitializationProvider"
+676-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:30:13-67
+677            android:authorities="com.mirrorfly.uikit.androidx-startup"
+677-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:31:13-68
+678            android:exported="false" >
+678-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:32:13-37
+679            <meta-data
+679-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:34:13-36:52
+680                android:name="androidx.work.WorkManagerInitializer"
+680-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:35:17-68
+681                android:value="androidx.startup" />
+681-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:36:17-49
+682            <meta-data
+682-->[androidx.emoji2:emoji2:1.2.0] /home/user/.gradle/caches/transforms-3/c12dcfd8e8ddb8581b771126e1865818/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+683                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+683-->[androidx.emoji2:emoji2:1.2.0] /home/user/.gradle/caches/transforms-3/c12dcfd8e8ddb8581b771126e1865818/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:30:17-75
+684                android:value="androidx.startup" />
+684-->[androidx.emoji2:emoji2:1.2.0] /home/user/.gradle/caches/transforms-3/c12dcfd8e8ddb8581b771126e1865818/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:31:17-49
+685            <meta-data
+685-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/user/.gradle/caches/transforms-3/c24d0bc4f39d605474efb83651c3c489/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+686                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+686-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/user/.gradle/caches/transforms-3/c24d0bc4f39d605474efb83651c3c489/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+687                android:value="androidx.startup" />
+687-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/user/.gradle/caches/transforms-3/c24d0bc4f39d605474efb83651c3c489/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+688        </provider>
+689
+690        <service
+690-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:39:9-45:35
+691            android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"
+691-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:40:13-88
+692            android:directBootAware="false"
+692-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:41:13-44
+693            android:enabled="@bool/enable_system_alarm_service_default"
+693-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:42:13-72
+694            android:exported="false" />
+694-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:43:13-37
+695        <service
+695-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:46:9-52:35
+696            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+696-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:47:13-84
+697            android:directBootAware="false"
+697-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:48:13-44
+698            android:enabled="@bool/enable_system_job_service_default"
+698-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:49:13-70
+699            android:exported="true"
+699-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:50:13-36
+700            android:permission="android.permission.BIND_JOB_SERVICE" />
+700-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:51:13-69
+701        <service
+701-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:53:9-59:35
+702            android:name="androidx.work.impl.foreground.SystemForegroundService"
+702-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:54:13-81
+703            android:directBootAware="false"
+703-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:55:13-44
+704            android:enabled="@bool/enable_system_foreground_service_default"
+704-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:56:13-77
+705            android:exported="false" />
+705-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:57:13-37
+706
+707        <receiver
+707-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:61:9-66:35
+708            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+708-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:62:13-88
+709            android:directBootAware="false"
+709-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:63:13-44
+710            android:enabled="true"
+710-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:64:13-35
+711            android:exported="false" />
+711-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:65:13-37
+712        <receiver
+712-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:67:9-77:20
+713            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy"
+713-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:68:13-106
+714            android:directBootAware="false"
+714-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:69:13-44
+715            android:enabled="false"
+715-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:70:13-36
+716            android:exported="false" >
+716-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:71:13-37
+717            <intent-filter>
+717-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:73:13-76:29
+718                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+718-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:74:17-87
+718-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:74:25-84
+719                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+719-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:75:17-90
+719-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:75:25-87
+720            </intent-filter>
+721        </receiver>
+722        <receiver
+722-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:78:9-88:20
+723            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy"
+723-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:79:13-104
+724            android:directBootAware="false"
+724-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:80:13-44
+725            android:enabled="false"
+725-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:81:13-36
+726            android:exported="false" >
+726-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:82:13-37
+727            <intent-filter>
+727-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:84:13-87:29
+728                <action android:name="android.intent.action.BATTERY_OKAY" />
+728-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:85:17-77
+728-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:85:25-74
+729                <action android:name="android.intent.action.BATTERY_LOW" />
+729-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:86:17-76
+729-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:86:25-73
+730            </intent-filter>
+731        </receiver>
+732        <receiver
+732-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:89:9-99:20
+733            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy"
+733-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:90:13-104
+734            android:directBootAware="false"
+734-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:91:13-44
+735            android:enabled="false"
+735-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:92:13-36
+736            android:exported="false" >
+736-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:93:13-37
+737            <intent-filter>
+737-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:95:13-98:29
+738                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+738-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:96:17-83
+738-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:96:25-80
+739                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+739-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:97:17-82
+739-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:97:25-79
+740            </intent-filter>
+741        </receiver>
+742        <receiver
+742-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:100:9-109:20
+743            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy"
+743-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:101:13-103
+744            android:directBootAware="false"
+744-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:102:13-44
+745            android:enabled="false"
+745-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:103:13-36
+746            android:exported="false" >
+746-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:104:13-37
+747            <intent-filter>
+747-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:106:13-108:29
+748                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+748-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:107:17-79
+748-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:107:25-76
+749            </intent-filter>
+750        </receiver>
+751        <receiver
+751-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:110:9-121:20
+752            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+752-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:111:13-88
+753            android:directBootAware="false"
+753-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:112:13-44
+754            android:enabled="false"
+754-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:113:13-36
+755            android:exported="false" >
+755-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:114:13-37
+756            <intent-filter>
+756-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:116:13-120:29
+757                <action android:name="android.intent.action.BOOT_COMPLETED" />
+757-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:353:17-79
+757-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:353:25-76
+758                <action android:name="android.intent.action.TIME_SET" />
+758-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:355:17-73
+758-->/home/user/MirrorFly/Development/UIKIT/p078-contus-instantmessenger-uikit-android/app/src/main/AndroidManifest.xml:355:25-70
+759                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+759-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:119:17-81
+759-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:119:25-78
+760            </intent-filter>
+761        </receiver>
+762        <receiver
+762-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:122:9-131:20
+763            android:name="androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver"
+763-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:123:13-99
+764            android:directBootAware="false"
+764-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:124:13-44
+765            android:enabled="@bool/enable_system_alarm_service_default"
+765-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:125:13-72
+766            android:exported="false" >
+766-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:126:13-37
+767            <intent-filter>
+767-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:128:13-130:29
+768                <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
+768-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:129:17-98
+768-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:129:25-95
+769            </intent-filter>
+770        </receiver>
+771        <receiver
+771-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:132:9-142:20
+772            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+772-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:133:13-78
+773            android:directBootAware="false"
+773-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:134:13-44
+774            android:enabled="true"
+774-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:135:13-35
+775            android:exported="true"
+775-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:136:13-36
+776            android:permission="android.permission.DUMP" >
+776-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:137:13-57
+777            <intent-filter>
+777-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:139:13-141:29
+778                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+778-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:140:17-88
+778-->[androidx.work:work-runtime:2.8.1] /home/user/.gradle/caches/transforms-3/810c3ab3ef17076de4262afff2555479/transformed/work-runtime-2.8.1/AndroidManifest.xml:140:25-85
+779            </intent-filter>
+780        </receiver>
+781
+782        <service
+782-->[androidx.room:room-runtime:2.5.0] /home/user/.gradle/caches/transforms-3/4af705982635bfc80d85d0218bf537ff/transformed/room-runtime-2.5.0/AndroidManifest.xml:24:9-28:63
+783            android:name="androidx.room.MultiInstanceInvalidationService"
+783-->[androidx.room:room-runtime:2.5.0] /home/user/.gradle/caches/transforms-3/4af705982635bfc80d85d0218bf537ff/transformed/room-runtime-2.5.0/AndroidManifest.xml:25:13-74
+784            android:directBootAware="true"
+784-->[androidx.room:room-runtime:2.5.0] /home/user/.gradle/caches/transforms-3/4af705982635bfc80d85d0218bf537ff/transformed/room-runtime-2.5.0/AndroidManifest.xml:26:13-43
+785            android:exported="false" />
+785-->[androidx.room:room-runtime:2.5.0] /home/user/.gradle/caches/transforms-3/4af705982635bfc80d85d0218bf537ff/transformed/room-runtime-2.5.0/AndroidManifest.xml:27:13-37
+786
+787        <activity
+787-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:47:9-53:63
+788            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+788-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:48:13-74
+789            android:clearTaskOnLaunch="true"
+789-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:49:13-45
+790            android:screenOrientation="sensorLandscape"
+790-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:50:13-56
+791            android:stateNotNeeded="true"
+791-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:51:13-42
+792            android:theme="@style/zxing_CaptureTheme"
+792-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:52:13-54
+793            android:windowSoftInputMode="stateAlwaysHidden" />
+793-->[com.journeyapps:zxing-android-embedded:3.6.0] /home/user/.gradle/caches/transforms-3/7a00a0b7f820fc8a27db6b820cb7c674/transformed/jetified-zxing-android-embedded-3.6.0/AndroidManifest.xml:53:13-60
+794
+795        <service
+795-->[com.google.android.datatransport:transport-backend-cct:3.1.7] /home/user/.gradle/caches/transforms-3/146046ea12980e2f35e488a6489938d3/transformed/jetified-transport-backend-cct-3.1.7/AndroidManifest.xml:29:9-35:19
+796            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+796-->[com.google.android.datatransport:transport-backend-cct:3.1.7] /home/user/.gradle/caches/transforms-3/146046ea12980e2f35e488a6489938d3/transformed/jetified-transport-backend-cct-3.1.7/AndroidManifest.xml:30:13-103
+797            android:exported="false" >
+797-->[com.google.android.datatransport:transport-backend-cct:3.1.7] /home/user/.gradle/caches/transforms-3/146046ea12980e2f35e488a6489938d3/transformed/jetified-transport-backend-cct-3.1.7/AndroidManifest.xml:31:13-37
+798            <meta-data
+798-->[com.google.android.datatransport:transport-backend-cct:3.1.7] /home/user/.gradle/caches/transforms-3/146046ea12980e2f35e488a6489938d3/transformed/jetified-transport-backend-cct-3.1.7/AndroidManifest.xml:32:13-34:39
+799                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+799-->[com.google.android.datatransport:transport-backend-cct:3.1.7] /home/user/.gradle/caches/transforms-3/146046ea12980e2f35e488a6489938d3/transformed/jetified-transport-backend-cct-3.1.7/AndroidManifest.xml:33:17-94
+800                android:value="cct" />
+800-->[com.google.android.datatransport:transport-backend-cct:3.1.7] /home/user/.gradle/caches/transforms-3/146046ea12980e2f35e488a6489938d3/transformed/jetified-transport-backend-cct-3.1.7/AndroidManifest.xml:34:17-36
+801        </service>
+802        <service
+802-->[com.google.android.datatransport:transport-runtime:3.1.7] /home/user/.gradle/caches/transforms-3/940dbd1e91fa7b6745c9287fd97510f4/transformed/jetified-transport-runtime-3.1.7/AndroidManifest.xml:26:9-30:19
+803            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+803-->[com.google.android.datatransport:transport-runtime:3.1.7] /home/user/.gradle/caches/transforms-3/940dbd1e91fa7b6745c9287fd97510f4/transformed/jetified-transport-runtime-3.1.7/AndroidManifest.xml:27:13-117
+804            android:exported="false"
+804-->[com.google.android.datatransport:transport-runtime:3.1.7] /home/user/.gradle/caches/transforms-3/940dbd1e91fa7b6745c9287fd97510f4/transformed/jetified-transport-runtime-3.1.7/AndroidManifest.xml:28:13-37
+805            android:permission="android.permission.BIND_JOB_SERVICE" >
+805-->[com.google.android.datatransport:transport-runtime:3.1.7] /home/user/.gradle/caches/transforms-3/940dbd1e91fa7b6745c9287fd97510f4/transformed/jetified-transport-runtime-3.1.7/AndroidManifest.xml:29:13-69
+806        </service>
+807
+808        <receiver
+808-->[com.google.android.datatransport:transport-runtime:3.1.7] /home/user/.gradle/caches/transforms-3/940dbd1e91fa7b6745c9287fd97510f4/transformed/jetified-transport-runtime-3.1.7/AndroidManifest.xml:32:9-34:40
+809            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+809-->[com.google.android.datatransport:transport-runtime:3.1.7] /home/user/.gradle/caches/transforms-3/940dbd1e91fa7b6745c9287fd97510f4/transformed/jetified-transport-runtime-3.1.7/AndroidManifest.xml:33:13-132
+810            android:exported="false" />
+810-->[com.google.android.datatransport:transport-runtime:3.1.7] /home/user/.gradle/caches/transforms-3/940dbd1e91fa7b6745c9287fd97510f4/transformed/jetified-transport-runtime-3.1.7/AndroidManifest.xml:34:13-37
+811    </application>
+812
+813</manifest>

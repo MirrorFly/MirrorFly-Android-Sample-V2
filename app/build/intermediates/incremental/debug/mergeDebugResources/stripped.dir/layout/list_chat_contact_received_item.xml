@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 2.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2019 ContusFly LTD. All rights reserved.
+  ~ @licence http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_2"
+    android:layout_marginBottom="@dimen/margin_2"
+    android:elevation="0dp"
+    android:orientation="vertical"
+    tools:targetApi="LOLLIPOP">
+
+    <ViewStub
+        android:id="@+id/view_message_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/view_chat_date" />
+
+    <include layout="@layout/view_chat_space" />
+
+    <RelativeLayout
+        android:id="@+id/row_chat_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:gravity="top|start"
+        android:paddingStart="@dimen/padding_18"
+        android:paddingEnd="@dimen/padding_8">
+
+        <RelativeLayout
+            android:id="@+id/rl_header_receiver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/header_starred_message_sender"
+                layout="@layout/row_starred_message_header_receiver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/text_chat_date"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_chat_date"
+                style="@style/StarredMessageDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="@dimen/margin_5"
+                android:maxWidth="250dp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/send_img_forward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/margin_12"
+            android:layout_toEndOf="@+id/view_contact_received_holder"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@null"
+            android:padding="@dimen/margin_3"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_forward_media" />
+
+        <LinearLayout
+            android:id="@+id/view_contact_received_holder"
+            android:layout_width="@dimen/margin_232"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_header_receiver"
+            android:background="@drawable/bg_chat_shape_receiver"
+            android:contentDescription="Received_contact"
+            android:orientation="vertical">
+
+            <ViewStub
+                android:id="@+id/view_sender_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/row_chat_sender_name" />
+
+            <include
+                android:id="@+id/view_text_sent_reply"
+                layout="@layout/list_chat_reply_received_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_3" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.contusfly.views.CircularImageView
+                    android:id="@+id/image_contact_picture"
+                    android:layout_width="@dimen/margin_35"
+                    android:layout_height="@dimen/margin_35"
+                    android:layout_margin="@dimen/margin_10"
+                    android:src="@drawable/ic_contact_img"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/text_contact_name"
+                    style="@style/TextRegularStyleBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    app:layout_constraintBottom_toBottomOf="@id/image_contact_picture"
+                    app:layout_constraintEnd_toStartOf="@+id/image_audio_favorite"
+                    app:layout_constraintLeft_toRightOf="@id/image_contact_picture"
+                    app:layout_constraintRight_toLeftOf="@+id/image_audio_favorite"
+                    app:layout_constraintStart_toEndOf="@id/image_contact_picture"
+                    app:layout_constraintTop_toTopOf="@id/image_contact_picture" />
+
+                <ImageView
+                    android:id="@+id/image_right_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_20"
+                    android:contentDescription="@null"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="@id/image_contact_picture"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/image_contact_picture"
+                    app:srcCompat="@drawable/ic_right_arrow" />
+
+                <ImageView
+                    android:id="@+id/image_audio_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5"
+                    android:layout_marginBottom="@dimen/margin_1"
+                    android:contentDescription="@null"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_audio_time"
+                    app:layout_constraintEnd_toStartOf="@+id/text_audio_time"
+                    app:layout_constraintRight_toLeftOf="@+id/text_audio_time"
+                    app:srcCompat="@drawable/ic_star_receiver" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_audio_time"
+                    style="@style/ChatTimeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_5"
+                    android:fontFamily="@font/sf_ui_display_regular"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/color_chat_msg_received_time"
+                    app:layout_constraintBottom_toTopOf="@+id/view_contact_separator"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <View
+                    android:id="@+id/view_contact_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:background="@color/color_chat_contact_separator"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/image_contact_picture" />
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/text_contact_action"
+                    style="@style/TextRegularStyleBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="@dimen/padding_8"
+                    android:paddingBottom="@dimen/padding_8"
+                    android:text="@string/message"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_contact_separator" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <View
+        android:id="@+id/view_divider"
+        style="@style/divider_starred_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:visibility="gone"/>
+</LinearLayout>

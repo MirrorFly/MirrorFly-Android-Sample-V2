@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/corner_radius_bg">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_100"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/dialog_icon_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_180"
+            app:layout_constraintBottom_toTopOf="@+id/title_tv">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/private_chat_enable_pull_refresh_image"
+                android:paddingTop="@dimen/padding_20"
+                android:layout_marginLeft="@dimen/margin_large"/>
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/privatechat_swipe_animation" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/title_tv"
+            style="@style/StatusList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="true"
+            android:paddingStart="@dimen/padding_12"
+            android:paddingTop="@dimen/padding_20"
+            android:paddingEnd="@dimen/padding_12"
+            android:paddingBottom="@dimen/padding_5"
+            android:gravity="center"
+            android:text="@string/chat_locked_title"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_icon_layout"
+            android:theme="@style/ChatTag_semibold"
+            android:textColor="@color/dashboard_toolbar_text_color"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:textSize="@dimen/padding_15"/>
+
+        <TextView
+            android:id="@+id/dialog_description"
+            style="@style/StatusList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="true"
+            android:paddingStart="@dimen/padding_19"
+            android:paddingEnd="@dimen/padding_19"
+            android:gravity="center"
+            android:text="@string/chat_locked_info"
+            app:layout_constraintTop_toBottomOf="@+id/title_tv"
+            android:fontFamily="@font/sf_ui_display_regular"
+            android:textColor="@color/private_chat_info_color"
+            android:textSize="@dimen/padding_14" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.3"
+            android:layout_marginTop="@dimen/margin_30"
+            android:background="?attr/menu_divider_color"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_description"/>
+
+        <TextView
+            android:id="@+id/view_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="true"
+            android:gravity="center"
+            android:padding="@dimen/margin_20"
+            app:layout_constraintTop_toBottomOf="@+id/view1"
+            android:text="@string/view_label"
+            android:theme="@style/ChatTag_semibold"
+            android:textColor="@color/color_blue"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:textSize="@dimen/padding_15"/>
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.3"
+            android:background="?attr/menu_divider_color"
+            app:layout_constraintTop_toBottomOf="@+id/view_tv"/>
+
+        <TextView
+            android:id="@+id/cancel_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="true"
+            android:gravity="center"
+            android:padding="@dimen/margin_20"
+            app:layout_constraintTop_toBottomOf="@+id/view2"
+            android:text="@string/cancel"
+            android:theme="@style/ChatTag_semibold"
+            android:textColor="@color/color_blue"
+            android:fontFamily="@font/sf_ui_display_semi_bold"
+            android:textSize="@dimen/padding_15"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

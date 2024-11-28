@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorG"
+    android:orientation="vertical"
+    tools:context=".activities.QrResultActivity">
+
+    <include
+        android:id="@+id/scanner_tool_bar"
+        layout="@layout/scanner_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_view_scanner_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_qr_scanner_web_login"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"
+            android:text="@string/scanner_result" />
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_logged_in_computers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/text_logged_in_computers"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider_color" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_web_chat_login"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                android:background="@color/colorG"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_logout_all_webchat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/colorG"
+                android:drawableStart="@drawable/ic_button_logout_all"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/action_logout_all_computers"
+                android:textColor="@color/text_color_black" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_web_url"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/text_visit_chat_web"
+            android:textColor="@color/color_dark_gray" />
+
+    </LinearLayout>
+
+</LinearLayout>

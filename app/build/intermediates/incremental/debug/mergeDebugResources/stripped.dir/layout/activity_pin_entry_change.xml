@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    tools:context="activities.PinEntryChange">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/common_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tool_bar"
+        android:layout_marginTop="@dimen/margin_10"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/otp_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+
+            <com.contusfly.views.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:padding="16dp"
+                android:text="We have sent a 6 digit OTP to your registered Mobile Number. Please enter below."
+                android:textAlignment="center"
+                android:textColor="@color/color_black" />
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/resend_otp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:padding="4dp"
+                android:text="Resend OTP"
+                android:textAlignment="center"
+                android:textColor="@color/color_red" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/color_light_gray" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/old_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_pin_old"
+                android:fontFamily="@font/sf_ui_display_semi_bold"
+                android:textColor="@color/color_black"
+                android:textSize="17sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FAFAFA"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FAFAFA"
+                    app:hintEnabled="false"
+                    app:passwordToggleDrawable="@drawable/icon_selector_password_eye"
+                    app:passwordToggleEnabled="true">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/old_pin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FAFAFA"
+                        android:digits="0123456789"
+                        android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberPassword"
+                        android:maxLength="4"
+                        android:textSize="20sp"
+                        tools:targetApi="LOLLIPOP" android:letterSpacing="0.95"
+                        android:ems="2"
+                        tools:text="ahi"
+                        android:nextFocusDown="@+id/set_pin"
+                        android:textColor="#767676" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05dp"
+                android:background="@color/color_light_gray" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/newPin_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_new_pin"
+                android:fontFamily="@font/sf_ui_display_semi_bold"
+                android:textColor="@color/color_black"
+                android:textSize="17sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FAFAFA"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FAFAFA"
+                    app:hintEnabled="false"
+                    app:passwordToggleDrawable="@drawable/icon_selector_password_eye"
+                    app:passwordToggleEnabled="true">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/set_pin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FAFAFA"
+                        android:digits="0123456789"
+                        android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberPassword"
+                        android:maxLength="4"
+                        android:textSize="20sp"
+                        tools:targetApi="LOLLIPOP" android:letterSpacing="0.95"
+                        android:ems="2"
+                        android:nextFocusDown="@+id/confirm_pin"
+                        android:textColor="#767676" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05dp"
+                android:background="@color/color_light_gray" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/confirmPin_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:background="#FAFAFA"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm_newpin"
+                android:fontFamily="@font/sf_ui_display_semi_bold"
+                android:textColor="@color/color_black"
+                android:textSize="17sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FAFAFA"
+                    app:hintEnabled="false"
+                    app:passwordToggleDrawable="@drawable/icon_selector_password_eye"
+                    app:passwordToggleEnabled="true">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/confirm_pin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FAFAFA"
+                        android:digits="0123456789"
+                        android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberPassword"
+                        android:maxLength="4"
+                        android:textSize="20sp"
+                        tools:targetApi="LOLLIPOP" android:letterSpacing="0.95"
+                        android:ems="2"
+                        android:textColor="#767676" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05dp"
+                android:background="@color/color_light_gray" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/save_btn"
+            style="@style/TextSemiBoldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_button_shape"
+            android:paddingBottom="15dp"
+            android:paddingEnd="40dp"
+            android:paddingStart="40dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingTop="15dp"
+            android:text="@string/save"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/margin_15"
+            android:visibility="visible" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

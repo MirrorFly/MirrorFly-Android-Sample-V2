@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_chat_audio"
+    style="@style/ChatView"
+    android:clickable="false">
+
+    <include layout="@layout/list_chat_audio_sent_item" />
+
+</LinearLayout>

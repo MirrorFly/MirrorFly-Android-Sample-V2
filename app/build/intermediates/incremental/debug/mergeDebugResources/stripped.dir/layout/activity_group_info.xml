@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 1.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2021 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:fitsSystemWindows="true"
+    tools:context=".activities.GroupInfoActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <com.contusfly.collapsingToolbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:collapsedTitleTextAppearance="@style/CollapsedToolbarTitleStyle"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginBottom="@dimen/margin_35"
+            app:expandedTitleMarginEnd="@dimen/margin_20"
+            app:expandedTitleMarginStart="@dimen/margin_20"
+            app:expandedTitleTextAppearance="@style/ExpandedToolbarTitleStyle"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_grp_bg"
+                    android:contentDescription="@string/cd_user_profile_image"
+                    android:minHeight="250dp"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+
+                android:layout_marginStart="@dimen/margin_20"
+                android:layout_marginEnd="@dimen/margin_20"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/padding_40"
+                app:layout_collapseMode="parallax">
+
+                <androidx.emoji.widget.EmojiAppCompatTextView
+                    android:id="@+id/subTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/sf_ui_display_light"
+                    android:textColor="@color/color_white"
+                    android:textSize="12sp"
+                    tools:ignore="RelativeOverlap" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/edit_name"
+                    android:layout_width="@dimen/margin_20"
+                    android:layout_height="@dimen/margin_20"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="end|bottom"
+
+                    android:layout_marginBottom="@dimen/margin_3"
+                    android:contentDescription="@string/cd_edit_group_name_image"
+                    app:srcCompat="@drawable/ic_edit"
+                    app:tint="@color/color_white" />
+
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/CustomToolBar"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin" />
+
+        </com.contusfly.collapsingToolbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_white"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_20"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/group_mute"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_size_28"
+                android:layout_marginBottom="@dimen/margin_20">
+
+                <androidx.emoji.widget.EmojiAppCompatTextView
+                    android:id="@+id/muteTitle"
+                    style="@style/TitleMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/label_mute_notification" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/muteSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:thumb="@drawable/thumb_selector"
+                    app:track="@drawable/track_selector" />
+
+            </RelativeLayout>
+
+            <include
+                android:id="@+id/private_chat_view"
+                layout="@layout/private_chat_toggle_layout">
+
+            </include>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/muteDivider"
+                    style="@style/DividerStyle" />
+
+                <androidx.emoji.widget.EmojiAppCompatTextView
+                    android:id="@+id/add_participant"
+                    style="@style/TitleMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableStart="@drawable/ic_add_participants"
+                    android:drawablePadding="@dimen/padding_15"
+                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/padding_16"
+                    android:visibility="gone"
+                    android:paddingBottom="@dimen/padding_16"
+                    android:text="@string/label_participants" />
+                <ProgressBar
+                    android:id="@+id/progress_spinner"
+                    android:layout_width="@dimen/margin_24"
+                    android:layout_height="@dimen/margin_24"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible" />
+
+                <View
+                    android:id="@+id/addParticipantsDivider"
+                    style="@style/DividerStyle"
+                    android:visibility="visible" />
+
+                <com.contusfly.views.CustomRecyclerView
+                    android:id="@+id/members_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    tools:listitem="@layout/list_participants_item" />
+
+                <View
+                    android:id="@+id/statusDivider"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone" />
+
+                <androidx.emoji.widget.EmojiAppCompatTextView
+                    android:id="@+id/text_media"
+                    style="@style/TitleMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableStart="@drawable/ic_image"
+                    android:drawableEnd="@drawable/ic_right_icon"
+                    android:drawablePadding="@dimen/padding_15"
+                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/padding_20"
+                    android:paddingBottom="@dimen/padding_20"
+                    android:text="@string/label_view_all_media" />
+
+                <View
+                    android:id="@+id/leaveGroupDivider"
+                    style="@style/DividerStyle"/>
+
+                <androidx.emoji.widget.EmojiAppCompatTextView
+                    android:id="@+id/report_group"
+                    style="@style/Report_User_TitleMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableStart="@drawable/ic_report_group"
+                    android:drawablePadding="@dimen/padding_10"
+                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/padding_20"
+                    android:paddingBottom="@dimen/padding_20"
+                    android:text="@string/label_report_group" />
+
+                <View
+                    android:id="@+id/viewAllMediaDivider"
+                    style="@style/DividerStyle" />
+
+                <androidx.emoji.widget.EmojiAppCompatTextView
+                    android:id="@+id/leave_group"
+                    style="@style/TitleMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableStart="@drawable/ic_leave_group"
+                    android:drawablePadding="@dimen/padding_15"
+                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/padding_20"
+                    android:paddingBottom="@dimen/padding_20"
+                    android:text="@string/label_leave_group"
+                    android:textColor="@color/color_red_light" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

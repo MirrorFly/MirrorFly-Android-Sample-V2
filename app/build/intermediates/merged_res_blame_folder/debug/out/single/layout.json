@@ -1,0 +1,902 @@
+[
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_call_history_detail.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_call_history_detail.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_notifications.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_notifications.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_data_usage_settings_child_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_data_usage_settings_child_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_participants_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_participants_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/permission_instruction_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/permission_instruction_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_chat_reply_received_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_chat_reply_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_pin.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_pin.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/attachment_view.xml",
+        "source": "com.contusfly.app-main-67:/layout/attachment_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_chat_contact_received_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_chat_contact_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_chats.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_chats.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_archived_chats.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_archived_chats.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_info_img_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_info_img_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_search_contact_message.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_search_contact_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_call_connected.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_call_connected.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_contact_selection_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_contact_selection_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_call_not_connected.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_call_not_connected.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_pick_contact.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_pick_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/notification_permission_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/notification_permission_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_pin_entry_change.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_pin_entry_change.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_layout_archived.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_layout_archived.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_no_call_history.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_no_call_history.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_on_going_call_preview_screen.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_on_going_call_preview_screen.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_status.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_status.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/people_selection_list_item_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/people_selection_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chatview_attachment_controls.xml",
+        "source": "com.contusfly.app-main-67:/layout/chatview_attachment_controls.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_video_sender_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_video_sender_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/join_call_preview_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/join_call_preview_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_view_all_media.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_view_all_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_starred_contact_sent_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_starred_contact_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_chat_file_sent_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_chat_file_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_user_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_user_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_starred_file_sent_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_starred_file_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_notification_alerts.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_notification_alerts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_restore.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_restore.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/bottom_sheet_chat_tag_remove_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/bottom_sheet_chat_tag_remove_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_user_info.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_user_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_country_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_country_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_chat_contact_sent_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_chat_contact_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_schedule_meet_receiver_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_schedule_meet_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_starred_message_header_sender.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_starred_message_header_sender.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/common_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/common_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_chat_file_received_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_chat_file_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_starred_audio_sent_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_starred_audio_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_group_call_members_image.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_group_call_members_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_media_docs_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_media_docs_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_no_search_message_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_no_search_message_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_map_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_map_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_schedule_meet_sender_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_schedule_meet_sender_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/toolbar_title_center_view.xml",
+        "source": "com.contusfly.app-main-67:/layout/toolbar_title_center_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_share_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_share_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/custom_tabs.xml",
+        "source": "com.contusfly.app-main-67:/layout/custom_tabs.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/custom_toast.xml",
+        "source": "com.contusfly.app-main-67:/layout/custom_toast.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_progress_bar.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_progress_bar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_quick_share.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_quick_share.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_media_preview.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_media_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_data_usage_settings_group_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_data_usage_settings_group_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_group_mention.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_group_mention.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_admin_blocked.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_admin_blocked.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_view_all_media.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_view_all_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_media_preview.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_media_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_contact_selected_preview.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_contact_selected_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_select_contact_message.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_select_contact_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_user_busy_status.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_user_busy_status.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_users_selection.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_users_selection.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_info_txt_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_info_txt_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_anonymous_call.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_anonymous_call.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_translated_language_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_translated_language_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/reply_view.xml",
+        "source": "com.contusfly.app-main-67:/layout/reply_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_audio_device_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_audio_device_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_recent_chat_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_recent_chat_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_qr_code_scanner.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_qr_code_scanner.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/progress_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/progress_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_media_slide.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_media_slide.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_about_help.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_about_help.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_country_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_country_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/pull_refresh_private_chat_view_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/pull_refresh_private_chat_view_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_files_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_files_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_info_audio_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_info_audio_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_info_video_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_info_video_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_chat_reply_sent_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_chat_reply_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/call_user_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/call_user_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_pin_setting.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_pin_setting.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_blocked_contacts.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_blocked_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_tag_list_item_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_tag_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_group_message_info.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_group_message_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_group_user_tag_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_group_user_tag_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_chat_audio_sent_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_chat_audio_sent_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/create_call_link_dialog_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/create_call_link_dialog_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/edit_view_footer.xml",
+        "source": "com.contusfly.app-main-67:/layout/edit_view_footer.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/otp_view.xml",
+        "source": "com.contusfly.app-main-67:/layout/otp_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/keyboard.xml",
+        "source": "com.contusfly.app-main-67:/layout/keyboard.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_image_preview.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_image_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_private_chat_enable_disable.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_private_chat_enable_disable.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_about_us.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_about_us.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_edit_message.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_edit_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_file_dialog_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_file_dialog_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_add_participant.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_add_participant.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_info_contact_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_info_contact_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_info_location_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_info_location_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_starred_message.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_starred_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/dialog_audio_recording.xml",
+        "source": "com.contusfly.app-main-67:/layout/dialog_audio_recording.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_call_options.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_call_options.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_schedule_bottom_sheet.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_schedule_bottom_sheet.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/contact_selection_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/contact_selection_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_common_editor.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_common_editor.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_data_usage_settings.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_data_usage_settings.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_media.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_media.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_starred_file_received_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_starred_file_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_message_info.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_message_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_private_chat_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_private_chat_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_layout_loader.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_layout_loader.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/recent_chat_tag_header_list_item_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/recent_chat_tag_header_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/reason_spinner_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/reason_spinner_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_new_group.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_new_group.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/select_contact_message_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/select_contact_message_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_detail_call_logs.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_detail_call_logs.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_chat_audio_received_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_chat_audio_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_media_links_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_media_links_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/profile_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/profile_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/suggestion_recycler_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/suggestion_recycler_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_rev_image_caption_text.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_rev_image_caption_text.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_info_file_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_info_file_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/progress_view.xml",
+        "source": "com.contusfly.app-main-67:/layout/progress_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/common_alert_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/common_alert_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/action_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/action_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_profile_start.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_profile_start.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_chat_space.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_chat_space.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_forward_message.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_forward_message.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/bottom_sheet_edit_profile_image.xml",
+        "source": "com.contusfly.app-main-67:/layout/bottom_sheet_edit_profile_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_starred_audio_received_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_starred_audio_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_no_messages.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_no_messages.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_group_call.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_group_call.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_notification_instruction.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_notification_instruction.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/backup_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/backup_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_img_receiver_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_img_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/poor_internet_connection.xml",
+        "source": "com.contusfly.app-main-67:/layout/poor_internet_connection.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_no_contacts.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_no_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_create_call_link.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_create_call_link.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/private_chat_empty_view_recent_screen_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/private_chat_empty_view_recent_screen_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/connectivity_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/connectivity_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_location_receiver_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_location_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_back_up.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_back_up.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_chat_tag.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_chat_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_group_info.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_group_info.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_select_contact_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_select_contact_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_qr_result.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_qr_result.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_img_sender_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_img_sender_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/edit_message_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/edit_message_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_pick_contact.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_pick_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_download.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_download.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_preview_send_contact.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_preview_send_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/private_chat_toggle_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/private_chat_toggle_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_chat_date.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_chat_date.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_biometric.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_biometric.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_chat_footer.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_chat_footer.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_edit_tag.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_edit_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/message_header_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/message_header_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/people_view_list_item_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/people_view_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_otp.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_otp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/custom_snack_bar.xml",
+        "source": "com.contusfly.app-main-67:/layout/custom_snack_bar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_pip_mode.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_pip_mode.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_on_gng_call_participants_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_on_gng_call_participants_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/message_child_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/message_child_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_video_receiver_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_video_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/private_chat_list_item_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/private_chat_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_starred_message_header_receiver.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_starred_message_header_receiver.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_starred_contact_received_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_starred_contact_received_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_preview_send_contact.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_preview_send_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/call_grid_user_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/call_grid_user_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_preview_mobile_number.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_preview_mobile_number.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_image_view.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_image_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_recent_chat.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_recent_chat.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/add_people_recent_chat_item_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/add_people_recent_chat_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_delete_my_account.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_delete_my_account.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/list_participants_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/list_participants_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/frequency_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/frequency_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/scanner_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/scanner_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_sent_image_caption_text.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_sent_image_caption_text.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/edit_chat_tag_list_item_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/edit_chat_tag_list_item_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_info_meet_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_info_meet_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chat_tag_common_toolbar.xml",
+        "source": "com.contusfly.app-main-67:/layout/chat_tag_common_toolbar.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_txt_receiver_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_txt_receiver_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_new_contacts.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_new_contacts.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_web_login_entry.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_web_login_entry.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_incoming_call.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_incoming_call.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_chat.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_chat.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_all_media_header_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_all_media_header_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_call_history.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_call_history.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_selected_media_view.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_selected_media_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_settings.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_settings.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_add_people.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_add_people.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/private_chat_enable_dialog_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/private_chat_enable_dialog_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/grid_media_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/grid_media_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/search_bar_loader_layout.xml",
+        "source": "com.contusfly.app-main-67:/layout/search_bar_loader_layout.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_empty_data.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_empty_data.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_bottom_sheet_otp.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_bottom_sheet_otp.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_contact_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_contact_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_create_tag.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_create_tag.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_language_list.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_language_list.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_participants_list_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_participants_list_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/checkbox.xml",
+        "source": "com.contusfly.app-main-67:/layout/checkbox.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/view_caption.xml",
+        "source": "com.contusfly.app-main-67:/layout/view_caption.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_profile_start_status.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_profile_start_status.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/chatview_controls.xml",
+        "source": "com.contusfly.app-main-67:/layout/chatview_controls.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_dashboard.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_dashboard.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_sender_name.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_sender_name.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_synchronize_contact.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_synchronize_contact.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_contact_selection.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_contact_selection.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_location_sender_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_location_sender_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_files_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_files_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_image_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_image_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/keyboard_popup.xml",
+        "source": "com.contusfly.app-main-67:/layout/keyboard_popup.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_call_logs.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_call_logs.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_user_profile_image.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_user_profile_image.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_settings.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_terms_and_conditions.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_terms_and_conditions.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_profile_dialog.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_profile_dialog.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/activity_select_map_view.xml",
+        "source": "com.contusfly.app-main-67:/layout/activity_select_map_view.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/share_contacts_row_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/share_contacts_row_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/layout_call_retry.xml",
+        "source": "com.contusfly.app-main-67:/layout/layout_call_retry.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_contact_us.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_contact_us.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/fragment_feedback.xml",
+        "source": "com.contusfly.app-main-67:/layout/fragment_feedback.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_notification_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_notification_item.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout/row_chat_txt_sender_item.xml",
+        "source": "com.contusfly.app-main-67:/layout/row_chat_txt_sender_item.xml"
+    }
+]
