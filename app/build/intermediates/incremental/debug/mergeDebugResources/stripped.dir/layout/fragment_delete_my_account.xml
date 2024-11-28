@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingEnd="@dimen/padding_18">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextMediumRegularStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_18"
+                android:drawableStart="@drawable/ic_delete_account_warning"
+                android:drawablePadding="@dimen/padding_15"
+                android:includeFontPadding="true"
+                android:text="@string/delete_account_desc_title"
+                android:textColor="@color/color_red_light" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextRegularStyleBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_34"
+                android:layout_marginTop="@dimen/margin_13"
+                android:drawableStart="@drawable/ic_bullet_icon"
+                android:drawablePadding="@dimen/padding_5"
+                android:text="@string/delete_account_desc_label_1"
+                android:textColor="@color/text_black_light" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextRegularStyleBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_34"
+                android:layout_marginTop="@dimen/margin_8"
+                android:drawableStart="@drawable/ic_bullet_icon"
+                android:drawablePadding="@dimen/padding_5"
+                android:text="@string/delete_account_desc_label_2"
+                android:textColor="@color/text_black_light" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextRegularStyleBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_34"
+                android:layout_marginTop="@dimen/margin_8"
+                android:drawableStart="@drawable/ic_bullet_icon"
+                android:drawablePadding="@dimen/padding_5"
+                android:text="@string/delete_account_desc_label_3"
+                android:textColor="@color/text_black_light" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextRegularStyleLight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_17"
+                android:text="@string/delete_account_country_desc"
+                android:textColor="@color/text_black_dark" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextSemiBoldStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_18"
+            android:layout_marginTop="@dimen/margin_15"
+            android:layout_marginEnd="@dimen/padding_18"
+            android:text="@string/country_label"
+            android:textColor="@color/text_black_dark" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/txt_country"
+            style="@style/TextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_settings"
+            android:drawableEnd="@drawable/ic_down_icon"
+            android:gravity="center_vertical"
+            android:hint="@string/choose_country_label"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="@dimen/padding_10"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="@dimen/padding_10"
+            android:textColor="@color/text_black_dark"
+            android:textColorHint="@color/text_black_light" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1"
+            android:layout_marginStart="@dimen/padding_18"
+            android:layout_marginEnd="@dimen/padding_18"
+            android:background="?attr/divider_color"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextSemiBoldStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_18"
+            android:layout_marginTop="@dimen/padding_18"
+            android:layout_marginEnd="@dimen/padding_18"
+            android:text="@string/mobile_number_hint_label"
+            android:textColor="@color/text_black_dark" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_18"
+            android:layout_marginEnd="@dimen/padding_18">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/plus_label"
+                style="@style/TextRegularStyleLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/plus_label"
+                app:layout_constraintBottom_toBottomOf="@+id/country_code_edit_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/country_code_edit_text" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/country_code_edit_text"
+                style="@style/TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/white_color"
+                android:inputType="number"
+                android:maxLength="4"
+                android:minWidth="@dimen/margin_50"
+                android:paddingStart="@dimen/padding_10"
+                android:paddingTop="@dimen/padding_10"
+                android:paddingEnd="@dimen/padding_5"
+                android:paddingBottom="@dimen/padding_10"
+                android:textColor="@color/text_black_dark"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintStart_toEndOf="@+id/plus_label"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/margin_1"
+                android:background="?attr/divider_color"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@+id/country_code_edit_text"
+                app:layout_constraintStart_toStartOf="@+id/plus_label"
+                app:layout_constraintTop_toBottomOf="@+id/country_code_edit_text" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/mobile_number_edit_text"
+                style="@style/TextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_40"
+                android:background="?attr/white_color"
+                android:hint="@string/mobile_number_hint_label"
+                android:inputType="number"
+                android:maxLength="15"
+                android:paddingTop="@dimen/padding_10"
+                android:paddingBottom="@dimen/padding_10"
+                android:textColor="@color/text_black_dark"
+                android:textColorHint="@color/text_black_light"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/country_code_edit_text"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/margin_1"
+                android:background="?attr/divider_color"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@+id/mobile_number_edit_text"
+                app:layout_constraintStart_toStartOf="@+id/mobile_number_edit_text"
+                app:layout_constraintTop_toBottomOf="@+id/mobile_number_edit_text" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_continue"
+            style="@style/CallLinkView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/margin_38"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_38"
+            android:background="@drawable/bg_button_red_shape"
+            android:focusable="false"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_40"
+            android:paddingEnd="@dimen/padding_40"
+            android:text="@string/continue_label"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_14"
+            android:visibility="visible" />
+    </LinearLayout>
+</ScrollView>

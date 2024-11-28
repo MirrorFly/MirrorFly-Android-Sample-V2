@@ -4,6 +4,7 @@ import android.app.PictureInPictureParams
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.util.DisplayMetrics
 import android.util.Rational
@@ -14,6 +15,7 @@ import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import com.contus.call.CallActions
 import com.contus.call.CallConstants.CALL_UI
@@ -27,6 +29,7 @@ import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.ActivityGroupCallBinding
 import com.contusfly.utils.CommonUtils
 import com.contusfly.utils.Constants
+import com.contusfly.TAG
 import com.mirrorflysdk.api.utils.ChatTimeFormatter
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 import com.mirrorflysdk.flycall.webrtc.*
@@ -156,22 +159,22 @@ class BaseCallViewHelper(
         durationHandler.postDelayed(updateTimerThread, 0)
     }
 
-    fun setUpCallUI() {
+    fun setUpCallUI(isCallOptionAnimation:Boolean,isLocalTrackAddedFromSwitchRequest:Boolean) {
         LogMessage.d(TAG, "$CALL_UI $JOIN_CALL callViewHelper setUpCallUI()")
         setOverlayBackground()
         callNotConnectedViewHelper.setUpCallUI()
-        callConnectedViewHelper.setUpCallUI()
+        callConnectedViewHelper.setUpCallUI(isLocalTrackAddedFromSwitchRequest)
         callOptionsViewHelper.setUpCallUI()
         retryCallViewHelper.setUpCallUI()
         incomingCallViewHelper.setUpCallUI()
 
         hidePIPLayout()
-        resizeLocalTile()
+        resizeLocalTile(isCallOptionAnimation)
 
         if (CallManager.isCallAnswered()) callDuration = activity.getString(R.string.start_timer)
         if (CallManager.isCallConnected() && (!GroupCallUtils.isCallLinkBehaviourMeet())) {
             startCallTimer()
-            enableCallOptionAnimation()
+            if(isCallOptionAnimation) enableCallOptionAnimation()
         }
         if (GroupCallUtils.isCallLinkBehaviourMeet()) {
             callConnectedViewHelper.hideTextCallDuration()
@@ -376,6 +379,7 @@ class BaseCallViewHelper(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && CallManager.isCallConnected() && !CallUtils.isAddUsersToTheCall()) {
             if (CommonUtils.isPipModeAllowed(activity)) {
                 // Calculate the aspect ratio of the PiP screen.
+                CallManager.unbindCallService()
                 val aspectRatio = Rational(binding.rootLayout.width, binding.rootLayout.height)
                 mPictureInPictureParamsBuilder!!.setAspectRatio(aspectRatio).build()
                 val isSuccess =
@@ -407,10 +411,7 @@ class BaseCallViewHelper(
     override fun enableCallOptionAnimation() {
         when {
             CallUtils.getIsGridViewEnabled() -> {
-                durationHandler.postDelayed(
-                    hideOptionsRunnable,
-                    3000
-                )
+                durationHandler.postDelayed(hideOptionsRunnable, 3000)
                 showGridTitle()
             }
 
@@ -419,21 +420,15 @@ class BaseCallViewHelper(
                 durationHandler.removeCallbacks(hideOptionsRunnable)
             }
 
-            else -> durationHandler.postDelayed(
-                hideOptionsRunnable,
-                3000
-            )
+            else -> durationHandler.postDelayed(hideOptionsRunnable, 3000)
         }
     }
 
-    private fun disableCallOptionAnimation() {
-        isAnimateClicked = false
-        durationHandler.removeCallbacks(hideOptionsRunnable)
-    }
 
     override fun checkOptionArrowVisibility(visibility: Int) {
         binding.callOptionsUpArrow.visibility = visibility
     }
+
 
     /**
      * animates the local video view to move down to bottom of the screen
@@ -443,6 +438,7 @@ class BaseCallViewHelper(
 
         if(binding.layoutCallOptions.layoutSlowNetwork.poorConnectionRoot.visibility == View.VISIBLE){
             LogMessage.d(TAG, "$CALL_UI skip callViewHelper onCallOptionsHidden() poorConnectionRoot VISIBLE")
+            binding.layoutCallOptions.layoutCallOptions.visibility = View.VISIBLE
             return
         }
         val bottomMarginStart =
@@ -458,7 +454,7 @@ class BaseCallViewHelper(
                 )
                 AnimationsHelper.animateViewWithValues(
                     binding.layoutCallConnected.layoutOneToOneAudioCall, bottomMarginStart,
-                    bottomMarginTo, 500
+                    bottomMarginTo, Constants.ANIMATION_DURATION
                 ) { updatedValue: Int ->
                     params.setMargins(
                         0,
@@ -507,7 +503,7 @@ class BaseCallViewHelper(
                     binding.layoutCallConnected.layoutOneToOneAudioCall,
                     bottomMarginStart,
                     bottomMarginTo,
-                    500
+                    Constants.ANIMATION_DURATION
                 ) { updatedValue: Int ->
                     params.setMargins(
                         0,
@@ -536,7 +532,7 @@ class BaseCallViewHelper(
     }
 
     private fun showListViewAtBottom() {
-        LogMessage.d(TAG, "$CALL_UI callViewHelper showListViewAtBottom()")
+        LogMessage.d(TAG, "$CALL_UI showListViewAtBottom()")
         val bottomMarginEnd = CommonUtils.convertDpToPixel(activity, 20) // margin start value
         val layoutMargin = CommonUtils.convertDpToPixel(activity, 10) // margin value
         val bottomMarginStart =
@@ -545,21 +541,23 @@ class BaseCallViewHelper(
             binding.layoutCallConnected.callUsersRecyclerview.layoutParams as RelativeLayout.LayoutParams
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT
         params.height = RelativeLayout.LayoutParams.WRAP_CONTENT
-        AnimationsHelper.animateViewWithValues(
-            binding.layoutCallConnected.callUsersRecyclerview, bottomMarginStart,
-            bottomMarginEnd, 500
-        ) { updatedValue: Int ->
-            params.setMargins(
-                layoutMargin,
-                layoutMargin,
-                layoutMargin,
-                updatedValue
-            )
-            binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams = params
-        }
+
+        params.setMargins(layoutMargin, layoutMargin, layoutMargin, bottomMarginEnd)
+        binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams = params
+
+        /*    AnimationsHelper.animateViewWithValues(
+                binding.layoutCallConnected.callUsersRecyclerview,
+                bottomMarginStart, bottomMarginEnd, Constants.ANIMATION_DURATION
+            ) { updatedValue: Int ->
+                params.setMargins(layoutMargin, layoutMargin, layoutMargin, updatedValue)
+                binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams = params
+            }*/
     }
 
     private fun showListViewAboveCallOptions() {
+        if (binding.layoutCallConnected.callUsersRecyclerview.visibility != View.VISIBLE) {
+            return // 3 users group video call->when any one of the user left, at the time if you go to pipmode and then come to maximize, left user view also visible ->issue fix
+        }
         LogMessage.d(TAG, "$CALL_UI callViewHelper showListViewAboveCallOptions()")
         LogMessage.i(
             TAG,
@@ -572,47 +570,60 @@ class BaseCallViewHelper(
             binding.layoutCallConnected.callUsersRecyclerview.layoutParams as RelativeLayout.LayoutParams
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT
         params.height = RelativeLayout.LayoutParams.WRAP_CONTENT
-        AnimationsHelper.animateViewWithValues(
-            binding.layoutCallConnected.callUsersRecyclerview,
-            0,
-            bottomMarginTo,
-            500
-        ) { updatedValue: Int ->
-            params.setMargins(
-                layoutMargin,
-                layoutMargin,
-                layoutMargin,
-                updatedValue
-            )
-            binding.layoutCallConnected.callUsersRecyclerview.layoutParams = params
-        }
+
+        params.addRule(RelativeLayout.ABOVE, binding.layoutCallOptions.layoutCallOptions.id) // Align RecyclerView's bottom to the top of the bottomView
+        params.setMargins(layoutMargin, layoutMargin, layoutMargin, bottomMarginTo)
+        binding.layoutCallConnected.callUsersRecyclerview.layoutParams = params
+
+        /* AnimationsHelper.animateViewWithValues(
+             binding.layoutCallConnected.callUsersRecyclerview, 0, bottomMarginTo, if(!binding.layoutCallOptions.layoutCallOptions.isVisible) Constants.ANIMATION_DURATION else 0
+         ) { updatedValue: Int ->
+             params.setMargins(layoutMargin, layoutMargin, layoutMargin, updatedValue)
+             binding.layoutCallConnected.callUsersRecyclerview.layoutParams = params
+         }*/
     }
 
     /**
      * animates the call options layout with respect to it's visibility
      */
-    override fun animateCallOptionsView() {
+    override fun animateCallOptionsView(isTouch: Boolean) {
         if (!isAnimateClicked) {
+            durationHandler.removeCallbacks(hideOptionsRunnable)
             isAnimateClicked = true
             LogMessage.d(TAG, "$CALL_UI callViewHelper animateCallOptionsView()")
             if (!CallManager.isCallConnected() || CallUtils.isAddUsersToTheCall()
                 || !CallUtils.getIsGridViewEnabled() && (CallManager.isOneToOneAudioCall()
                         || CallManager.isOneToOneRemoteVideoMuted()
                         || CallManager.isReconnecting())
-            )
+            ) {
+                if (!binding.layoutCallOptions.layoutCallOptions.isVisible) {
+                    animateCallOptions(com.contus.call.R.anim.slide_up, View.VISIBLE, View.GONE)
+                    animateCallDetails(com.contus.call.R.anim.slide_out_down, View.VISIBLE)
+                }
+                isAnimateClicked = false
                 return
+            }
 
-            if (GroupCallUtils.isSingleUserInCall())
+            if (GroupCallUtils.isSingleUserInCall()){
+                isAnimateClicked = false
                 return
+            }
 
             if (CallUtils.getIsGridViewEnabled())
                 animateGridView()
             else
-                animateListView()
+                animateListView(isTouch)
         }
     }
 
+    private fun clearAnimation(){
+        binding.layoutCallOptions.layoutCallOptions.clearAnimation()
+        binding.layoutCallConnected.layoutTitle.clearAnimation()
+        binding.layoutCallConnected.callGridUsersRecyclerview.clearAnimation()
+    }
+
     private fun animateGridView() {
+        clearAnimation()
         isAnimateClicked = false
         LogMessage.d(TAG, "$CALL_UI callViewHelper animateCallOptionsView animateGridView()")
         durationHandler.removeCallbacks(hideOptionsRunnable)
@@ -645,49 +656,43 @@ class BaseCallViewHelper(
     }
 
     private fun onCallTitleHidden() {
-        LogMessage.d(TAG, "$CALL_UI callViewHelper onCallTitleHidden()")
+        LogMessage.d(TAG, "$CALL_UI onCallTitleHidden()")
         val bottomMarginStart = binding.layoutCallConnected.layoutTitle.height // margin start value
         val bottomMarginTo = CommonUtils.convertDpToPixel(activity, 8) // where to animate to
         val params =
             binding.layoutCallConnected.callGridUsersRecyclerview.layoutParams as RelativeLayout.LayoutParams
 
         AnimationsHelper.animateViewWithValues(
-            binding.layoutCallConnected.callGridUsersRecyclerview, bottomMarginStart,
-            bottomMarginTo, 500
+            binding.layoutCallConnected.callGridUsersRecyclerview,
+            bottomMarginStart, bottomMarginTo, Constants.ANIMATION_DURATION
         ) { updatedValue: Int ->
             params.setMargins(
-                bottomMarginTo,
-                updatedValue + bottomMarginTo,
-                bottomMarginTo,
-                bottomMarginTo
+                bottomMarginTo, updatedValue + bottomMarginTo, bottomMarginTo, bottomMarginTo
             )
             binding.layoutCallConnected.callGridUsersRecyclerview.layoutParams = params
         }
     }
 
     private fun onCallTitleVisible() {
-        LogMessage.d(TAG, "$CALL_UI callViewHelper onCallTitleVisible()")
+        LogMessage.d(TAG, "$CALL_UI onCallTitleVisible()")
         val bottomMarginStart = CommonUtils.convertDpToPixel(activity, 8) // margin start value
         val bottomMarginTo = binding.layoutCallConnected.layoutTitle.height // where to animate to
         val params =
             binding.layoutCallConnected.callGridUsersRecyclerview.layoutParams as RelativeLayout.LayoutParams
+
         AnimationsHelper.animateViewWithValues(
             binding.layoutCallConnected.callGridUsersRecyclerview,
-            bottomMarginStart,
-            bottomMarginTo,
-            500
+            bottomMarginStart, bottomMarginTo, Constants.ANIMATION_DURATION
         ) { updatedValue: Int ->
             params.setMargins(
-                bottomMarginStart,
-                updatedValue + bottomMarginStart,
-                bottomMarginStart,
-                bottomMarginStart
+                bottomMarginStart, updatedValue + bottomMarginStart,
+                bottomMarginStart, bottomMarginStart
             )
             binding.layoutCallConnected.callGridUsersRecyclerview.layoutParams = params
         }
     }
 
-    private fun showGridTitle() {
+    override fun showGridTitle() {
         LogMessage.d(TAG, "$CALL_UI callViewHelper showGridTitle()")
         val bottomMarginStart = CommonUtils.convertDpToPixel(activity, 8) // margin start value
         binding.layoutCallConnected.backgroundView.gone()
@@ -706,38 +711,28 @@ class BaseCallViewHelper(
         }
     }
 
-    private fun animateListView() {
-        LogMessage.d(TAG, "$CALL_UI callViewHelper animateCallOptionsView animateListView()")
-        if (CallManager.isOneToOneCall()) {
-            animateOneToOneCallOption()
-        } else {
-            animateGroupListView()
-        }
+    private fun animateListView(isTouch: Boolean) {
+        LogMessage.d(TAG, "$CALL_UI animateListView()")
+        if (CallManager.isOneToOneCall()) animateOneToOneCallOption(isTouch) else animateGroupListView()
     }
 
-    private fun animateOneToOneCallOption() {
-        LogMessage.d(
-            TAG,
-            "$CALL_UI callViewHelper animateCallOptionsView animateOneToOneCallOption()"
-        )
+    private fun animateOneToOneCallOption(isTouch: Boolean) {
+        LogMessage.d(TAG, "$CALL_UI animateOneToOneCallOption() isTouch: $isTouch")
+        animateOnetoOne()
+    }
+
+    private fun animateOnetoOne(){
         if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE) {
-            LogMessage.d(
-                TAG,
-                "$CALL_UI callViewHelper animateCallOptionsView animateOneToOneCallOption() hide callOptions and call details!!"
-            )
-            animateCallOptions(R.anim.slide_down, View.GONE, View.VISIBLE)
-            animateCallDetails(R.anim.slide_out_up, View.GONE)
+            animateCallOptions(com.contus.call.R.anim.slide_down, View.GONE, View.VISIBLE)
+            animateCallDetails(com.contus.call.R.anim.slide_out_up, View.GONE)
             isAnimateClicked = false
             durationHandler.removeCallbacks(hideOptionsRunnable)
         } else {
-            LogMessage.d(
-                TAG,
-                "$CALL_UI callViewHelper animateCallOptionsView animateOneToOneCallOption() show callOptions and call details!!"
-            )
-            animateCallOptions(R.anim.slide_up, View.VISIBLE, View.GONE)
-            animateCallDetails(R.anim.slide_out_down, View.VISIBLE)
-            if (CallManager.isOneToOneVideoCall())
-                durationHandler.postDelayed(hideOptionsRunnable, 3000)
+            animateCallOptions(com.contus.call.R.anim.slide_up, View.VISIBLE, View.GONE)
+            animateCallDetails(com.contus.call.R.anim.slide_out_down, View.VISIBLE)
+            isAnimateClicked = false
+            /*if (CallManager.isOneToOneVideoCall())
+                durationHandler.postDelayed(hideOptionsRunnable, 3000)*/
         }
     }
 
@@ -823,13 +818,32 @@ class BaseCallViewHelper(
             if (CallUtils.getIsGridViewEnabled())
                 animateGridView()
             else {
-                animateCallDetails(R.anim.slide_out_down, View.VISIBLE)
-                animateCallOptions(R.anim.slide_up, View.VISIBLE, View.GONE)
+                animateCallDetails(com.contus.call.R.anim.slide_out_down, View.VISIBLE)
+                animateCallOptions(com.contus.call.R.anim.slide_up, View.VISIBLE, View.GONE)
             }
         }
-        binding.layoutCallConnected.textCallDuration.startAnimation(animation)
-        if (binding.layoutCallConnected.textCallDuration.visibility != View.VISIBLE) {
+
+        if (binding.layoutCallConnected.textCallDuration.visibility == View.VISIBLE) {
+            binding.layoutCallConnected.textCallDuration.startAnimation(animation)
+            activityFinishWithdelay()
+        } else {
             activity.finish()
+            CallLogger.callTestingLog("UIKIT---> updateCallConnectedLayout via activity.finish() called")
+        }
+    }
+
+    //Some time Animation not working properly so that time actiivty not finished so safer side added some delay logic
+    private fun activityFinishWithdelay() {
+        try {
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                if(!activity.isDestroyed) {
+                    CallLogger.callTestingLog("UIKIT---> updateCallConnectedLayout Handler Via Activity Destroyed..")
+                    activity.finish()
+                }
+            },1500)
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"hander exception $e")
+            CallLogger.callTestingLog("UIKIT---> hander exception $e",true)
         }
     }
 
@@ -839,7 +853,7 @@ class BaseCallViewHelper(
             "$CALL_UI #JOIN_CALL #disconnect callViewHelper updateDisconnectedStatus: isCallUIVisible():${isCallUIVisible()} GroupCallUtils.isCallLinkBehaviourMeet(): ${GroupCallUtils.isCallLinkBehaviourMeet()}"
         )
         if (isCallUIVisible()) {
-            val animation = AnimationUtils.loadAnimation(activity, R.anim.blink)
+            val animation = AnimationUtils.loadAnimation(activity, com.contus.call.R.anim.blink)
             LogMessage.d(
                 TAG,
                 "$CALL_UI #JOIN_CALL #disconnect callViewHelper updateDisconnectedStatus: callDuration.isNotBlank() :${callDuration.isNotBlank()} CallManager.isCallConnected(): ${CallManager.isCallConnected()}"
@@ -849,6 +863,8 @@ class BaseCallViewHelper(
             } else {
                 binding.layoutCallNotConnected.textCallStatus.text = callStatus
                 binding.layoutCallNotConnected.textCallStatus.startAnimation(animation)
+                activityFinishWithdelay()
+                CallLogger.callTestingLog("UIKIT---> updateCallConnectedLayout called isViewVisibility : ${binding.layoutCallConnected.textCallStatus.visibility}")
                 if (binding.layoutCallNotConnected.textCallStatus.visibility != View.VISIBLE) {
                     activity.finish()
                 }
@@ -857,6 +873,7 @@ class BaseCallViewHelper(
                 override fun onAnimationStart(animation: Animation) {
                     if (callStatus == CallStatus.DISCONNECTED) // while disconnecting the call, simultaneously new call receives which showing the ui without closing the group call activity. so pre-set variables doesnt reset and which causes the issue couldnt able to accept the call.
                         activity.finish()
+                    LogMessage.d(TAG,"on animation start-->")
                     /* not needed */
                 }
 
@@ -865,7 +882,7 @@ class BaseCallViewHelper(
                 }
 
                 override fun onAnimationRepeat(animation: Animation) {
-                    /* not needed */
+                    LogMessage.d(TAG,"$CALL_UI #Disconnect #onAnimationRepeat")
                 }
             })
         } else
@@ -923,7 +940,7 @@ class BaseCallViewHelper(
             } else {
                 callConnectedViewHelper.onVideoTrackAdded(userJid)
                 if (CallManager.isOneToOneCall())
-                    resizeLocalTile()
+                    resizeLocalTile(false)
             }
         } else LogMessage.d(TAG, "$CALL_UI callViewHelper onVideoTrackAdded Activity Destroyed")
     }
@@ -948,13 +965,15 @@ class BaseCallViewHelper(
         }
     }
 
-    private fun resizeLocalTile() {
+    private fun resizeLocalTile(isCallOptionAnimation:Boolean) {
+
 
         if (GroupCallUtils.isSingleUserInCall()) {
             LogMessage.d(TAG, "$CALL_UI callViewHelper resizeLocalTile singleUserInCall")
             reSizeLocalTileForSingleUserMeetBehaviourCall()
         } else if (CallManager.isLocalTileCanResize()) {
             LogMessage.d(TAG, "$CALL_UI callViewHelper resizeLocalTile isLocalTileCanResize")
+
             val params =
                 binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams as RelativeLayout.LayoutParams
             val rightMargin = CommonUtils.convertDpToPixel(activity, 20)
@@ -969,10 +988,7 @@ class BaseCallViewHelper(
                     params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
                     binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams = params
-                    LogMessage.i(
-                        TAG,
-                        "$CALL_UI callViewHelper Set video layout params on view post"
-                    )
+                    LogMessage.i(TAG, "$CALL_UI Set video layout params on view post")
                 }
             } else {
                 params.height = actualScreenHeight / 5
@@ -981,19 +997,17 @@ class BaseCallViewHelper(
                 params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
                 binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams = params
-                LogMessage.i(TAG, "$CALL_UI callViewHelper Set video layout params")
+                LogMessage.i(TAG, "$CALL_UI Set video layout params")
             }
         } else {
-            LogMessage.i(
-                TAG,
-                "$CALL_UI #callconnectionquality callViewHelper resizeLocalTile skip one to one call tile update getIsListViewAnimated:${CallUtils.getIsListViewAnimated()}"
-            )
-            if (!CallUtils.getIsListViewAnimated())
+            LogMessage.i(TAG, "$CALL_UI resizeLocalTile skip one to one call tile update")
+            if (!CallUtils.getIsListViewAnimated() && isCallOptionAnimation)
                 animateListViewWithCallOptions()
         }
     }
 
     override fun animateListViewWithCallOptions() {
+
         LogMessage.i(
             TAG,
             "$CALL_UI callViewHelper animateListViewWithCallOptions CallManager.isCallConnected(): ${CallManager.isCallConnected()}"
@@ -1003,14 +1017,25 @@ class BaseCallViewHelper(
             return
         if (!CallUtils.getIsGridViewEnabled() && CallManager.isCallConnected())
             binding.layoutCallOptions.layoutCallOptions.post {
-                CallUtils.setIsListViewAnimated(true)
-                if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE ) {
-                    val layoutMargin = CommonUtils.convertDpToPixel(activity, 20)
-                    if (layoutMargin >= binding.layoutCallConnected.callUsersRecyclerview.marginBottom || CallUtils.getIsFromPoorInternetUpdate())
-                        showListViewAboveCallOptions()
-                } else
-                    showListViewAtBottom()
+                if(!binding.layoutCallOptions.layoutCallOptions.isVisible) {
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        animateListViewCallOption()
+                    },1000)
+                } else {
+                    animateListViewCallOption()
+                }
             }
+    }
+
+
+    private fun animateListViewCallOption(){
+        CallUtils.setIsListViewAnimated(true)
+        if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE ) {
+            val layoutMargin = CommonUtils.convertDpToPixel(activity, 20)
+            if (layoutMargin >= binding.layoutCallConnected.callUsersRecyclerview.marginBottom || CallUtils.getIsFromPoorInternetUpdate())
+                showListViewAboveCallOptions()
+        } else
+            showListViewAtBottom()
     }
 
     /*
@@ -1064,6 +1089,10 @@ class BaseCallViewHelper(
         callConnectedViewHelper.updatePinnedUserIcon()
     }
 
+    override fun onConversionRequestAcceptSwapVideo() {
+        callOptionsViewHelper.conversionRequestAcceptSwapVideo()
+    }
+
     fun pinnedUserChanged(userJid: String) {
         CallUtils.setIsUserTilePinned(true)
         callConnectedViewHelper.pinnedUserChanged(userJid)
@@ -1109,9 +1138,24 @@ class BaseCallViewHelper(
         showCallOptions()
         CallUtils.setIsFromPoorInternetUpdate(true)
         CallUtils.setIsListViewAnimated(false)
-        resizeLocalTile()
+        resizeLocalTile(false)
     }
     fun updateUiForCallConnectionQuality(){
         callConnectedViewHelper.checkAndShowPoorConnectionQuality()
+    }
+
+    override fun isAnimationStarted(): Boolean {
+        return callOptionsViewHelper.isAnimationStarted
+    }
+
+    override fun disableCallOptionAnimation() {
+        isAnimateClicked = false
+        durationHandler.removeCallbacks(hideOptionsRunnable)
+    }
+
+    fun updateCallNotConnected(){
+        if(CallManager.isCallAttended()){
+            callNotConnectedViewHelper.setUpCallUIForCallAttended()
+        }
     }
 }

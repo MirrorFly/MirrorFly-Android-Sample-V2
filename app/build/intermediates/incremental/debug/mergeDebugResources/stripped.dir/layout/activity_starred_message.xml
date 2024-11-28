@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:animateLayoutChanges="true"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ToolbarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/chat_xmpp_connection_status_layout"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/chat_xmpp_connection_text"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:text="@string/msg_no_internet"
+            style="@style/Connection_status"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_xmpp_connection_status_layout"
+        android:orientation="horizontal"
+        android:paddingTop="-5dp"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="@string/title_add"
+            android:textColor="@color/text_color_black"
+            android:textAllCaps="false" />
+
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="match_parent"
+            android:background="@color/color_white" />
+
+        <Button
+            android:id="@+id/btn_block"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textColor="@color/text_color_black"
+
+            android:text="@string/title_block"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/empty_list"
+        layout="@layout/view_empty_data" />
+
+    <com.contusfly.views.CustomRecyclerView
+        android:id="@+id/view_chat_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view_footer"
+        android:layout_below="@+id/ll_block"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:background="@color/color_white"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:id="@+id/layout_redirect_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/view_footer"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="end"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/unread_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/drawable_unread_count"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/color_white"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/fb_redirect_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_redirect_last_message" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view_footer"
+        android:background="@color/black_transparent"
+        android:visibility="gone" />
+
+    <ViewStub
+        android:id="@+id/chat_controls_view_stub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/view_footer"
+        android:inflatedId="@+id/view_chat_controls"
+        android:layout="@layout/chatview_controls" />
+
+    <LinearLayout
+        android:id="@+id/view_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/view_text_reply_layout"
+            layout="@layout/list_chat_reply_sent_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/suggestion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="#FFFFFF"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/suggestion_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/reply_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/ic_close1"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/view_chat_footer"
+            layout="@layout/view_chat_footer" />
+
+        <FrameLayout
+            android:id="@+id/emojicons"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:visibility="gone" />
+    </LinearLayout>
+</RelativeLayout>

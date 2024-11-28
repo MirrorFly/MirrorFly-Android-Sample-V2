@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ @category ContusFly
+  ~ @version 3.0
+  ~ @author ContusTeam <developers@contus.in>
+  ~ @copyright Copyright (C) 2018 Contus. All rights reserved.
+  ~ @license http://www.apache.org/licenses/LICENSE-2.0
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".fragments.ChatsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:orientation="vertical"
+        tools:context=".fragments.ChatsFragment">
+
+        <RelativeLayout
+            android:id="@+id/layout_archived_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="@dimen/padding_17"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="@dimen/padding_17">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_archived_settings"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/switch_archived_settings"
+                android:text="@string/archive_settings" />
+
+            <com.contusfly.views.CustomTextView
+                style="@style/TextSmallStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_archived_settings"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/switch_archived_settings"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/archive_settings_label" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_archived_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                android:thumb="@drawable/thumb_selector"
+                app:track="@drawable/track_selector" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color" />
+
+        <RelativeLayout
+            android:id="@+id/layout_last_seen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="@dimen/padding_17"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="@dimen/padding_17">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_last_seen"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/image_last_seen"
+                android:text="@string/last_seen" />
+
+            <com.contusfly.views.CustomTextView
+                style="@style/TextSmallStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_last_seen"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/image_last_seen"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/last_seen_label" />
+
+            <ImageView
+                android:id="@+id/image_last_seen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_unselected_tick" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color" />
+
+        <RelativeLayout
+            android:id="@+id/layout_user_busy_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="@dimen/padding_17"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="@dimen/padding_17">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_user_busy_status"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/image_user_busy_status"
+                android:text="@string/user_busy_status" />
+
+            <com.contusfly.views.CustomTextView
+                style="@style/TextSmallStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_user_busy_status"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/image_user_busy_status"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/user_busy_status_label" />
+
+            <ImageView
+                android:id="@+id/image_user_busy_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_unselected_tick" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color" />
+
+        <RelativeLayout
+            android:id="@+id/layout_set_busy_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_25"
+            android:paddingTop="@dimen/padding_15"
+            android:paddingEnd="@dimen/padding_25"
+            android:paddingBottom="@dimen/padding_15"
+            >
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_set_busy_status"
+                style="@style/TextMediumStyles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/image_set_busy_status"
+                android:text="@string/edit_busy_status_message" />
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/busy_status_hint"
+                style="@style/TextRegularStyleLight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_set_busy_status"
+                android:layout_toStartOf="@+id/image_set_busy_status"
+                android:text="@string/edit_busy_status_label" />
+
+            <ImageView
+                android:id="@+id/image_set_busy_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_right_icon" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color" />
+
+
+        <RelativeLayout
+            android:id="@+id/layout_auto_download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="@dimen/padding_17"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="@dimen/padding_17">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_auto_download"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/image_auto_download"
+                android:text="@string/auto_download" />
+
+            <com.contusfly.views.CustomTextView
+                style="@style/TextSmallStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_auto_download"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/image_auto_download"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/auto_download_label" />
+
+            <ImageView
+                android:id="@+id/image_auto_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_unselected_tick" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color" />
+
+
+        <RelativeLayout
+            android:id="@+id/layout_data_usage_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_25"
+            android:paddingTop="@dimen/padding_15"
+            android:paddingEnd="@dimen/padding_25"
+            android:paddingBottom="@dimen/padding_15"
+            android:visibility="gone">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_data_usage_settings"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/image_data_usage_settings"
+                android:text="@string/data_usage_settings" />
+
+            <com.contusfly.views.CustomTextView
+                style="@style/TextSmallStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_data_usage_settings"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/image_data_usage_settings"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/data_usage_settings_label" />
+
+            <ImageView
+                android:id="@+id/image_data_usage_settings"
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_right_icon" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color" />
+
+        <RelativeLayout
+            android:id="@+id/layout_translation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="@dimen/padding_17"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="@dimen/padding_17"
+            android:visibility="visible">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_translation"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/image_translation"
+                android:text="@string/google_translation_label" />
+
+            <com.contusfly.views.CustomTextView
+                style="@style/TextSmallStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_translation"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/image_translation"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/google_translation_message" />
+
+            <ImageView
+                android:id="@+id/image_translation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_unselected_tick" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_translate_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="@dimen/padding_17"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="@dimen/padding_17"
+            android:visibility="gone">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_set_translate_language"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/image_translation_intent"
+                android:text="@string/google_translation_language_label" />
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/tv_selected_Language"
+                style="@style/TranslationTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_set_translate_language"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/image_translation_intent"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/google_translation_label" />
+
+            <com.contusfly.views.CustomTextView
+                style="@style/TextSmallStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_selected_Language"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/image_translation_intent"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/google_translation_language_double_tap" />
+
+            <ImageView
+                android:id="@+id/image_translation_intent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_right_icon" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_save_to_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="@dimen/padding_17"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="@dimen/padding_17"
+            android:visibility="gone">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_save_to_gallery"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/image_save_to_gallery"
+                android:text="@string/save_media_to_gallery" />
+
+            <com.contusfly.views.CustomTextView
+                style="@style/TextSmallStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_save_to_gallery"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_toStartOf="@+id/image_save_to_gallery"
+                android:lineSpacingExtra="5dp"
+                android:text="@string/set_up_media_to_gallery" />
+
+            <ImageView
+                android:id="@+id/image_save_to_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_unselected_tick" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/translate_message_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_list_divider_color" />
+
+        <RelativeLayout
+            android:id="@+id/layout_chat_backup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="24dp"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="24dp">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_chat_backup"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/chat_backup_image"
+                android:text="@string/chat_backup" />
+
+            <ImageView
+                android:id="@+id/chat_backup_image"
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_right_icon" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:visibility="visible"
+            android:background="@color/color_list_divider_color" />
+
+        <RelativeLayout
+            android:id="@+id/layout_call_logs_export"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_18"
+            android:paddingTop="24dp"
+            android:paddingEnd="@dimen/padding_18"
+            android:paddingBottom="24dp">
+
+            <com.contusfly.views.CustomTextView
+                android:id="@+id/text_call_logs"
+                style="@style/TextMediumNotificationStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/call_log_export_image"
+                android:text="@string/call_logs_export" />
+
+            <ImageView
+                android:id="@+id/call_log_export_image"
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_right_icon" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:visibility="visible"
+            android:background="@color/color_list_divider_color" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_clear_conversation"
+            style="@style/TextMediumStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_25"
+            android:paddingTop="21dp"
+            android:paddingEnd="@dimen/padding_25"
+            android:paddingBottom="21dp"
+            android:text="@string/clear_conversation"
+            android:textColor="@color/color_red" />
+
+        <View
+            android:id="@+id/clear_all_message_view"
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_15"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:background="@color/color_list_divider_color" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_delete_conversation"
+            style="@style/TextMediumStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/padding_25"
+            android:paddingTop="@dimen/padding_15"
+            android:paddingEnd="@dimen/padding_25"
+            android:paddingBottom="@dimen/padding_15"
+            android:text="@string/delete_conversation"
+            android:textColor="@color/color_red"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginStart="@dimen/margin_18"
+            android:layout_marginEnd="@dimen/margin_18"
+            android:background="@color/color_divider"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+</ScrollView>

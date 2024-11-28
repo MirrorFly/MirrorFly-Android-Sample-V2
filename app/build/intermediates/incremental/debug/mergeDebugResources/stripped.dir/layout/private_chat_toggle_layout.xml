@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/private_chat_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.contusfly.views.CustomTextView
+        android:id="@+id/private_chat_tv"
+        style="@style/TitleSemiBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:text="@string/label_private_chat"
+        android:drawablePadding="@dimen/padding_15"
+        android:paddingTop="@dimen/padding_20"
+        android:paddingBottom="@dimen/padding_20"
+        android:drawableEnd="@drawable/ic_right_icon"
+        android:background="?android:attr/selectableItemBackground"/>
+
+</LinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:minWidth="240dp"
+    android:orientation="horizontal"
+    android:padding="4dp"
+    android:weightSum="5">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fileTypeImage"
+        android:layout_width="48dp"
+        android:layout_gravity="center"
+        android:layout_height="48dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:background="@android:color/transparent"
+        android:minHeight="60dp"
+        android:orientation="vertical"
+        android:layout_marginStart="4dp"
+        android:padding="4dp"
+        android:weightSum="6">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fileName"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:textColor="@color/color_black"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fileSize"
+                android:layout_width="80dp"
+                android:textSize="12sp"
+                android:layout_height="24dp"
+                android:gravity="center|start" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fileType"
+                android:layout_width="40dp"
+                android:layout_height="24dp"
+                android:textSize="12sp"
+                android:gravity="center|start" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fileDuration"
+                android:layout_width="80dp"
+                android:layout_height="24dp"
+                android:textSize="12sp"
+                android:gravity="center|start" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/invalidText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|end"
+            android:textColor="@color/invalid_red"
+            android:textSize="@dimen/text_size_10" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

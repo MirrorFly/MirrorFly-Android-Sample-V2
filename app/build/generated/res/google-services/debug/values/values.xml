@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">719522206274-9vomc8pihmd5trrrq9bn1u36s237h888.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">719522206274</string>
+    <string name="google_api_key" translatable="false">AIzaSyBsDgqVCPQkReMH5BlmXGxRirPYzKgSdE0</string>
+    <string name="google_app_id" translatable="false">1:719522206274:android:df54ba1969d80aeba2d3db</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBsDgqVCPQkReMH5BlmXGxRirPYzKgSdE0</string>
+    <string name="google_storage_bucket" translatable="false">mirrorfly-uikit.appspot.com</string>
+    <string name="project_id" translatable="false">mirrorfly-uikit</string>
+</resources>

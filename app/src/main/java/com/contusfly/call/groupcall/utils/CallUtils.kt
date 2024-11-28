@@ -90,6 +90,19 @@ object CallUtils {
      */
     private var isFromPoorInternetUpdate = false
 
+    private var isTileViewScrolling = false
+
+    fun setIsTileViewScrolling(boolean: Boolean) {
+        LogMessage.e("tileScroll","set tileview scrolling-->$boolean")
+        isTileViewScrolling = boolean
+    }
+
+    fun isTileViewScrolling():Boolean{
+        LogMessage.e("tileScroll","iscroll-->$isTileViewScrolling")
+        return isTileViewScrolling
+    }
+
+
     fun setVideoViewInitialization(enabled: Boolean) {
         isVideoViewInitialized = enabled
     }

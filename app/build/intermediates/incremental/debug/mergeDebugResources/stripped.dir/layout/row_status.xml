@@ -1,0 +1,16 @@
+<com.contusfly.views.CustomTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rowTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:paddingTop="@dimen/padding_15"
+    android:paddingBottom="@dimen/padding_15"
+    android:textColor="@drawable/select_status_text_color"
+    android:textSize="@dimen/text_size_14"
+    android:maxLines="1"
+    android:drawablePadding="@dimen/padding_10"
+    android:ellipsize="end"
+    app:emojiconSize="@dimen/text_size_16">
+
+</com.contusfly.views.CustomTextView>

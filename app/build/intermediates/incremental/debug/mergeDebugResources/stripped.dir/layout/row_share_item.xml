@@ -1,0 +1,137 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contact_item"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/view_section_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/header_section_text_View"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TitleSemiBold"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:background="@color/color_menu_divider"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:padding="@dimen/padding_12"
+            android:singleLine="true"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/text_size_16"
+            app:emojiconSize="@dimen/text_size_18"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contact_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_10">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.contusfly.views.CircularImageView
+                android:id="@+id/image_chat_picture"
+                android:layout_width="@dimen/margin_50"
+                android:layout_height="@dimen/margin_50"
+                android:contentDescription="@string/title_app_name"
+                android:src="@drawable/profile_img"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/center_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/margin_5"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <androidx.emoji.widget.EmojiAppCompatTextView
+                android:id="@+id/text_chat_name"
+                style="@style/EmojiTextSemiBoldStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/color_contact_name"
+                android:textSize="@dimen/text_size_16" />
+
+
+            <androidx.emoji.widget.EmojiAppCompatTextView
+                android:id="@+id/text_user_status"
+                style="@style/TextParticipantStatusStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_1"
+                android:visibility="visible"
+                app:emojiconSize="@dimen/text_size_18"/>
+        </LinearLayout>
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_invite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/shape_invite_bg"
+            android:gravity="center"
+            android:paddingBottom="@dimen/padding_5"
+            android:paddingLeft="@dimen/padding_8"
+            android:paddingRight="@dimen/padding_8"
+            android:paddingTop="@dimen/padding_5"
+            android:text="@string/action_invite"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_12"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/image_tick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/title_content_description"
+            android:padding="@dimen/padding_5"
+            app:srcCompat="@drawable/single_tick"
+            android:visibility="gone" />
+
+        <CheckBox
+            android:id="@+id/check_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:theme="@style/CustomCheckBox"
+            android:button="@drawable/checkbox_green" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_0.5"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_marginStart="@dimen/margin_75"
+        android:background="@color/color_menu_divider" />
+</LinearLayout>

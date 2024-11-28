@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+
+    <TextView
+        android:id="@+id/snackbar_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:paddingRight="@dimen/margin_10"
+        tools:text="fdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdsfdfdsfdsfdsfdsf dfsfdsfererw"
+        android:layout_toLeftOf="@+id/button_layout"
+        android:maxLines="5"
+        android:textColor="@android:color/white" />
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="@style/CustomAlertDialog"
+        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        >
+
+        <TextView
+            android:id="@+id/button_not_now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellow"
+            android:fontFamily="@font/sf_ui_display_bold"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:text="NotNow" />
+
+        <TextView
+            android:id="@+id/button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok_label"
+            android:fontFamily="@font/sf_ui_display_bold"
+            android:textColor="@color/yellow"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+</RelativeLayout>

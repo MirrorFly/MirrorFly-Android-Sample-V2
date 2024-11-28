@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/tab_height"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <com.contusfly.views.CustomTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CustomTab"
+        android:textAllCaps="true" />
+
+    <com.contusfly.views.CustomTextView
+        android:id="@+id/text_unseen_count"
+        style="@style/TextMediumStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/margin_5"
+        android:background="@drawable/drawable_unread_count"
+        android:gravity="center"
+        android:maxLength="3"
+        android:maxLines="1"
+        android:textColor="?attr/white_color"
+        android:textSize="@dimen/text_size_12"
+        android:visibility="gone" />
+</LinearLayout>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_white"
+        android:orientation="vertical">
+
+        <include layout="@layout/common_toolbar" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@drawable/date_rounded_corner"
+            android:includeFontPadding="false"
+            android:paddingLeft="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_5"
+            android:paddingRight="@dimen/padding_10"
+            android:paddingBottom="@dimen/padding_5"
+            android:visibility="gone"
+            android:textSize="12sp"
+            tools:text="05-Nov-2018" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_15"
+            android:layout_marginRight="@dimen/margin_15"
+            android:background="@color/color_white">
+
+            <ViewStub
+                android:id="@+id/text_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_txt_item" />
+
+            <ViewStub
+                android:id="@+id/image_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_img_item" />
+
+            <ViewStub
+                android:id="@+id/video_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_video_item" />
+
+            <ViewStub
+                android:id="@+id/audio_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_audio_item" />
+
+            <ViewStub
+                android:id="@+id/location_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_location_item" />
+
+            <ViewStub
+                android:id="@+id/contact_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_contact_item" />
+
+            <ViewStub
+                android:id="@+id/file_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_file_item" />
+            <ViewStub
+                android:id="@+id/meet_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_info_meet_item" />
+        </FrameLayout>
+
+        <View
+            style="@style/MsgInfoView"
+            android:layout_marginTop="@dimen/margin_15"
+            android:background="@color/bs_divider_color"
+            android:foregroundTint="@color/bs_divider_color"
+            tools:targetApi="LOLLIPOP" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_20dp"
+            android:background="@color/color_white"
+            android:orientation="vertical">
+
+            <com.mirrorflysdk.views.NonScrollExpandableListView
+                android:id="@+id/expand_Deliverlist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:layout_marginTop="@dimen/margin_15"
+                android:groupIndicator="@null">
+
+            </com.mirrorflysdk.views.NonScrollExpandableListView>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/color_white">
+
+                <ImageView
+                    android:id="@+id/empty_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="@dimen/padding_10"
+                    android:src="@drawable/ic_no_messages"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/nomsg_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="130dp"
+                    android:background="@color/color_transparent"
+                    android:padding="@dimen/padding_10"
+                    android:text="@string/no_message"
+                    android:textColor="@color/color_dark_gray"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <View
+                style="@style/MsgInfoView"
+                android:layout_marginStart="@dimen/margin_16dp"
+                android:layout_marginEnd="@dimen/margin_16dp"
+                android:layout_marginTop="@dimen/margin_15"
+                android:background="#D1D1D1"
+                android:foregroundTint="#D1D1D1"
+                tools:targetApi="LOLLIPOP" />
+
+            <com.mirrorflysdk.views.NonScrollExpandableListView
+                android:id="@+id/expand_readlist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:layout_marginTop="@dimen/margin_15"
+                android:groupIndicator="@null">
+
+            </com.mirrorflysdk.views.NonScrollExpandableListView>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/color_white">
+
+                <ImageView
+                    android:id="@+id/empty_img_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="@dimen/padding_10"
+                    android:src="@drawable/ic_no_messages"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/nomsg_txt_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="130dp"
+                    android:padding="@dimen/padding_10"
+                    android:text="@string/no_message"
+                    android:textColor="@color/color_dark_gray"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <View
+                style="@style/MsgInfoView"
+                android:layout_marginStart="@dimen/margin_16dp"
+                android:layout_marginEnd="@dimen/margin_16dp"
+                android:layout_marginTop="@dimen/margin_15"
+                android:background="#D1D1D1"
+                android:foregroundTint="#D1D1D1"
+                tools:targetApi="LOLLIPOP" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

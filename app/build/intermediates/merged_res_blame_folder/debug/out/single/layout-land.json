@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout-land/activity_image_preview.xml",
+        "source": "com.contusfly.app-main-67:/layout-land/activity_image_preview.xml"
+    },
+    {
+        "merged": "com.contusfly.app-mergeDebugResources-64:/layout-land/activity_image_view.xml",
+        "source": "com.contusfly.app-main-67:/layout-land/activity_image_view.xml"
+    }
+]

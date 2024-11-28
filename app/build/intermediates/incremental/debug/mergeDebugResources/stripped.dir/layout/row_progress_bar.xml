@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/view_section_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/header_section_text_View"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TitleSemiBold"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:background="@color/color_menu_divider"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:padding="@dimen/padding_12"
+            android:singleLine="true"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/text_size_16"
+            app:emojiconSize="@dimen/text_size_18"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/load_more_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_section_header" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

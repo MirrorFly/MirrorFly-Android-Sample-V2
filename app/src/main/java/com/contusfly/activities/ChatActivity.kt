@@ -179,7 +179,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     private fun makeCallWithCallPermissionUtils(isAudioCall: Boolean, callMetaDataArray: Array<CallMetaData>? = emptyArray<CallMetaData>()){
-        LogMessage.d(TAG,"#callflow makeCallWithCallPermissionUtils isAudioCall:$isAudioCall callMetaDataList:${callMetaDataArray}")
+        LogMessage.d(TAG," #callflow makeCallWithCallPermissionUtils isAudioCall:$isAudioCall callMetaDataList:${callMetaDataArray}")
         if(isAudioCall){
             CallPermissionUtils(
                     this,
@@ -487,6 +487,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 val bundle = Bundle()
                 bundle.putInt(Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED, 1)
                     chatAdapter.notifyItemChanged(messagePosition, bundle)
+                com.contusfly.utils.LogMessage.d(TAG,"onMediaStatusUpdated---status--${message.mediaChatMessage.mediaUploadStatus}")
                     if(message.mediaChatMessage.mediaUploadStatus == MediaUploadStatus.MEDIA_UPLOADED_NOT_AVAILABLE) {
                         CustomToast.show(context, context!!.getString(R.string.msg_media_does_not_exists))
                     } else if(message.mediaChatMessage.mediaDownloadStatus == MediaDownloadStatus.STORAGE_NOT_ENOUGH) {

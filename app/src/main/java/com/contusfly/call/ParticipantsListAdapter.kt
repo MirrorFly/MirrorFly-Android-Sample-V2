@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.contus.call.CallConstants
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.R
 import com.contusfly.adapters.BaseViewHolder
@@ -14,6 +15,10 @@ import com.contusfly.getDisplayName
 import com.contusfly.isValidIndex
 import com.contusfly.loadUserProfileImage
 import com.contusfly.utils.ProfileDetailsUtils
+import com.contusfly.utils.SharedPreferenceManager
+import com.contusfly.TAG
+import com.mirrorflysdk.flycall.webrtc.CallStatus
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
 import java.util.ArrayList
@@ -66,14 +71,24 @@ class ParticipantsListAdapter(private val context: Context) : RecyclerView.Adapt
     }
 
     /*
-    * Set Audio, Video Mute/UnMute Status*/
+* Set Audio, Video Mute/UnMute Status*/
     private fun setUserMuteAndUnMuteStatus(profileJid: String, viewBinding: RowParticipantsListItemBinding) {
+        val currentStatus = CallManager.getCallStatus(profileJid)
         val isAudioMuted = CallManager.isRemoteAudioMuted(profileJid)
         val isVideoMuted = CallManager.isRemoteVideoMuted(profileJid) || CallManager.isRemoteVideoPaused(profileJid)
                 || CallManager.getRemoteProxyVideoSink(profileJid).isNull()
 
-        viewBinding.imageMuteAudio.isActivated = isAudioMuted
-        viewBinding.imageMuteVideo.isActivated = isVideoMuted
+        LogMessage.d(TAG, "${CallConstants.CALL_UI} participantListFragment profileJid:$profileJid currentStatus: $currentStatus isAudioMuted: $isAudioMuted")
+        if(currentStatus.equals(CallStatus.CONNECTED) || currentStatus.equals(CallStatus.RECONNECTING) || currentStatus.equals(
+                CallStatus.RECONNECTED)){
+            viewBinding.imageMuteAudio.isActivated =  if (profileJid == SharedPreferenceManager.getCurrentUserJid()) CallManager.isAudioMuted() else isAudioMuted
+        }else{
+            viewBinding.imageMuteAudio.isActivated =  if (profileJid == SharedPreferenceManager.getCurrentUserJid()) CallManager.isAudioMuted() else true
+        }
+
+        viewBinding.imageMuteVideo.isActivated =
+            if (profileJid == SharedPreferenceManager.getCurrentUserJid()) CallManager.isVideoMuted() else isVideoMuted
+
     }
 
     override fun getItemCount(): Int {

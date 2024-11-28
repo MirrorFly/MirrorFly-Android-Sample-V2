@@ -64,7 +64,7 @@ android {
             buildConfigField 'String', 'LICENSE', '"Please enter your License key"'
             buildConfigField 'String', 'WEB_CHAT_LOGIN', '"https://webchat-preprod-sandbox.mirrorfly.com/"'
             buildConfigField "String", "SUPPORT_MAIL", '"contussupport@gmail.com"'
-            buildConfigField 'Boolean', 'IS_SKIP_OTP', 'true'
+            buildConfigField 'Boolean', 'IS_SKIP_OTP', 'false'
             resValue("string", "app_name", "UI Kit")
             shrinkResources false
             debuggable false
@@ -73,6 +73,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 
     kotlinOptions {
         jvmTarget = '1.8'
@@ -198,7 +199,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.13.9'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.13.11'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'

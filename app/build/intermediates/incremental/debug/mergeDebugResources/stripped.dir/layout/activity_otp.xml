@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.OtpActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_title_center_view"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/white_color"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/get_mobile_number_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:background="@color/color_white"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_register_number_icon" />
+
+                <TextView
+                    android:id="@+id/otp_text"
+                    style="@style/NewTextSemiBoldExtraLargeStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_30"
+                    android:gravity="center_horizontal"
+                    android:text="@string/register_your_number_label" />
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/txt_info"
+                    style="@style/TextLightGreyStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_20"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_20"
+                    android:gravity="center_vertical"
+                    android:lines="2"
+                    android:text="@string/register_number_label"
+                    android:textAlignment="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/get_mobile_number_view_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:background="@color/color_white"
+                android:orientation="vertical">
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/txt_country"
+                    style="@style/NewTextSemiBoldMediumStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_40"
+                    android:background="@drawable/selector_settings_opt"
+                    android:drawableEnd="@drawable/ic_down_icon"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/padding_16"
+                    android:paddingTop="@dimen/padding_6"
+                    android:paddingEnd="@dimen/padding_16"
+                    android:paddingBottom="@dimen/padding_6"
+                    android:visibility="visible" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:layout_marginStart="@dimen/margin_15"
+                    android:layout_marginEnd="@dimen/margin_15"
+                    android:background="?attr/divider_color"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_40"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_20"
+                    android:layout_marginEnd="@dimen/margin_15"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/padding_10"
+                    android:paddingTop="@dimen/padding_6"
+                    android:paddingRight="@dimen/padding_10"
+                    android:paddingBottom="@dimen/padding_6"
+                    android:visibility="visible">
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/txt_code"
+                        style="@style/NewTextSemiBoldMediumStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/sf_ui_display_semi_bold"
+                        android:gravity="center_vertical"
+                        android:minEms="1"
+                        android:textColor="@android:color/black" />
+
+                    <View
+                        android:layout_width="@dimen/margin_1"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:background="?attr/divider_color" />
+
+                    <com.contusfly.views.CustomEditText
+                        android:id="@+id/edt_mobile_no"
+                        style="@style/TextMediumStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:hint="@string/enter_mobile_number_label"
+                        android:inputType="number"
+                        android:maxLength="15"
+                        android:textColorHint="?attr/light_gray_color"
+                        android:textSize="@dimen/text_size_14" />
+
+                </LinearLayout>
+
+                <com.contusfly.views.CustomTextView
+                    android:id="@+id/view_get_otp"
+                    style="@style/NewTextSemiBoldMediumStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin_45"
+                    android:background="@drawable/bg_button_shape"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:paddingStart="@dimen/padding_40"
+                    android:paddingTop="@dimen/padding_10"
+                    android:paddingEnd="@dimen/padding_40"
+                    android:paddingBottom="@dimen/padding_10"
+                    android:text="@string/continue_label"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_14"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/otp_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_10"
+                    android:background="?attr/white_color"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <include
+                        android:id="@+id/edt_verify_code"
+                        layout="@layout/otp_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/margin_20" />
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/view_verify"
+                        style="@style/NewTextSemiBoldMediumStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/margin_50"
+                        android:background="@drawable/bg_button_shape"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:paddingStart="@dimen/padding_40"
+                        android:paddingTop="@dimen/padding_10"
+                        android:paddingEnd="@dimen/padding_40"
+                        android:paddingBottom="@dimen/padding_10"
+                        android:text="@string/verify_otp_label"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_14"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/edit_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:visibility="gone">
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/txt_change_number"
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingTop="@dimen/padding_12"
+                        android:paddingBottom="@dimen/padding_12"
+                        android:text="@string/change_number_label"
+                        android:visibility="visible" />
+
+                    <View
+                        android:id="@+id/seperator"
+                        android:layout_width="@dimen/margin_1"
+                        android:layout_height="@dimen/margin_15"
+                        android:layout_marginStart="@dimen/margin_12"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:layout_marginEnd="@dimen/margin_12"
+                        android:background="?attr/divider_color"
+                        android:visibility="visible" />
+
+                    <com.contusfly.views.CustomTextView
+                        android:id="@+id/txt_resend"
+                        style="@style/ResendTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:gravity="center_vertical"
+                        android:paddingTop="@dimen/padding_12"
+                        android:paddingBottom="@dimen/padding_12"
+                        android:text="@string/resend_otp_label"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txt_terms_and_conditions_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_24"
+                    style="@style/TextLightGreyStyle"
+                    android:textAlignment="center"
+                    android:text="@string/terms_and_condition_description_label"/>
+
+                <TextView
+                    android:id="@+id/txt_terms_and_conditions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    style="@style/TextSmallStyle"
+                    android:padding="@dimen/margin_4"
+                    android:textColor="?attr/blue_color"
+                    android:textColorLink="?attr/blue_color"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

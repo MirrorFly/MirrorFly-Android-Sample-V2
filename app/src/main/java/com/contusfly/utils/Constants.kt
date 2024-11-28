@@ -436,6 +436,8 @@ class Constants {
         const val ASK_FULL_SCREEN_INTENT_PERMISSION = "ask_full_screen_notification_permission"
         const val FULLSCREEN_NOTIFICATION_PERMISSION_ASKED = "fullscreen_notification_permission_asked_before"
 
+        const val ANIMATION_DURATION = 180
+
 
     }
 }

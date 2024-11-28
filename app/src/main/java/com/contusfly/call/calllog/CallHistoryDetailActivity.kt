@@ -298,8 +298,11 @@ class CallHistoryDetailActivity : BaseActivity(), CoroutineScope, CommonAlertDia
 
     private fun isAdminBlocked(callLog: CallLog): Boolean {
         return if (callLog.callMode == CallMode.ONE_TO_ONE && (callLog.userList == null || callLog.userList!!.size < 2)) {
-            ProfileDetailsUtils.getProfileDetails(if (callLog.callState == CallState.OUTGOING_CALL) callLog.toUser!! else callLog.fromUser!!)!!.isAdminBlocked
-        } else if (callLog.groupId!!.isNotEmpty()) {
+            ProfileDetailsUtils.getProfileDetails(
+                if (callLog.callState == CallState.OUTGOING_CALL)
+                    callLog.toUser!! else callLog.fromUser!!
+            )!!.isAdminBlocked
+        } else if (callLog.groupId!!.isNotEmpty() && ProfileDetailsUtils.getProfileDetails(callLog.groupId!!) != null) {
             ProfileDetailsUtils.getProfileDetails(callLog.groupId!!)!!.isAdminBlocked
         } else false
     }

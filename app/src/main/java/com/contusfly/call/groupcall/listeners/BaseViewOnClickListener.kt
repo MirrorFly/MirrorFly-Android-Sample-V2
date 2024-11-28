@@ -26,7 +26,7 @@ interface BaseViewOnClickListener {
     /**
      * Callback Method to animate call detail while call is in hold/reconnecting
      */
-    fun animateCallOptionsView()
+    fun animateCallOptionsView(isTouch: Boolean = false)
 
     /**
      * Callback Method to enable call option animation
@@ -62,4 +62,15 @@ interface BaseViewOnClickListener {
      * Callback Method to remove pinned user
      */
     fun pinnedUserRemoved()
+
+    fun showGridTitle()
+
+    /**
+     * Callback Method for swap video while video call request accept (if back camera active means reset the camera)
+     */
+    fun onConversionRequestAcceptSwapVideo()
+
+    fun isAnimationStarted(): Boolean
+
+    fun disableCallOptionAnimation()
 }

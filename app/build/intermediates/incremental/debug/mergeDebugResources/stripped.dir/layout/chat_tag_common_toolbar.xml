@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout style="@style/CustomToolBar">
+
+        <ImageView
+            android:id="@+id/back_arrow_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.4"
+            android:padding="@dimen/text_size_10"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:id="@+id/title_tv"
+            style="@style/ToolbarTitleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.6"
+            android:gravity="center_vertical"
+            android:text="@string/chat_tag_title" />
+
+        <com.contusfly.views.CustomTextView
+            android:id="@+id/toolbar_action_title_tv"
+            style="@style/TitleSemiBold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:textAllCaps="true"
+            android:paddingRight="@dimen/text_size_20"
+            tools:text="EDIT"/>
+
+    </LinearLayout>
+
+</LinearLayout>

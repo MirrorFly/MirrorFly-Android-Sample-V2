@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.contusfly.app-mergeDebugResources-63:/values-watch-v21/values-watch-v21.xml",
+            "map": [
+                {
+                    "source": "/home/user/.gradle/caches/transforms-3/f123a5e2035d200c6bf60ab7a9e8f61d/transformed/appcompat-1.6.1/res/values-watch-v21/values-watch-v21.xml",
+                    "from": {
+                        "startLines": "2,6,10",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,271,499",
+                        "endLines": "5,9,13",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "266,494,724"
+                    }
+                }
+            ]
+        }
+    ]
+}

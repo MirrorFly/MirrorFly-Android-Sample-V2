@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="?attr/no_message_view_bg_color"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/error_no_contacts_label"
+        app:srcCompat="@drawable/no_contacts" />
+
+    <com.contusfly.views.CustomTextView
+        style="@style/no_messages1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_no_contacts_label" />
+
+    <com.contusfly.views.CustomTextView
+        style="@style/no_messages2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_any_contacts_label"
+        android:visibility="gone" />
+
+</LinearLayout>

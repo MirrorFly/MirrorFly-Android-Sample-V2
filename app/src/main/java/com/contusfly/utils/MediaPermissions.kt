@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -595,9 +596,9 @@ object MediaPermissions {
                     askVideoCallPermissions(activityResultCaller, permissionsToRequest, permissionAlertDialog, permissionDialogListener)
                 }
                 SharedPreferenceManager.getBoolean(Constants.CAMERA_PERMISSION_ASKED)
-                        || SharedPreferenceManager.getBoolean(Constants.RECORD_AUDIO_PERMISSION_ASKED)
+                        && (SharedPreferenceManager.getBoolean(Constants.RECORD_AUDIO_PERMISSION_ASKED)
                         || SharedPreferenceManager.getBoolean(Constants.READ_PHONE_STATE_PERMISSION_ASKED)
-                        || SharedPreferenceManager.getBoolean(Constants.BLUETOOTH_PERMISSION_ASKED)
+                        || SharedPreferenceManager.getBoolean(Constants.BLUETOOTH_PERMISSION_ASKED))
                 -> {
                     permissionAlertDialog.showPermissionInstructionDialog(PermissionAlertDialog.VIDEO_CALL_PERMISSION_DENIED,
                         object : PermissionDialogListener {
@@ -645,50 +646,83 @@ object MediaPermissions {
      *
      * @param activity       Activity of the View
      * @param activityResultCaller activityResultCaller
+     * @param isConversionRequest isConversionRequest
+     * @param isFromVideoCallEnable isFromVideoCallEnable we use this parameter to determine whether to launch permission settings in different screen or same screen.
      */
     fun requestVideoCallPermissions(
-        activity: Activity,
-        activityResultCaller: ActivityResultLauncher<Array<String>>
+        activity: Activity, activityResultCaller: ActivityResultLauncher<Array<String>>,  isConversionRequest: Boolean = false, isFromVideoCallEnable:Boolean = false
     ) {
-        if (!isPermissionAllowed(activity, Manifest.permission.CAMERA) ||
-            !isPermissionAllowed(activity, Manifest.permission.RECORD_AUDIO) ||
-            !isPermissionAllowed(activity, Manifest.permission.READ_PHONE_STATE) ||
-            (SDK_INT >= Build.VERSION_CODES.S && !isPermissionAllowed(activity, Manifest.permission.BLUETOOTH_CONNECT))
+        if (!isPermissionAllowed(activity, Manifest.permission.CAMERA)
+            || !isPermissionAllowed(activity, Manifest.permission.RECORD_AUDIO)
+            || !isPermissionAllowed(activity, Manifest.permission.READ_PHONE_STATE)
+            || (SDK_INT >= Build.VERSION_CODES.S && !isPermissionAllowed(
+                activity, Manifest.permission.BLUETOOTH_CONNECT
+            ))
         ) {
             when {
-                ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)
-                        || ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.RECORD_AUDIO)
-                        || ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.READ_PHONE_STATE)
-                        || (SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.BLUETOOTH_CONNECT))
-                -> {
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity, Manifest.permission.CAMERA
+                ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity, Manifest.permission.RECORD_AUDIO
+                ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity, Manifest.permission.READ_PHONE_STATE
+                ) || (SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity, Manifest.permission.BLUETOOTH_CONNECT
+                )) -> {
                     /*
                   If the user has denied the permission previously your code will come to this block
                   Here you can explain why you need this permission Explain here why you need this
                   permission
                  */
-                    Snackbar.make(
-                        activity.findViewById(android.R.id.content),
-                        R.string.video_record_permission_label,
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                        .setAction(R.string.ok_label) {
-                            askVideoCallPermissions(activityResultCaller)
+                    if(!isConversionRequest) {
+
+                        val snackbarView = activity.layoutInflater.inflate(R.layout.custom_snack_bar, null)
+                        val snackbarTextView = snackbarView.findViewById<TextView>(R.id.snackbar_text)
+                        val buttonOk = snackbarView.findViewById<TextView>(R.id.button_ok)
+                        val buttonNotNow = snackbarView.findViewById<TextView>(R.id.button_not_now)
+                        snackbarTextView.text = activity.getString(R.string.video_record_permission_label)
+
+                        val snackbar = Snackbar.make(
+                            activity.findViewById(android.R.id.content),
+                            "", // Your long text
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+
+                        snackbarTextView.maxLines = 5  // Adjust max lines based on your content
+
+                        snackbar.view.setPadding(0, 0, 0, 0)  // Remove default padding
+                        val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
+                        snackbarLayout.addView(snackbarView, 0)
+                        buttonOk.setOnClickListener {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.fromParts("package", activity.packageName, null))
+                            if(!isFromVideoCallEnable){
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                            }
+                            activity.startActivity(intent)
+                            snackbar.dismiss()
                         }
-                        .show()
+
+                        buttonNotNow.setOnClickListener {
+                            snackbar.dismiss()
+                        }
+                        // Show the Snackbar
+                        snackbar.show()
+                    } else {
+                        askVideoCallPermissions(activityResultCaller)
+                    }
+
                 }
-                SharedPreferenceManager.getBoolean(Constants.CAMERA_PERMISSION_ASKED) ||
-                        SharedPreferenceManager.getBoolean(Constants.RECORD_AUDIO_PERMISSION_ASKED) ||
-                        SharedPreferenceManager.getBoolean(Constants.READ_PHONE_STATE_PERMISSION_ASKED) ||
-                        SharedPreferenceManager.getBoolean(Constants.BLUETOOTH_PERMISSION_ASKED) -> {
-                    openSettingsForPermission(
-                        activity,
-                        activity.getString(R.string.video_record_permission_label)
-                    )
-                }
-                else -> {
-                    //And finally ask for the permission.
-                    askVideoCallPermissions(activityResultCaller)
-                }
+
+                SharedPreferenceManager.getBoolean(Constants.CAMERA_PERMISSION_ASKED)
+                        && SharedPreferenceManager.getBoolean(Constants.RECORD_AUDIO_PERMISSION_ASKED)
+                        && SharedPreferenceManager.getBoolean(Constants.READ_PHONE_STATE_PERMISSION_ASKED)
+                        && SharedPreferenceManager.getBoolean(Constants.BLUETOOTH_PERMISSION_ASKED) ->
+                    openSettingsForPermission(activity,activity.getString(R.string.video_record_permission_label), isConversionRequest)
+
+                else -> askVideoCallPermissions(activityResultCaller)
             }
         }
     }
@@ -1169,18 +1203,50 @@ object MediaPermissions {
             })
     }
 
-    private fun openSettingsForPermission(activity: Activity, message: String) {
-        Snackbar.make(activity.findViewById(android.R.id.content), message,
-            Snackbar.LENGTH_INDEFINITE)
-            .setAction(R.string.ok_label) {
+    private fun openSettingsForPermission(activity: Activity, message: String,isConversionRequest: Boolean = false) {
+        if(!isConversionRequest){
+            val snackbarView = activity.layoutInflater.inflate(R.layout.custom_snack_bar, null)
+            val snackbarTextView = snackbarView.findViewById<TextView>(R.id.snackbar_text)
+            val buttonOk = snackbarView.findViewById<TextView>(R.id.button_ok)
+            val buttonNotNow = snackbarView.findViewById<TextView>(R.id.button_not_now)
+            snackbarTextView.text = message
+
+            val snackbar = Snackbar.make(
+                activity.findViewById(android.R.id.content),
+                "", // Your long text
+                Snackbar.LENGTH_INDEFINITE
+            )
+
+            snackbarTextView.maxLines = 5  // Adjust max lines based on your content
+
+            snackbar.view.setPadding(0, 0, 0, 0)  // Remove default padding
+            val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
+            snackbarLayout.addView(snackbarView, 0)
+            buttonOk.setOnClickListener {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", activity.packageName, null))
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                 intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
                 activity.startActivity(intent)
+                snackbar.dismiss()
             }
-            .show()
+
+            buttonNotNow.setOnClickListener {
+                snackbar.dismiss()
+            }
+            // Show the Snackbar
+            snackbar.show()
+
+        } else {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", activity.packageName, null))
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+            activity.startActivity(intent)
+        }
+
     }
 
     private fun openSettingsForPermissionWithoutSmackBar(activity: Activity) {

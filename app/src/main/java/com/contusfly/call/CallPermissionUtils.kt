@@ -9,6 +9,9 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -219,9 +222,14 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
             if (!ChatManager.getAvailableFeatures().isOneToOneCallEnabled) {
                 CustomAlertDialog().showFeatureRestrictionAlert(activity)
             } else {
-                makeVoiceCall(jidList[0], callMetaDataArray, object : CallActionListener {
+                makeVoiceCall(jidList[0], callMetaDataArray,object : CallActionListener {
                     override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
-                        LogMessage.i(TAG, "$CALL_UI makeVoiceCall: ${flyException?.message}")
+                        try {
+                            LogMessage.i(TAG, "$CALL_UI makeVideoCall: ${flyException?.message}")
+                            CustomToast.show(ChatManager.applicationContext,flyException?.message)
+                        } catch(e: Exception) {
+                            LogMessage.e(TAG,"call exception $e")
+                        }
                     }
                 })
             }
@@ -236,11 +244,37 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
         } else {
             CallManager.makeGroupVoiceCall(jidList, groupId,callMetaDataArray, object : CallActionListener {
                 override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
-                    LogMessage.i(TAG, "$CALL_UI makeVoiceCall: ${flyException?.message}")
+                    try {
+                        var errorMessage = Constants.EMPTY_STRING
+                        LogMessage.i(TAG, "$CALL_UI makeVoiceCall: ${flyException?.message}")
+                        var error = flyException?.message?.split("ErrorCode")
+                        if(error!!.size > 0) errorMessage = error!!.get(0)
+                        CustomToast.show(ChatManager.applicationContext,errorMessage)
+                    } catch(e: Exception) {
+                        LogMessage.e(TAG,"call exception $e")
+                        val errorMessage = flyException?.message ?: ""
+                        LogMessage.i(TAG, "$CALL_UI makeVoiceCall: $errorMessage")
+                        if(!isSuccess){
+                            showErrorToast(errorMessage)
+                        }
+                        LogMessage.i(TAG, "$CALL_UI makeVoiceCall: $errorMessage")
+                    }
                 }
             })
             closeScreen()
         }
+    }
+
+    private fun showErrorToast(errorMessage:String){
+        val toast = Toast.makeText(
+            CallManager.applicationContext,
+            errorMessage,
+            Toast.LENGTH_SHORT
+        )
+        toast.show()
+        Handler(Looper.getMainLooper()).postDelayed({
+            toast.cancel()
+        }, 500)
     }
 
     /**

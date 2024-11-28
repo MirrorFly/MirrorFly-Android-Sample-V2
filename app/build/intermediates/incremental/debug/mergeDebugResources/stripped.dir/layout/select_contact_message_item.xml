@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_0"
+        android:layout_marginTop="@dimen/margin_0"
+        android:layout_marginEnd="@dimen/margin_0"
+        android:layout_marginBottom="@dimen/margin_10"
+        app:cardElevation="@dimen/margin_2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/margin_2"
+                android:paddingEnd="@dimen/margin_8">
+
+                <com.contusfly.views.CircularImageView
+                    android:id="@+id/image_profile_picture"
+                    android:layout_width="@dimen/margin_70"
+                    android:layout_height="@dimen/margin_70"
+                    android:contentDescription="@string/title_app_name"
+                    android:padding="@dimen/padding_10"
+                    android:src="@drawable/ic_profile"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_contact_name"
+                    style="@style/NewTextSemiBoldStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_2"
+                    android:layout_marginEnd="@dimen/margin_2"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textSize="@dimen/text_size_13"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/text_invite_contact"
+                    app:layout_constraintStart_toEndOf="@+id/image_profile_picture"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Stacy" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_invite_contact"
+                    style="@style/TextRegularStyleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_2"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    android:background="@drawable/bg_invite_background"
+                    android:paddingStart="@dimen/margin_13"
+                    android:paddingTop="@dimen/margin_7"
+                    android:paddingEnd="@dimen/margin_13"
+                    android:paddingBottom="@dimen/margin_7"
+                    android:text="@string/invite"
+                    android:textColor="@color/color_white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/text_add_contact"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:textAllCaps="true" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_add_contact"
+                    style="@style/TextRegularStyleBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_0"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    android:background="@drawable/bg_invite_background"
+                    android:paddingStart="@dimen/margin_13"
+                    android:paddingTop="@dimen/margin_7"
+                    android:paddingEnd="@dimen/margin_13"
+                    android:paddingBottom="@dimen/margin_7"
+                    android:text="@string/title_add"
+                    android:textColor="@color/color_white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:textAllCaps="true" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/view_divider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_0.5"
+                android:background="@color/color_list_divider_color" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/root_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/phone_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_2"
+                    android:layout_marginBottom="@dimen/margin_2"
+                    android:background="?android:selectableItemBackground"
+                    android:padding="@dimen/margin_20"
+                    android:src="@drawable/ic_contact_message"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/mobile_number_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="?android:selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/image_audio_call"
+                    app:layout_constraintStart_toEndOf="@+id/phone_icon"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/mobile_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_ui_display_regular"
+                        android:textColor="@color/color_text"
+                        android:textSize="@dimen/text_size_12"
+                        tools:text="+ 91 6372829390" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_ui_display_regular"
+                        android:text="@string/label_mobile"
+                        android:textColor="#737373"
+                        android:textSize="@dimen/text_size_11" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/image_audio_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:padding="@dimen/padding_15"
+                    android:src="@drawable/ic_phone_call_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/image_video_call"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/image_video_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5"
+                    android:background="?android:selectableItemBackground"
+                    android:padding="@dimen/padding_15"
+                    android:src="@drawable/ic_video_call_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

@@ -99,6 +99,9 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
         holder.binding.rootLayout.clicks().throttleFirst(500, TimeUnit.MILLISECONDS).subscribe {
             onTapOnRecyclerView()
         }
+        holder.binding.callerStatusLayout.clicks().throttleFirst(500, TimeUnit.MILLISECONDS).subscribe {
+            onTapOnRecyclerView()
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -304,7 +307,7 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
                 }
                 CallActions.NOTIFY_PINNED_USER_VIEW -> {
                     updateGridPinnedPosition(holder, position)
-                    updateUserSpeaking(holder, position, CallUtils.getUserSpeakingLevel(gridCallUserList[position]))
+                    //updateUserSpeaking(holder, position, CallUtils.getUserSpeakingLevel(gridCallUserList[position]))
                 }
                 CallActions.NOTIFY_USER_SPEAKING -> {
                     updateUserSpeaking(holder, position, bundle.getInt(key, 0))
@@ -466,11 +469,12 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
     private fun updateUserStoppedSpeaking(holder: CallUserGridViewHolder, position: Int){
         holder.binding.viewSpeakingIndicator.onUserStoppedSpeaking(object : SpeakingIndicatorListener {
             override fun onSpeakingIndicatorHidden() {
-                if (position < gridCallUserList.size)
+                if (position < gridCallUserList.size){
                     CallUtils.clearPeakSpeakingUser(gridCallUserList[position])
+                    setUpAudioMuted(holder, position)
+                }
             }
         })
-        setUpAudioMuted(holder, position)
     }
 
     fun setScreenHeight(actualScreenHeight: Int) {
