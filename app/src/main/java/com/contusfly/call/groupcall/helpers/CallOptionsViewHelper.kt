@@ -14,6 +14,7 @@ import com.contus.call.CallConstants.CALL_UI
 import com.contus.call.CallConstants.JOIN_CALL
 import com.contusfly.R
 import com.contusfly.TAG
+import com.contusfly.call.groupcall.AudioDeviceAdapter
 import com.contusfly.call.groupcall.isInPIPMode
 import com.contusfly.call.groupcall.isOutgoingCall
 import com.contusfly.call.groupcall.isVideoCall
@@ -40,7 +41,7 @@ class CallOptionsViewHelper(
     private val baseViewOnClickListener: BaseViewOnClickListener
 ) : View.OnClickListener {
     var isCameraButtonClick: Boolean = false
-
+    var isAnimationStarted: Boolean = false
     init {
         binding.imageMuteAudio.setOnClickListener(this)
         binding.imageMuteVideo.setOnClickListener(this)
@@ -112,6 +113,11 @@ class CallOptionsViewHelper(
 
     }
 
+
+    fun conversionRequestAcceptSwapVideo() {
+        switchCamera(binding.imageSwitchCamera)
+    }
+
     /**
      * handles the swap camera functionality and animations
      *
@@ -145,7 +151,7 @@ class CallOptionsViewHelper(
             TAG,
             "$CALL_UI  CallOptionsViewHelper handleSpeaker#audioDevices:$audioDevices"
         )
-        val devices = audioDevices.toTypedArray()
+        var devices = audioDevices.toTypedArray()
         if (devices.size <= 2) {
             if (devices.size <= 1) {
                 return
@@ -162,13 +168,23 @@ class CallOptionsViewHelper(
             CallAudioManager.getInstance(activity).selectAudioDevice(selectedDevice)
             return
         }
+        var selectedDevice = CallAudioManager.getInstance(activity).selectedAudioDevice
+        val adapter = AudioDeviceAdapter(activity, devices, selectedDevice)
+        val builder = AlertDialog.Builder(activity)
+        builder.setAdapter(adapter) { _, which ->
+            val audioDevices = CallManager.getAudioDevices()
+            devices = audioDevices.toTypedArray()
+            if (which < 0 || which >= devices.size) {
+                LogMessage.e(TAG, "$CALL_UI CallOptionsViewHelper popup show handleSpeaker#invalidIndex:$which")
+                return@setAdapter  // Exit if the index is invalid
+            }
+            val selectedDevice = devices[which]
+            setAudioDeviceIcon(selectedDevice)
+            LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper popup show handleSpeaker#choosendevice:$selectedDevice")
+            CallManager.setAudioDevice(selectedDevice)
 
-        val builder = AlertDialog.Builder(activity, R.style.AudioDevicesDialogStyle)
-        builder.setItems(devices) { _: DialogInterface?, which: Int ->
-            @AudioDevice val device = devices[which]
-            setAudioDeviceIcon(device)
-            LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper handleSpeaker#choosendevice:$device")
-            CallManager.setAudioDevice(device)
+            // Update selection in the adapter
+            adapter.updateSelection(selectedDevice)
         }
         val audioDevicesDialog = builder.create()
         if (audioDevicesDialog.window != null) audioDevicesDialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
@@ -178,6 +194,13 @@ class CallOptionsViewHelper(
     fun setUpCallUI() {
         LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper setUpCallUI")
         setAudioDeviceIcon(CallAudioManager.getInstance(activity).selectedAudioDevice)
+
+        if(CallManager.isCallConnected()) {
+            binding.imageMuteVideo.setImageResource(com.contus.call.R.drawable.selector_call_video_state)
+        } else {
+            binding.imageMuteVideo.setImageResource(com.contus.call.R.drawable.selector_before_connect_video_state)
+        }
+
 
         checkAndUpdateCameraView()
 
@@ -230,15 +253,21 @@ class CallOptionsViewHelper(
             binding.imageSwitchCamera.gone()
             binding.imageSwitchCamera.isActivated = false
             binding.imageSwitchCamera.isEnabled = false
-            binding.imageMuteVideo.isActivated = false
-            binding.imageMuteVideo.isEnabled =
-                CallManager.isCallConnected() || GroupCallUtils.isCallLinkBehaviourMeet()
+            if (CallManager.isOneToOneCall() && CallManager.isOutgoingCallConversionRequestAvailable()) {
+                binding.imageMuteVideo.isActivated = true
+                binding.imageMuteVideo.isEnabled = CallManager.isCallConnected()
+            } else {
+                binding.imageMuteVideo.isActivated = false
+                binding.imageMuteVideo.isEnabled =
+                    CallManager.isCallConnected() || GroupCallUtils.isCallLinkBehaviourMeet()
+            }
+
         } else {
             binding.imageSwitchCamera.show()
             binding.imageSwitchCamera.isActivated = !CallUtils.getIsBackCameraCapturing()
             binding.imageSwitchCamera.isEnabled = true
             binding.imageMuteVideo.isActivated = true
-            binding.imageMuteVideo.isEnabled = true
+            binding.imageMuteVideo.isEnabled = CallManager.isCallConnected()
         }
     }
 
@@ -257,31 +286,44 @@ class CallOptionsViewHelper(
         if (activity.isInPIPMode() || !CallManager.isCallConnected() || CallUtils.isAddUsersToTheCall())
             return
         val isCallOptionNotVisible = binding.layoutCallOptions.visibility != View.VISIBLE
+
+        if (!CallUtils.getIsGridViewEnabled()) { //List view animation with call options not needed for grid view
+            if (callOptionsVisibility == View.VISIBLE) {
+                if (isCallOptionNotVisible) baseViewOnClickListener.onCallOptionsVisible()
+            }
+        }
+
         val slideDownAnimation = AnimationUtils.loadAnimation(activity, animation)
         binding.layoutCallOptions.startAnimation(slideDownAnimation)
         slideDownAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
+                isAnimationStarted = true
                 if (arrowVisibility == View.GONE)
                     baseViewOnClickListener.checkOptionArrowVisibility(arrowVisibility)
             }
 
             override fun onAnimationEnd(animation: Animation) {
+                isAnimationStarted = false
                 if (CallUtils.getIsGridViewEnabled() || !CallManager.isOneToOneCall() || CallManager.isVideoCall()) {
                     binding.layoutCallOptions.visibility = callOptionsVisibility
                     baseViewOnClickListener.checkOptionArrowVisibility(arrowVisibility)
                 }
+                if(!CallUtils.getIsGridViewEnabled() && callOptionsVisibility == View.GONE) {
+                    baseViewOnClickListener.onCallOptionsHidden()
+                }
+
             }
 
             override fun onAnimationRepeat(animation: Animation) {
                 /* not needed */
             }
         })
-        if (!CallUtils.getIsGridViewEnabled()) { //List view animation with call options not needed for grid view
-            if (callOptionsVisibility == View.VISIBLE) {
-                if (isCallOptionNotVisible) baseViewOnClickListener.onCallOptionsVisible()
-            } else
-                if (!isCallOptionNotVisible) baseViewOnClickListener.onCallOptionsHidden()
-        }
+        /* if (!CallUtils.getIsGridViewEnabled()) { //List view animation with call options not needed for grid view
+             if (callOptionsVisibility == View.VISIBLE) {
+                 if (isCallOptionNotVisible) baseViewOnClickListener.onCallOptionsVisible()
+             } else
+                 if (!isCallOptionNotVisible) baseViewOnClickListener.onCallOptionsHidden()
+         }*/
     }
 
     fun showOrHideSwitchCamera(showCamera: Boolean) {

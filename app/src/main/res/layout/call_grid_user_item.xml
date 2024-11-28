@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardBackgroundColor="@color/caller_tile_background"
-        app:cardCornerRadius="@dimen/margin_12">
+        app:cardCornerRadius="@dimen/margin_12"
+        app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

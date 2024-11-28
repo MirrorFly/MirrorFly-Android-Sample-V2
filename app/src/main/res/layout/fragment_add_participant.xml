@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".call.groupcall.AddParticipantFragment">
+    tools:context=".call.groupcall.AddParticipantFragment"
+    android:id="@+id/root_add_participant">
 
     <LinearLayout
         android:id="@+id/call_link_view"

@@ -2,17 +2,19 @@ package com.contusfly.call.groupcall.helpers
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.contus.call.CallActions
 import com.contus.call.CallConstants.CALL_UI
 import com.contus.call.CallConstants.JOIN_CALL
@@ -30,6 +32,7 @@ import com.contusfly.call.groupcall.isAudioCall
 import com.contusfly.call.groupcall.isCallNotConnected
 import com.contusfly.call.groupcall.isInPIPMode
 import com.contusfly.call.groupcall.isNull
+import com.contusfly.call.groupcall.isOutgoingCall
 import com.contusfly.call.groupcall.isUserAudioMuted
 import com.contusfly.call.groupcall.isUserVideoMuted
 import com.contusfly.call.groupcall.isVideoCall
@@ -53,18 +56,15 @@ import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
-import com.mirrorflysdk.flycall.webrtc.CallDirection
 import com.mirrorflysdk.flycall.webrtc.CallStatus
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycall.webrtc.api.ConnectionQuality
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
-import kotlinx.android.synthetic.main.layout_call_connected.view.single_user_text_call_status
 import org.webrtc.RendererCommon
 import java.util.Collections
 import java.util.concurrent.atomic.AtomicBoolean
-
 
 class CallConnectedViewHelper(
     private val binding: LayoutCallConnectedBinding,
@@ -82,6 +82,9 @@ class CallConnectedViewHelper(
 
     // True if local view is in the fullscreen renderer.
     private var isSwappedFeeds = false
+
+    private val scrollDelayHandler = Handler(Looper.getMainLooper())
+
 
     init {
         LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CallConnectedViewHelper init")
@@ -102,6 +105,24 @@ class CallConnectedViewHelper(
             CallManager.isOneToOneCall() || motionEvent.pointerCount > 1
         }
 
+        binding.callUsersRecyclerview.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    scrollDelayHandler.postDelayed({
+                        CallUtils.setIsTileViewScrolling(false)
+                        // Now safe to update views
+                    }, 1000)  // 1 second delay
+
+                } else {
+                    CallUtils.setIsTileViewScrolling(true)
+                    scrollDelayHandler.removeCallbacksAndMessages(null)  // Cancel any pending reset
+
+                }
+            }
+        })
+
         //Fix for Local view shown when call converted into one to many call
         binding.viewVideoLocal.setOnTouchListener { _, _ ->
             !CallManager.isOneToOneCall()
@@ -119,8 +140,13 @@ class CallConnectedViewHelper(
             R.id.view_video_local -> if (!GroupCallUtils.isSingleUserInCall() && CallManager.isCallConnected()) setSwappedFeeds(
                 !isSwappedFeeds
             )
+            R.id.image_menu_switch_call_view -> {
+                if (!baseViewOnClickListener.isAnimationStarted()) { // if i click the 3 dot menu while layout animation to up/down, menu only showing but layout moved up. So prevent that issue, we made a condition like this
+                    baseViewOnClickListener.disableCallOptionAnimation()
+                    showMenuPopUp(view)
+                }
+            }
 
-            R.id.image_menu_switch_call_view -> showMenuPopUp(view)
             R.id.image_unpin -> baseViewOnClickListener.pinnedUserRemoved()
         }
     }
@@ -190,13 +216,13 @@ class CallConnectedViewHelper(
         }
     }
 
-    fun setUpCallUI() {
+    fun setUpCallUI(isLocalTrackAddedFromSwitchRequest: Boolean) {
         val isCallNotConnected = CallManager.isCallNotConnected()
         LogMessage.d(
             TAG,
             "$CALL_UI $JOIN_CALL CallConnectedViewHelper setUpCallUI() isCallNotConnected: $isCallNotConnected"
         )
-        initLocalVideoViews()
+        initLocalVideoViews(isLocalTrackAddedFromSwitchRequest)
         if (isCallNotConnected)
             setUpCallNotConnected()
         else
@@ -206,7 +232,7 @@ class CallConnectedViewHelper(
     /**
      * Here all the video views are initializing
      */
-    private fun initLocalVideoViews() {
+    private fun initLocalVideoViews(isLocalTrackAddedFromSwitchRequest: Boolean = false) {
         // re-initiating video views will causes {@link IllegalStateException},
         //so this flag is checked before initializing video views
         LogMessage.d(
@@ -225,6 +251,8 @@ class CallConnectedViewHelper(
 
                 binding.viewVideoPinned.init(CallManager.getRootEglBase()?.eglBaseContext, null)
                 binding.viewVideoPinned.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
+            } else if(isLocalTrackAddedFromSwitchRequest && CallUtils.getIsBackCameraCapturing()) {
+                baseViewOnClickListener.onConversionRequestAcceptSwapVideo()
             }
         }catch (exception:Exception){
             exception.printStackTrace()
@@ -234,7 +262,7 @@ class CallConnectedViewHelper(
     fun checkAndShowLocalVideoView() {
         LogMessage.d(
             TAG,
-            "$CALL_UI $JOIN_CALL checkAndShowLocalVideoView  isVideoMuted() : ${CallManager.isVideoMuted()}"
+            "$CALL_UI ${JOIN_CALL} checkAndShowLocalVideoView  isVideoMuted() : ${CallManager.isVideoMuted()}"
         )
         if (GroupCallUtils.isSingleUserInCall()) {
             binding.layoutOneToOneAudioCall.show()
@@ -251,16 +279,12 @@ class CallConnectedViewHelper(
             // if local user available in list view then list view item will be refreshed
             // and local user view will not updated, so it is one to one call then remove local user from list view
             callUsersListAdapter.removeUser(CallManager.getCurrentUserId())
-            LogMessage.d(
-                TAG,
-                "$CALL_UI $JOIN_CALL checkAndShowLocalVideoView isOneToOneCall isCallConnected() : ${CallManager.isCallConnected()}"
-            )
-            LogMessage.d(
-                TAG,
-                "$CALL_UI $JOIN_CALL checkAndShowLocalVideoView isOneToOneCall isAudioCall() : ${CallManager.isAudioCall()}"
-            )
-            if (CallManager.isVideoMuted() && (CallManager.isCallConnected() || CallManager.isAudioCall())) {
+            if(!CallManager.isCallConnected() && (CallManager.isOutgoingCall() && CallManager.isVideoCall())) {
+                if(CallManager.isVideoMuted()) binding.viewVideoLocal.gone() else binding.viewVideoLocal.show()
+            } else if (CallManager.isVideoMuted() && (CallManager.isCallConnected() || CallManager.isAudioCall())) {
                 binding.viewVideoLocal.gone()
+                if(CallManager.isCallConnected()) binding.localProfileImage.show()
+                setSwappedFeeds(false)
             } else {
                 binding.viewVideoLocal.show()
                 setSwappedFeeds(isSwappedFeeds) // Set target for surface view
@@ -268,11 +292,9 @@ class CallConnectedViewHelper(
         } else {
             // Since local user will be removed from list view for one to one call,
             // we must add local user to list view for group call
-            if (CallUtils.getPinnedUserJid() != CallManager.getCurrentUserId() && !callUsersListAdapter.callUserList.contains(
-                    CallManager.getCurrentUserId()
-                )
-            )
-                callUsersListAdapter.addUser(CallManager.getCurrentUserId())
+            if (CallUtils.getPinnedUserJid() != CallManager.getCurrentUserId()
+                && !callUsersListAdapter.callUserList.contains(CallManager.getCurrentUserId())
+            ) callUsersListAdapter.addUser(CallManager.getCurrentUserId())
             binding.viewVideoLocal.gone()
             baseViewOnClickListener.onCallOptionsVisible()
         }
@@ -327,6 +349,7 @@ class CallConnectedViewHelper(
                 TAG,
                 "$CALL_UI CallConnectedViewHelper setUpConnectedCallView() GridViewEnabled"
             )
+            baseViewOnClickListener.showGridTitle() //switched to grid view and click on gridview to hide the title & duration and then go to pipmode, now maximize the pipmode, observes gridview overlap on the title & duration issue fixes.
             checkAndHideListViewVideoSurfaceViews()
             makeViewsGone(
                 binding.layoutProfile,
@@ -608,51 +631,57 @@ class CallConnectedViewHelper(
                 //Not Needed
             }
         })
+        optionsMenu.setOnDismissListener {
+            baseViewOnClickListener.enableCallOptionAnimation()
+        }
         optionsMenu.show()
     }
 
     fun updateCallStatus() {
-        LogMessage.i(TAG, "$CALL_UI CallConnectedViewHelper updateCallStatus isOneToOneCall: ${CallManager.isOneToOneCall()}")
         val pinnedUser = CallUtils.getPinnedUserJid()
-        val connectedStatus =
-            if (CallManager.isOneToOneCall()) CallManager.getCallConnectedStatus(activity)
-            else CallManager.getCallStatus(pinnedUser)
-        LogMessage.i(TAG, "$CALL_UI CallConnectedViewHelper connectedStatus:$connectedStatus pinnedUser:$pinnedUser")
+        val connectedStatus = if (CallManager.isOneToOneCall())
+            CallManager.getCallConnectedStatus(activity)
+        else CallManager.getCallStatus(pinnedUser)
+        val pinnedUserStatus = CallManager.getCallStatus(pinnedUser)
+        val pinnedUserNotConnected = (pinnedUserStatus.equals(CallStatus.CALLING) || pinnedUserStatus.equals(CallStatus.RINGING))
+        LogMessage.d(TAG, "$CALL_UI updateCallStatus connectedStatus: $connectedStatus Jid == $pinnedUser pinnedUserStatus:$pinnedUserStatus")
+        LogMessage.d(TAG, "$CALL_UI updateCallStatus pinnedUserNotConnected: $pinnedUserNotConnected")
         if (connectedStatus in arrayOf(
-                CallStatus.ON_HOLD,
-                CallStatus.RECONNECTING,
-                activity.getString(R.string.reconnecting),
-                CallStatus.CONNECTING
-            )
+                CallStatus.ON_HOLD, CallStatus.RECONNECTING,
+                activity.getString(com.contus.call.R.string.reconnecting)
+            ) || pinnedUserNotConnected
         ) {
-            LogMessage.e(TAG, "$CALL_UI Call Status $connectedStatus Jid == $pinnedUser")
+            LogMessage.d(TAG, "$CALL_UI Call Status $connectedStatus Jid == $pinnedUser pinnedUserStatus:$pinnedUserStatus")
+
             if (GroupCallUtils.isSingleUserInCall()) {
                 binding.layoutTitle.show()
                 binding.textCallStatus.hide()
                 if (connectedStatus == CallStatus.RECONNECTING || connectedStatus == activity.getString(
-                        R.string.reconnecting
+                        com.contus.call.R.string.reconnecting
                     )
                 ) {
-                    binding.layoutOneToOneAudioCall.single_user_text_call_status.text =
-                        activity.getString(R.string.reconnecting)
-                    binding.layoutOneToOneAudioCall.single_user_text_call_status.visibility =
+                    binding.singleUserTextCallStatus.text =
+                        activity.getString(com.contus.call.R.string.reconnecting)
+                    binding.singleUserTextCallStatus.visibility =
                         View.VISIBLE
-                    LogMessage.e(TAG, "$CALL_UI Call Status RECONNECTING single user")
+                    LogMessage.d(TAG, "$CALL_UI Call Status RECONNECTING single user")
                 } else {
-                    binding.layoutOneToOneAudioCall.single_user_text_call_status.visibility =
+                    binding.singleUserTextCallStatus.visibility =
                         View.GONE
                 }
             } else {
                 binding.layoutTitle.show()
-                binding.layoutOneToOneAudioCall.single_user_text_call_status.visibility = View.GONE
+                binding.singleUserTextCallStatus.visibility = View.GONE
                 binding.textCallStatus.show()
                 binding.textCallStatus.text =
-                    if (connectedStatus == CallStatus.RECONNECTING) activity.getString(R.string.reconnecting)
+                    if (connectedStatus == CallStatus.RECONNECTING) activity.getString(com.contus.call.R.string.reconnecting)
                     else connectedStatus
+                if(pinnedUserNotConnected)
+                    binding.textCallStatus.text = pinnedUserStatus
             }
         } else {
             binding.textCallStatus.gone()
-            binding.layoutOneToOneAudioCall.single_user_text_call_status.visibility = View.GONE
+            binding.singleUserTextCallStatus.visibility = View.GONE
         }
 
     }
@@ -755,7 +784,7 @@ class CallConnectedViewHelper(
 
     fun onLocalVideoTrackAdded() {
         LogMessage.d(TAG, "$CALL_UI onLocalVideoTrackAdded()")
-        initLocalVideoViews()
+        initLocalVideoViews(true)
     }
 
     fun onVideoTrackAdded(userJid: String) {
@@ -801,14 +830,15 @@ class CallConnectedViewHelper(
     fun updatePinnedUserVideoMuteStatus() {
         LogMessage.i(
             TAG,
-            "$CALL_UI $JOIN_CALL CallConnectedViewHelper updatePinnedUserVideoMuteStatus isSwappedFeeds:$isSwappedFeeds"
+            "$CALL_UI ${JOIN_CALL} CallConnectedViewHelper updatePinnedUserVideoMuteStatus isSwappedFeeds:$isSwappedFeeds"
         )
         if (GroupCallUtils.isSingleUserInCall()) {
             LogMessage.i(
                 TAG,
-                "$CALL_UI $JOIN_CALL CallConnectedViewHelper just hide videoPinned SingleUserInCall"
+                "$CALL_UI ${JOIN_CALL} CallConnectedViewHelper just hide videoPinned SingleUserInCall"
             )
             binding.viewVideoPinned.gone()
+            hideOrShowLocalProfileImage()
             binding.layoutOneToOneAudioCall.show()
         } else if (CallUtils.getIsGridViewEnabled()) {
             makeViewsGone(binding.layoutProfile, binding.textCallStatus)
@@ -818,33 +848,33 @@ class CallConnectedViewHelper(
             else {
                 isSwappedFeeds = false
                 val videoSink = CallUtils.getPinnedVideoSink()
-                LogMessage.i(
-                    TAG,
-                    "$CALL_UI $JOIN_CALL CallConnectedViewHelper just hide videoPinned getPinnedUserVideoMuted:${CallUtils.getPinnedUserVideoMuted()}"
-                )
-                LogMessage.i(
-                    TAG,
-                    "$CALL_UI $JOIN_CALL CallConnectedViewHelper just hide videoPinned getPinnedUserJid:${CallUtils.getPinnedUserJid()}"
-                )
-                if (CallUtils.getPinnedUserVideoMuted() || CallManager.isRemoteVideoPaused(CallUtils.getPinnedUserJid()) || videoSink.isNull()) {
-                    LogMessage.i(
-                        TAG,
-                        "$CALL_UI $JOIN_CALL CallConnectedViewHelper just hide videoPinned "
-                    )
+
+                if(!CallManager.isCallConnected() && (CallManager.isOutgoingCall() && CallManager.isVideoCall())) {
+                    if(CallManager.isVideoMuted()) binding.viewVideoLocal.gone() else binding.viewVideoLocal.show()
+                } else if (CallUtils.getPinnedUserVideoMuted() || videoSink.isNull()
+                    || CallManager.isRemoteVideoPaused(CallUtils.getPinnedUserJid())
+                ) {
                     binding.viewVideoPinned.gone()
                     showViews(binding.layoutProfile)
                 } else {
-                    LogMessage.i(
-                        TAG,
-                        "$CALL_UI $JOIN_CALL CallConnectedViewHelper just show videoPinned "
-                    )
                     makeViewsGone(binding.layoutProfile, binding.textCallStatus)
                     binding.viewVideoPinned.show()
                     videoSink?.setTarget(binding.viewVideoPinned)
-                    binding.viewVideoPinned.setMirror(CallUtils.getPinnedUserJid() == CallManager.getCurrentUserId() && !CallUtils.getIsBackCameraCapturing())
+                    binding.viewVideoPinned.setMirror(
+                        CallUtils.getPinnedUserJid() == CallManager.getCurrentUserId()
+                                && !CallUtils.getIsBackCameraCapturing()
+                    )
                 }
             }
             updateCallStatus()
+        }
+    }
+
+    private fun hideOrShowLocalProfileImage(){
+        if (CallManager.isVideoCall()) {
+            binding.localProfileImage.hide()
+        } else {
+            binding.localProfileImage.show()
         }
     }
 
@@ -889,6 +919,7 @@ class CallConnectedViewHelper(
                 bundle.putInt(CallActions.NOTIFY_CONNECT_TO_SINK, 1)
                 bundle.putInt(CallActions.NOTIFY_PINNED_USER_VIEW, 1)
                 bundle.putInt(CallActions.NOTIFY_USER_POOR_CONNECTION, 1)
+                bundle.putInt(CallActions.NOTIFY_VIEW_SIZE_UPDATED,1)
                 if (CallUtils.getIsGridViewEnabled())
                     callUserGridAdapter.notifyItemRangeChanged(
                         0,

@@ -82,6 +82,8 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
 
     private var ismarkRead:Boolean=false
 
+    open var currentFragmentPosition = 0
+
     val contactPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         val contactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: ChatUtils.checkMediaPermission(this, Manifest.permission.READ_CONTACTS)

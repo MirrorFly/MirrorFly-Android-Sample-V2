@@ -3,6 +3,8 @@ package com.contusfly.call.groupcall
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -32,6 +34,7 @@ import com.contusfly.utils.UIKitContactUtils
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.CustomAlertDialog
 import com.contusfly.views.CustomRecyclerView
+import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.activities.FlyBaseActivity
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
@@ -180,10 +183,6 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
             groupId = it.getString(Constants.GROUP_ID, "")
             isAddUsersToOneToOneCall = it.getBoolean(ADD_USERS_TO_ONE_TO_ONE_CALL, false)
             callConnectedUserList = it.getStringArrayList(CONNECTED_USER_LIST)
-            callConnectedUserList?.let { list ->
-                if (list.contains(SharedPreferenceManager.getCurrentUserJid()))
-                    list.remove(SharedPreferenceManager.getCurrentUserJid())
-            }
         }
     }
 
@@ -346,6 +345,32 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
             listContact.visibility = View.GONE
             callLinkTitleTextView.text = getString(R.string.meet_link)
         }
+        addParticipantButtonAdjustOverKeyboard(view)
+
+    }
+
+    /**
+     * for below android 10 versions keypad is not adjusted.
+     */
+    private fun addParticipantButtonAdjustOverKeyboard(view: View) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val rootView = view.findViewById<View>(R.id.root_add_participant)
+            rootView.viewTreeObserver.addOnGlobalLayoutListener {
+                val rect = Rect()
+                rootView.getWindowVisibleDisplayFrame(rect)
+                val screenHeight = rootView.rootView.height
+                val keypadHeight = screenHeight - rect.bottom
+
+                if (keypadHeight > screenHeight * 0.15) { // If keyboard is displayed
+                    // Adjust your layout or button position here
+                    addParticipantsLayout.translationY = -keypadHeight.toFloat()
+                } else {
+                    // Reset the position of the button
+                    addParticipantsLayout.translationY = 0f
+                }
+            }
+        }
+
     }
 
     private fun setContactAdapter() {
@@ -403,18 +428,30 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
 
     private fun setListeners() {
         addParticipantsLayout.setOnClickListener {
-            if (selectedList.isNotEmpty()) {
-                if (!ChatManager.getAvailableFeatures().isGroupCallEnabled) {
-                    CustomAlertDialog().showFeatureRestrictionAlert(requireContext())
-                } else {
-                    addParticipantsLayout.isEnabled = false
-                    CallManager.inviteUsersToOngoingCall(selectedList, inputCallActionListener = callActionListener)
-                    CallUtils.setIsAddUsersToTheCall(false)
-                    requireActivity().supportFragmentManager.popBackStackImmediate()
-                }
-            } else {
-                Toast.makeText(requireContext(), getString(R.string.error_select_atleast_one), Toast.LENGTH_SHORT).show()
+            if(AppUtils.isNetConnected(requireActivity())){
+                checkAndInviteUsersToOngoingCall()
+            }else{
+                CustomToast.show(context, getString(R.string.msg_no_internet))
+                addParticipantsLayout.isEnabled = false
+                requireActivity().supportFragmentManager.popBackStackImmediate()
             }
+        }
+    }
+
+    private fun checkAndInviteUsersToOngoingCall(){
+        if (selectedList.isNotEmpty()) {
+            if (!ChatManager.getAvailableFeatures().isGroupCallEnabled) {
+                CustomAlertDialog().showFeatureRestrictionAlert(requireContext())
+            } else {
+                addParticipantsLayout.isEnabled = false
+                val newSelectedList: ArrayList<String> = arrayListOf()
+                newSelectedList.addAll(selectedList)
+                CallManager.inviteUsersToOngoingCall(newSelectedList, inputCallActionListener = callActionListener)
+                CallUtils.setIsAddUsersToTheCall(false)
+                requireActivity().supportFragmentManager.popBackStackImmediate()
+            }
+        } else {
+            CustomToast.show(requireContext(), getString(com.contus.call.R.string.error_select_atleast_one))
         }
     }
 
@@ -564,5 +601,23 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
     private fun updateProfileDetails(userJid: String) {
         val profileDetails = ProfileDetailsUtils.getProfileDetails(userJid)
         mAdapter.updateProfileDetails(profileDetails)
+    }
+
+    fun updateMemberRemovedOrAddedInUserList(isUserLeft: Boolean, jid: String, mGroupId: String?) {
+        if (groupId == mGroupId) {
+            if (isUserLeft) {
+                if (selectedList.isNotEmpty()) {
+                    val isJidSelected = selectedList.any { it == jid }
+                    val index = selectedList.indexOf(jid)
+                    if (isJidSelected && index.isValidIndex()) {
+                        selectedList.removeAt(index)
+                    }
+                }
+                removeUser(jid)
+                addParticipantsTextView.text = selectedUserCount
+            } else {
+                getRefreshedProfilesList()
+            }
+        }
     }
 }

@@ -440,11 +440,21 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
             }
 
             override fun onCallLogsUpdated() {
-                mAdapter.clearCallLogs()
-                viewModel.addLoaderToTheList(context = context)
-                viewModel.getCallLogsList(false)
-                Log.d(TAG, "Call Logs Updated")
-                (activity as DashboardActivity).validateMissedCallsCount()
+                try {
+                    mAdapter.clearCallLogs()
+                    viewModel.addLoaderToTheList(context = context)
+                    viewModel.getCallLogsList(false)
+                    val currentFragment = (activity as DashboardActivity).getCurrentVisibleFragment()
+                    if (currentFragment is CallHistoryFragment) {
+                        (activity as DashboardActivity).clearMissedCall()
+                    } else {
+                        Log.d(TAG, "Call Logs Updated")
+                        (activity as DashboardActivity).validateMissedCallsCount()
+                    }
+
+                } catch(e: Exception){
+                    LogMessage.e(TAG,"onCallLogsUpdated exception $e")
+                }
             }
         })
     }
@@ -871,11 +881,14 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
     }
 
     private fun isAdminBlocked(callLog: CallLog): Boolean {
-        return if (callLog.callMode == CallMode.ONE_TO_ONE && (callLog.userList == null || callLog.userList!!.size < 2)) {
-            ProfileDetailsUtils.getProfileDetails(if (callLog.callState == CallState.OUTGOING_CALL) callLog.toUser!! else callLog.fromUser!!)!!.isAdminBlocked
-        } else if (callLog.groupId!!.isNotEmpty()) {
+        return if (callLog.callMode == CallMode.ONE_TO_ONE
+            && (callLog.userList == null || callLog.userList!!.size < 2)
+        ) ProfileDetailsUtils.getProfileDetails(
+            if (callLog.callState == CallState.OUTGOING_CALL) callLog.toUser!! else callLog.fromUser!!
+        )!!.isAdminBlocked
+        else if (callLog.groupId!!.isNotEmpty() && ProfileDetailsUtils.getProfileDetails(callLog.groupId!!) != null)
             ProfileDetailsUtils.getProfileDetails(callLog.groupId!!)!!.isAdminBlocked
-        } else false
+        else false
     }
 
     /**

@@ -46,7 +46,7 @@ class DialogViewHelper(
             LogMessage.d(TAG, "$CALL_UI outgoingRequestRunnable no response from end user")
             outGoingRequest = false
             dismissVideoCallRequestingDialog()
-            CallManager.muteVideo(true)
+            CallManager.cancelVideoCallSwitchRequest()
             activityOnClickListener.onRequestingVideoCallDialog()
             Toast.makeText(context, "No response from " + ProfileDetailsUtils.getDisplayName(CallManager.getEndCallerJid()), Toast.LENGTH_LONG).show()
         }
@@ -208,4 +208,11 @@ class DialogViewHelper(
     fun isIncomingRequestAvailable() {
         inComingRequest = CallManager.isCallConversionRequestAvailable()
     }
+
+    fun hideVideoCallRequestingDialogForPipMode(){
+        if (requestingVideoCallDialog.isShowing) {
+            requestingVideoCallDialog.dismiss()
+        }
+    }
+
 }

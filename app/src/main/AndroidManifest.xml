@@ -272,6 +272,7 @@
             android:taskAffinity="call.video"
             android:turnScreenOn="true"
             android:windowSoftInputMode="stateHidden"
+            android:hardwareAccelerated="true"
             tools:targetApi="R"/>
         <activity
             android:name=".call.calllog.CallHistoryDetailActivity"

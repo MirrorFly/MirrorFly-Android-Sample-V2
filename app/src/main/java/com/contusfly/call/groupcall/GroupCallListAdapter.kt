@@ -203,52 +203,56 @@ class GroupCallListAdapter(val context: Context) :
     }
 
     private fun setRemoteUserInfo(holder: CallUserViewHolder, position: Int) {
-        val profileDetails = ProfileDetailsUtils.getProfileDetails(callUserList[position])
-        if (profileDetails != null) {
-            val name = Utils.returnEmptyStringIfNull(profileDetails.getDisplayName())
-            val image = profileDetails.image
-            val setDrawable = SetDrawable(context, profileDetails)
-            holder.binding.textUserName.text = name.toString()
-            holder.binding.imgProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-            val icon: Drawable? = setDrawable.setDrawableForGroupCall(
-                name.toString(),
-                CallConstants.DRAWABLE_SIZE,
-                false
-            )
-            MediaUtils.loadImageWithGlideSecure(
-                context,
-                image,
-                holder.binding.imgProfileImage,
-                icon
-            )
+        try {
+            val profileDetails = ProfileDetailsUtils.getProfileDetails(callUserList[position])
+            if (profileDetails != null) {
+                val name = Utils.returnEmptyStringIfNull(profileDetails.getDisplayName())
+                val image = profileDetails.image
+                val setDrawable = SetDrawable(context, profileDetails)
+                holder.binding.textUserName.text = name.toString()
+                holder.binding.imgProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                val icon: Drawable? = setDrawable.setDrawableForGroupCall(
+                    name.toString(),
+                    CallConstants.DRAWABLE_SIZE,
+                    false
+                )
+                MediaUtils.loadImageWithGlideSecure(
+                    context,
+                    image,
+                    holder.binding.imgProfileImage,
+                    icon
+                )
 
-        } else {
-            val userJid = ChatUtils.getUserFromJid(callUserList[position])
-            holder.binding.textUserName.text =
-                Utils.getFormattedPhoneNumber(userJid)
-            holder.binding.imgProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-            MediaUtils.loadImageWithGlideSecure(
-                context,
-                "",
-                holder.binding.imgProfileImage,
-                ContextCompat.getDrawable(context, R.drawable.ic_group_call_user_default_pic)
-            )
-
-            if(BuildConfig.CONTACT_SYNC_ENABLED)
+            } else {
+                val userJid = ChatUtils.getUserFromJid(callUserList[position])
+                holder.binding.textUserName.text =
+                    Utils.getFormattedPhoneNumber(userJid)
+                holder.binding.imgProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
                 MediaUtils.loadImageWithGlideSecure(
                     context,
                     "",
                     holder.binding.imgProfileImage,
                     ContextCompat.getDrawable(context, R.drawable.ic_group_call_user_default_pic)
                 )
-            else{
-                val setDrawable = SetDrawable(context)
-                val icon = setDrawable.setDrawableForGroupCall(userJid, CallConstants.DRAWABLE_SIZE,
-                    isProfile = true,
-                    isUnknownContact = true
-                )
-                MediaUtils.loadImageWithGlideSecure(context,"" ,holder.binding.imgProfileImage, icon)
+
+                if(BuildConfig.CONTACT_SYNC_ENABLED)
+                    MediaUtils.loadImageWithGlideSecure(
+                        context,
+                        "",
+                        holder.binding.imgProfileImage,
+                        ContextCompat.getDrawable(context, R.drawable.ic_group_call_user_default_pic)
+                    )
+                else{
+                    val setDrawable = SetDrawable(context)
+                    val icon = setDrawable.setDrawableForGroupCall(userJid, CallConstants.DRAWABLE_SIZE,
+                        isProfile = true,
+                        isUnknownContact = true
+                    )
+                    MediaUtils.loadImageWithGlideSecure(context,"" ,holder.binding.imgProfileImage, icon)
+                }
             }
+        } catch(e: Exception){
+            LogMessage.d(TAG,"remoteUserInfo exception $e")
         }
     }
 
@@ -580,23 +584,28 @@ class GroupCallListAdapter(val context: Context) :
     }
 
     private fun updateUserSpeaking(holder: CallUserViewHolder, position: Int, audioLevel: Int) {
-        if (audioLevel == 0 || CallManager.isUserAudioMuted(callUserList[position]))
-            updateUserStoppedSpeaking(holder, position)
-        else {
-            holder.binding.imageAudioMuted.gone()
-            holder.binding.viewSpeakingIndicator.onUserSpeaking(audioLevel)
+        if (!CallUtils.isTileViewScrolling()) {
+            if (audioLevel == 0 || CallManager.isUserAudioMuted(callUserList[position]))
+                updateUserStoppedSpeaking(holder, position)
+            else {
+                holder.binding.imageAudioMuted.gone()
+                holder.binding.viewSpeakingIndicator.onUserSpeaking(audioLevel)
+            }
         }
     }
 
-    private fun updateUserStoppedSpeaking(holder: CallUserViewHolder, position: Int) {
-        holder.binding.viewSpeakingIndicator.onUserStoppedSpeaking(object :
-            SpeakingIndicatorListener {
-            override fun onSpeakingIndicatorHidden() {
-                if (position < callUserList.size)
-                    CallUtils.clearPeakSpeakingUser(callUserList[position])
-            }
-        })
-        setUpAudioMuted(holder, position)
+    private fun updateUserStoppedSpeaking(holder: CallUserViewHolder, position: Int){
+        if(!CallUtils.isTileViewScrolling()) {
+            holder.binding.viewSpeakingIndicator.onUserStoppedSpeaking(object :
+                SpeakingIndicatorListener {
+                override fun onSpeakingIndicatorHidden() {
+                    if (position < callUserList.size) {
+                        CallUtils.clearPeakSpeakingUser(callUserList[position])
+                        setUpAudioMuted(holder, position)
+                    }
+                }
+            })
+        }
     }
 
     private fun updatePoorNetworkIndicator(holder: CallUserViewHolder, position: Int){

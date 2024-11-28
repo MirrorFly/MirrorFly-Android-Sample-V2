@@ -137,4 +137,11 @@ class CallNotConnectedViewHelper(
         binding.textCallerName.text = membersName.toString()
         binding.textParticipantsName.text = membersName.toString()
     }
+
+    fun setUpCallUIForCallAttended(){
+        showCallStatus()
+        updateCallStatus()
+        updateCallMemberDetails(CallManager.getCallUsersList())
+        showCallerImage()
+    }
 }

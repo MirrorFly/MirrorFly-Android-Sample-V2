@@ -280,10 +280,12 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
 
     fun updateUserJoined(userJid: String) {
         onGngCallParticipantsListFragment.updateUserJoined(userJid)
+        addParticipantsListFragment.updateMemberRemovedOrAddedInUserList(true,userJid,GroupCallUtils.getGroupId())
     }
 
     fun updateUserLeft(userJid: String) {
         onGngCallParticipantsListFragment.updateUserLeft(userJid)
+        addParticipantsListFragment.refreshUsersList()
     }
 
     fun handleMuteEvents(userJid: String) {

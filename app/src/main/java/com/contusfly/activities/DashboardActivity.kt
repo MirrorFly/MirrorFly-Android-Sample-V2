@@ -195,6 +195,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                 isPageChanged = true
                 callHistoryFragment.clearSelectedMessages()
                 recentChatFragment.clearSelectedMessages()
+                currentFragmentPosition = position
                 invalidateOptionsMenu()
                 actionMode?.finish()
                 when (position) {
@@ -214,12 +215,11 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         })
     }
 
-    private fun clearMissedCall() {
+    fun clearMissedCall() {
         clearMissedCallNotificationDetails()
         //mark missed calls as read
         CallLogManager.markAllUnreadMissedCallsAsRead()
         validateMissedCallsCount()
-
     }
 
     @SuppressLint("InflateParams")
@@ -865,5 +865,9 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         LogMessage.d("DashboardActivity", "#dashboard #recent onConnected chatHistoryMigration")
         viewModel.chatHistoryMigration()
         callLogviewModel.uploadUnSyncedCallLogs()
+    }
+
+    fun getCurrentVisibleFragment(): Fragment? {
+        return mAdapter.fragmentsArray[currentFragmentPosition]
     }
 }
