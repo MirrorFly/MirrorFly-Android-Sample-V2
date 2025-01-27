@@ -29,7 +29,6 @@ import com.contusfly.helpers.PaginationScrollListener
 import com.contusfly.helpers.UserListType
 import com.contusfly.network.NetworkConnection
 import com.contusfly.utils.ProfileDetailsUtils
-import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.utils.UIKitContactUtils
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.CustomAlertDialog

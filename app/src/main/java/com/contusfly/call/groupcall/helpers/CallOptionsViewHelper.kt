@@ -1,7 +1,6 @@
 package com.contusfly.call.groupcall.helpers
 
 import android.Manifest
-import android.content.DialogInterface
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -287,12 +286,14 @@ class CallOptionsViewHelper(
             return
         val isCallOptionNotVisible = binding.layoutCallOptions.visibility != View.VISIBLE
 
-        if (!CallUtils.getIsGridViewEnabled()) { //List view animation with call options not needed for grid view
-            if (callOptionsVisibility == View.VISIBLE) {
-                if (isCallOptionNotVisible) baseViewOnClickListener.onCallOptionsVisible()
-            }
+        if (!CallUtils.getIsGridViewEnabled() && callOptionsVisibility == View.VISIBLE && isCallOptionNotVisible) { //List view animation with call options not needed for grid view
+            baseViewOnClickListener.onCallOptionsVisible()
         }
 
+        animated(animation,callOptionsVisibility,arrowVisibility)
+    }
+
+    private fun animated(animation: Int, callOptionsVisibility: Int, arrowVisibility: Int){
         val slideDownAnimation = AnimationUtils.loadAnimation(activity, animation)
         binding.layoutCallOptions.startAnimation(slideDownAnimation)
         slideDownAnimation.setAnimationListener(object : Animation.AnimationListener {
@@ -318,12 +319,6 @@ class CallOptionsViewHelper(
                 /* not needed */
             }
         })
-        /* if (!CallUtils.getIsGridViewEnabled()) { //List view animation with call options not needed for grid view
-             if (callOptionsVisibility == View.VISIBLE) {
-                 if (isCallOptionNotVisible) baseViewOnClickListener.onCallOptionsVisible()
-             } else
-                 if (!isCallOptionNotVisible) baseViewOnClickListener.onCallOptionsHidden()
-         }*/
     }
 
     fun showOrHideSwitchCamera(showCamera: Boolean) {

@@ -189,14 +189,32 @@
                     android:textColor="?attr/chat_list_time_color"
                     android:textSize="@dimen/text_size_13" />
 
-                <ImageView
-                    android:id="@+id/search_pin"
-                    android:layout_width="@dimen/margin_20"
-                    android:layout_height="@dimen/margin_20"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:contentDescription="@string/image_content_description"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/ic_pinicon" />
+                    android:orientation="horizontal"
+                    android:gravity="right|center_vertical"
+                    android:layout_marginTop="@dimen/margin_5">
+
+                    <ImageView
+                        android:id="@+id/mute"
+                        android:layout_width="@dimen/margin_15"
+                        android:layout_height="@dimen/margin_15"
+                        android:layout_marginEnd="@dimen/margin_5"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_mute" />
+
+                    <ImageView
+                        android:id="@+id/search_pin"
+                        android:layout_width="@dimen/margin_20"
+                        android:layout_height="@dimen/margin_20"
+                        android:layout_gravity="end"
+                        android:contentDescription="@string/image_content_description"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_pinicon" />
+
+                </LinearLayout>
 
                 <com.contusfly.views.CustomTextView
                     android:id="@+id/search_text_archive"

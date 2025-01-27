@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.CompoundButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ import com.contusfly.privateChat.PrivateChatEnableDisableActivity
 import com.contusfly.utils.AppConstants
 import com.contusfly.utils.ChatUtils
 import com.contusfly.utils.LogMessage
+import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.DoProgressDialog
@@ -36,6 +38,7 @@ import com.contusfly.collapsingToolbar.CollapsingToolbarLayout
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.contusfly.utils.Constants.Companion.MUTE_STATUS
 
 class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener {
 
@@ -77,9 +80,7 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
         getLastSeenData()
         setUserData()
         SharedPreferenceManager.setString(com.contusfly.utils.Constants.ON_GOING_CHAT_USER,userProfileDetails.jid)
-        binding.muteSwitch.setOnCheckedChangeListener { _, isChecked ->
-            FlyCore.updateChatMuteStatus(userProfileDetails.jid, isChecked)
-        }
+        binding.muteSwitch.setOnCheckedChangeListener(listener)
         binding.textMedia.setOnClickListener {
             var feature=ChatManager.getAvailableFeatures()
             if(feature.isViewAllMediaEnabled){
@@ -204,12 +205,34 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
         binding.profileImage.loadUserInfoProfileImage(this, userProfileDetails)
     }
 
-    private fun setMuteNotificationStatus(isMute: Boolean) {
+    private fun setMuteNotificationStatus(isMute: Boolean, isReceivedFromServer: Boolean = false) {
+        LogMessage.d(MUTE_STATUS,"setMuteNotificationStatus called isReceivedFromServer: $isReceivedFromServer")
         if (!FlyCore.isUserUnArchived(userProfileDetails.jid)) {
             binding.muteSwitch.isEnabled = false
             binding.muteSwitch.alpha = 0.5F
         }
+        if(isReceivedFromServer) binding.muteSwitch.setOnCheckedChangeListener(null)
         binding.muteSwitch.isChecked = isMute
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            binding.muteSwitch.setOnCheckedChangeListener(listener)
+        },500)
+    }
+
+    val listener = object:CompoundButton.OnCheckedChangeListener{
+        override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+            LogMessage.d(MUTE_STATUS,"onCheckedChanged received isChecked: $isChecked")
+            var userJidList = mutableListOf<String>()
+            userJidList.add(userProfileDetails.jid)
+            updateMuteStatus(userJidList,isChecked)
+        }
+    }
+
+    private fun updateMuteStatus(jidList: MutableList<String>, muteStatus: Boolean) {
+        try {
+            ChatManager.updateChatMuteStatus(jidList, muteStatus)
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"#updateMuteStatus exception $e")
+        }
     }
 
     private fun setUserData() {
@@ -454,6 +477,55 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
                 launchAuthPinActivity()
             }
         }
+
+    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
+        super.onMuteStatusUpdated(isSuccess,message,jidList)
+        LogMessage.d("DashboardActivity", "#mute #recentChat update")
+        LogMessage.d(MUTE_STATUS,"onMuteStatusUpdated received from server isSuccess: $isSuccess message : $message")
+        muteChatStatusUpdate(jidList)
+    }
+
+    private fun muteChatStatusUpdate(jidList: List<String>) {
+        try {
+            for(jid in jidList) {
+                if(userProfileDetails.jid == jid) {
+                    var profile =  ProfileDetailsUtils.getProfileDetails(jid)!!
+                    if(profile != null) {
+                        userProfileDetails = profile
+                        LogMessage.d(MUTE_STATUS,"muteChatStatusUpdate--> isProfileMuteStatus: ${userProfileDetails.isMuted} switchButtonStatus: ${binding.muteSwitch.isChecked}")
+                        if(userProfileDetails.isMuted != binding.muteSwitch.isChecked)
+                        setMuteNotificationStatus(userProfileDetails.isMuted,true)
+                    }
+                    break
+                }
+            }
+
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"#mute #update exception $e")
+        }
+    }
+    override fun updateArchiveUnArchiveChats(toUser: String?, archiveStatus: Boolean) {
+        muteButtonEnabeDisable()
+    }
+
+    override fun updateArchivedSettings(archivedSettingsStatus: Boolean) {
+        super.updateArchivedSettings(archivedSettingsStatus)
+        muteButtonEnabeDisable()
+    }
+
+    private fun muteButtonEnabeDisable(){
+        try {
+            if (!FlyCore.isUserUnArchived(userProfileDetails.jid)) {
+                binding.muteSwitch.isEnabled = false
+                binding.muteSwitch.alpha = 0.5F
+            } else {
+                binding.muteSwitch.isEnabled = true
+                binding.muteSwitch.alpha = 1F
+            }
+        } catch(e: Exception){
+            LogMessage.e(TAG,"updateArchiveUnArchiveChats exception $e")
+        }
+    }
 
     override fun onStart() {
         super.onStart()

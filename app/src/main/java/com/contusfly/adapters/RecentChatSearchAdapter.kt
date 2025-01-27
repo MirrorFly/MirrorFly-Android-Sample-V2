@@ -194,6 +194,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
                 makeViewsGone(emailContactIcon)
                 val recent = FlyCore.getRecentChatOf(profileDetail.jid)
                 setArchivedAndPinLabel(recent, this)
+                switchBetweenMuteUnmute(recent, this)
 
             }
         } catch (e: Exception) {
@@ -450,7 +451,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
                     val stopIndex = startIndex + searchKey.length
                     EmojiUtils.setEmojiTextAndHighLightSearchText(searchTextChatPerson, profileDetail.getDisplayName(), startIndex, stopIndex)
                 } else EmojiUtils.setEmojiText(searchTextChatPerson, profileDetail.getDisplayName().toString())
-                makeViewsGone(searchTextRecentChatmsg, searchTextArchive, searchImageRecentChatStatus, searchTextUnseenCount, searchPin)
+                makeViewsGone(searchTextRecentChatmsg, searchTextArchive, searchImageRecentChatStatus, searchTextUnseenCount, searchPin, mute)
                 setAdapterIcon(profileDetail, this)
                 val status = Utils.returnEmptyStringIfNull(profileDetail.status)
                 /**
@@ -496,6 +497,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
             viewBinding.searchRecentItem.setBackgroundResource(R.drawable.recycleritem_ripple)
         }
         setArchivedAndPinLabel(recent, viewBinding)
+        switchBetweenMuteUnmute(recent, viewBinding)
     }
 
     /**
@@ -510,6 +512,22 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
             if (recent.isChatPinned) viewBinding.searchPin.show() else viewBinding.searchPin.gone()
         }
 
+    }
+
+    /**
+
+     * Mute status Icon Showing Recent chat
+
+     *
+
+     * @param recent Instance of RecentChat
+
+     * @param holder Instance of the view holder
+
+     */
+
+    private fun switchBetweenMuteUnmute(recent: RecentChat?, holder: RowSearchContactMessageBinding) {
+        if (recent!!.isMuted && FlyCore.isUserUnArchived(recent.jid)) holder.mute.show() else holder.mute.gone()
     }
 
     /**

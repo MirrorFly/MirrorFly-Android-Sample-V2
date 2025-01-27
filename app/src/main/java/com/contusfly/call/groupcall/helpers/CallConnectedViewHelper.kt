@@ -56,6 +56,7 @@ import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.mirrorflysdk.flycall.webrtc.CallLogger
 import com.mirrorflysdk.flycall.webrtc.CallStatus
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.mirrorflysdk.flycall.webrtc.api.ConnectionQuality
@@ -262,7 +263,7 @@ class CallConnectedViewHelper(
     fun checkAndShowLocalVideoView() {
         LogMessage.d(
             TAG,
-            "$CALL_UI ${JOIN_CALL} checkAndShowLocalVideoView  isVideoMuted() : ${CallManager.isVideoMuted()}"
+            "$CALL_UI $JOIN_CALL checkAndShowLocalVideoView  isVideoMuted() : ${CallManager.isVideoMuted()}"
         )
         if (GroupCallUtils.isSingleUserInCall()) {
             binding.layoutOneToOneAudioCall.show()
@@ -276,20 +277,9 @@ class CallConnectedViewHelper(
                 setSwappedFeeds(isSwappedFeeds) // Set target for surface view
             }
         } else if (CallManager.isOneToOneCall()) {
-            // if local user available in list view then list view item will be refreshed
-            // and local user view will not updated, so it is one to one call then remove local user from list view
-            callUsersListAdapter.removeUser(CallManager.getCurrentUserId())
-            if(!CallManager.isCallConnected() && (CallManager.isOutgoingCall() && CallManager.isVideoCall())) {
-                if(CallManager.isVideoMuted()) binding.viewVideoLocal.gone() else binding.viewVideoLocal.show()
-            } else if (CallManager.isVideoMuted() && (CallManager.isCallConnected() || CallManager.isAudioCall())) {
-                binding.viewVideoLocal.gone()
-                if(CallManager.isCallConnected()) binding.localProfileImage.show()
-                setSwappedFeeds(false)
-            } else {
-                binding.viewVideoLocal.show()
-                setSwappedFeeds(isSwappedFeeds) // Set target for surface view
-            }
+            updateLocalVideoView()
         } else {
+            CallLogger.callTestingLog("UIKIT---> checkAndShowLocalVideoView userJid: ${CallManager.getCurrentUserId()} pinnedUserJid: ${CallUtils.getPinnedUserJid()}")
             // Since local user will be removed from list view for one to one call,
             // we must add local user to list view for group call
             if (CallUtils.getPinnedUserJid() != CallManager.getCurrentUserId()
@@ -297,6 +287,22 @@ class CallConnectedViewHelper(
             ) callUsersListAdapter.addUser(CallManager.getCurrentUserId())
             binding.viewVideoLocal.gone()
             baseViewOnClickListener.onCallOptionsVisible()
+        }
+    }
+
+    private fun updateLocalVideoView(){
+        // if local user available in list view then list view item will be refreshed
+        // and local user view will not updated, so it is one to one call then remove local user from list view
+        callUsersListAdapter.removeUser(CallManager.getCurrentUserId())
+        if(!CallManager.isCallConnected() && (CallManager.isOutgoingCall() && CallManager.isVideoCall())) {
+            if(CallManager.isVideoMuted()) binding.viewVideoLocal.gone() else binding.viewVideoLocal.show()
+        } else if (CallManager.isVideoMuted() && (CallManager.isCallConnected() || CallManager.isAudioCall())) {
+            binding.viewVideoLocal.gone()
+            if(CallManager.isCallConnected()) binding.localProfileImage.show()
+            setSwappedFeeds(false)
+        } else {
+            binding.viewVideoLocal.show()
+            setSwappedFeeds(isSwappedFeeds) // Set target for surface view
         }
     }
 
@@ -639,51 +645,70 @@ class CallConnectedViewHelper(
 
     fun updateCallStatus() {
         val pinnedUser = CallUtils.getPinnedUserJid()
-        val connectedStatus = if (CallManager.isOneToOneCall())
+        val connectedStatus = if (CallManager.isOneToOneCall()) {
             CallManager.getCallConnectedStatus(activity)
-        else CallManager.getCallStatus(pinnedUser)
+        } else {
+            CallManager.getCallStatus(pinnedUser)
+        }
         val pinnedUserStatus = CallManager.getCallStatus(pinnedUser)
-        val pinnedUserNotConnected = (pinnedUserStatus.equals(CallStatus.CALLING) || pinnedUserStatus.equals(CallStatus.RINGING))
+        val pinnedUserNotConnected = pinnedUserStatus in listOf(CallStatus.CALLING, CallStatus.RINGING)
+
         LogMessage.d(TAG, "$CALL_UI updateCallStatus connectedStatus: $connectedStatus Jid == $pinnedUser pinnedUserStatus:$pinnedUserStatus")
         LogMessage.d(TAG, "$CALL_UI updateCallStatus pinnedUserNotConnected: $pinnedUserNotConnected")
-        if (connectedStatus in arrayOf(
-                CallStatus.ON_HOLD, CallStatus.RECONNECTING,
-                activity.getString(com.contus.call.R.string.reconnecting)
-            ) || pinnedUserNotConnected
-        ) {
-            LogMessage.d(TAG, "$CALL_UI Call Status $connectedStatus Jid == $pinnedUser pinnedUserStatus:$pinnedUserStatus")
 
-            if (GroupCallUtils.isSingleUserInCall()) {
-                binding.layoutTitle.show()
-                binding.textCallStatus.hide()
-                if (connectedStatus == CallStatus.RECONNECTING || connectedStatus == activity.getString(
-                        com.contus.call.R.string.reconnecting
-                    )
-                ) {
-                    binding.singleUserTextCallStatus.text =
-                        activity.getString(com.contus.call.R.string.reconnecting)
-                    binding.singleUserTextCallStatus.visibility =
-                        View.VISIBLE
-                    LogMessage.d(TAG, "$CALL_UI Call Status RECONNECTING single user")
-                } else {
-                    binding.singleUserTextCallStatus.visibility =
-                        View.GONE
-                }
-            } else {
-                binding.layoutTitle.show()
-                binding.singleUserTextCallStatus.visibility = View.GONE
-                binding.textCallStatus.show()
-                binding.textCallStatus.text =
-                    if (connectedStatus == CallStatus.RECONNECTING) activity.getString(com.contus.call.R.string.reconnecting)
-                    else connectedStatus
-                if(pinnedUserNotConnected)
-                    binding.textCallStatus.text = pinnedUserStatus
-            }
+        if (shouldShowCallStatus(connectedStatus, pinnedUserNotConnected)) {
+            handleCallStatusForSingleUser(connectedStatus)
+            handleCallStatusForGroupCall(connectedStatus, pinnedUserNotConnected, pinnedUserStatus)
         } else {
-            binding.textCallStatus.gone()
-            binding.singleUserTextCallStatus.visibility = View.GONE
+            hideCallStatusViews()
         }
+    }
 
+    private fun shouldShowCallStatus(connectedStatus: String, pinnedUserNotConnected: Boolean): Boolean {
+        return connectedStatus in listOf(
+            CallStatus.ON_HOLD, CallStatus.RECONNECTING,
+            activity.getString(com.contus.call.R.string.reconnecting)
+        ) || pinnedUserNotConnected
+    }
+
+    private fun handleCallStatusForSingleUser(connectedStatus: String) {
+        if (GroupCallUtils.isSingleUserInCall()) {
+            binding.layoutTitle.show()
+            binding.textCallStatus.hide()
+            if (connectedStatus == CallStatus.RECONNECTING || connectedStatus == activity.getString(com.contus.call.R.string.reconnecting)) {
+                binding.singleUserTextCallStatus.text =
+                    activity.getString(com.contus.call.R.string.reconnecting)
+                binding.singleUserTextCallStatus.visibility = View.VISIBLE
+                LogMessage.d(TAG, "$CALL_UI Call Status RECONNECTING single user")
+            } else {
+                binding.singleUserTextCallStatus.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun handleCallStatusForGroupCall(
+        connectedStatus: String,
+        pinnedUserNotConnected: Boolean,
+        pinnedUserStatus: String
+    ) {
+        if (!GroupCallUtils.isSingleUserInCall()) {
+            binding.layoutTitle.show()
+            binding.singleUserTextCallStatus.visibility = View.GONE
+            binding.textCallStatus.show()
+            binding.textCallStatus.text = if (connectedStatus == CallStatus.RECONNECTING) {
+                activity.getString(com.contus.call.R.string.reconnecting)
+            } else {
+                connectedStatus
+            }
+            if (pinnedUserNotConnected) {
+                binding.textCallStatus.text = pinnedUserStatus
+            }
+        }
+    }
+
+    private fun hideCallStatusViews() {
+        binding.textCallStatus.gone()
+        binding.singleUserTextCallStatus.visibility = View.GONE
     }
 
     /*
@@ -830,45 +855,61 @@ class CallConnectedViewHelper(
     fun updatePinnedUserVideoMuteStatus() {
         LogMessage.i(
             TAG,
-            "$CALL_UI ${JOIN_CALL} CallConnectedViewHelper updatePinnedUserVideoMuteStatus isSwappedFeeds:$isSwappedFeeds"
+            "$CALL_UI $JOIN_CALL CallConnectedViewHelper updatePinnedUserVideoMuteStatus isSwappedFeeds:$isSwappedFeeds"
         )
-        if (GroupCallUtils.isSingleUserInCall()) {
-            LogMessage.i(
-                TAG,
-                "$CALL_UI ${JOIN_CALL} CallConnectedViewHelper just hide videoPinned SingleUserInCall"
-            )
-            binding.viewVideoPinned.gone()
-            hideOrShowLocalProfileImage()
-            binding.layoutOneToOneAudioCall.show()
-        } else if (CallUtils.getIsGridViewEnabled()) {
-            makeViewsGone(binding.layoutProfile, binding.textCallStatus)
-        } else {
-            if (isSwappedFeeds && CallManager.isOneToOneCall()) // when remote user mute their video and we swapped local to full view then we have restore the swapped state
-                setSwappedFeeds(false)
-            else {
-                isSwappedFeeds = false
-                val videoSink = CallUtils.getPinnedVideoSink()
 
-                if(!CallManager.isCallConnected() && (CallManager.isOutgoingCall() && CallManager.isVideoCall())) {
-                    if(CallManager.isVideoMuted()) binding.viewVideoLocal.gone() else binding.viewVideoLocal.show()
-                } else if (CallUtils.getPinnedUserVideoMuted() || videoSink.isNull()
-                    || CallManager.isRemoteVideoPaused(CallUtils.getPinnedUserJid())
-                ) {
-                    binding.viewVideoPinned.gone()
-                    showViews(binding.layoutProfile)
-                } else {
-                    makeViewsGone(binding.layoutProfile, binding.textCallStatus)
-                    binding.viewVideoPinned.show()
-                    videoSink?.setTarget(binding.viewVideoPinned)
-                    binding.viewVideoPinned.setMirror(
-                        CallUtils.getPinnedUserJid() == CallManager.getCurrentUserId()
-                                && !CallUtils.getIsBackCameraCapturing()
-                    )
-                }
+        when {
+            GroupCallUtils.isSingleUserInCall() -> handleSingleUserInCall()
+            CallUtils.getIsGridViewEnabled() -> makeViewsGone(binding.layoutProfile, binding.textCallStatus)
+            else -> handleNormalCall()
+        }
+
+        updateCallStatus()
+    }
+
+    private fun handleSingleUserInCall() {
+        LogMessage.i(
+            TAG,
+            "$CALL_UI $JOIN_CALL CallConnectedViewHelper just hide videoPinned SingleUserInCall"
+        )
+        binding.viewVideoPinned.gone()
+        hideOrShowLocalProfileImage()
+        binding.layoutOneToOneAudioCall.show()
+    }
+
+    private fun handleNormalCall() {
+        if (isSwappedFeeds && CallManager.isOneToOneCall()) {
+            // Restore swapped state if needed
+            setSwappedFeeds(false)
+        } else {
+            isSwappedFeeds = false
+            val videoSink = CallUtils.getPinnedVideoSink()
+
+            if (!CallManager.isCallConnected() && CallManager.isOutgoingCall() && CallManager.isVideoCall()) {
+                // Handle outgoing video call mute
+                if (CallManager.isVideoMuted()) binding.viewVideoLocal.gone() else binding.viewVideoLocal.show()
+            } else if (shouldHidePinnedVideo(videoSink)) {
+                // Hide pinned video if muted or other conditions
+                binding.viewVideoPinned.gone()
+                showViews(binding.layoutProfile)
+            } else {
+                // Show pinned video
+                makeViewsGone(binding.layoutProfile, binding.textCallStatus)
+                binding.viewVideoPinned.show()
+                videoSink?.setTarget(binding.viewVideoPinned)
+                binding.viewVideoPinned.setMirror(
+                    CallUtils.getPinnedUserJid() == CallManager.getCurrentUserId()
+                            && !CallUtils.getIsBackCameraCapturing()
+                )
             }
-            updateCallStatus()
         }
     }
+
+    private fun shouldHidePinnedVideo(videoSink: Any?): Boolean {
+        return CallUtils.getPinnedUserVideoMuted() || videoSink == null
+                || CallManager.isRemoteVideoPaused(CallUtils.getPinnedUserJid())
+    }
+
 
     private fun hideOrShowLocalProfileImage(){
         if (CallManager.isVideoCall()) {
@@ -1127,10 +1168,10 @@ class CallConnectedViewHelper(
 
     private fun handleConnectionQualityForGrid(bundle: Bundle) {
         val gridIndex =
-                callUserGridAdapter.gridCallUserList.indexOf(CallManager.getCurrentUserId())
+            callUserGridAdapter.gridCallUserList.indexOf(CallManager.getCurrentUserId())
         LogMessage.d(
-                TAG,
-                "$CALL_UI #callconnectionquality onQualityUpdated checkAndUpdateGridViewEnabled gridIndex:$gridIndex"
+            TAG,
+            "$CALL_UI #callconnectionquality onQualityUpdated checkAndUpdateGridViewEnabled gridIndex:$gridIndex"
         )
         if (gridIndex.isValidIndex()) {
             callUserGridAdapter.notifyItemChanged(gridIndex, bundle)
@@ -1140,8 +1181,8 @@ class CallConnectedViewHelper(
     private fun handleConnectionQualityForList(bundle: Bundle) {
         val index = callUsersListAdapter.callUserList.indexOf(CallManager.getCurrentUserId())
         LogMessage.d(
-                TAG,
-                "$CALL_UI #callconnectionquality onQualityUpdated checkAndUpdateListView index:$index"
+            TAG,
+            "$CALL_UI #callconnectionquality onQualityUpdated checkAndUpdateListView index:$index"
         )
         if (index.isValidIndex()) {
             callUsersListAdapter.notifyItemChanged(index, bundle)

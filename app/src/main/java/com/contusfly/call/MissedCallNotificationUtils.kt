@@ -22,6 +22,7 @@ import com.contusfly.utils.Constants
 import com.contusfly.utils.NotifyRefererUtils
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
+import com.contusfly.utils.Utils
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.flycall.call.utils.CallConstants
@@ -129,7 +130,7 @@ object MissedCallNotificationUtils {
         )
         notBuilder.setContentIntent(pendingIntent)
         val notification = notBuilder.build()
-        if (!SharedPreferenceManager.getBoolean(Constants.MUTE_NOTIFICATION))
+        if (!Utils.isMuteNotification())
             notificationManager.notify(CallConstants.CALL_NOTIFICATION_ID, notification)
     }
 

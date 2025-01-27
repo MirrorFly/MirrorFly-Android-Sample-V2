@@ -33,6 +33,7 @@ import com.contusfly.constants.MobileApplication
 import com.contusfly.notification.AppNotificationManager
 import com.contusfly.showToast
 import com.contusfly.utils.*
+import com.contusfly.utils.Utils.getUserMuteNotificationStatus
 import com.mirrorflysdk.AppUtils
 import com.mirrorflysdk.activities.FlyBaseActivity
 import com.mirrorflysdk.api.AvailableFeaturesCallback
@@ -528,6 +529,16 @@ open class BaseActivity : FlyBaseActivity() {
         val intent = Intent(this, DashboardActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
+    }
+
+    override fun updateMuteSettings(isSuccess: Boolean,message: String,isMute: Boolean) {
+        super.updateMuteSettings(isSuccess,message,isMute)
+        getUserMuteNotificationStatus()
+    }
+
+    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
+        super.onMuteStatusUpdated(isSuccess,message,jidList)
+        LogMessage.d(TAG, "#mute #recentChat update")
     }
 
 

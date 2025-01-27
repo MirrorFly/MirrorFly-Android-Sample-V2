@@ -307,7 +307,6 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
                 }
                 CallActions.NOTIFY_PINNED_USER_VIEW -> {
                     updateGridPinnedPosition(holder, position)
-                    //updateUserSpeaking(holder, position, CallUtils.getUserSpeakingLevel(gridCallUserList[position]))
                 }
                 CallActions.NOTIFY_USER_SPEAKING -> {
                     updateUserSpeaking(holder, position, bundle.getInt(key, 0))

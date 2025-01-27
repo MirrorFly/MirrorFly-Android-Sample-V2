@@ -74,6 +74,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         LogMessage.d("DashboardActivity", "#dashboard onCreate")
         dashboardBinding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(dashboardBinding.root)
+        Utils.getUserMuteNotificationStatus()
         handler = Handler(Looper.getMainLooper())
         setSupportActionBar(dashboardBinding.toolbar)
         supportActionBar?.title = Constants.EMPTY_STRING
@@ -142,7 +143,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
      * @param message Instance of the Message
      */
     override fun onGroupNotificationMessage(message: ChatMessage) {
-        if((message.messageTextContent.contains("removed you") || message.messageTextContent.contains("added you")) &&
+        if((message.messageTextContent.contains("removed you") || message.messageTextContent.contains("added you") || message.messageTextContent.contains("You left")) &&
             viewModel.selectedRecentChats.isNotEmpty())
             recentClick(viewModel.selectedRecentChats, false)
         viewModel.getRecentChatOfUser(message.chatUserJid, RecentChatEvent.GROUP_EVENT)
@@ -515,14 +516,18 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         actionModeMenu.findItem(R.id.action_un_pin).isVisible = recentList[0].isChatPinned
         actionModeMenu.findItem(R.id.action_pin).isVisible = !recentList[0].isChatPinned
 
-        if (ChatType.TYPE_BROADCAST_CHAT != recentList[0].getChatType()) {
+        if (recentList[0].isGroup && !GroupManager.isMemberOfGroup(
+                recentList[0].jid,
+                SharedPreferenceManager.getCurrentUserJid()
+            )
+        ) {
+            hideMenuActionsVisibility()
+        } else if (ChatType.TYPE_BROADCAST_CHAT != recentList[0].getChatType()) {
             actionModeMenu.findItem(R.id.action_unmute).isVisible = recentList[0].isMuted
             actionModeMenu.findItem(R.id.action_mute).isVisible = !recentList[0].isMuted
             actionModeMenu.findItem(R.id.action_add_chat_shortcuts).isVisible = true
         } else {
-            actionModeMenu.findItem(R.id.action_unmute).isVisible = false
-            actionModeMenu.findItem(R.id.action_mute).isVisible = false
-            actionModeMenu.findItem(R.id.action_add_chat_shortcuts).isVisible = false
+            hideMenuActionsVisibility()
         }
 
         actionModeMenu.findItem(R.id.action_mark_as_read).isVisible = recentList[0].isConversationUnRead
@@ -530,6 +535,12 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
 
         updateActionMenuIcons(ChatManager.getAvailableFeatures(),recentList)
 
+    }
+
+    private fun hideMenuActionsVisibility(){
+        actionModeMenu.findItem(R.id.action_unmute).isVisible = false
+        actionModeMenu.findItem(R.id.action_mute).isVisible = false
+        actionModeMenu.findItem(R.id.action_add_chat_shortcuts).isVisible = false
     }
 
 
@@ -576,15 +587,21 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
 
     private fun menuValidationForMuteUnMuteIcon(recentList: List<RecentChat>) {
         val checkListForMuteUnMuteIcon = ArrayList<Boolean>()
+        val leftgroupList = ArrayList<String>()
 
-        for (i in recentList.indices)
+        for (i in recentList.indices){
             if (!recentList[i].isBroadCast)
                 checkListForMuteUnMuteIcon.add(recentList[i].isMuted)
 
+            if(recentList[i].isGroup && !GroupManager.isMemberOfGroup(recentList[i].jid,SharedPreferenceManager.getCurrentUserJid())){
+                leftgroupList.add(recentList[i].jid)
+            }
+        }
+
         when {
-            checkListForMuteUnMuteIcon.contains(true) -> {
-                actionModeMenu.findItem(R.id.action_mute).isVisible = false
-                actionModeMenu.findItem(R.id.action_unmute).isVisible = true
+
+            leftgroupList.size > 0 -> {
+                hideMuteUnMuteIconVisibility()
             }
 
             checkListForMuteUnMuteIcon.contains(false) -> {
@@ -592,11 +609,20 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
                 actionModeMenu.findItem(R.id.action_unmute).isVisible = false
             }
 
-            else -> {
+            checkListForMuteUnMuteIcon.contains(true) -> {
                 actionModeMenu.findItem(R.id.action_mute).isVisible = false
-                actionModeMenu.findItem(R.id.action_unmute).isVisible = false
+                actionModeMenu.findItem(R.id.action_unmute).isVisible = true
+            }
+
+            else -> {
+                hideMuteUnMuteIconVisibility()
             }
         }
+    }
+
+    private fun hideMuteUnMuteIconVisibility(){
+        actionModeMenu.findItem(R.id.action_mute).isVisible = false
+        actionModeMenu.findItem(R.id.action_unmute).isVisible = false
     }
 
     /**
@@ -661,6 +687,11 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
             launchArchiveChat()
 
         }
+
+        viewModel.updateSelectedChat.observe(this) {
+            recentClick(viewModel.selectedRecentChats, false)
+        }
+
 
     }
 
@@ -865,6 +896,15 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         LogMessage.d("DashboardActivity", "#dashboard #recent onConnected chatHistoryMigration")
         viewModel.chatHistoryMigration()
         callLogviewModel.uploadUnSyncedCallLogs()
+    }
+
+    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
+        super.onMuteStatusUpdated(isSuccess,message,jidList)
+        LogMessage.d("DashboardActivity", "#mute #recentChat update")
+        viewModel.muteChatStatusUpdate(jidList)
+        if(viewModel.selectedRecentChats.size > 0) {
+            viewModel.muteChatStatusUpdateSelectedRecentChat(jidList)
+        }
     }
 
     fun getCurrentVisibleFragment(): Fragment? {

@@ -70,7 +70,6 @@ import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flynetwork.ApiCalls
-import com.mirrorflysdk.flynetwork.model.createmeetlink.MeetLinkDetailsData
 import com.mirrorflysdk.views.CustomToast
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import dagger.android.support.AndroidSupportInjection

@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.contusfly.TAG
+import com.mirrorflysdk.api.ChatManager
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -37,5 +38,22 @@ object Utils {
         SharedPreferenceManager.clearAllPreference()
         ConfigurationUtils.setDefaultValues(context)
         UIKitContactUtils.clearAllData()
+    }
+
+    fun updateMuteSettings(isMuteStatus: Boolean) {
+        ChatManager.enableDisableMuteSettings(isMuteStatus)
+    }
+
+    fun getUserMuteNotificationStatus() {
+        val isMute = ChatManager.isMuteSettingsEnabled()
+        setNotificationMuteStatus(isMute)
+    }
+
+    fun setNotificationMuteStatus(isMuteStatus: Boolean) {
+        SharedPreferenceManager.setBoolean(Constants.MUTE_NOTIFICATION,isMuteStatus)
+    }
+
+    fun isMuteNotification(): Boolean {
+        return SharedPreferenceManager.getBoolean(Constants.MUTE_NOTIFICATION)
     }
 }

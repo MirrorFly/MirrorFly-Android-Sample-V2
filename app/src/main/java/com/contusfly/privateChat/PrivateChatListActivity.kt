@@ -261,6 +261,18 @@ CommonAlertDialog.CommonDialogClosedListener {
             initChatAdapter(it)
         })
 
+        viewModel.updateChatMute.observe( this, { pair ->
+            try {
+                mAdapter.notifyItemChanged(pair.first)
+            } catch(e: Exception){
+                com.mirrorflysdk.flycommons.LogMessage.e(TAG,"#mute #chat adapter update exception $e")
+            }
+        })
+
+        viewModel.updateSelectedChat.observe(this) {
+            privateChatClick(viewModel.selectedChats, false)
+        }
+
     }
 
     private fun groupObserver(){
@@ -441,10 +453,21 @@ CommonAlertDialog.CommonDialogClosedListener {
 
     private fun privateChatMenuValidationForMuteUnMuteIcon(recentList: List<RecentChat>) {
         val checkListMuteUnMuteIcon = ArrayList<Boolean>()
-        for (i in recentList.indices)
+        val leftgroupList = ArrayList<String>()
+        for (i in recentList.indices) {
             if (!recentList[i].isBroadCast)
                 checkListMuteUnMuteIcon.add(recentList[i].isMuted)
+
+            if(recentList[i].isGroup && !GroupManager.isMemberOfGroup(recentList[i].jid,SharedPreferenceManager.getCurrentUserJid())){
+                leftgroupList.add(recentList[i].jid)
+            }
+        }
         when {
+
+            leftgroupList.size > 0 -> {
+                hideMuteAndUnMuteVisibility()
+            }
+
             checkListMuteUnMuteIcon.contains(false) -> {
                 actionModeMenu.findItem(R.id.action_mute).isVisible = true
                 actionModeMenu.findItem(R.id.action_unmute).isVisible = false
@@ -454,10 +477,14 @@ CommonAlertDialog.CommonDialogClosedListener {
                 actionModeMenu.findItem(R.id.action_unmute).isVisible = true
             }
             else -> {
-                actionModeMenu.findItem(R.id.action_mute).isVisible = false
-                actionModeMenu.findItem(R.id.action_unmute).isVisible = false
+                hideMuteAndUnMuteVisibility()
             }
         }
+    }
+
+    private fun hideMuteAndUnMuteVisibility() {
+        actionModeMenu.findItem(R.id.action_mute).isVisible = false
+        actionModeMenu.findItem(R.id.action_unmute).isVisible = false
     }
 
     private fun updateActionMenuIcons(features: Features, recentList: List<RecentChat>) {
@@ -878,4 +905,20 @@ CommonAlertDialog.CommonDialogClosedListener {
             finish()
         }
     }
+    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
+        super.onMuteStatusUpdated(isSuccess,message,jidList)
+        LogMessage.d("DashboardActivity", "#mute #recentChat update")
+        viewModel.archiveANDPrivateChatmuteChatStatusUpdate(jidList)
+        if(viewModel.selectedChats.size > 0) {
+            viewModel.muteChatStatusUpdateSelectedPrivateAndArchiveChat(jidList)
+        }
+    }
+
+    override fun onGroupNotificationMessage(message: ChatMessage) {
+        if((message.messageTextContent.contains("removed you") || message.messageTextContent.contains("added you") || message.messageTextContent.contains("You left")) &&
+            viewModel.selectedChats.isNotEmpty())
+            privateChatMenuValidationForMuteUnMuteIcon(viewModel.selectedChats)
+        viewModel.getPrivateChatOfUser(message.chatUserJid, RecentChatEvent.GROUP_EVENT)
+    }
+
 }

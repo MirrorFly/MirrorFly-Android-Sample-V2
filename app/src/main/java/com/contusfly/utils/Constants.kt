@@ -438,6 +438,8 @@ class Constants {
 
         const val ANIMATION_DURATION = 180
 
+        const val MUTE_STATUS = "#muteStatus"
+
 
     }
 }

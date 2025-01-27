@@ -25,7 +25,7 @@ object SafeChatUtils {
         get() = SharedPreferenceManager.getBoolean(Constants.SHOW_PIN)
 
     private val muteNotificationEnabled: Boolean
-        get() = SharedPreferenceManager.getBoolean(Constants.MUTE_NOTIFICATION)
+        get() = Utils.isMuteNotification()
 
     @JvmField
     var updateSafeChat : SafeChatUpdate = SafeChatUpdate.NONE
@@ -84,7 +84,7 @@ object SafeChatUtils {
 
     private fun setSafeChatInPreference(enableDisable:Boolean){
         SharedPreferenceManager.setBoolean(Constants.IS_SAFE_CHAT_ENABLED, enableDisable)
-        SharedPreferenceManager.setBoolean(Constants.MUTE_NOTIFICATION, enableDisable)
+        Utils.updateMuteSettings(enableDisable)
         SharedPreferenceManager.setBoolean(Constants.SHOW_PIN, enableDisable)
         if(SharedPreferenceManager.getBoolean(Constants.BIOMETRIC) == true)
             SharedPreferenceManager.setBoolean(Constants.BIOMETRIC,enableDisable)

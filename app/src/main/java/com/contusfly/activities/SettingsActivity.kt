@@ -185,4 +185,9 @@ class SettingsActivity : BaseActivity(), CoroutineScope {
     override fun updateFeatureActions(features: Features) {
         viewModel.updateFeatureRestriction(features)
     }
+
+    override fun updateMuteSettings(isSuccess: Boolean,message: String,isMute: Boolean) {
+        super.updateMuteSettings(isSuccess,message,isMute)
+        viewModel.getNotificationMuteStatus(isMute)
+    }
 }

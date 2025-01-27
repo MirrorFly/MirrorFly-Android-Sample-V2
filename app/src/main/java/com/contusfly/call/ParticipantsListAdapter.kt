@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.contus.call.CallConstants
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.R
+import com.contusfly.TAG
 import com.contusfly.adapters.BaseViewHolder
 import com.contusfly.call.groupcall.isNull
 import com.contusfly.databinding.RowParticipantsListItemBinding
@@ -16,7 +17,6 @@ import com.contusfly.isValidIndex
 import com.contusfly.loadUserProfileImage
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
-import com.contusfly.TAG
 import com.mirrorflysdk.flycall.webrtc.CallStatus
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
@@ -52,7 +52,7 @@ class ParticipantsListAdapter(private val context: Context) : RecyclerView.Adapt
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParticipantsListViewHolder {
-       val binding = RowParticipantsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RowParticipantsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ParticipantsListViewHolder(binding)
     }
 
@@ -72,6 +72,7 @@ class ParticipantsListAdapter(private val context: Context) : RecyclerView.Adapt
 
     /*
 * Set Audio, Video Mute/UnMute Status*/
+    @SuppressWarnings("kotlin:S1125")
     private fun setUserMuteAndUnMuteStatus(profileJid: String, viewBinding: RowParticipantsListItemBinding) {
         val currentStatus = CallManager.getCallStatus(profileJid)
         val isAudioMuted = CallManager.isRemoteAudioMuted(profileJid)
