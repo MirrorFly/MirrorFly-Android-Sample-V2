@@ -535,8 +535,6 @@ class BaseCallViewHelper(
         LogMessage.d(TAG, "$CALL_UI showListViewAtBottom()")
         val bottomMarginEnd = CommonUtils.convertDpToPixel(activity, 20) // margin start value
         val layoutMargin = CommonUtils.convertDpToPixel(activity, 10) // margin value
-        val bottomMarginStart =
-            binding.layoutCallOptions.layoutCallOptions.height // margin start value
         val params =
             binding.layoutCallConnected.callUsersRecyclerview.layoutParams as RelativeLayout.LayoutParams
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT
@@ -544,14 +542,6 @@ class BaseCallViewHelper(
 
         params.setMargins(layoutMargin, layoutMargin, layoutMargin, bottomMarginEnd)
         binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams = params
-
-        /*    AnimationsHelper.animateViewWithValues(
-                binding.layoutCallConnected.callUsersRecyclerview,
-                bottomMarginStart, bottomMarginEnd, Constants.ANIMATION_DURATION
-            ) { updatedValue: Int ->
-                params.setMargins(layoutMargin, layoutMargin, layoutMargin, updatedValue)
-                binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams = params
-            }*/
     }
 
     private fun showListViewAboveCallOptions() {
@@ -574,13 +564,6 @@ class BaseCallViewHelper(
         params.addRule(RelativeLayout.ABOVE, binding.layoutCallOptions.layoutCallOptions.id) // Align RecyclerView's bottom to the top of the bottomView
         params.setMargins(layoutMargin, layoutMargin, layoutMargin, bottomMarginTo)
         binding.layoutCallConnected.callUsersRecyclerview.layoutParams = params
-
-        /* AnimationsHelper.animateViewWithValues(
-             binding.layoutCallConnected.callUsersRecyclerview, 0, bottomMarginTo, if(!binding.layoutCallOptions.layoutCallOptions.isVisible) Constants.ANIMATION_DURATION else 0
-         ) { updatedValue: Int ->
-             params.setMargins(layoutMargin, layoutMargin, layoutMargin, updatedValue)
-             binding.layoutCallConnected.callUsersRecyclerview.layoutParams = params
-         }*/
     }
 
     /**
@@ -731,8 +714,6 @@ class BaseCallViewHelper(
             animateCallOptions(com.contus.call.R.anim.slide_up, View.VISIBLE, View.GONE)
             animateCallDetails(com.contus.call.R.anim.slide_out_down, View.VISIBLE)
             isAnimateClicked = false
-            /*if (CallManager.isOneToOneVideoCall())
-                durationHandler.postDelayed(hideOptionsRunnable, 3000)*/
         }
     }
 

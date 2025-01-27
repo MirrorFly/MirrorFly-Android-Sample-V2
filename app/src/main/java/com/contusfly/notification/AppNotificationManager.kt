@@ -8,7 +8,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.contusfly.BuildConfig
 import com.contusfly.utils.Constants
 import com.contusfly.utils.LogMessage
-import com.contusfly.utils.SharedPreferenceManager
+import com.contusfly.utils.Utils
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.flycall.call.utils.CallConstants
@@ -25,7 +25,7 @@ object AppNotificationManager {
         /**
          * if the user enables mute notification in settings, we should not show any notification
          */
-        if (SharedPreferenceManager.getBoolean(Constants.MUTE_NOTIFICATION))
+        if (Utils.isMuteNotification())
             return
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

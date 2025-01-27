@@ -238,6 +238,19 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         viewModel.groupUserRemovedLiveData.observe(this, { onGroupUpdated() })
 
         viewModel.groupAdminChangedLiveData.observe(this, { onGroupUpdated() })
+
+        viewModel.updateChatMute.observe( this, { pair ->
+            try {
+                mAdapter.notifyItemChanged(pair.first)
+            } catch(e: Exception) {
+                com.mirrorflysdk.flycommons.LogMessage.e(TAG,"#mute #chat adapter update exception $e")
+            }
+        })
+        viewModel.updateSelectedChat.observe(this) {
+
+            recentClick(viewModel.selectedChats, false)
+
+        }
     }
 
     private fun setAndFetchData() {
@@ -413,8 +426,10 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private fun menuValidationForMuteUnMuteIcon(recentList: List<RecentChat>) {
         val checkListForMuteUnMuteIcon = ArrayList<Boolean>()
         for (i in recentList.indices)
-            if (!recentList[i].isBroadCast)
+            if (!recentList[i].isBroadCast) {
                 checkListForMuteUnMuteIcon.add(recentList[i].isMuted)
+            }
+
         if (FlyCore.isArchivedSettingsEnabled()) {
             actionModeMenu.findItem(R.id.action_mute).isVisible = false
             actionModeMenu.findItem(R.id.action_unmute).isVisible = false
@@ -764,7 +779,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             getArchiveChatFor(message.getChatUserJid(), RecentChatEvent.MESSAGE_RECEIVED)
         } else {
             viewModel.getArchivedChats()
-            unSelectCountForRestoredChat(message)
+            unSelectCountForRestoredChat(message.senderUserJid)
         }
     }
 
@@ -837,11 +852,12 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     override fun onLeftFromGroup(groupJid: String, leftUserJid: String) {
         super.onLeftFromGroup(groupJid, leftUserJid)
         onGroupUpdated()
+        unSelectCountForRestoredChat(groupJid)
     }
 
-    private fun unSelectCountForRestoredChat(message: ChatMessage) {
+    private fun unSelectCountForRestoredChat(jid: String) {
         if (viewModel.selectedChats.size > 0) {
-            val index = viewModel.selectedChats?.indexOfFirst { it.jid == message.senderUserJid }
+            val index = viewModel.selectedChats?.indexOfFirst { it.jid == jid }
             if (index.isValidIndex()) {
                 viewModel.selectedChats?.removeAt(index)
                 recentClick(viewModel.selectedChats, true)
@@ -877,6 +893,15 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             }
         } catch(e:Exception) {
             LogMessage.e(TAG,e.toString())
+        }
+    }
+
+    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
+        super.onMuteStatusUpdated(isSuccess,message,jidList)
+        LogMessage.d("DashboardActivity", "#mute #recentChat update")
+        viewModel.archiveANDPrivateChatmuteChatStatusUpdate(jidList)
+        if(viewModel.selectedChats.size > 0) {
+            viewModel.muteChatStatusUpdateSelectedPrivateAndArchiveChat(jidList)
         }
     }
 }

@@ -138,6 +138,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         initView(recentChatBinding)
         setListeners()
         setObservers()
+        muteObserver()
         return recentChatBinding.root
     }
 
@@ -461,6 +462,24 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         viewModel.chatTagDataPinUnpinLoad.observe(viewLifecycleOwner) {
             getRecentChatListBasedOnTagData()
         }
+    }
+
+    private fun muteObserver(){
+        viewModel.updateChatMute.observe(viewLifecycleOwner, Observer { pair ->
+            try {
+                if(mRecentChatListType == DashboardParent.RecentChatListType.RECENT) {
+                    mAdapter.notifyItemChanged(pair.first)
+                } else {
+                    val searchIndex = mRecentSearchList.indexOfFirst { it.jid == pair.second }
+                    if (searchIndex.isValidIndex() && searchKey.isNotEmpty()) {
+                        mSearchAdapter.notifyItemChanged(searchIndex)
+                    }
+                }
+            } catch(e: Exception) {
+                LogMessage.e(TAG,"#mute #chat adapter update exception $e")
+            }
+        })
+
     }
 
     private fun chatTaglistUpdate(it: ArrayList<ChatTagModel>) {

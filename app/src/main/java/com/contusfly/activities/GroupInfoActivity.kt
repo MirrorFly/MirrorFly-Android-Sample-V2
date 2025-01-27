@@ -8,9 +8,12 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.CompoundButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -65,6 +68,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.collections.ArrayList
+import com.contusfly.utils.Constants.Companion.MUTE_STATUS
 
 class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedListener ,DialogInterface.OnClickListener{
 
@@ -268,9 +272,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
 
     private fun initListeners() {
         mDialog!!.setOnDialogCloseListener(this)
-        binding.muteSwitch.setOnCheckedChangeListener { _, isChecked ->
-            FlyCore.updateChatMuteStatus(groupProfileDetails.jid, isChecked)
-        }
+        binding.muteSwitch.setOnCheckedChangeListener(listener)
         binding.addParticipant.setOnClickListener {
             if (!BuildConfig.CONTACT_SYNC_ENABLED || MediaPermissions.isPermissionAllowed(this, Manifest.permission.READ_CONTACTS)) {
                 onAddParticipantsClick()
@@ -397,6 +399,8 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
                     binding.leaveGroup.visibility=View.VISIBLE
                     binding.leaveGroup.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_leave_group, 0, 0, 0)
                     binding.leaveGroup.text = getString(R.string.label_leave_group)
+                    binding.muteSwitch.isEnabled = true
+                    binding.muteSwitch.alpha = 1F
                 }
                 ChatType.TYPE_GROUP_CHAT == groupProfileDetails.getChatType() -> {
                     if(!ChatManager.getAvailableFeatures().isDeleteChatEnabled){
@@ -406,6 +410,8 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
                     binding.leaveGroup.visibility=View.VISIBLE
                     binding.leaveGroup.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete_group, 0, 0, 0)
                     binding.leaveGroup.text = getString(R.string.label_delete_group)
+                    binding.muteSwitch.isEnabled = false
+                    binding.muteSwitch.alpha = 0.5F
                 }
                 else -> {
                     binding.leaveGroup.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete_group, 0, 0, 0)
@@ -884,12 +890,34 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
         }
     }
 
-    private fun setMuteNotificationStatus(isMute: Boolean) {
+    private fun setMuteNotificationStatus(isMute: Boolean,isReceivedFromServer: Boolean = false) {
+        com.contusfly.utils.LogMessage.d(MUTE_STATUS,"setMuteNotificationStatus called isReceivedFromServer: $isReceivedFromServer")
         if (!FlyCore.isUserUnArchived(groupProfileDetails.jid)) {
             binding.muteSwitch.isEnabled = false
             binding.muteSwitch.alpha = 0.5F
         }
+        if(isReceivedFromServer) binding.muteSwitch.setOnCheckedChangeListener(null)
         binding.muteSwitch.isChecked = isMute
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            binding.muteSwitch.setOnCheckedChangeListener(listener)
+        },500)
+    }
+
+    val listener = object: CompoundButton.OnCheckedChangeListener {
+        override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+            com.contusfly.utils.LogMessage.d(MUTE_STATUS,"onCheckedChanged received isChecked: $isChecked")
+            var userJidList = mutableListOf<String>()
+            userJidList.add(groupProfileDetails.jid)
+            updateMuteStatus(userJidList,isChecked)
+        }
+    }
+
+    private fun updateMuteStatus(jidList: MutableList<String>, muteStatus: Boolean) {
+        try {
+            ChatManager.updateChatMuteStatus(jidList, muteStatus)
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"#updateMuteStatus exception $e")
+        }
     }
 
     private fun setUserData() {
@@ -901,8 +929,10 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
             binding.subTitle.text = "0 members"
         }
         setMuteNotificationStatus(groupProfileDetails.isMuted)
-        if (!isGroupMember) binding.muteSwitch.isEnabled = false
+        muteButtonEnabeDisable()
     }
+
+
 
     /**
      * Callback for delete group button click
@@ -1570,6 +1600,54 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
         }
     }
 
+    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
+        super.onMuteStatusUpdated(isSuccess,message,jidList)
+        com.contusfly.utils.LogMessage.d("DashboardActivity", "#mute #recentChat update")
+        muteChatStatusUpdate(jidList)
+    }
+
+    private fun muteChatStatusUpdate(jidList: List<String>) {
+        try {
+            for(jid in jidList) {
+                if(groupProfileDetails.jid == jid) {
+                    var profile =  ProfileDetailsUtils.getProfileDetails(jid)!!
+                    if(profile != null) {
+                        groupProfileDetails = profile
+                        com.contusfly.utils.LogMessage.d(MUTE_STATUS,"muteChatStatusUpdate--> isProfileMuteStatus: ${groupProfileDetails.isMuted} switchButtonStatus: ${binding.muteSwitch.isChecked}")
+                        if(groupProfileDetails.isMuted != binding.muteSwitch.isChecked)
+                        setMuteNotificationStatus(groupProfileDetails.isMuted,true)
+                    }
+                    break
+                }
+            }
+
+        } catch(e: Exception) {
+            com.contusfly.utils.LogMessage.e(TAG,"#mute #update exception $e")
+        }
+    }
+
+    override fun updateArchiveUnArchiveChats(toUser: String?, archiveStatus: Boolean) {
+        muteButtonEnabeDisable()
+    }
+
+    override fun updateArchivedSettings(archivedSettingsStatus: Boolean) {
+        super.updateArchivedSettings(archivedSettingsStatus)
+        muteButtonEnabeDisable()
+    }
+
+    private fun muteButtonEnabeDisable() {
+        try {
+            if (!FlyCore.isUserUnArchived(groupProfileDetails.jid) || !isGroupMember ) {
+                binding.muteSwitch.isEnabled = false
+                binding.muteSwitch.alpha = 0.5F
+            } else {
+                binding.muteSwitch.isEnabled = true
+                binding.muteSwitch.alpha = 1F
+            }
+        } catch(e: Exception){
+            com.contusfly.utils.LogMessage.e(TAG,"updateArchiveUnArchiveChats exception $e")
+        }
+    }
 
     override fun onStart() {
         super.onStart()

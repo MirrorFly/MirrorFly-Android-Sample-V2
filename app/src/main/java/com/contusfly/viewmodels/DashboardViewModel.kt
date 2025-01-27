@@ -99,6 +99,8 @@ constructor() : ViewModel() {
     val swipeRefreshLoader = MutableLiveData<Boolean>()
     var isArchiveChatTriggered =false
 
+    val notificationMuteStatus = MutableLiveData<Boolean>()
+
 
     //Define the Recent Chat List Builder class
     private lateinit var recentChatListParams : RecentChatListParams
@@ -156,6 +158,11 @@ constructor() : ViewModel() {
 
     val isUserBlockedUnblockedMe = MutableLiveData<Pair<String, Boolean>>()
     val isUserBlockedByAdmin = MutableLiveData<Pair<String, Boolean>>()
+
+    val updateChatMute = MutableLiveData<Pair<Int, String>>()
+
+    val updateSelectedChat = MutableLiveData<Boolean>()
+
 
     /**
      * contact refreshing status
@@ -987,15 +994,41 @@ constructor() : ViewModel() {
     }
 
     fun updateMuteNotification(type: String) {
+        var jidList = mutableListOf<String>()
         for (i in selectedRecentChats.indices) {
             val recentChat = selectedRecentChats[i]
             try {
-                if (!recentChat.isBroadCast) {
-                    FlyCore.updateChatMuteStatus(recentChat.jid, type == Constants.MUTE_NOTIFY)
+                if (!recentChat.isBroadCast && recentChat.isMuted != (type == Constants.MUTE_NOTIFY)) {
+                    jidList.add(recentChat.jid)
                 }
             } catch (e: Exception) {
                 LogMessage.e(Constants.TAG, e)
             }
+        }
+        updateMuteStatus(jidList,type == Constants.MUTE_NOTIFY)
+    }
+
+    fun updateArchivedMuteNotification(type: String) {
+        var jidList = mutableListOf<String>()
+        for (i in selectedChats.indices) {
+            try {
+                val recentChat = selectedChats[i]
+                if (!recentChat.isBroadCast && recentChat.isMuted != (type == Constants.MUTE_NOTIFY)) {
+                    jidList.add(recentChat.jid)
+                }
+            } catch (e: Exception) {
+                LogMessage.e(Constants.TAG, e)
+            }
+        }
+        updateMuteStatus(jidList,type == Constants.MUTE_NOTIFY)
+    }
+
+
+    private fun updateMuteStatus(jidList: MutableList<String>, muteStatus: Boolean) {
+        try {
+            ChatManager.updateChatMuteStatus(jidList,muteStatus)
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"#updateMuteStatus exception $e")
         }
     }
 
@@ -1109,18 +1142,7 @@ constructor() : ViewModel() {
         }
     }
 
-    fun updateArchivedMuteNotification(type: String) {
-        for (i in selectedChats.indices) {
-            try {
-                val recentChat = selectedChats[i]
-                if (!recentChat.isBroadCast) {
-                    FlyCore.updateChatMuteStatus(recentChat.jid, type == Constants.MUTE_NOTIFY)
-                }
-            } catch (e: Exception) {
-                LogMessage.e(Constants.TAG, e)
-            }
-        }
-    }
+
 
     /**
      * Updating archived chats when search key updated
@@ -1285,6 +1307,94 @@ constructor() : ViewModel() {
                 val currentContactCount = ContactUtils.getContactCount(ChatManager.applicationContext)
                 SharedPreferenceManager.setInt(ContactUtils.CONTACTS_COUNT, currentContactCount)
             }
+        }
+    }
+
+    fun muteChatStatusUpdate(jidList: List<String>) {
+        try {
+            viewModelScope.launch {
+                for(jid in jidList) {
+                    val recent = FlyCore.getRecentChatOf(jid)
+                    if (recent != null) {
+                        //update view model list
+                        val index = recentChatAdapter.indexOfFirst { it.jid == recent.jid }
+                        if (index.isValidIndex()) {
+                            recentChatList.value!![index] = recent
+                            recentChatAdapter[index] = recent
+                            updateChatMute.value = Pair(index,recent.jid)
+                        }
+                    }
+                }
+            }
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"#mute #chat #exception $e")
+        }
+    }
+
+    fun muteChatStatusUpdateSelectedRecentChat(jidList: List<String>) {
+        try {
+            viewModelScope.launch {
+                for(jid in jidList) {
+                    val recent = FlyCore.getRecentChatOf(jid)
+                    if (recent != null) {
+                        //update view model list
+                        val index = selectedRecentChats.indexOfFirst { it.jid == recent.jid }
+                        if (index.isValidIndex()) {
+                            selectedRecentChats[index] = recent
+                        }
+                    }
+                }
+                updateSelectedChat.value = true
+            }
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"#mute #chat #exception $e")
+        }
+    }
+
+    fun muteChatStatusUpdateSelectedPrivateAndArchiveChat(jidList: List<String>) {
+        try {
+            viewModelScope.launch {
+                for(jid in jidList) {
+                    val recent = FlyCore.getRecentChatOf(jid)
+                    if (recent != null) {
+                        //update view model list
+                        val index = selectedChats.indexOfFirst { it.jid == recent.jid }
+                        if (index.isValidIndex()) {
+                            selectedChats[index] = recent
+                        }
+                    }
+                }
+                updateSelectedChat.value = true
+            }
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"#mute #chat #exception $e")
+        }
+    }
+
+    fun archiveANDPrivateChatmuteChatStatusUpdate(jidList: List<String>) {
+        try {
+            viewModelScope.launch {
+                for(jid in jidList) {
+                    val recent = FlyCore.getRecentChatOf(jid)
+                    if (recent != null) {
+                        //update view model list
+                        val index = chatList.value!!.indexOfFirst { it.jid == recent.jid }
+                        if (index.isValidIndex()) {
+                            chatList.value!![index] = recent
+                            chatAdapter[index] = recent
+                            updateChatMute.value = Pair(index,recent.jid)
+                        }
+                    }
+                }
+            }
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"#mute #chat #exception $e")
+        }
+    }
+
+    fun getNotificationMuteStatus(status: Boolean) {
+        viewModelScope.launch {
+            notificationMuteStatus.value = status
         }
     }
 }

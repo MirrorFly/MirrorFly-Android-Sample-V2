@@ -17,6 +17,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.FragmentTransaction
 import com.contus.call.CallActions
 import com.contus.call.CallConstants
+import com.contus.call.CallConstants.CALL_FLOW_TAG
 import com.contus.call.CallConstants.CALL_UI
 import com.contus.call.CallConstants.JOIN_CALL
 import com.contusfly.*
@@ -34,7 +35,6 @@ import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.PermissionAlertDialog
 import com.mirrorflysdk.AppUtils
-import com.contusfly.TAG
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 import com.mirrorflysdk.flycall.webrtc.*
 import com.mirrorflysdk.flycall.webrtc.WebRtcCallService.Companion.setupVideoCapture
@@ -203,7 +203,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             ) {
                 MediaPermissions.requestVideoCallPermissions(this, requestVideoCallPermission)
             } else{
-                CallLogger.callTestingLog("$TAG onStart() startVideoCapture ")
+                CallLogger.callTestingLog("$CALL_FLOW_TAG onStart() startVideoCapture ")
                 CallManager.startVideoCapture()
             }
         } else if(!CallManager.isOnGoingCall() && !CallManager.isOutgoingCall()) {
@@ -885,10 +885,10 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 CallStatus.INCOMING_CALL_TIME_OUT -> {
                     LogMessage.d(
                         TAG,
-                        "$CALL_UI ${JOIN_CALL} INCOMING_CALL_TIME_OUT userJid:${userJid}"
+                        "$CALL_UI $JOIN_CALL INCOMING_CALL_TIME_OUT userJid:${userJid}"
                     )
                     if (CallManager.isCallConnected()) {
-                        LogMessage.d(TAG, "$CALL_UI ${JOIN_CALL} INCOMING_CALL_TIME_OUT userJid:$userJid")
+                        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL INCOMING_CALL_TIME_OUT userJid:$userJid")
                         val timeOutUserList = userJid.split(",").toList()
                         checkAndUpdateTimeoutUsers(timeOutUserList)
                     } else {
@@ -950,7 +950,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
 
         private fun checkAndUpdateRingingBasedOnUserSize(userJid: String){
-            LogMessage.d(TAG, "$CALL_UI ${JOIN_CALL}  checkAndUpdateRingingBasedOnUserSize userJid:$userJid")
+            LogMessage.d(TAG, "$CALL_UI $JOIN_CALL  checkAndUpdateRingingBasedOnUserSize userJid:$userJid")
             if(GroupCallUtils.getCallConnectedUsersList().size>1)
                 callViewHelper.updateStatusAdapter(userJid)
             else{
@@ -1033,7 +1033,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                         LogMessage.e(TAG, "$CALL_UI RemoteOtherBusy user left::$userJid")
                         participantListFragment.updateUserLeft(userJid)
                     }
-                    }
+                }
                 CallAction.ACTION_AUDIO_DEVICE_CHANGED -> callViewHelper.setSelectedAudioDeviceIcon()
                 CallAction.CHANGE_TO_AUDIO_CALL -> {
                     activityBinding.layoutCallOptions.imageMuteVideo.isActivated = false
@@ -1459,8 +1459,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     private fun checkAndDismissPoorConnection(){
         if(activityBinding.layoutCallOptions.layoutSlowNetwork.poorConnectionRoot.visibility == View.VISIBLE){
             LogMessage.d(
-                    TAG,
-                    "$CALL_UI #callconnectionquality checkAndDismissPoorConnection"
+                TAG,
+                "$CALL_UI #callconnectionquality checkAndDismissPoorConnection"
             )
             dismissPoorConnectionLayout()
         }

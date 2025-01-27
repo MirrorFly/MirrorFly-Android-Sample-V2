@@ -5,11 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.contusfly.R
 import com.contusfly.activities.SettingsActivity
 import com.contusfly.databinding.FragmentNotificationAlertsBinding
 import com.contusfly.utils.SafeChatUtils
 import com.contusfly.utils.SharedPreferenceManager
+import com.contusfly.utils.Utils
+import com.contusfly.viewmodels.DashboardViewModel
 
 /**
  * This class provides an option to the user for setting up the notification alert preferences when
@@ -25,6 +29,11 @@ class NotificationAlertsFragment : Fragment(),View.OnClickListener {
 
     private lateinit var binding: FragmentNotificationAlertsBinding
 
+    private val viewModel by lazy {
+        ViewModelProvider(requireActivity()).get(DashboardViewModel::class.java)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settingsActivity = activity as SettingsActivity?
@@ -39,17 +48,27 @@ class NotificationAlertsFragment : Fragment(),View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setObservers()
         initView()
         setClickListeners()
     }
 
     private fun initView(){
         binding.layoutNotificationPopup.visibility = View.GONE
+        Utils.getUserMuteNotificationStatus()
         displayNotificationSoundPreference()
         displayNotificationPopupPreference()
         displayVibrationPreference()
         displayMuteNotificationPreference()
     }
+
+    private fun setObservers() {
+        viewModel.notificationMuteStatus.observe(viewLifecycleOwner, Observer {
+            Utils.getUserMuteNotificationStatus()
+            displayMuteNotificationPreference()
+        })
+    }
+
 
     private fun setClickListeners() {
         binding.layoutNotificationSound.setOnClickListener(this)
@@ -82,20 +101,26 @@ class NotificationAlertsFragment : Fragment(),View.OnClickListener {
                 displayVibrationPreference()
             }
             R.id.layout_mute_notification -> {
-                if (!SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.MUTE_NOTIFICATION)) {
+                if (!Utils.isMuteNotification()) {
                     unSetAlerts()
                 } else {
                     enableNotification()
                     displayNotificationSoundPreference()
                 }
-                SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.MUTE_NOTIFICATION,
-                    !SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.MUTE_NOTIFICATION))
-                SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.KEY_CHANGE_FLAG, true)
-                displayMuteNotificationPreference()
-                SafeChatUtils.silentDisableSafeChat(requireContext())
+                updateMuteSettings(!Utils.isMuteNotification())
+
             }
         }
     }
+
+    fun updateMuteSettings(isMuteStatus: Boolean) {
+        Utils.updateMuteSettings(isMuteStatus)
+        Utils.setNotificationMuteStatus(isMuteStatus)
+        SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.KEY_CHANGE_FLAG, true)
+        displayMuteNotificationPreference()
+        SafeChatUtils.silentDisableSafeChat(requireContext())
+    }
+
 
     /**
      * Displays the user preference in regard to playing the notification sound for incoming
@@ -139,7 +164,7 @@ class NotificationAlertsFragment : Fragment(),View.OnClickListener {
      */
     private fun displayMuteNotificationPreference() {
         //If Mute Notification is pressed all the other alert preferences should be disabled
-        if (SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.MUTE_NOTIFICATION)) {
+        if (Utils.isMuteNotification()) {
             binding.imageMuteNotification.setImageResource(R.drawable.ic_selected_tick)
             binding.imageVibration.setImageResource(R.drawable.ic_unselected_tick)
             binding.imageNotificationPopup.setImageResource(R.drawable.ic_unselected_tick)
@@ -167,9 +192,9 @@ class NotificationAlertsFragment : Fragment(),View.OnClickListener {
     }
 
     private fun checkWhetherMuteEnabled() {
-        if (SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.MUTE_NOTIFICATION)) {
+        if (Utils.isMuteNotification()) {
             SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.NOTIFICATION_SOUND, true)
-            SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.MUTE_NOTIFICATION, false)
+            Utils.updateMuteSettings(false)
             displayMuteNotificationPreference()
             displayNotificationSoundPreference()
             SafeChatUtils.silentDisableSafeChat(requireContext())
