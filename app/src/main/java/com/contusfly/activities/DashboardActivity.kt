@@ -898,11 +898,16 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         callLogviewModel.uploadUnSyncedCallLogs()
     }
 
-    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
-        super.onMuteStatusUpdated(isSuccess,message,jidList)
-        LogMessage.d("DashboardActivity", "#mute #recentChat update")
+    override fun onMuteStatusUpdated(
+        isSuccess: Boolean,
+        message: String,
+        jidList: List<String>,
+        muteStatus: Boolean
+    ) {
+        super.onMuteStatusUpdated(isSuccess, message, jidList, muteStatus)
+        LogMessage.d("DashboardActivity", "#mute #recentChat update--$muteStatus")
         viewModel.muteChatStatusUpdate(jidList)
-        if(viewModel.selectedRecentChats.size > 0) {
+        if (viewModel.selectedRecentChats.size > 0) {
             viewModel.muteChatStatusUpdateSelectedRecentChat(jidList)
         }
     }

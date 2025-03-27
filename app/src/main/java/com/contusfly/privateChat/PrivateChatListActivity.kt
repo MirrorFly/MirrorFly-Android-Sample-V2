@@ -905,11 +905,16 @@ CommonAlertDialog.CommonDialogClosedListener {
             finish()
         }
     }
-    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
-        super.onMuteStatusUpdated(isSuccess,message,jidList)
+    override fun onMuteStatusUpdated(
+        isSuccess: Boolean,
+        message: String,
+        jidList: List<String>,
+        muteStatus: Boolean
+    ) {
+        super.onMuteStatusUpdated(isSuccess, message, jidList, muteStatus)
         LogMessage.d("DashboardActivity", "#mute #recentChat update")
         viewModel.archiveANDPrivateChatmuteChatStatusUpdate(jidList)
-        if(viewModel.selectedChats.size > 0) {
+        if (viewModel.selectedChats.size > 0) {
             viewModel.muteChatStatusUpdateSelectedPrivateAndArchiveChat(jidList)
         }
     }

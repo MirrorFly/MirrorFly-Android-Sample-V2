@@ -83,8 +83,7 @@
     <string name="action_logout_all_computers">Logout from all computers</string>
     <string name="text_logged_in_computers">Logged In Computers</string>
     <string name="scanner_result">Scanner Result</string>
-    <string name="alert_dialouge_logout">Are you want to logout?</string>
-
+    <string name="alert_dialouge_logout">Are you sure you want to logout?</string>
     <!-- Action Menu Strings -->
     <string name="new_group_label">New Group</string>
     <string name="clear_all_call_log">Clear call log</string>

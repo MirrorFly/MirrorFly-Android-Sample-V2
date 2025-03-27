@@ -199,7 +199,7 @@ dependencies {
     implementation project(':sdk:googletranslation')
     implementation project(path: ':call')
 
-    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.13.13'
+    implementation 'com.mirrorfly.sdk:mirrorflysdk:7.13.16'
 
     //Socket - versions.gradle
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
@@ -225,8 +225,8 @@ dependencies {
     //okhttp interceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
     //QR Code Scanner
-    implementation 'com.journeyapps:zxing-android-embedded:3.6.0@aar'
-    implementation 'com.google.zxing:core:3.3.2'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0@aar'
+    implementation 'com.google.zxing:core:3.4.1'
     //shortcut badger
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 

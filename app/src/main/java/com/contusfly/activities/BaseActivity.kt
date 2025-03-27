@@ -536,8 +536,13 @@ open class BaseActivity : FlyBaseActivity() {
         getUserMuteNotificationStatus()
     }
 
-    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
-        super.onMuteStatusUpdated(isSuccess,message,jidList)
+    override fun onMuteStatusUpdated(
+        isSuccess: Boolean,
+        message: String,
+        jidList: List<String>,
+        muteStatus: Boolean
+    ) {
+        super.onMuteStatusUpdated(isSuccess, message, jidList, muteStatus)
         LogMessage.d(TAG, "#mute #recentChat update")
     }
 

@@ -1600,8 +1600,13 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
         }
     }
 
-    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
-        super.onMuteStatusUpdated(isSuccess,message,jidList)
+    override fun onMuteStatusUpdated(
+        isSuccess: Boolean,
+        message: String,
+        jidList: List<String>,
+        muteStatus: Boolean
+    ) {
+        super.onMuteStatusUpdated(isSuccess, message, jidList, muteStatus)
         com.contusfly.utils.LogMessage.d("DashboardActivity", "#mute #recentChat update")
         muteChatStatusUpdate(jidList)
     }
