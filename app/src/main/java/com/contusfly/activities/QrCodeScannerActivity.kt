@@ -11,7 +11,7 @@ import com.contusfly.databinding.ActivityQrCodeScannerBinding
 import com.contusfly.getMessage
 import com.contusfly.utils.LogMessage
 import com.contusfly.utils.UserInterfaceUtils.Companion.setUpToolBar
-import com.mirrorflysdk.AppUtils
+import com.google.zxing.BarcodeFormat
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.utils.UpDateWebPassword
 import com.mirrorflysdk.views.CustomToast
@@ -26,11 +26,6 @@ class QrCodeScannerActivity : BaseActivity(), BarcodeCallback {
     private lateinit var qrCodeScannerBinding: ActivityQrCodeScannerBinding
 
     /**
-     * The reference of the UpdatedWebPassword helper object.
-     */
-    private var updateWebPassword: UpDateWebPassword? = null
-
-    /**
      * The view reference of the BarcodeView object.
      */
     private var barcodeView: DecoratedBarcodeView? = null
@@ -40,8 +35,6 @@ class QrCodeScannerActivity : BaseActivity(), BarcodeCallback {
         qrCodeScannerBinding = ActivityQrCodeScannerBinding.inflate(layoutInflater)
         setContentView(qrCodeScannerBinding.root)
 
-        updateWebPassword = UpDateWebPassword()
-
         val toolbar: Toolbar = qrCodeScannerBinding.toolbar
         setSupportActionBar(toolbar)
         setUpToolBar(this, toolbar, supportActionBar, resources.getString(R.string.scan_code))
@@ -50,13 +43,13 @@ class QrCodeScannerActivity : BaseActivity(), BarcodeCallback {
         tvWebLoginUrl.text = "Visit " + BuildConfig.WEB_CHAT_LOGIN.toString() + " on your computer and scan the QR code"
         val intent = Intent()
         intent.putExtra(Intents.Scan.PROMPT_MESSAGE, "")
+        intent.putExtra(Intents.Scan.FORMATS, BarcodeFormat.QR_CODE.toString())  // Restrict to QR codes
         barcodeView!!.initializeFromIntent(intent)
         barcodeView!!.decodeSingle(this)
     }
 
-    override fun barcodeResult(result: BarcodeResult?) {
-        LogMessage.e("#qrlogin","Scanned Successfully")
-        FlyCore.loginWebChatViaQRCode(result!!.result.text) { isSuccess, _, data ->
+    private fun qrCodeLogin(qrText: String) {
+        FlyCore.loginWebChatViaQRCode(qrText) { isSuccess, throwable, data ->
             if (isSuccess) {
                 val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
                 if (vibrator.hasVibrator()) {
@@ -64,14 +57,18 @@ class QrCodeScannerActivity : BaseActivity(), BarcodeCallback {
                 }
                 finish()
             } else {
-                if (AppUtils.isNetConnected(this)) {
-                    CustomToast.show(this, getString(R.string.error_occurred_label))
-                }else{
-                    CustomToast.show(this, data.getMessage())
+                val errorMessage = data.getMessage().ifEmpty {
+                    throwable?.localizedMessage ?: getString(R.string.error_occurred_label)
                 }
+                CustomToast.show(this, errorMessage)
                 finish()
             }
         }
+    }
+
+    override fun barcodeResult(result: BarcodeResult?) {
+        LogMessage.d("#qrlogin","Scanned Successfully")
+        qrCodeLogin(result!!.result.text)
     }
 
     override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {

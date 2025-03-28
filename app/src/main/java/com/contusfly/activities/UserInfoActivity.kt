@@ -478,8 +478,13 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
             }
         }
 
-    override fun onMuteStatusUpdated(isSuccess: Boolean,message: String,jidList: List<String>) {
-        super.onMuteStatusUpdated(isSuccess,message,jidList)
+    override fun onMuteStatusUpdated(
+        isSuccess: Boolean,
+        message: String,
+        jidList: List<String>,
+        muteStatus: Boolean
+    ) {
+        super.onMuteStatusUpdated(isSuccess, message, jidList, muteStatus)
         LogMessage.d("DashboardActivity", "#mute #recentChat update")
         LogMessage.d(MUTE_STATUS,"onMuteStatusUpdated received from server isSuccess: $isSuccess message : $message")
         muteChatStatusUpdate(jidList)

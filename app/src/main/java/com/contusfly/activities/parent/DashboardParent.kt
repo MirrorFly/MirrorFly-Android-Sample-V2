@@ -114,7 +114,9 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
 
         if(!permissions.containsValue(false)) {
-            startActivity(Intent(this, QrCodeScannerActivity::class.java))
+            checkInternetAndExecute {
+                startActivity(Intent(this, QrCodeScannerActivity::class.java))
+            }
         }
     }
 
@@ -634,7 +636,9 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
         checkLogin()
         if (!SharedPreferenceManager.getBoolean(Constants.IS_WEBCHAT_LOGGED_IN)) {
             if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.CAMERA))
-                startActivity(Intent(this, QrCodeScannerActivity::class.java))
+                checkInternetAndExecute {
+                    startActivity(Intent(this, QrCodeScannerActivity::class.java))
+                }
             else
                 MediaPermissions.requestCameraPermission(this, permissionAlertDialog, cameraPermissionLauncher)
         } else

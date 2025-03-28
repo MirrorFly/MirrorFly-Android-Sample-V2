@@ -1,30 +1,26 @@
 package com.contusfly.activities
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.contusfly.BuildConfig
 import com.contusfly.R
 import com.contusfly.adapters.WebLoginAdapter
+import com.contusfly.checkInternetAndExecute
 import com.contusfly.databinding.ActivityQrResultBinding
+import com.contusfly.getMessage
 import com.contusfly.views.CommonAlertDialog
 import com.contusfly.views.CommonAlertDialog.CommonDialogClosedListener
 import com.mirrorflysdk.AppUtils
-import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.WebLoginDataManager
 import com.mirrorflysdk.flydatabase.model.WebLogin
 import com.mirrorflysdk.utils.UpDateWebPassword
 import com.mirrorflysdk.views.CustomToast
-import java.util.*
 
 class QrResultActivity : BaseActivity(), View.OnClickListener, CommonDialogClosedListener {
 
@@ -75,15 +71,6 @@ class QrResultActivity : BaseActivity(), View.OnClickListener, CommonDialogClose
      */
     var txtWebUrl: TextView? = null
 
-    /**
-     * Recives broadcast when the user logout from WEB CHAT.
-     */
-    private val webLogReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            loadAdapter()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         qrResultBinding = ActivityQrResultBinding.inflate(layoutInflater)
@@ -99,8 +86,6 @@ class QrResultActivity : BaseActivity(), View.OnClickListener, CommonDialogClose
         imageViewAddButton!!.setOnClickListener(this)
         imageViewBackButton!!.setOnClickListener(this)
         btnLogOutAll!!.setOnClickListener(this)
-
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(webLogReceiver, IntentFilter("Update_webPage"))
         loadAdapter()
     }
 
@@ -120,8 +105,9 @@ class QrResultActivity : BaseActivity(), View.OnClickListener, CommonDialogClose
     override fun onClick(v: View) {
         when (v.id) {
             R.id.button_add -> {
-                WebLoginDataManager.webLoginDetailsCleared()
-                startActivity(Intent(applicationContext, QrCodeScannerActivity::class.java))
+                checkInternetAndExecute {
+                    startActivity(Intent(applicationContext, QrCodeScannerActivity::class.java))
+                }
                 finish()
             }
             R.id.btn_logout_all_webchat -> logoutAllWeb()
@@ -159,10 +145,17 @@ class QrResultActivity : BaseActivity(), View.OnClickListener, CommonDialogClose
         finish()
     }
 
+    /**
+     * Override method will be called when Qr code loggedIn web will be logged out.
+     * Based on the SocketId, remove the web login from the list.
+     */
+    override fun onLogoutWeb(socketId: List<String>?) {
+        super.onLogoutWeb(socketId)
+        loadAdapter()
+    }
+
     override fun onDialogClosed(dialogType: CommonAlertDialog.DIALOGTYPE?, isSuccess: Boolean) {
         if (isSuccess) {
-            WebLoginDataManager.webLoginDetailsCleared()
-            mUpDateWebPassword!!.upDatePassword()
             logoutWebUser()
         }
     }
@@ -172,10 +165,9 @@ class QrResultActivity : BaseActivity(), View.OnClickListener, CommonDialogClose
      */
     private fun logoutWebUser() {
         if (AppUtils.isNetConnected(this)) {
-            if (listWebLogin!!.isNotEmpty()) {
-                for (i in listWebLogin!!.indices) {
-                    ChatManager.logoutWebUser(listWebLogin!![i].qrUniqeToken)
-                }
+            WebLoginDataManager.logOutWebSessions { _, _, data ->
+                CustomToast.show(this, data.getMessage())
+                finish()
             }
         } else CustomToast.show(this, getString(R.string.msg_no_internet))
     }
