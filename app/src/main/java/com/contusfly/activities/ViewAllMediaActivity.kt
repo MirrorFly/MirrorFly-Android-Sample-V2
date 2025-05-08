@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager
 import com.mirrorflysdk.flycommons.ChatType
 import com.contusfly.R
 import com.contusfly.adapters.SectionsPagerAdapter
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.databinding.ActivityViewAllMediaBinding
 import com.contusfly.getDisplayName
 import com.contusfly.models.PrivateChatAuthenticationModel
@@ -85,6 +86,15 @@ class ViewAllMediaActivity : BaseActivity() {
         super.onAdminBlockedOtherUser(jid, type, status)
         if (profileId == jid && status && type == ChatType.TYPE_GROUP_CHAT) {
             showToast(getString(R.string.group_block_message_label))
+            startDashboardActivity()
+        }
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (profileId == groupJid) {
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
             startDashboardActivity()
         }
     }

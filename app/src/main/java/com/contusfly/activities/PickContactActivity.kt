@@ -11,8 +11,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.mirrorflysdk.flycommons.Constants
-import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.AppLifecycleListener
 import com.contusfly.R
 import com.contusfly.adapters.PickContactAdapter
@@ -21,15 +19,16 @@ import com.contusfly.chat.MessagingClient
 import com.contusfly.chat.ShareMessagesController
 import com.contusfly.models.ContactShareModel
 import com.contusfly.utils.ProfileDetailsUtils
-import com.contusfly.utils.QuickShareMessageListener
 import com.contusfly.utils.UserInterfaceUtils
 import com.contusfly.views.CustomRecyclerView
 import com.contusfly.views.ShareDialog
 import com.contusfly.views.WrapContentLayoutManager
 import com.mirrorflysdk.AppUtils
+import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.models.Contact
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
+import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -242,14 +241,11 @@ class PickContactActivity : BaseActivity() {
     private fun sendContacts(contactList: ArrayList<ContactShareModel>) {
         if (AppUtils.isNetConnected(this)) {
             shareDialog!!.initializeAndShowShareDialog("Quick Share", "Sending contacts...")
-            shareMessagesController.sendContactMessage(contactList, userIdList!!,object:
-                QuickShareMessageListener {
-                override fun sendMediaSucess() {
-                    shareDialog!!.dismissShareDialog()
-                    navigateToAppropriateScreen()
-                    finish()
-                }
-            })
+            shareMessagesController.sendContactMessage(contactList, userIdList!!) {
+                shareDialog!!.dismissShareDialog()
+                navigateToAppropriateScreen()
+                finish()
+            }
         } else {
             shareDialog!!.dismissShareDialog()
             CustomToast.show(this, getString(R.string.msg_no_internet))

@@ -223,17 +223,22 @@ object ChatUtils {
     fun getFileSizeText(fileSizeInBytes: String): String {
         val fileSizeBuilder = StringBuilder()
         val fileSize = fileSizeInBytes.toLong().toDouble()
-        if (fileSize > 1073741824) {
-            fileSizeBuilder.append(getRoundedFileSize(fileSize / 1073741824))
-                .append(" ").append("GB")
-        } else if (fileSize > 1048576) {
-            fileSizeBuilder.append(getRoundedFileSize(fileSize / 1048576))
-                .append(" ").append("MB")
-        } else if (fileSize > 1024) {
-            fileSizeBuilder.append(getRoundedFileSize(fileSize / 1024))
-                .append(" ").append("KB")
-        } else {
-            fileSizeBuilder.append(fileSizeInBytes).append(" ").append("bytes")
+        when {
+            fileSize > 1073741824 -> {
+                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1073741824))
+                    .append(" ").append("GB")
+            }
+            fileSize > 1048576 -> {
+                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1048576))
+                    .append(" ").append("MB")
+            }
+            fileSize > 1024 -> {
+                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1024))
+                    .append(" ").append("KB")
+            }
+            else -> {
+                fileSizeBuilder.append(fileSizeInBytes).append(" ").append("bytes")
+            }
         }
         return fileSizeBuilder.toString()
     }
@@ -289,8 +294,8 @@ object ChatUtils {
         url: String
     ): Boolean {
         val callLink = url.replace(BuildConfig.WEB_CHAT_LOGIN, "")
-        if (AppUtils.isNetConnected(context)) {
-            return if (CallManager.isOnGoingCall()) {
+        return if (AppUtils.isNetConnected(context)) {
+            if (CallManager.isOnGoingCall()) {
                 val onGngCallLink = CallManager.getCallLink()
                 if (onGngCallLink == callLink) {
                     hideKeyboard(context)
@@ -316,7 +321,7 @@ object ChatUtils {
             }
         } else {
             CustomToast.show(context, context.getString(R.string.error_check_internet))
-            return true
+            true
         }
     }
 
@@ -477,18 +482,17 @@ object ChatUtils {
     }
 
     fun getLastSeenTime(context: Context, time: String): String {
-        return if (time == null || time.isEmpty()) Constants.EMPTY_STRING else if (time.equals(
-                Constants.ONLINE_STATUS
-            )
-        ) Constants.ONLINE else {
+        return if (time.isNullOrEmpty())
+            Constants.EMPTY_STRING
+        else if (time == Constants.ONLINE_STATUS)
+            Constants.ONLINE
+        else {
             val lastSeen = time.toLong()
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = lastSeen
-            var status = DateUtils.getRelativeTimeSpanString(context, lastSeen, true)
-                .toString()
+            var status = DateUtils.getRelativeTimeSpanString(context, lastSeen, true).toString()
             val todayDate = Calendar.getInstance()
-            if (todayDate[Calendar.DATE] - calendar[Calendar.DATE] == 1) status =
-                "on Yesterday" // date are not equal to current date it's taken an yesterday
+            if (todayDate[Calendar.DATE] - calendar[Calendar.DATE] == 1) status = "on Yesterday" // date are not equal to current date it's taken an yesterday
             String.format(context.getString(R.string.fly_info_status_last_seen), status)
         }
     }

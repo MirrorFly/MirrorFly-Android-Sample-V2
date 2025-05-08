@@ -361,7 +361,7 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
         if (userJid.isBlank())
             return
         LogMessage.d(TAG, "$CALL_UI addUser() userJid:${userJid}")
-        if (gridCallUserList.size == 0) {
+        if (gridCallUserList.isEmpty()) {
             gridCallUserList.add(userJid)
             notifyItemInserted(gridCallUserList.indexOf(userJid))
         } else if (!gridCallUserList.contains(userJid)) {
@@ -381,7 +381,7 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
     @SuppressLint("NotifyDataSetChanged")
     fun addUsers(userList: ArrayList<String>) {
         LogMessage.d(TAG, "$CALL_UI addUsers() userJid:${userList}")
-        if (gridCallUserList.size == 0) {
+        if (gridCallUserList.isEmpty()) {
             gridCallUserList.addAll(userList)
             notifyDataSetChanged()
         } else {
@@ -493,6 +493,13 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
             holder.binding.imageGridPoorNetworkIndicator.visibility = View.VISIBLE
         }else{
             holder.binding.imageGridPoorNetworkIndicator.visibility = View.GONE
+        }
+    }
+
+    fun clearGridAdapterUserList(){
+        if(gridCallUserList.isNotEmpty()){
+            LogMessage.d(TAG, "$CALL_UI clearGridUserList ")
+            gridCallUserList.clear()
         }
     }
 

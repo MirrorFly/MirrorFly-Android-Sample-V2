@@ -92,7 +92,7 @@ class MirrorFlySeekBar @JvmOverloads constructor(
         this.longClickListener = longClickListener
     }
 
-    interface LongClickListener {
+    fun interface LongClickListener {
         fun onLongClick()
     }
 }

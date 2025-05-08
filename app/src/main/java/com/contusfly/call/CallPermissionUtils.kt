@@ -66,6 +66,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
      * JID
      */
     private val jidList: ArrayList<String>
+        get() = field
 
     /**
      * Group ID
@@ -94,16 +95,12 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
      */
     fun audioCall() {
         try {
-            if (!AppUtils.isNetConnected(activity)) {
-                activity.showToast(getString(R.string.msg_no_internet))
-            } else if (isBlocked) {
-                showBlockedAlertAudioCall()
-            } else if (isOnTelephonyCall(activity)) {
-                showTelephonyCallAlert(activity)
-            } else if (CallManager.isOnGoingCall()) {
-                showOngoingCallAlert(activity)
-            } else if (!isAdminBlocked) {
-                makeVoiceCall()
+            when {
+                !AppUtils.isNetConnected(activity) -> activity.showToast(getString(R.string.msg_no_internet))
+                isBlocked -> showBlockedAlertAudioCall()
+                isOnTelephonyCall(activity) -> showTelephonyCallAlert(activity)
+                CallManager.isOnGoingCall() -> showOngoingCallAlert(activity)
+                !isAdminBlocked -> makeVoiceCall()
             }
         } catch (e:Exception) {
             LogMessage.e(e)
@@ -131,16 +128,22 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
      */
     fun videoCall() {
         try {
-            if (!AppUtils.isNetConnected(activity)) {
-                activity.showToast(getString(R.string.msg_no_internet))
-            } else if (isBlocked) {
-                showBlockedAlertVideoCall()
-            } else if (isOnTelephonyCall(activity)) {
-                showTelephonyCallAlert(activity)
-            } else if (CallManager.isOnGoingCall()) {
-                showOngoingCallAlert(activity)
-            } else if (!isAdminBlocked) {
-                makeVideoCall()
+            when {
+                !AppUtils.isNetConnected(activity) -> {
+                    activity.showToast(getString(R.string.msg_no_internet))
+                }
+                isBlocked -> {
+                    showBlockedAlertVideoCall()
+                }
+                isOnTelephonyCall(activity) -> {
+                    showTelephonyCallAlert(activity)
+                }
+                CallManager.isOnGoingCall() -> {
+                    showOngoingCallAlert(activity)
+                }
+                !isAdminBlocked -> {
+                    makeVideoCall()
+                }
             }
         } catch (e:Exception) {
             LogMessage.e(e)
@@ -176,10 +179,10 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
                 FlyCallback { isSuccess: Boolean, _: Throwable?, _: HashMap<String?, Any?>? ->
                     if (isSuccess) {
                         isBlocked = false
-                        if (CallUtils.getIsCallStarted().equals(CallType.AUDIO_CALL)) {
+                        if (CallUtils.getIsCallStarted() == CallType.AUDIO_CALL) {
                             audioCall()
                             CallUtils.setIsCallStarted(null)
-                        } else if (CallUtils.getIsCallStarted().equals(CallType.VIDEO_CALL)) {
+                        } else if (CallUtils.getIsCallStarted() == CallType.VIDEO_CALL) {
                             videoCall()
                             CallUtils.setIsCallStarted(null)
                         }
@@ -331,11 +334,6 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
 
     private fun closeScreen() {
         if (isCloseScreen) (activity as Activity).finish()
-    }
-
-    fun getJidList() : ArrayList<String>{
-
-        return jidList
     }
 
     /**

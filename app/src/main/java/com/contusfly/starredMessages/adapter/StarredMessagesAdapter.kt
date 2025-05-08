@@ -341,7 +341,7 @@ class StarredMessagesAdapter(val listChats: RecyclerView) : RecyclerView.Adapter
      */
     private fun getStarredTextViewSender(holder: RecyclerView.ViewHolder, item: ChatMessage, position: Int) {
         try {
-            val starredTxtSenderViewHolder: TextSentViewHolder = holder as TextSentViewHolder
+            val starredTxtSenderViewHolder: TextSentViewHolder = holder as? TextSentViewHolder ?: return
             setHeader(holder, SENDER_HEADER, item)
             val time: String = getChatMsgTime(item)!!
             txtEditedVisibility(item.isEdited, starredTxtSenderViewHolder.txtEdited)
@@ -396,7 +396,7 @@ class StarredMessagesAdapter(val listChats: RecyclerView) : RecyclerView.Adapter
 
     private fun getStarredMeetViewSender(holder: RecyclerView.ViewHolder, item: ChatMessage, position: Int) {
         try {
-            val starredMeetSentViewHolder: MeetSentViewHolder = holder as MeetSentViewHolder
+            val starredMeetSentViewHolder: MeetSentViewHolder = holder as? MeetSentViewHolder ?: return
             setHeader(holder, SENDER_HEADER, item)
             val time: String = getChatMsgTime(item)!!
             starredMeetSentViewHolder.txtChatTime.text = time
@@ -495,7 +495,7 @@ class StarredMessagesAdapter(val listChats: RecyclerView) : RecyclerView.Adapter
      */
     private fun getStarredTextViewReceiver(holder: RecyclerView.ViewHolder, item: ChatMessage, position: Int) {
         // View holder for the text view
-        val starredTxtReceiverViewHolder = holder as TextReceivedViewHolder
+        val starredTxtReceiverViewHolder = holder as? TextReceivedViewHolder ?: return
         setHeader(holder, RECEIVER_HEADER, item)
         val time: String = getChatMsgTime(item)!!
         txtEditedVisibility(item.isEdited,starredTxtReceiverViewHolder.txtEdited)
@@ -658,7 +658,7 @@ class StarredMessagesAdapter(val listChats: RecyclerView) : RecyclerView.Adapter
     private fun getStarredImageViewReceiver(holder: RecyclerView.ViewHolder, messageItem: ChatMessage, position: Int) {
         try {
             setHeader(holder, RECEIVER_HEADER, messageItem)
-            val starredImgReceiverViewHolder: ImageReceivedViewHolder = holder as ImageReceivedViewHolder
+            val starredImgReceiverViewHolder: ImageReceivedViewHolder = holder as? ImageReceivedViewHolder ?: return
             starredImageItemViewHelper!!.setImageWidthAndHeight(starredImgReceiverViewHolder, messageItem)
             val base64Img = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaThumbImage)
             val filePath = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaLocalStoragePath)
@@ -693,7 +693,7 @@ class StarredMessagesAdapter(val listChats: RecyclerView) : RecyclerView.Adapter
     private fun getStarredVideoViewSender(holder: RecyclerView.ViewHolder, messageItem: ChatMessage, position: Int) {
         try {
             setHeader(holder, SENDER_HEADER, messageItem)
-            val starredVideoSenderViewHolder: VideoSentViewHolder = holder as VideoSentViewHolder
+            val starredVideoSenderViewHolder: VideoSentViewHolder = holder as? VideoSentViewHolder ?: return
             starredVideoItemViewHelper!!.setImageWidthAndHeight(starredVideoSenderViewHolder, messageItem)
             val filePath = Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaLocalStoragePath)
             val time: String = getChatMsgTime(messageItem)!!
@@ -1601,7 +1601,7 @@ class StarredMessagesAdapter(val listChats: RecyclerView) : RecyclerView.Adapter
         if (starredFileSize!!.isNotEmpty() && downloadView!!.visibility == View.VISIBLE) {
             var size = 0
             val txtSize = context?.getString(R.string.title_kb)
-            if (!starredFileSize.equals(Constants.COUNT_ZERO.toString(), ignoreCase = true))
+            if (!checkEqualString(starredFileSize, Constants.COUNT_ZERO.toString()))
                 size = starredFileSize.toInt() / Constants.ONE_KB
             if (size >= Constants.ONE_KB) {
                 starredFileSizeView?.text = ChatUtils.getFileSizeText(starredFileSize)

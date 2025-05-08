@@ -64,7 +64,7 @@ class StatusDeleteDialog {
     /**
      * Interface definition for a callback to be invoked when user wants to delete the status.
      */
-    interface UpdateAdapterListener {
+    fun interface UpdateAdapterListener {
         /**
          * The callback method to notify the adapter.
          */

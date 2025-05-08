@@ -27,10 +27,10 @@ constructor() : ViewModel() {
     fun getParticipantsHashMap(jid: String) {
         GroupManager.getGroupMembersList(false, jid) { isSuccess, _, data ->
             if (isSuccess) {
-                var participantsNameList: List<ProfileDetails>
-                var groupsMembersProfileList: MutableList<ProfileDetails> = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
+                val participantsNameList: List<ProfileDetails>
+                val groupsMembersProfileList: MutableList<ProfileDetails> = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty().toMutableList()
                 participantsNameList =ProfileDetailsUtils.sortGroupProfileListWithoutOwn(groupsMembersProfileList)
-                var newParticipantList=ArrayList<ProfileDetails>()
+                val newParticipantList=ArrayList<ProfileDetails>()
                 for (i in participantsNameList) {
                     if (!i.isAdminBlocked) {
                         newParticipantList.add(i)

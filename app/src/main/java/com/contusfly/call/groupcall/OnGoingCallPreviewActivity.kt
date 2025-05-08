@@ -604,44 +604,36 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
 
     private fun checkAndAllowToOnGngCall() {
         LogMessage.d(TAG, "$CALL_UI $JOIN_CALL checkAndAllowToOnGngCall")
-        if (AppUtils.isNetConnected(this)) {
-            if (!CallManager.isAudioCallPermissionsGranted(skipBlueToothPermission = false)) MediaPermissions.requestAudioCallPermissions(
-                this,
-                permissionAlertDialog, audioCallPermissionLauncher
-            )
-            else if (muteVideoImage.isActivated && !CallManager.isVideoCallPermissionsGranted(
-                    skipBlueToothPermission = false
-                )
-            ) MediaPermissions.requestVideoCallPermissions(
-                this,
-                permissionAlertDialog, videoCallPermissionLauncher
-            ) else if (CallManager.isOnTelephonyCall(this)) {
-                showAlertForTelephonyCall()
-            } else if (!CallManager.isNotificationPermissionsGranted()) {
-                MediaPermissions.requestNotificationPermission(
-                    this,
-                    permissionAlertDialog, notificationPermissionLauncher, true
-                )
-            } else {
-                handleJoinNowButton(false)
-                checkInternetConnection!!.visibility = View.VISIBLE
-                checkInternetConnection!!.text = getString(R.string.connecting_label)
-                CallManager.joinCall(object : JoinCallActionListener {
-                    override fun onFailure(error: Error) {
-                        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL onFailure()")
-                        checkInternetConnection!!.visibility = View.GONE
-                        handleOnFailure(error)
-                    }
+        when {
+            AppUtils.isNetConnected(this) -> {
+                when {
+                    !CallManager.isAudioCallPermissionsGranted(skipBlueToothPermission = false) -> MediaPermissions.requestAudioCallPermissions(this, permissionAlertDialog, audioCallPermissionLauncher)
+                    muteVideoImage.isActivated && !CallManager.isVideoCallPermissionsGranted(skipBlueToothPermission = false) -> MediaPermissions.requestVideoCallPermissions(this, permissionAlertDialog, videoCallPermissionLauncher)
+                    CallManager.isOnTelephonyCall(this) -> showAlertForTelephonyCall()
+                    !CallManager.isNotificationPermissionsGranted() -> MediaPermissions.requestNotificationPermission(this, permissionAlertDialog, notificationPermissionLauncher, true)
+                    else -> {
+                        handleJoinNowButton(false)
+                        checkInternetConnection!!.visibility = View.VISIBLE
+                        checkInternetConnection!!.text = getString(R.string.connecting_label)
+                        CallManager.joinCall(object : JoinCallActionListener {
+                            override fun onFailure(error: Error) {
+                                LogMessage.d(TAG, "$CALL_UI $JOIN_CALL onFailure()")
+                                checkInternetConnection!!.visibility = View.GONE
+                                handleOnFailure(error)
+                            }
 
-                    override fun onSuccess() {
-                        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL joinCall onSuccess()")
-                        CallManager.cleanUpJoinCallViaLink()
-                        finish()
-                    }
+                            override fun onSuccess() {
+                                LogMessage.d(TAG, "$CALL_UI $JOIN_CALL joinCall onSuccess()")
+                                CallManager.cleanUpJoinCallViaLink()
+                                finish()
+                            }
 
-                })
+                        })
+                    }
+                }
             }
-        } else checkInternetConnection!!.visibility = View.VISIBLE
+            else -> checkInternetConnection!!.visibility = View.VISIBLE
+        }
     }
 
     private fun toggleVideoMute() {

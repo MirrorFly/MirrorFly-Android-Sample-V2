@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 class ContactSelectionViewModel : ViewModel() {
 
     val contactsList = mutableListOf<DeviceContactModel>()
-    val selectedContactList = mutableListOf<DeviceContactModel>()
+    val selectedContactList = arrayListOf<DeviceContactModel>()
     val selectedList = MutableLiveData<MutableList<DeviceContactModel>>()
     val contactDiffResult = MutableLiveData<DiffUtil.DiffResult>()
     private val deviceContactsList = linkedMapOf<String, DeviceContactModel>()

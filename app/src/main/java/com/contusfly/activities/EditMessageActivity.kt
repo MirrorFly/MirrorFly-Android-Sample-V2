@@ -148,7 +148,7 @@ class EditMessageActivity : EditChatParent(), View.OnTouchListener,
             chatMessageEditText.mentionedUsers,
             mentionedUsersIds
         )
-        sendTextMessageWithMentionFormat = if (mentionedUsersIds.size > 0) {
+        sendTextMessageWithMentionFormat = if (mentionedUsersIds.isNotEmpty()) {
             chatMessageEditText.mentionedTemplate.toString()
         } else {
             chatMessageEditText.text.toString().trim()
@@ -307,11 +307,7 @@ class EditMessageActivity : EditChatParent(), View.OnTouchListener,
 
 
 
-    private fun getKeyboardListener() = object : KeyboardHeightProvider.KeyboardListener {
-        override fun onHeightChanged(height: Int) {
-            softKeyboardHeight = height
-        }
-    }
+    private fun getKeyboardListener() = KeyboardHeightProvider.KeyboardListener { height -> softKeyboardHeight = height }
 
     private fun getMessage(): ChatMessage? {
         return if (!messageId.isNullOrEmpty()) FlyMessenger.getMessageOfId(messageId) else null

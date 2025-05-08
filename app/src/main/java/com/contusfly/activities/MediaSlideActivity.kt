@@ -142,7 +142,7 @@ class MediaSlideActivity : BaseActivity() {
                 val replyMsg = FlyMessenger.getMessageOfId(msgId)?.isMessageRecalled
                 if (replyMsg == true) {
                     mediaMessages.remove(message)
-                    if (mediaMessages.size > 0) {
+                    if (mediaMessages.isNotEmpty()) {
                         viewPager?.adapter?.notifyDataSetChanged()
                     } else {
                         finish()

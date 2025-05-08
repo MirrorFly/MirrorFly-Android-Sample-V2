@@ -11,18 +11,20 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.contusfly.R
+import com.contusfly.activities.BaseActivity
 import com.contusfly.chatTag.activities.ChatTagActivity.Companion.chatTagMemberIdList
 import com.contusfly.chatTag.activities.ChatTagActivity.Companion.createdChatTagList
 import com.contusfly.chatTag.adapter.PeopleSelectionListAdapter
 import com.contusfly.chatTag.interfaces.ChatTagClickListener
 import com.contusfly.chatTag.viewmodel.ChatTagViewModel
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.databinding.ActivityCreateTagBinding
 import com.contusfly.isDeletedContact
+import com.contusfly.isValidIndex
 import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CommonAlertDialog
@@ -38,7 +40,7 @@ import com.mirrorflysdk.flydatabase.model.ChatTagModel
 import com.mirrorflysdk.views.CustomToast
 import java.lang.reflect.Type
 
-class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
+class CreateTagActivity : BaseActivity(), ChatTagClickListener,
     CommonAlertDialog.CommonDialogClosedListener {
 
     private val TAG: String = CreateTagActivity::class.java.simpleName
@@ -393,7 +395,7 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
 
         try {
             for (i in 0 until memberIdlist.size) {
-                if(selectedMemberid.equals(memberIdlist.get(i))){
+                if(selectedMemberid == memberIdlist[i]){
                     memberIdlist.removeAt(i)
                 }
             }
@@ -442,5 +444,25 @@ class CreateTagActivity : AppCompatActivity(), ChatTagClickListener,
                 LogMessage.e(TAG, e.toString())
             }
         }
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        try {
+            val selectionIndex = chatSelectedList.indexOfFirst { it.jid == groupJid }
+            if (selectionIndex.isValidIndex()) {
+                if (groupName.isNotEmpty())
+                    CustomToast.show(
+                        context,
+                        getString(R.string.deleted_by_super_admin, groupName)
+                    )
+                removeSelectedmemberList(chatSelectedList.get(selectionIndex).jid)
+                chatSelectedList.removeAt(selectionIndex)
+                mSelectionAdapter.notifyItemRemoved(selectionIndex)
+            }
+        }catch (e:Exception){
+            LogMessage.e(TAG,"Exception on tag activity-->$e")
+        }
+        clearDeletedGroupChatNotification(groupJid, context)
     }
 }

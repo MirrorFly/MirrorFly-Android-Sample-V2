@@ -405,4 +405,14 @@ class CommonEditorActivity : BaseActivity(), View.OnClickListener,
             finish()
         }
     }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        if (this.groupJid == groupJid) {
+            CustomToast.show(context, getString(R.string.deleted_by_super_admin, groupName))
+            startDashboardActivity(this)
+            finish()
+        }
+        clearDeletedGroupChatNotification(groupJid, context)
+    }
 }

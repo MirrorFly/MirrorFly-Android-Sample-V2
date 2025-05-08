@@ -1,6 +1,6 @@
 package com.contusfly.utils
 
-interface QuickShareMessageListener {
+fun interface QuickShareMessageListener {
 
-    fun sendMediaSucess()
+    fun sendMediaSuccess()
 }

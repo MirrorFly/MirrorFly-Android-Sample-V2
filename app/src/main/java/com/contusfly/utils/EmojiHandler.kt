@@ -221,7 +221,7 @@ class EmojiHandler(context: AppCompatActivity) {
         fragmentManager = context.supportFragmentManager
     }
 
-    interface EmojiKeyBoardListener {
+    fun interface EmojiKeyBoardListener {
         fun onKeyBoardStateChanged(isOpened: Boolean)
     }
 }

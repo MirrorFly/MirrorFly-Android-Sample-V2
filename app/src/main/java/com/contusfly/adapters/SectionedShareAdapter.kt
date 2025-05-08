@@ -13,7 +13,6 @@ import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.*
 import com.contusfly.databinding.RowProgressBarBinding
 import com.contusfly.databinding.RowShareItemBinding
-import com.contusfly.interfaces.GetGroupUsersNameCallback
 import com.contusfly.interfaces.RecyclerViewItemClick
 import com.contusfly.models.ProfileDetailsShareModel
 import com.contusfly.utils.Constants
@@ -317,10 +316,10 @@ class SectionedShareAdapter(private val context: Context, private val commonAler
     private fun setSearchHeader(headerSectionTextView: CustomTextView, position: Int) {
         val profileDetailsItem = profileDetailsList[position]
         when {
-            profileDetailsItem.type.equals(ChatType.TYPE_GROUP_CHAT, true) -> {
+            checkEqualString(profileDetailsItem.type,ChatType.TYPE_GROUP_CHAT) -> {
                 headerSectionTextView.text = context.getString(R.string.groups)
             }
-            profileDetailsItem.type.equals(ChatType.TYPE_CHAT, true) -> {
+            checkEqualString(profileDetailsItem.type,ChatType.TYPE_CHAT) -> {
                 headerSectionTextView.text = context.getString(R.string.contacts)
             }
             else -> {
@@ -342,7 +341,7 @@ class SectionedShareAdapter(private val context: Context, private val commonAler
 
     private fun handleStatus(statusTextView: EmojiAppCompatTextView, type: String, profileDetails: ProfileDetails) {
         Log.d("handleStatus", type)
-        if (type.equals(ChatType.TYPE_CHAT, true)) {
+        if (checkEqualString(type,ChatType.TYPE_CHAT)) {
             setStatusForChatUsers(statusTextView, profileDetails)
         } else {
             setStatusForGroupAndBroadcastUsers(statusTextView, profileDetails)
@@ -366,13 +365,12 @@ class SectionedShareAdapter(private val context: Context, private val commonAler
     }
 
     private fun setStatusForGroupAndBroadcastUsers(statusTextView: EmojiAppCompatTextView, profileDetails: ProfileDetails) {
-        ProfileDetailsUtils.getGroupUsersNames(profileDetails.jid, object : GetGroupUsersNameCallback {
-            override fun onGroupUsersNamePrepared(names: String) {
-                Log.d("STATUS_GNB", names)
-                statusTextView.visibility = View.VISIBLE
-                EmojiUtils.setEmojiText(statusTextView, names)
-            }
-        })
+        ProfileDetailsUtils.getGroupUsersNames(profileDetails.jid
+        ) { names ->
+            Log.d("STATUS_GNB", names)
+            statusTextView.visibility = View.VISIBLE
+            EmojiUtils.setEmojiText(statusTextView, names)
+        }
     }
 
     /**

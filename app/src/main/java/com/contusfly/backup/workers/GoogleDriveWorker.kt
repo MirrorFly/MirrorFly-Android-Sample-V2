@@ -138,7 +138,7 @@ class GoogleDriveWorker(private val appContext: Context, workerParams: WorkerPar
             }
 
             exception?.let {
-                var code = emptyString()
+                val code: String
                 when (it) {
                     is GoogleJsonResponseException -> {
                         val apiException = it

@@ -98,11 +98,11 @@ object ProfileDetailsUtils {
     fun getProfileDetails(jid: String, isUnknownContact: Boolean = false) : ProfileDetails? {
         if (XmppStringUtils.parseDomain(jid).isNullOrBlank())
             return null
-        if (BuildConfig.CONTACT_SYNC_ENABLED) {
-            return getContactSyncProfileDetails(jid, isUnknownContact)
+        return if (BuildConfig.CONTACT_SYNC_ENABLED) {
+            getContactSyncProfileDetails(jid, isUnknownContact)
         } else {
             val profileDetails = ContactManager.getProfileDetails(jid)
-            return when {
+            when {
                 profileDetails == null -> UIKitContactUtils.getProfileDetails(jid) // if it is null then return UIKit contact
                 profileDetails.isUnknownContact() -> UIKitContactUtils.getProfileDetails(jid) ?: profileDetails // if it is isUnknownContact then return UIKit contact
                 else -> profileDetails

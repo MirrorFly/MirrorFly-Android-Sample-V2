@@ -82,21 +82,25 @@ class PinEntryChange : AppCompatActivity() {
         setSaveBtnOnClickListener()
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val type = intent.getStringExtra("TYPE")
-        if (type.equals("SET", ignoreCase = true)) {
-            pinType = PinStatus.PIN_SET
-            title = "PIN Lock"
-            binding.oldLayout!!.visibility = View.GONE
-        } else if (type.equals("forgot", ignoreCase = true)) {
-            callAppListener(true)
-            pinType = PinStatus.PIN_FORGOT
-            title = "Change PIN"
-            binding.oldLayout!!.visibility = View.GONE
-            binding.newPinLayout!!.visibility = View.VISIBLE
-            binding.setPin!!.isFocusable = true
-            binding.confirmPinLayout!!.visibility = View.VISIBLE
-        } else if (type.equals("CHANGE", ignoreCase = true)) {
-            pinType = PinStatus.PIN_CHANGE
-            title = "Change PIN"
+        when {
+            type.equals("SET", ignoreCase = true) -> {
+                pinType = PinStatus.PIN_SET
+                title = "PIN Lock"
+                binding.oldLayout.visibility = View.GONE
+            }
+            type.equals("forgot", ignoreCase = true) -> {
+                callAppListener(true)
+                pinType = PinStatus.PIN_FORGOT
+                title = "Change PIN"
+                binding.oldLayout.visibility = View.GONE
+                binding.newPinLayout.visibility = View.VISIBLE
+                binding.setPin.isFocusable = true
+                binding.confirmPinLayout.visibility = View.VISIBLE
+            }
+            type.equals("CHANGE", ignoreCase = true) -> {
+                pinType = PinStatus.PIN_CHANGE
+                title = "Change PIN"
+            }
         }
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
@@ -116,29 +120,38 @@ class PinEntryChange : AppCompatActivity() {
      * to validate the pin
      */
     private fun validatePin(): Boolean {
-        return if (setPinValue!!.isEmpty()) {
-            errorMessage = "Enter the PIN"
-            false
-        } else if (setPinValue!!.length < 4) {
-            errorMessage = "PIN must be of 4 digits"
-            false
-        } else if (confirmPinValue!!.isEmpty()) {
-            errorMessage = "Enter the Confirm PIN"
-            false
-        } else if (confirmPinValue!!.length < 4) {
-            errorMessage = "Confirm PIN must be of 4 digits"
-            false
-        } else if (!setPinValue.equals(confirmPinValue, ignoreCase = true)) {
-            errorMessage = "PIN and Confirm PIN must be same"
-            false
-        } else if (pinType == PinStatus.PIN_CHANGE && oldPinValue == confirmPinValue || myPin == confirmPinValue) {
-            errorMessage = "Old PIN and new PIN should not be same"
-            false
-        } else if (pinType == PinStatus.PIN_SET && setPinValue == SharedPreferenceManager.getString(Constants.CHANGE_PIN_NEXT)) {
-            errorMessage = "PIN should not be same as immediate previous PIN"
-            false
-        } else {
-            true
+        return when {
+            setPinValue!!.isEmpty() -> {
+                errorMessage = "Enter the PIN"
+                false
+            }
+            setPinValue!!.length < 4 -> {
+                errorMessage = "PIN must be of 4 digits"
+                false
+            }
+            confirmPinValue!!.isEmpty() -> {
+                errorMessage = "Enter the Confirm PIN"
+                false
+            }
+            confirmPinValue!!.length < 4 -> {
+                errorMessage = "Confirm PIN must be of 4 digits"
+                false
+            }
+            setPinValue != confirmPinValue -> {
+                errorMessage = "PIN and Confirm PIN must be same"
+                false
+            }
+            pinType == PinStatus.PIN_CHANGE && oldPinValue == confirmPinValue || myPin == confirmPinValue -> {
+                errorMessage = "Old PIN and new PIN should not be same"
+                false
+            }
+            pinType == PinStatus.PIN_SET && setPinValue == SharedPreferenceManager.getString(Constants.CHANGE_PIN_NEXT) -> {
+                errorMessage = "PIN should not be same as immediate previous PIN"
+                false
+            }
+            else -> {
+                true
+            }
         }
     }
 
@@ -235,11 +248,7 @@ class PinEntryChange : AppCompatActivity() {
     }
 
     private fun updateSafeChat(){
-        SafeChatUtils.actionAuthorized(this,object : () -> Unit {
-            override fun invoke() {
-                finish()
-            }
-        })
+        SafeChatUtils.actionAuthorized(this) { finish() }
     }
 
     /**
@@ -262,7 +271,7 @@ class PinEntryChange : AppCompatActivity() {
         confirmPinValue = binding.confirmPin.text.toString()
         Log.d("PIN", "$setPinValue $confirmPinValue")
         if (pinType == PinStatus.PIN_CHANGE) {
-            if (!oldPinValue.equals(myPin, ignoreCase = true)) {
+            if (oldPinValue != myPin) {
                 errorMessage = "Invalid old PIN"
                 return false
             }

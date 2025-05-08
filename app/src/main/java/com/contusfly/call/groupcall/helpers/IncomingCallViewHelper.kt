@@ -23,6 +23,8 @@ import com.contusfly.call.groupcall.utils.AnimationsHelper
 import com.contusfly.databinding.LayoutIncomingCallBinding
 import com.contusfly.gone
 import com.contusfly.show
+import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
+import com.mirrorflysdk.flycommons.Constants
 
 /*
 * This class contains the incoming call accept or reject functionalities and animations
@@ -126,7 +128,6 @@ class IncomingCallViewHelper(
      * @param curY call swipe button [.binding.btnCallSwipe] y position
      */
     private fun actionClick(curY: Float) {
-        LogMessage.d(TAG, "$CALL_UI actionClick() curY:${curY}")
         if (curY <= binding.imageCallAnswer.bottom && !begin) {
             /* we shouldn't perform click operation when view is disabled */
             if (binding.imageCallAnswer.isEnabled) {
@@ -159,11 +160,20 @@ class IncomingCallViewHelper(
                     CallManager.declineCall()
                     Toast.makeText(
                         context,
-                        context.getString(R.string.call_permission_denied),
+                        getpermissionErrorMessage(),
                         Toast.LENGTH_LONG
                     ).show()
                 }
             }
+        }
+    }
+
+    private fun getpermissionErrorMessage(): String {
+        return when {
+            GroupCallUtils.getCallType() == CallType.AUDIO_CALL && !CallManager.isAudioCallPermissionsGranted() -> context.getString(R.string.record_permission_label)
+            GroupCallUtils.getCallType() == CallType.VIDEO_CALL && !CallManager.isVideoCallPermissionsGranted() -> context.getString(R.string.video_record_permission_label)
+            !CallManager.isBluetoothPermissionsGranted() -> "Bluetooth permission (Nearby devices) are needed for Calling features."
+            else -> Constants.EMPTY_STRING
         }
     }
 

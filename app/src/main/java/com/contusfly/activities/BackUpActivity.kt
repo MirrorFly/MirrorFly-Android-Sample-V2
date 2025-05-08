@@ -219,7 +219,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
             }
             LogMessage.e(TAG, "cancelBackup BACKUP_FILE_PATH empty")
             SharedPreferenceManager.setString(BackupConstants.BACKUP_FILE_PATH, emptyString())
-            resetBackupUI()
+            resetUI()
         }
 
         activityBackUpBinding.accountBox.setOnClickListener {
@@ -237,6 +237,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         }
 
         activityBackUpBinding.restoreData.setOnClickListener {
+            isOnlyBackup = false
             onRestoreClicked()
         }
 
@@ -454,10 +455,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         LogMessage.e(TAG, "uploadWorkerGeneric RUNNING")
         setFilePathIfEmpty()
         if (isDriveBackup && !::driveUploadWorkerID.isInitialized) {
-            LogMessage.e(
-                TAG,
-                "uploadWorkerGeneric driveUploadWorkerID initDriveWorker"
-            )
+            LogMessage.e(TAG, "uploadWorkerGeneric driveUploadWorkerID initDriveWorker")
             driveUploadWorkerID = workerInfo.id
             initDriveWorker(driveUploadWorkerID)
         }
@@ -491,7 +489,6 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
      * @param id UUID of the worker
      */
     private fun initDriveWorker(id: UUID) {
-
         var workerInfo: WorkInfo?
         val context = this
         driveUploadWorker = workManager.getWorkInfoByIdLiveData(id)
@@ -632,6 +629,8 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         activityBackUpBinding.backup.show()
         activityBackUpBinding.workProgress.progress = 0
         isUploadInEnqueuedState = false
+        resetUI()
+
     }
 
     /**
@@ -693,6 +692,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
             override fun onFailure(reason: String?) {
                 Handler(Looper.getMainLooper()).post {
                     LogMessage.e(TAG, "#backup Backup failure::$reason")
+                    showToast(reason ?: "")
                     resetBackupUI()
                 }
             }
@@ -708,34 +708,29 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     }
 
     private fun onBackupWorkerSucceeded() {
-        if (!WorkManagerController.isNetConnected())
-            showAlertDialog(true)
-        else if ((WorkManagerController.checkRoaming(this) && !WorkManagerController.isConnectedToWifi()))
-            showAlertDialog(isRoamingLogic = true)
-        else if (WorkManagerController.checkWifiLogic())
-            showAlertDialog()
-        else {
-            if (isOnlyBackup) {
-                showToast(getString(R.string.downloaded_backup_info))
-                resetDownloadUI()
-            } else if (isDriveBackup) {
-                launch {
-                    if (!WorkManagerController.checkIfAWorkerIsAlreadyScheduledOrNot(
-                            BackupConstants.DRIVE_WORKER_TAG
-                        )
-                    ) {
-                        driveUploadWorkerID = WorkManagerController.runDriveUpload()
-                        LogMessage.e(
-                            TAG,
-                            "#backup backupWorker.observe driveUploadWorkerID initDriveWorker"
-                        )
-                        initDriveWorker(driveUploadWorkerID)
+        when {
+            !WorkManagerController.isNetConnected() -> showAlertDialog(true)
+            WorkManagerController.checkRoaming(this) && !WorkManagerController.isConnectedToWifi() -> showAlertDialog(isRoamingLogic = true)
+            WorkManagerController.checkWifiLogic() -> showAlertDialog()
+            else -> {
+                LogMessage.d("#backup","onBackupWorkerSucceeded isOnlyBackup: $isOnlyBackup isDriveBackup: $isDriveBackup")
+                if (isOnlyBackup) {
+                    showToast(getString(R.string.downloaded_backup_info))
+                    resetDownloadUI()
+                } else if (isDriveBackup) {
+                    launch {
+                        if (!WorkManagerController.checkIfAWorkerIsAlreadyScheduledOrNot(
+                                BackupConstants.DRIVE_WORKER_TAG)) {
+                            driveUploadWorkerID = WorkManagerController.runDriveUpload()
+                            LogMessage.e(TAG, "#backup backupWorker.observe driveUploadWorkerID initDriveWorker")
+                            initDriveWorker(driveUploadWorkerID)
+                        }
                     }
-                }
-                if (WorkManagerController.isNetConnected()) {
-                    driveWorkerIfNotInitialized()
-                    initDriveWorker(driveUploadWorkerID)
-                    showUploadUI("Uploading : 0 KB  of $fileSizeString (0%)")
+                    if (WorkManagerController.isNetConnected()) {
+                        driveWorkerIfNotInitialized()
+                        initDriveWorker(driveUploadWorkerID)
+                        showUploadUI("Uploading : 0 KB  of $fileSizeString (0%)")
+                    }
                 }
             }
         }

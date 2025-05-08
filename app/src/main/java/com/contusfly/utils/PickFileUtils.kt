@@ -10,6 +10,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.provider.MediaStore
+import com.contusfly.mediapicker.utils.PickerConstants
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.api.ChatManager.isActivityStartedForResult
 import com.mirrorflysdk.utils.RequestCode
@@ -104,11 +105,8 @@ object PickFileUtils {
     fun isValidFileType(fileType: String?): Boolean {
         if (fileType.isNullOrEmpty()) return false
         val type = fileType.toLowerCase(Locale.getDefault())
-        val extensions = arrayOf(
-            "doc", "xls", "txt", "pdf", "ppt", "xlsx", "docx",
-            "zip", "rar", "pptx", "csv"
-        )
-        for (extension in extensions) {
+        val extension2 = PickerConstants.supportedFormats
+        for (extension in extension2) {
             if (type.endsWith(extension)) return true
         }
         return false
@@ -124,6 +122,12 @@ object PickFileUtils {
         if (filePath.isNullOrEmpty()) return true
         val file = File(filePath)
         val fileInKb = file.length() / 1024
+        val fileInMb = fileInKb / 1024
+        return maxSize > fileInMb
+    }
+
+    fun checkFileSize(fileLength:Long, maxSize: Int): Boolean {
+        val fileInKb = fileLength / 1024
         val fileInMb = fileInKb / 1024
         return maxSize > fileInMb
     }

@@ -59,8 +59,8 @@ class UserListViewModel @Inject constructor() : ViewModel() {
             setUserListFetching(true)
             FlyCore.getUserList(currentPage, resultPerPage) { isSuccess, _, data ->
                 if (isSuccess) {
-                    val profileList = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
-                    totalPage = data[Constants.TOTAL_PAGES] as Int
+                    val profileList = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty()
+                    totalPage = data[Constants.TOTAL_PAGES] as? Int ?: 0
                     var userListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileList, false)
                     if (fromGroupInfo && !groupId.isNullOrEmpty()) {
                         userListResult = userListResult.filter { ChatManager.getAvailableFeatures().isGroupChatEnabled && !GroupManager.isMemberOfGroup(groupId, it.jid) }
@@ -105,8 +105,8 @@ class UserListViewModel @Inject constructor() : ViewModel() {
             setSearchUserListFetching(true)
             FlyCore.getUserList(currentSearchPage, resultPerPage, searchString) { isSuccess, _, data ->
                 if (isSuccess) {
-                    val profileList = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
-                    totalSearchPage = data[Constants.TOTAL_PAGES] as Int
+                    val profileList = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty()
+                    totalSearchPage = data[Constants.TOTAL_PAGES] as? Int ?: 0
                     var userListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileList, false)
                     if (fromGroupInfo && !groupId.isNullOrEmpty()) {
                         userListResult = userListResult.filter { ChatManager.getAvailableFeatures().isGroupChatEnabled && !GroupManager.isMemberOfGroup(groupId, it.jid) }

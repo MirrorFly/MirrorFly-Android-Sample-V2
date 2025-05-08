@@ -159,7 +159,7 @@ class SelectMapViewActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
             } catch (e: IOException) {
                 LogMessage.e(e)
             }
-            if (addresses != null && !addresses.isEmpty()) {
+            if (!addresses.isNullOrEmpty()) {
                 val address = addresses[0]
                 if (address != null) {
                     val ad = address.getAddressLine(0)

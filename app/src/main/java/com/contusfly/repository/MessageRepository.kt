@@ -90,14 +90,17 @@ class MessageRepository {
         val today = month + " " + checkTwoDigitsForDate(calendar[Calendar.DATE]) + "," + " " + +calendar[Calendar.YEAR]
         val yesterday = month + " " + checkTwoDigitsForDate(yesterdayDate) + "," + " " + +calendar[Calendar.YEAR]
         var dateHeaderMessage = ChatMessage()
-        if (messageDate.compareTo(today) == 0) {
-            date = "Today"
-            dateHeaderMessage = createDateHeaderMessageWithDate(date, item)
-        } else if (messageDate.compareTo(yesterday) == 0) {
-            date = "Yesterday"
-            dateHeaderMessage = createDateHeaderMessageWithDate(date, item)
-        } else if (!messageDate.contains("1970"))
-            dateHeaderMessage = createDateHeaderMessageWithDate(messageDate, item)
+        when {
+            messageDate.compareTo(today) == 0 -> {
+                date = "Today"
+                dateHeaderMessage = createDateHeaderMessageWithDate(date, item)
+            }
+            messageDate.compareTo(yesterday) == 0 -> {
+                date = "Yesterday"
+                dateHeaderMessage = createDateHeaderMessageWithDate(date, item)
+            }
+            !messageDate.contains("1970") -> dateHeaderMessage = createDateHeaderMessageWithDate(messageDate, item)
+        }
         return dateHeaderMessage
     }
 

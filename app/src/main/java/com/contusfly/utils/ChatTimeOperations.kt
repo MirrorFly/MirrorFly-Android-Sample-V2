@@ -21,16 +21,36 @@ class ChatTimeOperations constructor(val calendar: Calendar) {
      * Recent chat DateFormat
      */
     private var recentChatDateFormat: SimpleDateFormat? = null
+        get() {
+            if (field == null) {
+                field = SimpleDateFormat("dd-MMM", Locale.getDefault())
+            }
+            return field
+        }
+
 
     /**
      * Recent chat DateFormat
      */
     private var callDateFormat: SimpleDateFormat? = null
+        get() {
+            if (field == null) {
+                field = SimpleDateFormat(" dd MMM", Locale.getDefault())
+            }
+            return field
+        }
 
     /**
      * Common DateFormat
      */
     private var commonDateFormat: SimpleDateFormat? = null
+        get() {
+            if (field == null) {
+                field = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            }
+            return field
+        }
+
 
     /**
      * chatMsg instance
@@ -120,9 +140,9 @@ class ChatTimeOperations constructor(val calendar: Calendar) {
         val currentYear = cal[Calendar.YEAR]
         cal.time = messageDate
         val time: String = if (currentYear == cal[Calendar.YEAR]) {
-            getRecentChatDateFormat()!!.format(messageDate.time)
+            recentChatDateFormat!!.format(messageDate.time)
         } else {
-            getCommonDateFormat()!!.format(messageDate.time)
+            commonDateFormat!!.format(messageDate.time)
         }
         return if (equalsWithYesterday(messageDate, Constants.TODAY)) hourTime else if (equalsWithYesterday(messageDate, Constants.YESTERDAY)) Constants.YESTERDAY_UPPER else time
     }
@@ -159,8 +179,8 @@ class ChatTimeOperations constructor(val calendar: Calendar) {
          */
         val yesterday: Date
         try {
-            yesterday = getCommonDateFormat()!!.parse(getCommonDateFormat()!!.format(calendar.timeInMillis))
-            val srcDateWithoutTime = getCommonDateFormat()!!.parse(getCommonDateFormat()?.format(srcDate))
+            yesterday = commonDateFormat!!.parse(commonDateFormat!!.format(calendar.timeInMillis))
+            val srcDateWithoutTime = commonDateFormat!!.parse(commonDateFormat?.format(srcDate))
             /*
               Checks src date equals yesterday.
              */return yesterday == srcDateWithoutTime
@@ -182,31 +202,9 @@ class ChatTimeOperations constructor(val calendar: Calendar) {
         messageDate.time = epochTime
         val hourTime: String = manipulateMessageTime(context, messageDate)
         /* The time stamp. */
-        val date = getCallDateFormat()!!.format(messageDate.time)
+        val date = callDateFormat!!.format(messageDate.time)
         return if (equalsWithYesterday(messageDate, Constants.TODAY)) Constants.TODAY + ", " + hourTime
         else if (equalsWithYesterday(messageDate, Constants.YESTERDAY)) Constants.YESTERDAY + ", " + hourTime
         else "$date, $hourTime"
-    }
-
-    private fun getRecentChatDateFormat(): SimpleDateFormat? {
-        if (recentChatDateFormat == null) {
-            recentChatDateFormat = SimpleDateFormat("dd-MMM", Locale
-                    .getDefault())
-        }
-        return recentChatDateFormat
-    }
-
-    private fun getCallDateFormat(): SimpleDateFormat? {
-        if (callDateFormat == null) {
-            callDateFormat = SimpleDateFormat(" dd MMM", Locale.getDefault())
-        }
-        return callDateFormat
-    }
-
-    private fun getCommonDateFormat(): SimpleDateFormat? {
-        if (commonDateFormat == null) {
-            commonDateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-        }
-        return commonDateFormat
     }
 }

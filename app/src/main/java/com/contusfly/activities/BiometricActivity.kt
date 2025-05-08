@@ -228,11 +228,7 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
                 finish()
             }
             SafeChatUtils.updateSafeChat != SafeChatUtils.SafeChatUpdate.NONE-> {
-                SafeChatUtils.actionAuthorized(this, object : () -> Unit {
-                    override fun invoke() {
-                        finish()
-                        }
-                    })
+                SafeChatUtils.actionAuthorized(this) { finish() }
             }
             AppLifecycleListener.isFromQuickShareForBioMetric -> {
                 AppLifecycleListener.isFromQuickShareForBioMetric = false
@@ -340,15 +336,12 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
 
     private fun setPrivateChatEnableOrDisable(data: Intent) {
         try {
-            var privateChatType=data.getStringExtra(Constants.PRIVATE_CHAT_TYPE)
-            if(privateChatType == Constants.PRIVATE_CHAT_ENABLE) {
-                setResultLaunchType(Constants.PRIVATE_CHAT_ENABLE)
-            } else if(privateChatType == Constants.PRIVATE_CHAT_DISABLE) {
-                setResultLaunchType(Constants.PRIVATE_CHAT_DISABLE)
-            } else if(privateChatType == Constants.PRIVATE_CHAT_LIST) {
-                setResultLaunchType(Constants.PRIVATE_CHAT_LIST)
-            } else {
-                finish()
+            val privateChatType = data.getStringExtra(Constants.PRIVATE_CHAT_TYPE)
+            when (privateChatType) {
+                Constants.PRIVATE_CHAT_ENABLE -> setResultLaunchType(Constants.PRIVATE_CHAT_ENABLE)
+                Constants.PRIVATE_CHAT_DISABLE -> setResultLaunchType(Constants.PRIVATE_CHAT_DISABLE)
+                Constants.PRIVATE_CHAT_LIST -> setResultLaunchType(Constants.PRIVATE_CHAT_LIST)
+                else -> finish()
             }
         } catch(e: Exception) {
             LogMessage.e(TAG,e.toString())
@@ -366,7 +359,7 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
     private fun getIntentExtras() {
         if (intent.hasExtra(GOTOCONST)) {
             goTo = intent.getStringExtra(GOTOCONST)!!
-            if (goTo.equals("CHATVIEW", ignoreCase = true)) {
+            if (goTo == "CHATVIEW") {
                 jid = intent.getStringExtra(LibConstants.JID)
                 chatType = intent.getStringExtra(Constants.CHAT_TYPE)
             }
@@ -397,7 +390,7 @@ class BiometricActivity : BaseActivity(), BiometricCallback {
         val intentKey = com.contusfly.utils.Constants.GO_TO
         if (intent != null && intent.hasExtra(intentKey)) {
             goTo = intent.getStringExtra(intentKey).toString()
-            if (goTo.equals("CHATVIEW", ignoreCase = true)) {
+            if (goTo == "CHATVIEW") {
                 jid = intent.getStringExtra(LibConstants.JID)
                 chatType = intent.getStringExtra(com.mirrorflysdk.flycommons.Constants.CHAT_TYPE)
             }

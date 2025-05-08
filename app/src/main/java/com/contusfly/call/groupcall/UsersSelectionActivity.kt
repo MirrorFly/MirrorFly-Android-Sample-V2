@@ -1,5 +1,6 @@
 package com.contusfly.call.groupcall
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
@@ -374,7 +375,7 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
      * Make group call
      */
     private fun checkTypeAndCall() {
-        if (selectedList.size > 0) {
+        if (selectedList.isNotEmpty()) {
             when {
                 !AppUtils.isNetConnected(this) -> {
                     CustomToast.show(this, getString(R.string.fly_error_msg_no_internet))
@@ -493,5 +494,17 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
             selectedUsersList = selectedList
             updateGroupMembersList()
         }, 500)
+    }
+
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if(groupJid == this.groupJid){
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
+            setResult(Activity.RESULT_FIRST_USER)
+            startDashboardActivity(this)
+            finish()
+        }
     }
 }

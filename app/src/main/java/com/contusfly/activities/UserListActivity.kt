@@ -210,7 +210,7 @@ class UserListActivity : BaseContactActivity() {
         if (isMakeCall && !callType.isNullOrEmpty()) {
             userListBinding.buttonMakeCall.gone()
             userListBinding.buttonMakeCall.text = String.format(getString(R.string.action_call_now), selectedUsersJid.size)
-            if (callType.equals(CallType.VIDEO_CALL)) {
+            if (callType == CallType.VIDEO_CALL) {
                 userListBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, R.drawable.ic_fab_video_call)
             } else {
                 userListBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, R.drawable.ic_fab_voice_call)
@@ -406,6 +406,21 @@ class UserListActivity : BaseContactActivity() {
             }
             mAdapter.removeUserProfile(jid)
             mSearchAdapter.removeUserProfile(jid)
+        }
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (this.groupId == groupJid) {
+            if (groupName.isNotEmpty())
+                showToast(
+                    getString(
+                        R.string.deleted_by_super_admin,
+                        groupName
+                    )
+                )
+            startDashboardActivity()
         }
     }
 

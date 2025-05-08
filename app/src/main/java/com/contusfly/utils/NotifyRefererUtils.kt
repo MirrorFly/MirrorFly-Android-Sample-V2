@@ -222,11 +222,11 @@ object NotifyRefererUtils {
         isSummaryNotification: Boolean,
         chatChannelId: String?
     ): String {
-        var channelId:String=""
+        val channelId:String
         val randomNumberGenerator = SecureRandom()
         val bound = 1000
         if(isSummaryNotification) {
-            var summaryChannelId=randomNumberGenerator.nextInt(bound).toString()
+            val summaryChannelId=randomNumberGenerator.nextInt(bound).toString()
             SharedPreferenceManager.setString(Constants.KEY_NOTIIFCATION_SUMMARY_CHANNEL_ID, summaryChannelId)
             channelId=summaryChannelId
         } else {

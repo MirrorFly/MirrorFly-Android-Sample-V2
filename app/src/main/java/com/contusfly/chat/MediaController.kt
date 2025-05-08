@@ -21,6 +21,7 @@ import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
 import com.contusfly.TAG
+import com.contusfly.checkEqualString
 import com.contusfly.interfaces.AudioPlayItemViewSetListener
 import com.contusfly.utils.ChatMessageUtils.getFormattedTime
 import com.contusfly.utils.MediaDetailUtils.getMediaDuration
@@ -317,7 +318,7 @@ class MediaController(private val context: Context) {
     }
 
     fun pausePlayer() {
-        if (mediaPlayer!!.isPlaying && lastUsedMedia.equals(filePath, ignoreCase = true)) {
+        if (mediaPlayer!!.isPlaying && checkEqualString(lastUsedMedia!!,filePath!!)) {
             currentPosition = mediaPlayer!!.currentPosition
             mediaPlayer!!.pause()
             imgPlay!!.setImageResource(R.drawable.ic_play_audio_recipient)
@@ -333,14 +334,14 @@ class MediaController(private val context: Context) {
      */
     @SuppressLint("NewApi", "ClickableViewAccessibility")
     private fun handlePlayerOperations() {
-        if (mediaPlayer!!.isPlaying && lastUsedMedia.equals(filePath, ignoreCase = true)) {
+        if (mediaPlayer!!.isPlaying && checkEqualString(lastUsedMedia!!, filePath!!)) {
             currentPosition = mediaPlayer!!.currentPosition
             mediaPlayer!!.pause()
             abandonAudioFocus()
             LogMessage.v(TAG, "#audio Paused: timeConsumed:${timeConsumed}")
             imgPlay!!.setImageResource(R.drawable.ic_play_audio_recipient)
             mHandler!!.removeCallbacks(songHandler.get()!!)
-        } else if (!mediaPlayer!!.isPlaying && lastUsedMedia.equals(filePath, ignoreCase = true)) {
+        } else if (!mediaPlayer!!.isPlaying && checkEqualString(lastUsedMedia!!, filePath!!)) {
             if (requestAudioFocus(
                     focusChangeListener, AudioManager.USE_DEFAULT_STREAM_TYPE,
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK

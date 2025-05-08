@@ -84,7 +84,7 @@ object TimeAgo {
         input.timeZone = TimeZone.getTimeZone("UTC")
         val output = SimpleDateFormat("dd MMM yyyy | hh.mm aa")
         output.timeZone = TimeZone.getDefault()
-        var finalTime = ""
+        val finalTime: String
         try {
             val date = Date(timestamp)
             finalTime = output.format(date)

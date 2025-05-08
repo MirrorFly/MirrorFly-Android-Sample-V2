@@ -352,6 +352,11 @@ class ProfileDialogFragment : DialogFragment() {
         dialog?.dismiss()
     }
 
+    fun dismissDialogWhenGroupDeleted(groupJid: String) {
+        if (profileDetails.jid == groupJid)
+            dialog?.dismiss()
+    }
+
     fun refreshView(){
         checkUserBlocked()
         setData()

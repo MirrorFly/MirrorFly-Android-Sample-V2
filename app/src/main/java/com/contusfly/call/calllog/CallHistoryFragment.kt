@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -60,6 +59,7 @@ import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.flycall.call.database.model.CallLog
 import com.mirrorflysdk.flycall.call.utils.CallConstants
+import com.mirrorflysdk.flycall.webrtc.CallLogger
 import com.mirrorflysdk.flycall.webrtc.CallMode
 import com.mirrorflysdk.flycall.webrtc.CallState
 import com.mirrorflysdk.flycall.webrtc.CallType
@@ -160,13 +160,12 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
         { requireActivity() },
         { callLogsViewModelFactory })
 
-    private var listener = object : CallHistoryAdapter.OnItemClickListener {
-        override fun onItemClick(view: ImageView, position: Int) {
+    private var listener =
+        CallHistoryAdapter.OnItemClickListener { view, position ->
             if (viewModel.selectedCallLogs.isEmpty())
                 openChatView(view, position)
             else selectUnselectPayload(position)
         }
-    }
 
     // Request multiple permissions contract
     private val requestCallPermissions: ActivityResultLauncher<Array<String>> =
@@ -708,11 +707,10 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
                 mSearchAdapter.getCallLogAtPosition(position)
             else
                 mAdapter.getCallLogAtPosition(position)
+        LogMessage.d(TAG,"#callflow callLog :$callLog")
         if (callLog != null) {
-            val toUser = if (callLog.callState == CallState.INCOMING_CALL
-                || callLog.callState == CallState.MISSED_CALL
-            )
-                callLog.fromUser else callLog.toUser
+            val toUser = if (callLog.callState != null && (callLog.callState == CallState.INCOMING_CALL || callLog.callState == CallState.MISSED_CALL))
+                callLog.fromUser else if(callLog.callState == null && callLog.toUser == SharedPreferenceManager.getCurrentUserJid()) callLog.fromUser else callLog.toUser
             val callMetaData = callLog.callMetaData
             val roomId = callLog.roomId
             LogMessage.d(TAG,"#callflow roomId :$roomId")
@@ -722,28 +720,33 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
             } else {
                 openDirectChatView(callLog, view, toUser)
             }
-        }
+        } else  LogMessage.e(TAG,"Call Log is Empty for selected User")
     }
 
     private fun openDirectChatView(callLog: CallLog, view: View?, toUser: String?) {
-        val profileDetails = ProfileDetailsUtils.getProfileDetails(toUser!!)
-        val mTempUserListWithoutOwnJid = callLog.userList
-        mTempUserListWithoutOwnJid?.remove(SharedPreferenceManager.getCurrentUserJid())
-        if (!mTempUserListWithoutOwnJid.isNullOrEmpty() && mTempUserListWithoutOwnJid.size >= 2) {
-            if (view?.id == R.id.img_call_type) {
-                makeJanusCall(callLog.groupId!!, callLog, profileDetails, true)
-            } else {
-                val intent = Intent(activity, CallHistoryDetailActivity::class.java)
-                intent.putExtra(CallConstants.ROOM_ID, callLog.roomId)
-                launchIntent.launch(intent)
-            }
+        try {
+            val profileDetails = ProfileDetailsUtils.getProfileDetails(toUser!!)
+            val mTempUserListWithoutOwnJid = callLog.userList
+            mTempUserListWithoutOwnJid?.remove(SharedPreferenceManager.getCurrentUserJid())
+            if (!mTempUserListWithoutOwnJid.isNullOrEmpty() && mTempUserListWithoutOwnJid.size >= 2) {
+                if (view?.id == R.id.img_call_type) {
+                    makeJanusCall(callLog.groupId!!, callLog, profileDetails, true)
+                } else {
+                    val intent = Intent(activity, CallHistoryDetailActivity::class.java)
+                    intent.putExtra(CallConstants.ROOM_ID, callLog.roomId)
+                    launchIntent.launch(intent)
+                }
 
-        } else if (profileDetails != null) {
-            if (view?.id == R.id.img_call_type) {
-                makeJanusCall(toUser, callLog, profileDetails, false)
-            } else {
-                privateChatUserChecking(toUser)
+            } else if (profileDetails != null) {
+                if (view?.id == R.id.img_call_type) {
+                    makeJanusCall(toUser, callLog, profileDetails, false)
+                } else {
+                    privateChatUserChecking(toUser)
+                }
             }
+        }catch (e:Exception){
+            CallLogger.callLog(TAG, "exception in call history fragment::$e",true)
+            com.contusfly.utils.LogMessage.e(TAG,e.toString())
         }
     }
 
@@ -1075,26 +1078,20 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
             meetLink,
             requireActivity(),
             dialogType = CommonAlertDialog.DIALOGTYPE.DIALOG_TRIPLE,
-            object : CommonAlertDialog.CommonTripleDialogClosedListener {
-                override fun onTripleOptionDialogClosed(
-                    dialogType: CommonAlertDialog.DIALOGTYPE?,
-                    position: Int
-                ) {
-                    when (position) {
-                        1 -> {
-                            Log.d(TAG, "onTripleOptionDialogClosed: position: $1")
-                        }
-
-                        2 -> {
-                            Log.d(TAG, "onTripleOptionDialogClosed: position: $2")
-                        }
-
-                        3 -> {
-                            Log.d(TAG, "onTripleOptionDialogClosed: position: $3")
-                        }
+            listener = { _: CommonAlertDialog.DIALOGTYPE?, position: Int ->
+                when (position) {
+                    1 -> {
+                        Log.d(TAG, "onTripleOptionDialogClosed: position: $1")
+                    }
+                    2 -> {
+                        Log.d(TAG, "onTripleOptionDialogClosed: position: $2")
+                    }
+                    3 -> {
+                        Log.d(TAG, "onTripleOptionDialogClosed: position: $3")
                     }
                 }
-            })
+            }
+        )
     }
 
 }

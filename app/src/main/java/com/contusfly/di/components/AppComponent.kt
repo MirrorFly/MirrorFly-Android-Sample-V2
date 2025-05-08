@@ -17,7 +17,7 @@ import javax.inject.Singleton
     (RepoModule::class),
     (FragmentModule::class),
     (UtilityModule::class)])
-interface AppComponent {
+fun interface AppComponent {
 
     // Create an instance of the Component
     @Component.Builder

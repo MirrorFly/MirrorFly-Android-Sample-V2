@@ -609,13 +609,39 @@ object ImageUtils {
      */
     fun getImageThumbImage(imagePath: String?): String {
         return if (imagePath != null) {
-            val thumb = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), ThumbSize.THUMB_100, ThumbSize.THUMB_100)
-            if (thumb != null) {
-                val byteArray = getCompressedBitmapData(thumb, 2048, 48)
-                LogMessage.v("getVideoThumbImage", "final video thumbnail size: " + byteArray!!.size)
-                thumb.recycle()
-                Base64.encodeToString(byteArray, 0)
-            } else ""
+            try {
+                val options = BitmapFactory.Options().apply {
+                    inSampleSize = 2 // Sample down to reduce memory usage
+                }
+                val originalBitmap = BitmapFactory.decodeFile(imagePath, options)
+
+                if (originalBitmap != null) {
+                    val thumb = ThumbnailUtils.extractThumbnail(originalBitmap, ThumbSize.THUMB_100, ThumbSize.THUMB_100)
+                    originalBitmap.recycle() // Free up the original bitmap memory
+
+                    if (thumb != null) {
+                        val byteArray = getCompressedBitmapData(thumb, 2048, 48)
+                        thumb.recycle() // Free up the thumbnail bitmap memory
+
+                        if (byteArray != null) {
+                            LogMessage.v("getImageThumbImage", "final image thumbnail size: " + byteArray.size)
+                            Base64.encodeToString(byteArray, 0)
+                        } else {
+                            LogMessage.e("getImageThumbImage", "Failed to compress image below size limit")
+                            ""
+                        }
+                    } else {
+                        LogMessage.e("getImageThumbImage", "Failed to extract thumbnail")
+                        ""
+                    }
+                } else {
+                    LogMessage.e("getImageThumbImage", "Failed to decode image file")
+                    ""
+                }
+            } catch (e: Exception) {
+                LogMessage.e("getImageThumbImage", "Exception: ${e.message}")
+                ""
+            }
         } else ""
     }
 
@@ -638,16 +664,44 @@ object ImageUtils {
 
 
     private fun getCompressedBitmapData(bitmap: Bitmap, maxFileSize: Int, maxDimensions: Int): ByteArray? {
-        val resizedBitmap: Bitmap = if (bitmap.width > maxDimensions || bitmap.height > maxDimensions) {
+        // Start with resizing to target dimensions
+        var currentBitmap = if (bitmap.width > maxDimensions || bitmap.height > maxDimensions) {
             getResizedBitmap(bitmap, maxDimensions)
         } else {
             bitmap
         }
-        var bitmapData = getByteArray(resizedBitmap)
-        while (bitmapData.size > maxFileSize) {
-            bitmapData = getByteArray(resizedBitmap)
+
+        // Try progressively lower quality
+        for (quality in arrayOf(70, 50, 30, 15, 10, 5)) {
+            val bos = ByteArrayOutputStream()
+            currentBitmap.compress(Bitmap.CompressFormat.JPEG, quality, bos)
+            val byteArray = bos.toByteArray()
+            if (byteArray.size <= maxFileSize) {
+                return byteArray
+            }
         }
-        return bitmapData
+
+        // If quality reduction alone doesn't work, try reducing dimensions further
+        var currentMaxDimension = maxDimensions
+        while (currentMaxDimension > 24) { // Don't go below 24px
+            currentMaxDimension = (currentMaxDimension * 0.7).toInt() // Reduce by 30%
+            currentBitmap = getResizedBitmap(bitmap, currentMaxDimension)
+
+            // Try with lowest quality
+            val bos = ByteArrayOutputStream()
+            currentBitmap.compress(Bitmap.CompressFormat.JPEG, 5, bos)
+            val byteArray = bos.toByteArray()
+
+            if (byteArray.size <= maxFileSize) {
+                return byteArray
+            }
+        }
+
+        // If all attempts fail, return the smallest we could get
+        val bitmap = getResizedBitmap(bitmap, 24)
+        val bos = ByteArrayOutputStream()
+        getResizedBitmap(bitmap, 24).compress(Bitmap.CompressFormat.JPEG, 5, bos)
+        return bos.toByteArray() // Return whatever we got, might be over the size limit
     }
 
     private fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
@@ -662,12 +716,6 @@ object ImageUtils {
             width = (height * bitmapRatio).toInt()
         }
         return Bitmap.createScaledBitmap(image, width, height, true)
-    }
-
-    private fun getByteArray(bitmap: Bitmap): ByteArray {
-        val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos)
-        return bos.toByteArray()
     }
 
 }

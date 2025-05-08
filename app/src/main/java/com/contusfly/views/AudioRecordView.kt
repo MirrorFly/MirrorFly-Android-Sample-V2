@@ -123,19 +123,23 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         }
 
         chatParent.textAudioSlideToCancel.setOnTouchListener { _, motionEvent ->
-            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                LogMessage.e("RECORDING","START_RECORD")
-                onStartRecording(motionEvent)
-            } else if (motionEvent.action == MotionEvent.ACTION_UP || motionEvent.action == MotionEvent.ACTION_CANCEL) {
-                LogMessage.e("RECORDING","STOP_MOVING")
-                onStopMoving()
-                visibleGoneRecordTimerDeleteIcon(false)
-            } else if (motionEvent.action == MotionEvent.ACTION_MOVE) {
-                LogMessage.e("RECORDING","START_MOVING---$stopTrackingAction")
-                if (stopTrackingAction) {
-                    true
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    LogMessage.e("RECORDING","START_RECORD")
+                    onStartRecording(motionEvent)
                 }
-                onStartMoving(motionEvent)
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    LogMessage.e("RECORDING","STOP_MOVING")
+                    onStopMoving()
+                    visibleGoneRecordTimerDeleteIcon(false)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    LogMessage.e("RECORDING","START_MOVING---$stopTrackingAction")
+                    if (stopTrackingAction) {
+                        true
+                    }
+                    onStartMoving(motionEvent)
+                }
             }
             false
         }
@@ -200,16 +204,20 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         var direction: UserBehaviour = UserBehaviour.NONE
         val motionX: Float = abs(firstX - motionEvent.rawX)
         val motionY: Float = abs(firstY - motionEvent.rawY)
-        if (if (isLayoutDirectionRightToLeft) motionX > directionOffset && lastX > firstX && lastY > firstY else motionX > directionOffset && lastX < firstX && lastY < firstY) {
-            if (canCancelRecording(motionX, motionY)) {
+        when {
+            if (isLayoutDirectionRightToLeft) motionX > directionOffset && lastX > firstX && lastY > firstY else motionX > directionOffset && lastX < firstX && lastY < firstY -> {
+                if (canCancelRecording(motionX, motionY)) {
+                    direction = UserBehaviour.CANCELING
+                } else if (motionY > motionX && lastY < firstY) {
+                    direction = UserBehaviour.LOCKING
+                }
+            }
+            canCancelRecording(motionX, motionY) && motionX > directionOffset && motionX > directionOffset -> {
                 direction = UserBehaviour.CANCELING
-            } else if (motionY > motionX && lastY < firstY) {
+            }
+            motionY > motionX && motionY > directionOffset && lastY < firstY -> {
                 direction = UserBehaviour.LOCKING
             }
-        } else if (canCancelRecording(motionX, motionY) && motionX > directionOffset && motionX > directionOffset ) {
-            direction = UserBehaviour.CANCELING
-        } else if (motionY > motionX && motionY > directionOffset && lastY < firstY) {
-            direction = UserBehaviour.LOCKING
         }
 
         return direction
@@ -311,43 +319,47 @@ class AudioRecordView(val chatParent: ChatParent) : AudioRecorder.AudioRecording
         if (isLocked) {
             return
         }
-        if (recordingBehaviour == RecordingBehaviour.PAUSED) {
-            isRecordingStarted = false
-            recordingListener?.onRecordingLocked()
-            timerTask?.cancel()
-            pauseRecording()
-        } else if (recordingBehaviour == RecordingBehaviour.CANCELED) {
-            isRecordingStarted = false
-            chatParent.viewAudioRecordSpace.visibility = View.GONE
-            chatParent.textAudioRecordTimer.visibility = View.GONE
-            chatParent.textAudioSlideToCancel.visibility = View.GONE
-            chatParent.textAudioRecordCancel.visibility = View.GONE
-            chatParent.imageAudioRecord.visibility = View.GONE
-            chatParent.smiley.visibility = View.VISIBLE
-            chatParent.chatMessageEditText.visibility = View.VISIBLE
-            chatParent.attachment.visibility = View.VISIBLE
-            chatParent.voiceAttachment.visibility = View.VISIBLE
-            chatParent.layoutViewAudio.visibility = View.GONE
-            timerTask?.cancel()
-            delete()
-            stopRecording()
-            recordingListener?.onRecordingCanceled()
-        } else if (recordingBehaviour == RecordingBehaviour.RELEASED || recordingBehaviour == RecordingBehaviour.LOCK_DONE) {
-            isRecordingStarted = false
-            chatParent.viewAudioRecordSpace.visibility = View.GONE
-            chatParent.textAudioRecordTimer.visibility = View.GONE
-            chatParent.textAudioSlideToCancel.visibility = View.GONE
-            chatParent.textAudioRecordCancel.visibility = View.GONE
-            chatParent.imageAudioRecord.visibility = View.GONE
-            chatParent.smiley.visibility = View.VISIBLE
-            chatParent.chatMessageEditText.visibility = View.VISIBLE
-            chatParent.attachment.visibility = View.VISIBLE
-            chatParent.voiceAttachment.visibility = View.VISIBLE
-            chatParent.layoutViewAudio.visibility = View.GONE
-            delete()
-            timerTask?.cancel()
-            recordingListener?.onRecordingCompleted()
-            stopRecording()
+        when (recordingBehaviour) {
+            RecordingBehaviour.PAUSED -> {
+                isRecordingStarted = false
+                recordingListener?.onRecordingLocked()
+                timerTask?.cancel()
+                pauseRecording()
+            }
+            RecordingBehaviour.CANCELED -> {
+                isRecordingStarted = false
+                chatParent.viewAudioRecordSpace.visibility = View.GONE
+                chatParent.textAudioRecordTimer.visibility = View.GONE
+                chatParent.textAudioSlideToCancel.visibility = View.GONE
+                chatParent.textAudioRecordCancel.visibility = View.GONE
+                chatParent.imageAudioRecord.visibility = View.GONE
+                chatParent.smiley.visibility = View.VISIBLE
+                chatParent.chatMessageEditText.visibility = View.VISIBLE
+                chatParent.attachment.visibility = View.VISIBLE
+                chatParent.voiceAttachment.visibility = View.VISIBLE
+                chatParent.layoutViewAudio.visibility = View.GONE
+                timerTask?.cancel()
+                delete()
+                stopRecording()
+                recordingListener?.onRecordingCanceled()
+            }
+            RecordingBehaviour.RELEASED, RecordingBehaviour.LOCK_DONE -> {
+                isRecordingStarted = false
+                chatParent.viewAudioRecordSpace.visibility = View.GONE
+                chatParent.textAudioRecordTimer.visibility = View.GONE
+                chatParent.textAudioSlideToCancel.visibility = View.GONE
+                chatParent.textAudioRecordCancel.visibility = View.GONE
+                chatParent.imageAudioRecord.visibility = View.GONE
+                chatParent.smiley.visibility = View.VISIBLE
+                chatParent.chatMessageEditText.visibility = View.VISIBLE
+                chatParent.attachment.visibility = View.VISIBLE
+                chatParent.voiceAttachment.visibility = View.VISIBLE
+                chatParent.layoutViewAudio.visibility = View.GONE
+                delete()
+                timerTask?.cancel()
+                recordingListener?.onRecordingCompleted()
+                stopRecording()
+            }
         }
     }
 

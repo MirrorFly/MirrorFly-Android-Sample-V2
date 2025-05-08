@@ -30,6 +30,7 @@ import com.contusfly.utils.MediaUtils
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
 import com.jakewharton.rxbinding3.view.clicks
+import com.mirrorflysdk.flycall.webrtc.CallLogger
 import com.mirrorflysdk.flycall.webrtc.CallStatus
 import com.mirrorflysdk.flycall.webrtc.TextureViewRenderer
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
@@ -113,9 +114,31 @@ class GroupCallListAdapter(val context: Context) :
         updateListPinnedPosition(holder, position)
         updateUserSpeaking(holder, position, CallUtils.getUserSpeakingLevel(callUserList[position]))
         updatePoorNetworkIndicator(holder,position)
+        videoTrackChecking(holder,position)
 
         holder.binding.rootLayout.clicks().throttleFirst(500, TimeUnit.MILLISECONDS).subscribe {
             onTapOnRecyclerView()
+        }
+    }
+
+    private fun videoTrackChecking(holder: CallUserViewHolder, position: Int){
+        try {
+            if(callUserList[position] == CallManager.getCurrentUserId()) {
+                if(CallManager.isVideoMuted() || CallManager.getLocalProxyVideoSink().isNull()) {
+                    holder.binding.imgProfileImage.visibility = View.VISIBLE
+                } else {
+                    holder.binding.imgProfileImage.visibility = View.GONE
+                }
+            } else {
+                if(CallManager.isRemoteVideoMuted(callUserList[position]) || CallManager.getRemoteProxyVideoSink(callUserList[position]).isNull()) {
+                    holder.binding.imgProfileImage.visibility = View.VISIBLE
+                } else {
+                    holder.binding.imgProfileImage.visibility = View.GONE
+                }
+            }
+
+        } catch(e: Exception) {
+            com.contusfly.utils.LogMessage.e(TAG,"videoTrack exception $e")
         }
     }
 
@@ -259,10 +282,6 @@ class GroupCallListAdapter(val context: Context) :
     private fun setSurfaceViewToVideoSink(holder: CallUserViewHolder, position: Int) {
         LogMessage.d(
             TAG,
-            "$CALL_UI  setSurfaceViewToVideoSink position: $position userJid:${callUserList[position]}"
-        )
-        LogMessage.d(
-            TAG,
             "$CALL_UI setSurfaceViewToVideoSink available surfaces: ${callUsersSurfaceViews.size} unique surfaces:${
                 callUsersSurfaceViews.values.distinct().count()
             }"
@@ -284,6 +303,8 @@ class GroupCallListAdapter(val context: Context) :
                 )
                 CallManager.getRemoteProxyVideoSink(callUserList[position])
                     ?.setTarget(holder.binding.viewVideoSurface)
+            } else -> {
+             CallLogger.callLog(TAG, "#UIKIT SURFACE VIEW NULL UserJId : ${callUserList[position]} getRemoteProxyVideoSink : ${CallManager.getRemoteProxyVideoSink(callUserList[position])}")
             }
         }
     }
@@ -364,11 +385,13 @@ class GroupCallListAdapter(val context: Context) :
 
                     CallActions.NOTIFY_VIEW_STATUS_UPDATED -> {
                         updateConnectionStatus(holder, position)
+                        videoTrackChecking(holder,position)
                     }
 
                     CallActions.NOTIFY_CONNECT_TO_SINK -> {
                         setSurfaceViewToVideoSink(holder, position)
                         setUpVideoMuted(holder, position)
+                        videoTrackChecking(holder,position)
                     }
 
                     CallActions.NOTIFY_SWAP_VIDEO_SINK -> {
@@ -440,10 +463,11 @@ class GroupCallListAdapter(val context: Context) :
     private val viewWidth get() = (actualScreenWidth / 3.5).toInt()
 
     fun addUser(userJid: String, addIndex: Int = callUserList.size - 1) {
+        CallLogger.callTestingLog("UIKIT--->addUser called callUserListSize : ${callUserList.size} userJid: $userJid")
         if (userJid.isBlank())
             return
         LogMessage.d(TAG, "$CALL_UI addUser() userJid:${userJid}")
-        if (callUserList.size == 0) {
+        if (callUserList.isEmpty()) {
             callUserList.add(userJid)
             notifyItemInserted(callUserList.indexOf(userJid))
         } else if (!callUserList.contains(userJid)) {
@@ -464,7 +488,7 @@ class GroupCallListAdapter(val context: Context) :
 
     fun addUsers(userList: ArrayList<String>) {
         LogMessage.d(TAG, "$CALL_UI  addUsers() userJid:${userList}")
-        if (callUserList.size == 0) {
+        if (callUserList.isEmpty()) {
             callUserList.addAll(userList)
             notifyDataSetChanged()
         } else {
@@ -483,6 +507,10 @@ class GroupCallListAdapter(val context: Context) :
             callUserList.add(
                 if (replacePosition.isValidIndex()) replacePosition else 0,
                 oldPinnedUserJid
+            )
+            LogMessage.d(
+                TAG,
+                "$CALL_UI swapPinnedUser() replacePosition:$replacePosition"
             )
             notifyItemChanged(if (replacePosition.isValidIndex()) replacePosition else 0)
         } else {
@@ -613,6 +641,13 @@ class GroupCallListAdapter(val context: Context) :
             holder.binding.imagePoorNetworkIndicatorList.visibility = View.VISIBLE
         }else{
             holder.binding.imagePoorNetworkIndicatorList.visibility = View.GONE
+        }
+    }
+
+    fun clearListAdapterUserList(){
+        if(callUserList.isNotEmpty()) {
+            LogMessage.d(GroupCallGridAdapter.TAG, "$CALL_UI clearListAdapterUserList ")
+            callUserList.clear()
         }
     }
 

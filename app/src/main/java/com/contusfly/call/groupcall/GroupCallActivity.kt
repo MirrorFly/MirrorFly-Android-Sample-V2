@@ -2,6 +2,7 @@ package com.contusfly.call.groupcall
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PixelFormat
@@ -14,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.contus.call.CallActions
 import com.contus.call.CallConstants
@@ -35,6 +37,7 @@ import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.PermissionAlertDialog
 import com.mirrorflysdk.AppUtils
+import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.flycall.call.utils.GroupCallUtils
 import com.mirrorflysdk.flycall.webrtc.*
 import com.mirrorflysdk.flycall.webrtc.WebRtcCallService.Companion.setupVideoCapture
@@ -222,7 +225,43 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         LogMessage.i(TAG, "$CALL_UI onNewIntent()")
-        setUpCallDataAndUI()
+        if(!CallManager.isCallAttended() && CallManager.getCallDirection().equals(CallDirection.INCOMING_CALL)
+            && (callUserGridAdapter.gridCallUserList.isEmpty() || callUsersListAdapter.callUserList.isEmpty()) && callViewHelper.isCallRetryVisible()){
+            LogMessage.i(TAG, "$CALL_UI incoming call while on call again screen!!")
+            CallLogger.callTestingLog("UIKIT--->onNewIntent recreate()")
+            recreate()
+        } else {
+            setUpCallDataAndUI(intent)
+        }
+    }
+
+    override fun onMemberRemovedFromGroup(
+        groupJid: String,
+        removedMemberJid: String,
+        removedByMemberJid: String
+    ) {
+        super.onMemberRemovedFromGroup(groupJid, removedMemberJid, removedByMemberJid)
+        if (::participantListFragment.isInitialized && CallUtils.isAddUsersToTheCall()) {
+            participantListFragment.onMemberRemovedOrAddedInGroup(true,removedMemberJid,groupJid)
+        }
+    }
+
+    override fun onLeftFromGroup(groupJid: String, leftUserJid: String) {
+        super.onLeftFromGroup(groupJid, leftUserJid)
+        if (::participantListFragment.isInitialized && CallUtils.isAddUsersToTheCall()) {
+            participantListFragment.onMemberRemovedOrAddedInGroup(true,leftUserJid,groupJid)
+        }
+    }
+
+    override fun onNewMemberAddedToGroup(
+        groupJid: String,
+        newMemberJid: String,
+        addedByMemberJid: String
+    ) {
+        super.onNewMemberAddedToGroup(groupJid, newMemberJid, addedByMemberJid)
+        if (::participantListFragment.isInitialized && CallUtils.isAddUsersToTheCall()) {
+            participantListFragment.onMemberRemovedOrAddedInGroup(false, newMemberJid, groupJid)
+        }
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -232,6 +271,12 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
         activityBinding = ActivityGroupCallBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+
+        if(CallUtils.getIsFromCallAgainPipMode() && !CallManager.isOnGoingCall()){
+            CallUtils.setIsFromCallAgainPipMode(isFromPipModeCallAgain = false)
+            finish()
+        }
+        CallUtils.setIsFromCallAgainPipMode(isFromPipModeCallAgain = false)
         CallManager.configureCallActivity(this)
         window.setFormat(PixelFormat.TRANSLUCENT)
         //register for call events
@@ -240,13 +285,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         CallManager.setConnectionQualityListener(customCallEventsListener)
 
         initClickListeners()
-        setUpCallDataAndUI()
+        setUpCallDataAndUI(intent)
         groupCallViewModel.checkInternetConnection()
 
         checkAndRequestFullScreenPermission()
     }
 
-    private fun setUpCallDataAndUI() {
+    private fun setUpCallDataAndUI(intent: Intent) {
         if (intent.extras != null) {
             groupId =
                 intent.getStringExtra(com.mirrorflysdk.flycall.call.utils.CallConstants.EXTRA_GROUP_ID)
@@ -270,7 +315,9 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     private fun setObservers() {
 
         groupCallViewModel.internetConnectionNotAvailable.observe(this) {
-            showToast(getString(R.string.fly_error_msg_no_internet))
+            if (!AppUtils.isNetConnected(this)) {
+                showToast(getString(R.string.fly_error_msg_no_internet))
+            }
         }
 
         groupCallViewModel.remoteAudioMuteStatus.observe(this) { userJid ->
@@ -353,68 +400,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
     }
 
-    public override fun onUserLeaveHint() {
-        LogMessage.d(
-            TAG,
-            "$CALL_UI onUserLeaveHint() CallManager.isCallAgain:${CallManager.isCallAgain()}"
-        )
-        callViewHelper.gotoPIPMode()
-        if (CallManager.isCallAgain()) {
-            cancelCallAgain()
-        } else if (!CallManager.isCallConnected() && CallManager.isOutgoingCall()) {
-            finish()
-        }
-    }
-
-    override fun onBackPressed() {
-        LogMessage.d(TAG, "$CALL_UI onBackPressed()")
-        if (CallManager.isCallAgain()) {
-            cancelCallAgain()
-        }
-        super.onBackPressed()
-    }
-
-    override fun onPictureInPictureModeChanged(
-        isInPictureInPictureMode: Boolean,
-        newConfig: Configuration
-    ) {
-        pipModeChangeListeners(isInPictureInPictureMode)
-    }
-
-    private fun pipModeChangeListeners(pipModeStatus: Boolean) {
-        CallManager.enablePIPMode(pipModeStatus)
-        LogMessage.d(TAG, "$CALL_UI pipModeChangeListeners() pipModeStatus $pipModeStatus")
-        if (!pipModeStatus) {
-            callViewHelper.hidePIPLayout()
-            resetPIPModeByCallType()
-        }
-    }
-
-    private fun resetPIPModeByCallType() {
-        activityBinding.imageMinimizeCall.show()
-        setUpCallUI()
-    }
-
-    override fun finish() {
-        LogMessage.d(TAG, "$CALL_UI finish()")
-        CallLogger.callTestingLog("#groupCallActivity Finish - isDisconnectCalled-${isDisconnectCalled.get()}")
-        if (SystemClock.elapsedRealtime() - lastClickTime > 2000) {
-            if (!CallManager.isCallConnected()) {
-                CallLogger.callTestingLog("#groupCallActivity Finish - call not connected")
-                super.finish()
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !isDisconnectCalled.get()) { //receive a call and attend it and instantly cut the call. at the time call ui closed and moved into pipmode issue - fix
-                    CallLogger.callTestingLog("#groupCallActivity - go to pipmode")
-                    handleOutgoingCallSwitchRequestForPipMode()
-                    handleIncomingCallSwitchRequestForPipMode()
-                    callViewHelper.gotoPIPMode()
-                } else {
-                    CallLogger.callTestingLog("#groupCallActivity Finish - call connected")
-                    super.finish()
-                }
-            }
-            lastClickTime = SystemClock.elapsedRealtime()
-        }
+    private fun showOutgoingCallConversionRequest(){
+        dialogViewHelper.showVideoCallRequestingDialog()
     }
 
     private fun handleIncomingCallSwitchRequestForPipMode() {
@@ -441,6 +428,104 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
     }
 
+    public override fun onUserLeaveHint() {
+        LogMessage.d(
+            TAG,
+            "$CALL_UI onUserLeaveHint() CallManager.isCallAgain:${CallManager.isCallAgain()}"
+        )
+        handleOutgoingCallSwitchRequestForPipMode()
+        handleIncomingCallSwitchRequestForPipMode()
+        callViewHelper.gotoPIPMode()
+        if (CallManager.isCallAgain()) {
+            CallUtils.setIsFromCallAgainPipMode(isFromPipModeCallAgain = true)
+            cancelCallAgain()
+        } else if (!CallManager.isCallConnected() && CallManager.isOutgoingCall()) {
+            finish()
+        }
+    }
+
+    override fun onBackPressed() {
+        LogMessage.d(TAG, "$CALL_UI onBackPressed()")
+        if (CallManager.isCallAgain()) {
+            cancelCallAgain()
+        }
+        try {
+            val fragment = supportFragmentManager.findFragmentByTag(ParticipantsListFragment::class.java.name)
+                    as? ParticipantsListFragment
+            // Check if the fragment is active (attached and visible)
+            if (fragment != null && fragment.isVisible) {
+                CallUtils.setIsAddUsersToTheCall(false)
+                supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                return
+            }
+        } catch(e: Exception) {
+            LogMessage.e(TAG,"error $e")
+        }
+
+        supportFragmentManager.fragments.forEach { fragment -> // remove fragment before go to pipmode to prevent this issue->doesnt get back or go to pipmode some times dude to add participant fragment was not properly detach.
+            supportFragmentManager.beginTransaction().remove(fragment).commitNowAllowingStateLoss()
+        }
+        super.onBackPressed()
+    }
+
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration
+    ) {
+        pipModeChangeListeners(isInPictureInPictureMode)
+    }
+
+    private fun pipModeChangeListeners(pipModeStatus: Boolean) {
+        CallManager.enablePIPMode(pipModeStatus)
+        LogMessage.d(TAG, "$CALL_UI pipModeChangeListeners() pipModeStatus $pipModeStatus")
+        if (!pipModeStatus) {
+            CallManager.bindCallService()
+            callViewHelper.hidePIPLayout()
+            resetPIPModeByCallType()
+        }
+    }
+
+    private fun resetPIPModeByCallType() {
+        CallManager.bindCallService()
+        activityBinding.imageMinimizeCall.show()
+        setUpCallUI()
+        refreshConnectedViewHelper()
+        callViewHelper.ownAudioMuteStatusUpdated()
+        if (CallManager.isCallConversionRequestAvailable()) {
+            handleIncomingRequest()
+        }
+        if(CallManager.isOutgoingCallConversionRequestAvailable()) {
+            showOutgoingCallConversionRequest()
+        }
+    }
+
+    private fun refreshConnectedViewHelper() {
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            setUpCallUI(false)
+        },4000)
+    }
+
+    override fun finish() {
+        LogMessage.d(TAG, "$CALL_UI finish()")
+        CallLogger.callTestingLog("#groupCallActivity Finish - isDisconnectCalled-${isDisconnectCalled.get()}")
+        if (SystemClock.elapsedRealtime() - lastClickTime > 2000) {
+            if (!CallManager.isCallConnected()) {
+                CallLogger.callTestingLog("#groupCallActivity Finish - call not connected")
+                super.finish()
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !isDisconnectCalled.get()) { //receive a call and attend it and instantly cut the call. at the time call ui closed and moved into pipmode issue - fix
+                    CallLogger.callTestingLog("#groupCallActivity - go to pipmode")
+                    handleOutgoingCallSwitchRequestForPipMode()
+                    handleIncomingCallSwitchRequestForPipMode()
+                    callViewHelper.gotoPIPMode()
+                } else {
+                    CallLogger.callTestingLog("#groupCallActivity Finish - call connected")
+                    super.finish()
+                }
+            }
+            lastClickTime = SystemClock.elapsedRealtime()
+        }
+    }
 
     /**
      * initialize views here
@@ -518,7 +603,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             }
         }
     }
-
+    @SuppressWarnings("kotlin:S3923")
     override fun hangVideoCall() {
         LogMessage.d(TAG, "$CALL_UI hangVideoCall()")
         if (!activityBinding.layoutCallOptions.imageMuteVideo.isActivated) {
@@ -547,6 +632,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
      */
     @SuppressLint("MissingPermission")
     override fun answer() {
+        CallLogger.callTestingLog("UIKIT---->answer() called isAnswerCalled: $isAnswerCalled")
         LogMessage.d(TAG, "$CALL_UI answer()")
         if (isAnswerCalled.compareAndSet(false, true)) {
             CallManager.answerCall(object : CallActionListener {
@@ -581,6 +667,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         isNotFromRetry: Boolean,
         callStatus: String = CallStatus.DISCONNECTED
     ) {
+        CallLogger.callTestingLog("UIKIT---> disconnectCall called isNotFromRetry : $isNotFromRetry callStatus: $callStatus isDisconnectCalled: $isDisconnectCalled")
         LogMessage.d(
             TAG,
             "$CALL_UI $JOIN_CALL #disconnect ui start disconnectCall IN UI isDisconnectCalled: $isDisconnectCalled isNotFromRetry:$isNotFromRetry"
@@ -662,15 +749,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     private fun updateUserDetailsUpdatedInCall(jid: String) {
         val isUserPresent = CallManager.getCallUsersList().contains(jid)
         LogMessage.d(TAG, "userUpdatedHisProfile getCallUsersList: isUserPresent:${isUserPresent} ")
-        if (CallManager.isOneToOneCall() && jid == CallManager.getEndCallerJid())
-            callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
-        else if (isUserPresent) {
-            callViewHelper.setUpProfileDetails(CallManager.getCallUsersList(), jid)
-        } else if (CallManager.getGroupID().isNotBlank() && CallManager.getGroupID()
-                .equals(jid, false)
-        ) {
-            LogMessage.d(TAG, "userUpdatedHisProfile Group ProfileDetails updated!! ")
-            callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
+        when {
+            CallManager.isOneToOneCall() && jid == CallManager.getEndCallerJid() -> callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
+            isUserPresent -> callViewHelper.setUpProfileDetails(CallManager.getCallUsersList(), jid)
+            CallManager.getGroupID().isNotBlank() && CallManager.getGroupID().equals(jid, false) -> {
+                LogMessage.d(TAG, "userUpdatedHisProfile Group ProfileDetails updated!! ")
+                callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
+            }
         }
     }
 
@@ -718,6 +803,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             LogMessage.d(TAG, "$CALL_UI makeCallAgain()")
             callViewHelper.hideCallAgainView()
             CallManager.makeCallAgain()
+            callViewHelper.makeCallAgainGroupMemberNameUpdate()
         } else {
             CustomToast.show(applicationContext, getString(R.string.fly_error_msg_no_internet))
             cancelCallAgain()
@@ -807,7 +893,90 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
     }
 
-    private inner class CustomCallEventsListener : CallEventsListener,CallActionListener,ConnectionQualityListener{
+    private fun handleReconnectingOrHold(@CallStatus callEvent: String, userJid: String) {
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL #reconnecting  handleReconnecting userJid:$userJid")
+        if (CallManager.isCallAttended()) {
+            callViewHelper.updateCallStatus()
+        } else {
+            checkAndDismissPoorConnection()
+            if (CallManager.isOneToOneCall()) {
+                setUpCallUI()
+            }
+            if (callEvent == CallStatus.RECONNECTING) {
+                CallUtils.clearPeakSpeakingUser(userJid)
+                callViewHelper.onUserStoppedSpeaking(userJid)
+                durationHandler.postDelayed({ checkAndUpdateStatusForUser(userJid) }, 1200)
+            } else {
+                checkAndUpdateStatusForUser(userJid)
+            }
+        }
+    }
+
+    private fun checkAndUpdateStatusForUser(userJid: String){
+        if ((CallManager.isOneToOneCall() || CallUtils.getPinnedUserJid() == userJid) && !CallUtils.getIsGridViewEnabled()) callViewHelper.updateCallStatus()
+        else callViewHelper.updateStatusAdapter(userJid)
+    }
+
+    private fun handleIncomingCallTimeoutCallNotConnectedState(){
+        LogMessage.d(TAG, "$CALL_UI handleIncomingCallTimeoutCallNotConnectedState")
+        if(CallManager.isCallAttended() && CallManager.getCallUsersList().size>0){
+            callViewHelper.updateCallNotConnected()
+        }else{
+            LogMessage.d(TAG, "$CALL_UI handleIncomingCallTimeoutCall disconnectCall")
+            disconnectCall(true, CallStatus.DISCONNECTED)
+        }
+    }
+
+    private fun checkAndUpdateRingingBasedOnUserSize(userJid: String){
+        LogMessage.d(TAG, "$CALL_UI ${com.mirrorflysdk.flycall.call.utils.JOIN_CALL}  checkAndUpdateRingingBasedOnUserSize userJid:$userJid")
+        if(GroupCallUtils.getAvailableCallUsersList().size>1)
+            callViewHelper.updateStatusAdapter(userJid)
+        else{
+            callViewHelper.updateCallStatus()
+        }
+    }
+
+    private fun handleRemoteBusyBasedOnCallSize(userJid: String) {
+        LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize userJid:$userJid ")
+        if (GroupCallUtils.getAvailableCallUsersList().size < 1 &&
+            !GroupCallUtils.getInvitedUsersList().contains(userJid)
+        ) {
+            LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize isOneToOneCall ")
+            CustomToast.showShortToast(this,"User is busy")
+            disconnectCall(true, "User Busy")
+        } else {
+            LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize busy from $userJid ")
+            handleToastRemoteOtherBusy(userJid)
+            callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
+            updateStatusAndRemove(userJid)
+        }
+    }
+
+    private fun handleToastRemoteOtherBusy(userJid: String) {
+        LogMessage.d(TAG, "$CALL_UI handleToastRemoteOtherBusy   userJid: $userJid ")
+        val remoteBusyUserName: String = CallManager.getUserName(userJid)
+        if (remoteBusyUserName == Constants.EMPTY_STRING)
+            showToast("User is busy")
+        else
+            showToast("$remoteBusyUserName is busy")
+    }
+
+    private fun handleToastRemoteEngaged(userJid: String) {
+        try {
+            val remoteEngageUserName: String = CallManager.getUserName(userJid)
+            LogMessage.d(TAG, "$CALL_UI handleCallEngagedBasedOnCallSize   remoteEngageUserName: $remoteEngageUserName ")
+            if (remoteEngageUserName == Constants.EMPTY_STRING) {
+                val profile = FlyCore.getUserProfile(userJid)
+                if(profile != null && !profile.name.isNullOrEmpty()) showToast("${profile.name} is on another call") else showToast("User is on another call")
+            } else
+                showToast("$remoteEngageUserName is on another call")
+        } catch(e: Exception){
+            com.contusfly.utils.LogMessage.e(TAG,"handleToastRemoteEngaged Exception: $e")
+        }
+    }
+
+    private inner class CustomCallEventsListener : CallEventsListener, CallActionListener,
+        ConnectionQualityListener {
         override fun onCallStatusUpdated(callStatus: String, userJid: String) {
             handleCallStatusMessages(callStatus, userJid)
         }
@@ -858,7 +1027,11 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         }
 
         private fun handleCallStatusMessages(@CallStatus callEvent: String, userJid: String) {
-            LogMessage.d(TAG, "$CALL_UI $JOIN_CALL received call status: $callEvent userJid:$userJid")
+            LogMessage.d(
+                TAG,
+                "$CALL_UI $JOIN_CALL received call status: $callEvent userJid:$userJid"
+            )
+            CallLogger.callTestingLog("UIKIT--> received call status: $callEvent userJid:$userJid")
             when (callEvent) {
                 CallStatus.CONNECTED -> handleCallStatusConnected(userJid)
                 CallStatus.DISCONNECTED -> disconnectCall(true, callEvent)
@@ -866,10 +1039,17 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                     if (CallManager.isCallAttended()) callViewHelper.updateCallStatus()
                     else callViewHelper.updateStatusAdapter(userJid)
                 }
+
                 CallStatus.OUTGOING_CALL_TIME_OUT -> {
-                    LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CALL_TIME_OUT userJid:${CallStatus.OUTGOING_CALL_TIME_OUT}")
+                    LogMessage.d(
+                        TAG,
+                        "$CALL_UI $JOIN_CALL OUTGOING_CALL_TIME_OUT userJid:${userJid}"
+                    )
                     if (CallManager.isCallConnected()) {
-                        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL CALL_TIME_OUT userJid:$userJid")
+                        LogMessage.d(
+                            TAG,
+                            "$CALL_UI $JOIN_CALL OUTGOING_CALL_TIME_OUT userJid:$userJid"
+                        )
                         val timeOutUserList = userJid.split(",").toList()
                         checkAndUpdateTimeoutUsers(timeOutUserList)
                     } else {
@@ -882,125 +1062,51 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                     val timeOutUserList = userJid.split(",").toList()
                     checkAndUpdateTimeoutInviteUsers(timeOutUserList)
                 }
+
                 CallStatus.INCOMING_CALL_TIME_OUT -> {
                     LogMessage.d(
                         TAG,
-                        "$CALL_UI $JOIN_CALL INCOMING_CALL_TIME_OUT userJid:${userJid}"
+                        "$CALL_UI ${com.mirrorflysdk.flycall.call.utils.JOIN_CALL} INCOMING_CALL_TIME_OUT userJid:${userJid}"
                     )
                     if (CallManager.isCallConnected()) {
-                        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL INCOMING_CALL_TIME_OUT userJid:$userJid")
+                        LogMessage.d(
+                            TAG,
+                            "$CALL_UI ${com.mirrorflysdk.flycall.call.utils.JOIN_CALL} INCOMING_CALL_TIME_OUT userJid:$userJid"
+                        )
                         val timeOutUserList = userJid.split(",").toList()
                         checkAndUpdateTimeoutUsers(timeOutUserList)
                     } else {
                         handleIncomingCallTimeoutCallNotConnectedState()
                     }
                 }
+
                 else -> handleOtherCallStatusMessages(callEvent, userJid)
             }
-        }
-
-        private fun handleIncomingCallTimeoutCallNotConnectedState(){
-            LogMessage.d(TAG, "$CALL_UI handleIncomingCallTimeoutCallNotConnectedState")
-            if(CallManager.isCallAttended() && CallManager.getCallUsersList().size>0){
-                callViewHelper.updateCallNotConnected()
-            }else{
-                LogMessage.d(TAG, "$CALL_UI handleIncomingCallTimeoutCall disconnectCall")
-                disconnectCall(true, CallStatus.DISCONNECTED)
-            }
-        }
-
-        private fun checkAndUpdateStatusForUser(userJid: String){
-            if ((CallManager.isOneToOneCall() || CallUtils.getPinnedUserJid() == userJid) && !CallUtils.getIsGridViewEnabled()) callViewHelper.updateCallStatus()
-            else callViewHelper.updateStatusAdapter(userJid)
         }
 
         private fun handleOtherCallStatusMessages(@CallStatus callEvent: String, userJid: String) {
             when (callEvent) {
                 CallStatus.ON_RESUME -> handleCallStatusResume(userJid)
                 CallStatus.RECONNECTING, CallStatus.ON_HOLD -> {
-                    LogMessage.d(TAG, "$CALL_UI $JOIN_CALL #reconnecting  userJid:$userJid")
-                    if (CallManager.isCallAttended()) {
-                        callViewHelper.updateCallStatus()
-                    }else{
-                        checkAndDismissPoorConnection()
-                        setUpCallUI()
-                        if(callEvent.equals(CallStatus.RECONNECTING,true)){
-                            CallUtils.clearPeakSpeakingUser(userJid)
-                            onUserStoppedSpeaking(userJid)
-                            durationHandler.postDelayed({checkAndUpdateStatusForUser(userJid)},1200)
-                        }else{
-                            checkAndUpdateStatusForUser(userJid)
-                        }
-                    }
+                    handleReconnectingOrHold(callEvent, userJid)
                 }
-
                 CallStatus.RINGING, CallStatus.CALLING_AFTER_10S -> {
                     val isCallNotConnected = CallManager.isCallNotConnected()
                     LogMessage.d(TAG, "$CALL_UI $callEvent $isCallNotConnected")
                     if (isCallNotConnected) callViewHelper.updateCallStatus()
-                    else{
+                    else {
                         checkAndUpdateRingingBasedOnUserSize(userJid)
                     }
                 }
-
                 CallStatus.RECONNECTED -> handleCallStatusReconnected(userJid)
                 CallStatus.USER_JOINED -> updateUserJoined(userJid)
                 CallStatus.USER_LEFT -> updateUserLeft(userJid, true)
             }
         }
 
-        private fun checkAndUpdateRingingBasedOnUserSize(userJid: String){
-            LogMessage.d(TAG, "$CALL_UI $JOIN_CALL  checkAndUpdateRingingBasedOnUserSize userJid:$userJid")
-            if(GroupCallUtils.getCallConnectedUsersList().size>1)
-                callViewHelper.updateStatusAdapter(userJid)
-            else{
-                callViewHelper.updateCallStatus()
-            }
-        }
-
-        private fun handleRemoteBusyBasedOnCallSize(userJid: String) {
-            LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize userJid:$userJid ")
-            if (GroupCallUtils.getAvailableCallUsersList().size < 1 &&
-                !GroupCallUtils.getInvitedUsersList().contains(userJid)
-            ) {
-                LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize isOneToOneCall ")
-                showToast("User is busy")
-                disconnectCall(true, "User Busy")
-            } else {
-                LogMessage.d(TAG, "$CALL_UI handleRemoteBusyBasedOnCallSize busy from $userJid ")
-                handleToastRemoteOtherBusy(userJid)
-                callViewHelper.setUpProfileDetails(CallManager.getCallUsersList())
-                updateStatusAndRemove(userJid)
-            }
-        }
-
-        private fun handleToastRemoteOtherBusy(userJid: String) {
-            LogMessage.d(TAG, "$CALL_UI handleToastRemoteOtherBusy   userJid: $userJid ")
-            val remoteBusyUserName: String = CallManager.getUserName(userJid)
-            if (remoteBusyUserName.equals(
-                    Constants.EMPTY_STRING,
-                    false
-                )
-            )
-                showToast("User is busy")
-            else
-                showToast("$remoteBusyUserName is busy")
-        }
-
-        private fun handleToastRemoteEngaged(userJid: String) {
-            val remoteEngageUserName: String = CallManager.getUserName(userJid)
-            if (remoteEngageUserName.equals(
-                    Constants.EMPTY_STRING,
-                    false
-                )
-            )
-                showToast("User is on another call")
-            else
-                showToast("$remoteEngageUserName is on another call")
-        }
-
         private fun handleCallActionMessages(callAction: String, userJid: String) {
             LogMessage.d(TAG, "$CALL_UI received callAction: $callAction")
+            CallLogger.callTestingLog("UIKIT---> handleCallActionMessages received callAction: $callAction")
             when (callAction) {
                 CallAction.ACTION_REMOTE_OTHER_BUSY -> {
                     handleToastRemoteOtherBusy(userJid)
@@ -1034,6 +1140,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                         participantListFragment.updateUserLeft(userJid)
                     }
                 }
+
                 CallAction.ACTION_AUDIO_DEVICE_CHANGED -> callViewHelper.setSelectedAudioDeviceIcon()
                 CallAction.CHANGE_TO_AUDIO_CALL -> {
                     activityBinding.layoutCallOptions.imageMuteVideo.isActivated = false
@@ -1042,18 +1149,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 }
 
                 CallAction.ACTION_INVITE_USERS -> {
-                    dismissSwitchRequestDialog()
-                    for (inviteUserJid in CallManager.getInvitedUsersList()) {
-                        if (CallManager.getCallStatus(inviteUserJid) != CallStatus.DISCONNECTED) {
-                            checkAndAddPinnedUser(inviteUserJid)
-                            checkAndAddNotPinnedUserInListAdapter(inviteUserJid)
-                            callUserGridAdapter.addUser(inviteUserJid)
-                            checkAndUpdateUserJoinedForInvitedUser(inviteUserJid)
-                        }
-                    }
-                    CallUtils.setIsAddUsersToTheCall(false)
-                    setUpCallUI()
-                    callViewHelper.showListView()
+                    invitedUsersProcess()
                 }
 
                 CallAction.ACTION_CAMERA_SWITCH_SUCCESS -> callViewHelper.setMirrorLocalView()
@@ -1065,18 +1161,41 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             }
         }
 
+        private fun invitedUsersProcess() {
+            try {
+                dismissSwitchRequestDialog()
+                for (inviteUserJid in CallManager.getInvitedUsersList()) {
+                    if (CallManager.getCallStatus(inviteUserJid) != CallStatus.DISCONNECTED) {
+                        checkAndAddPinnedUser(inviteUserJid)
+                        checkAndAddNotPinnedUserInListAdapter(inviteUserJid)
+                        callUserGridAdapter.addUser(inviteUserJid)
+                        checkAndUpdateUserJoinedForInvitedUser(inviteUserJid)
+                    }
+                }
+                CallUtils.setIsAddUsersToTheCall(false)
+                setUpCallUI()
+                callViewHelper.showListView()
+            } catch (e: Exception) {
+                com.contusfly.utils.LogMessage.e("Error", "invitedUsersProcess exception $e")
+            }
+        }
+
+
         override fun onResponse(isSuccess: Boolean, flyException: FlyException?) {
             LogMessage.d(TAG, "$CALL_UI onResponse")
             val errorMessage = flyException?.message ?: ""
             runOnUiThread {
-                if(!isSuccess)
+                if (!isSuccess)
                     Toast.makeText(this@GroupCallActivity, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
 
         override fun onQualityUpdated(quality: ConnectionQuality) {
-            LogMessage.d(TAG, "$CALL_UI onQualityUpdated received quality:$quality isInPIPMode:${isInPIPMode()}")
-            if(!isInPIPMode()){
+            LogMessage.d(
+                TAG,
+                "$CALL_UI onQualityUpdated received quality:$quality isInPIPMode:${isInPIPMode()}"
+            )
+            if (!isInPIPMode()) {
                 checkAndShowPoorConnection(quality)
             }
         }
@@ -1089,6 +1208,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 "$CALL_UI checkAndAddPinnedUser  userJid: $userJid"
             )
             CallUtils.setIsUserTilePinned(true)
+            CallLogger.callTestingLog("UIKIT---> checkAndAddPinnedUser setPinnedUserJid $userJid")
             CallUtils.setPinnedUserJid(userJid)
         }
     }
@@ -1243,8 +1363,10 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         dialogViewHelper.videoCallSwitchRequestAccepted()
         if (CallUtils.getPinnedUserJid().isBlank() && userJid != CallManager.getCurrentUserId()){
             CallUtils.setIsUserTilePinned(true)
+            CallLogger.callTestingLog("UIKIT---> updateUserJoined setPinnedUserJid $userJid")
             CallUtils.setPinnedUserJid(userJid)
         }
+        CallLogger.callTestingLog("UIKIT---> updateUserJoined userJid: $userJid pinnedUserJid: ${CallUtils.getPinnedUserJid()}")
         if (CallUtils.getPinnedUserJid() != userJid)
             callUsersListAdapter.addUser(userJid)
         checkAndAddUserJoinedForGridLayout(userJid)
@@ -1285,7 +1407,13 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 CallUtils.setIsGridViewEnabled(false)
             }
 
-            setUpCallUI()
+            if(CallManager.isOneToOneCall()){
+                LogMessage.d(
+                    TAG,
+                    "$CALL_UI $JOIN_CALL isOneToOneCall updateUserLeft "
+                )
+                setUpCallUI()
+            }
 
             if (::participantListFragment.isInitialized) {
                 participantListFragment.updateUserLeft(userJid)
@@ -1336,7 +1464,6 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         LogMessage.d(TAG, "$CALL_UI onCallSwitchConfirmationDialog removeUser")
         callViewHelper.animateCallOptionsView()
         callUsersListAdapter.removeUser(CallManager.getCurrentUserId())
-        //resizeGridView()
         activityBinding.layoutCallOptions.imageMuteVideo.isActivated = true
     }
 
@@ -1352,8 +1479,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             } else {
                 MediaPermissions.requestVideoCallPermissions(
                     this,
-                    requestCallSwitchCameraPermission
-                )
+                    requestCallSwitchCameraPermission,true)
             }
         } else {
             callViewHelper.checkAndUpdateCameraView()
@@ -1400,6 +1526,18 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
         super.onGroupProfileUpdated(groupJid)
         LogMessage.d(TAG, "$CALL_UI onGroupProfileUpdated groupJid:$groupJid")
         updateUserDetailsUpdatedInCall(groupJid)
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (CallManager.getGroupID() == groupJid){
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
+            setResult(Activity.RESULT_FIRST_USER)
+            disconnectCall(true)
+            if (!isInPIPMode())
+                startDashboardActivity(this)
+        }
     }
 
     fun checkAndRequestFullScreenPermission() {
@@ -1459,8 +1597,8 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     private fun checkAndDismissPoorConnection(){
         if(activityBinding.layoutCallOptions.layoutSlowNetwork.poorConnectionRoot.visibility == View.VISIBLE){
             LogMessage.d(
-                TAG,
-                "$CALL_UI #callconnectionquality checkAndDismissPoorConnection"
+                    TAG,
+                    "$CALL_UI #callconnectionquality checkAndDismissPoorConnection"
             )
             dismissPoorConnectionLayout()
         }

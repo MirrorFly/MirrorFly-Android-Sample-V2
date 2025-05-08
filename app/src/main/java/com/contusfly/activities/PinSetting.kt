@@ -158,12 +158,12 @@ class PinSetting : AppCompatActivity(), BiometricCallback/*, CallLogListener*/, 
     }
 
     private fun showAlert() {
-        var message:String=""
+
         binding.biometricTogglePin.isChecked = false
-        if(pinAvailable) {
-            message=getString(R.string.msg_enable_app_lock_info)
+        val message = if(pinAvailable) {
+            getString(R.string.msg_enable_app_lock_info)
         } else {
-            message=getString(R.string.msg_set_pin_alert)
+            getString(R.string.msg_set_pin_alert)
         }
         mDialog!!.showAlertDialog(message, getString(R.string.action_Ok),
             getString(R.string.action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
@@ -381,15 +381,19 @@ class PinSetting : AppCompatActivity(), BiometricCallback/*, CallLogListener*/, 
     private fun verifyFingerprintIsEnabledInDevice() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val fingerprintManager = this@PinSetting.getSystemService(Context.FINGERPRINT_SERVICE) as FingerprintManager
-            if (!fingerprintManager.isHardwareDetected) {
-                binding.biometricTogglePin.isChecked = false
-                CustomToast.show(this@PinSetting, "Fingerprint is not supported")
-            } else if (!fingerprintManager.hasEnrolledFingerprints()) {
-                CustomToast.show(this@PinSetting, "Please enable the fingerprint on your device")
-                binding.biometricTogglePin.isChecked = false
-            } else if(!SharedPreferenceManager.getBoolean(Constants.BIOMETRIC)){
-                Log.e("PinSettings", "verifyFingerprintIsEnabledInDevice: ")
-                handleBiometricChecked()
+            when {
+                !fingerprintManager.isHardwareDetected -> {
+                    binding.biometricTogglePin.isChecked = false
+                    CustomToast.show(this@PinSetting, "Fingerprint is not supported")
+                }
+                !fingerprintManager.hasEnrolledFingerprints() -> {
+                    CustomToast.show(this@PinSetting, "Please enable the fingerprint on your device")
+                    binding.biometricTogglePin.isChecked = false
+                }
+                !SharedPreferenceManager.getBoolean(Constants.BIOMETRIC) -> {
+                    Log.e("PinSettings", "verifyFingerprintIsEnabledInDevice: ")
+                    handleBiometricChecked()
+                }
             }
         }
     }

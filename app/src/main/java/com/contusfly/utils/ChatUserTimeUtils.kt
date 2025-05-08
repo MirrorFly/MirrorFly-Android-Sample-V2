@@ -25,7 +25,12 @@ object ChatUserTimeUtils {
             } else {
                 val sec = timeConsume % 60
                 val min = timeConsume / 60
-                if (min < 10 && sec < 10) "0$min:0$sec" else if (min < 10 && sec >= 10) "0$min:$sec" else if (min >= 10 && sec < 10) "$min:0$sec" else "$min:$sec"
+            when {
+                min < 10 && sec < 10 -> "0$min:0$sec"
+                min < 10 && sec >= 10 -> "0$min:$sec"
+                min >= 10 && sec < 10 -> "$min:0$sec"
+                else -> "$min:$sec"
+            }
             }
     }
 

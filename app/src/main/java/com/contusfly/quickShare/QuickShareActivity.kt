@@ -386,21 +386,23 @@ class QuickShareActivity : BaseActivity(),
          * holds the type on incoming URI
          */
         val receivedType = intent.type
-        if (receivedType != null && receivedType.equals(CONTACT, ignoreCase = true)) {
-            shareType = ShareType.CONTACT
-            val uri = intent.extras!![Intent.EXTRA_STREAM] as Uri?
-            contactShareModels = generateContactShareModel(parseVcard(uri!!))
-        } else if (receivedType != null && receivedType.equals(TEXT, ignoreCase = true)) {
-            val fileURI = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            if (fileURI == null)
-                shareType = ShareType.TEXT
-            else
-                handleSingleFileShare()
-        } else if (intent.action != null && intent.action.equals(Intent.ACTION_SEND, ignoreCase = true))
-            handleSingleFileShare()
-        else if (intent.action != null && intent.action.equals(Intent.ACTION_SEND_MULTIPLE, ignoreCase = true))
-            handleMultipleFileShare()
-        else Toast.makeText(applicationContext, "Unsupported Format", Toast.LENGTH_LONG).show()
+        when {
+            receivedType != null && receivedType.equals(CONTACT, ignoreCase = true) -> {
+                shareType = ShareType.CONTACT
+                val uri = intent.extras!![Intent.EXTRA_STREAM] as Uri?
+                contactShareModels = generateContactShareModel(parseVcard(uri!!))
+            }
+            receivedType != null && receivedType.equals(TEXT, ignoreCase = true) -> {
+                val fileURI = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                if (fileURI == null)
+                    shareType = ShareType.TEXT
+                else
+                    handleSingleFileShare()
+            }
+            intent.action != null && intent.action.equals(Intent.ACTION_SEND, ignoreCase = true) -> handleSingleFileShare()
+            intent.action != null && intent.action.equals(Intent.ACTION_SEND_MULTIPLE, ignoreCase = true) -> handleMultipleFileShare()
+            else -> Toast.makeText(applicationContext, "Unsupported Format", Toast.LENGTH_LONG).show()
+        }
 
         clickListeners()
 
@@ -560,15 +562,13 @@ class QuickShareActivity : BaseActivity(),
 
     private fun sendOtherFiles(otherFileList: java.util.ArrayList<FileObject>, userIdList: java.util.ArrayList<String>, isNavigationEnable: Boolean) {
         if (AppUtils.isNetConnected(this)) {
-            shareMessagesController.sendMediaMessagesForSingleUser(otherFileList, userIdList,object: QuickShareMessageListener{
-                override fun sendMediaSucess() {
-                    if (isNavigationEnable) {
-                        progressDialog!!.dismiss()
-                        navigateToAppropriateScreen(userIdList)
-                        finish()
-                    }
+            shareMessagesController.sendMediaMessagesForSingleUser(otherFileList, userIdList) {
+                if (isNavigationEnable) {
+                    progressDialog!!.dismiss()
+                    navigateToAppropriateScreen(userIdList)
+                    finish()
                 }
-            })
+            }
         } else if (isNavigationEnable) {
             progressDialog!!.dismiss()
             CustomToast.show(context, getString(R.string.msg_no_internet))
@@ -675,10 +675,12 @@ class QuickShareActivity : BaseActivity(),
         val sizeMb = sizeKb * sizeKb
         val sizeGb = sizeMb * sizeKb
         val sizeTerra = sizeGb * sizeKb
-        if (size < sizeMb) return df.format((size / sizeKb).toDouble()) + " Kb"
-        else if (size < sizeGb) return df.format((size / sizeMb).toDouble()) + " Mb"
-        else if (size < sizeTerra) return df.format((size / sizeGb).toDouble()) + " Gb"
-        return ""
+        return when {
+            size < sizeMb -> df.format((size / sizeKb).toDouble()) + " Kb"
+            size < sizeGb -> df.format((size / sizeMb).toDouble()) + " Mb"
+            size < sizeTerra -> df.format((size / sizeGb).toDouble()) + " Gb"
+            else -> ""
+        }
     }
 
     private fun milliSecondsToTimer(milliseconds: Long): String {
@@ -770,35 +772,36 @@ class QuickShareActivity : BaseActivity(),
      */
     private fun checkPermission(): Boolean {
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
 
             if (ChatUtils.checkMediaPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 && ChatUtils.checkWritePermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 permissionDenied = false
-                return true
+                true
 
-        } else
+        } else {
                 permissionDenied = true
                 MediaPermissions.requestStorageAccess(
                     this,
                     permissionAlertDialog,
                     galleryPermissionLauncher
                 )
-                return false
+                false
+            }
 
         } else {
 
             if (ChatUtils.checkMediaPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
                 && ChatUtils.checkWritePermission(this, Manifest.permission.READ_MEDIA_VIDEO)) {
                 permissionDenied = false
-                return true
+                true
             } else {
                 permissionDenied = true
                 MediaPermissions.requestMediaFiles(
                     this,
                     permissionAlertDialog,
                     galleryPermissionLauncher)
-                return false
+                false
             }
         }
 
@@ -1196,6 +1199,19 @@ class QuickShareActivity : BaseActivity(),
 
     override fun onAdminBlockedOtherUser(jid: String, type: String, status: Boolean) {
         super.onAdminBlockedOtherUser(jid, type, status)
+        updateSelectedUsers(status, jid)
+    }
+
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        updateSelectedUsers(status = true, groupJid)
+        if (groupName.isNotEmpty())
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
+    }
+
+    private fun updateSelectedUsers(status: Boolean, jid: String) {
         if (status && selectedUsersWithNames.containsKey(jid)) {
             selectedUsersWithNames.remove(jid)
             selectedProfileDetails.removeIf { it.jid == jid }

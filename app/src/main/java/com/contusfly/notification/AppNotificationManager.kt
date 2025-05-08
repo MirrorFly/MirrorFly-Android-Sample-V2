@@ -91,4 +91,15 @@ object AppNotificationManager {
             }
         }
     }
+
+    fun checkGroupHasNotification(jId: String, context: Context): Boolean {
+        val id = jId.hashCode().toLong().toInt()
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.activeNotifications.any { it.id == id }
+        } else {
+            NotificationBuilder.chatNotifications.containsKey(id)
+        }
+    }
 }

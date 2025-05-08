@@ -405,7 +405,7 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
             images = ArrayList()
             images!!.add(Image(0, mediaPath!!,0, true))
         } else {
-            images = intent.getSerializableExtra(Constants.SELECTED_IMAGES) as ArrayList<Image>
+            images = (intent.getSerializableExtra(Constants.SELECTED_IMAGES) as? ArrayList<*>)?.filterIsInstance<Image>()?.toCollection(ArrayList()) ?: arrayListOf()
         }
         /*
          * Assign the position of selected media
@@ -655,20 +655,20 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
     }
 
     override fun onBackPressed() {
-        if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return
+        if(SystemClock.elapsedRealtime() - lastClickTime < 1000) return
         lastClickTime = SystemClock.elapsedRealtime()
-        if (emojiHandler!!.isEmojiShowing) {
-            emojiHandler!!.hideEmoji()
-            showingEmojiKeyboard = false
-            if (isFromQuickShare && fileObjects!!.size > 1) showThumbnailAndRecipient() else if (selectedImageList.isNotEmpty()) {
-                showThumbnailAndRecipient()
+        when {
+            emojiHandler!!.isEmojiShowing -> {
+                emojiHandler!!.hideEmoji()
+                showingEmojiKeyboard = false
+                if (isFromQuickShare && fileObjects!!.size > 1) showThumbnailAndRecipient() else if (selectedImageList.isNotEmpty()) {
+                    showThumbnailAndRecipient()
+                }
             }
-        } else if (isFromQuickShare)
-            finishQuickShare()
-        else if (isFromCamera)
-            backToCamera()
-        else
-            super.onBackPressed()
+            isFromQuickShare -> finishQuickShare()
+            isFromCamera -> backToCamera()
+            else -> super.onBackPressed()
+        }
     }
 
     override fun onClick(v: View) {

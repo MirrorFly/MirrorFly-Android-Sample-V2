@@ -344,12 +344,12 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
     }
 
     private fun getJidFromSharedContact(contactMessage: ContactChatMessage): String? {
-        var registeredJid: String? = null
+        var registeredJid: String?
         registeredJid = Constants.EMPTY_STRING
-        for (i in contactMessage.getIsChatAppUser().indices) {
-            if (java.lang.Boolean.TRUE == contactMessage.getIsChatAppUser()[i]) {
+        for (i in contactMessage.isChatAppUser.indices) {
+            if (java.lang.Boolean.TRUE == contactMessage.isChatAppUser[i]) {
                 val countryCode = SharedPreferenceManager.getString(com.contusfly.utils.Constants.COUNTRY_CODE)
-                registeredJid = Utils.getJidFromPhoneNumber(this, contactMessage.getContactPhoneNumbers()[i], if (countryCode.isEmpty()) "IN" else countryCode)
+                registeredJid = Utils.getJidFromPhoneNumber(this, contactMessage.contactPhoneNumbers[i], if (countryCode.isEmpty()) "IN" else countryCode)
                 break
             }
         }
@@ -701,6 +701,8 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                           replyChatMessage: ChatMessage) {
         try {
             val replyMessage = replyChatMessage.getReplyParentChatMessage()
+            val replyMsg = if (replyMessage == null) null else getMessageOfId(replyMessage.messageId)
+            if(replyMsg == null) return
             txtUsername.setTextColor(replyMessage.getSenderName().getColourCode())
             txtUsername.text = replyMessage.getSenderName()
             if (replyMessage.isMessageRecalled() || replyMessage.isMessageDeleted()) {
@@ -709,7 +711,7 @@ open class BaseMessageInfoActivity : BaseActivity(), CommonDialogClosedListener 
                 when (replyMessage.getMessageType()) {
                     MessageType.TEXT,MessageType.AUTO_TEXT -> {
                         txtChat.maxWidth = SharedPreferenceManager.getInt(com.contusfly.utils.Constants.DEVICE_WIDTH)
-                        replyChatMessage?.let { setReplyViewMessageFormat(it,context!!,txtChat!!,replyMessage.messageTextContent,false,replyMessage) }
+                        replyMsg?.let { setReplyViewMessageFormat(it,context!!,txtChat!!,replyMessage.messageTextContent,false,replyMessage) }
                         imgImageVideo.gone()
                         layout.show()
                     }

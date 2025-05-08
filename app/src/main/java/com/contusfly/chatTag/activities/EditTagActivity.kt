@@ -15,7 +15,6 @@ import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
 import com.contusfly.chatTag.adapter.EditChatTagAdapter
 import com.contusfly.chatTag.adapter.ReorderList
-import com.contusfly.chatTag.interfaces.DialogPositiveButtonClick
 import com.contusfly.chatTag.interfaces.ListItemClickListener
 import com.contusfly.databinding.ActivityEditTagBinding
 import com.contusfly.getData
@@ -68,7 +67,7 @@ class EditTagActivity : AppCompatActivity(),ReorderList {
                     if(isSuccess){
                         chatTagnamelist= ArrayList()
                         deleteTagIdList= ArrayList()
-                        isRecommendedTag= data.get(Constants.IS_RECOMMENDED_KEY) as String
+                        isRecommendedTag= data[Constants.IS_RECOMMENDED_KEY] as String
                         chatTagnamelist= data.getData() as MutableList<ChatTagModel>
                         chatTagAdapterset()
                         recommendedChatTagCheking()
@@ -82,7 +81,7 @@ class EditTagActivity : AppCompatActivity(),ReorderList {
 
     private fun recommendedChatTagCheking(){
         CoroutineScope(Dispatchers.Main).launch {
-            if(isRecommendedTag.equals("1")){
+            if(isRecommendedTag == "1"){
                 binding.recommendedChatTagTitle.text=resources.getString(R.string.recommended_chat_tag)
                 binding.editInfoLayout.visibility= View.GONE
             } else{
@@ -183,21 +182,17 @@ class EditTagActivity : AppCompatActivity(),ReorderList {
 
     private fun chatTagRemoveDialogShow(){
 
-        CommonUtils.chatTagRemoveBottomDialogShow(mContext,object: DialogPositiveButtonClick {
-
-            override fun onItemClickListener(listener: View.OnClickListener) {
-                try {
-                    deleteTagIdList.add(chatTagId)
-                    chatTagadapter.updateList(itemSelectedPosition)
-                    GlobalScope.launch(Dispatchers.Main.immediate) {
-                        setResult(Activity.RESULT_OK)
-                    }
-                } catch(e:Exception){
-                    LogMessage.e(TAG,e.toString())
+        CommonUtils.chatTagRemoveBottomDialogShow(mContext) {
+            try {
+                deleteTagIdList.add(chatTagId)
+                chatTagadapter.updateList(itemSelectedPosition)
+                GlobalScope.launch(Dispatchers.Main.immediate) {
+                    setResult(Activity.RESULT_OK)
                 }
+            } catch (e: Exception) {
+                LogMessage.e(TAG, e.toString())
             }
-
-        })
+        }
     }
 
     override fun onItemMoved(fromPosition: Int, toPosition: Int) {

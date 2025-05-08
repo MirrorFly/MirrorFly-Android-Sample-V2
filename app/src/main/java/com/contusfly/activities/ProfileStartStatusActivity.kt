@@ -31,6 +31,7 @@ import com.mirrorflysdk.utils.RequestCode
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonAlertDialog.CommonDialogClosedListener, StatusDeleteDialog.UpdateAdapterListener {
 
@@ -39,7 +40,7 @@ class ProfileStartStatusActivity : BaseActivity(), View.OnClickListener, CommonA
     /**
      * The status list to display the status list in the recycler view in the activity.
      */
-    private var statusList: MutableList<ProfileStatus> = mutableListOf()
+    private var statusList: ArrayList<ProfileStatus> = arrayListOf()
 
     /**
      * The list adapter used to display the status of the user

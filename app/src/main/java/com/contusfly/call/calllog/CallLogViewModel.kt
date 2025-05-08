@@ -78,7 +78,7 @@ constructor(private val repository: CallLogRepository, private val apiCalls: Api
                 if (isSuccess) {
                     val callLogDBList = data.getData() as MutableList<CallLog>
                     LogMessage.d("CALL_LOG", "callLogDBList-----${callLogDBList.size}")
-                    totalPages = data.getParams("total_pages") as Int
+                    totalPages = data.getParams("total_pages") as? Int ?: 0
                     removeLoader.postValue(true)
                     callList.postValue(callLogDBList)
                     LogMessage.d(TAG, "$CALL_UI getCallLogs pageNumber: $currentPage, $totalPages")

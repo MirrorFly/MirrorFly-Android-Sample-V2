@@ -18,7 +18,7 @@ import java.util.*
  * @author ContusTeam <developers></developers>@contus.in>
  * @version 3.0
  */
-class DataUsageSettingsAdapter(fragment: Fragment) : BaseExpandableListAdapter() {
+class DataUsageSettingsAdapter(fragment: DataUsageSettingsFragment) : BaseExpandableListAdapter() {
     /**
      * Only Clicked position
      */
@@ -28,7 +28,7 @@ class DataUsageSettingsAdapter(fragment: Fragment) : BaseExpandableListAdapter()
     private var compoundDrawable = 0
 
     // The DataUsageSettingsFragment to which this adapter is currently associated with.
-    private val dataUsageSettingsFragment: DataUsageSettingsFragment = fragment as DataUsageSettingsFragment
+    private val dataUsageSettingsFragment: DataUsageSettingsFragment = fragment
 
     // The group items of the expandable list.
     private val groupItemList: List<String>
@@ -112,17 +112,16 @@ class DataUsageSettingsAdapter(fragment: Fragment) : BaseExpandableListAdapter()
      */
     private fun setUpMobileDataSettingsChildView(childViewText: CustomTextView, childPosition: Int) {
         if (dataUsageSettingsFragment.mediaAutoDownloadOption != null) {
-            if (childPosition == 0) {
-                photoAutoDownloadCheckViaData(childViewText)
-            } else if (childPosition == 1) {
-                videoAutoDownloadCheckViaData(childViewText)
-            } else if (childPosition == 2) {
-                audioAutoDownloadCheckViaData(childViewText)
-            } else {
-                if (dataUsageSettingsFragment.mediaAutoDownloadOption!!.downloadDocumentsOnMobileData) {
-                    childViewText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_selected_tick, 0)
-                } else {
-                    childViewText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_unselected_tick, 0)
+            when (childPosition) {
+                0 -> photoAutoDownloadCheckViaData(childViewText)
+                1 -> videoAutoDownloadCheckViaData(childViewText)
+                2 -> audioAutoDownloadCheckViaData(childViewText)
+                else -> {
+                    if (dataUsageSettingsFragment.mediaAutoDownloadOption!!.downloadDocumentsOnMobileData) {
+                        childViewText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_selected_tick, 0)
+                    } else {
+                        childViewText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_unselected_tick, 0)
+                    }
                 }
             }
         }
@@ -160,17 +159,16 @@ class DataUsageSettingsAdapter(fragment: Fragment) : BaseExpandableListAdapter()
      */
     private fun setUpWifiDataSettingsChildView(childViewText: CustomTextView, childPosition: Int) {
         if (dataUsageSettingsFragment.mediaAutoDownloadOption != null) {
-            if (childPosition == 0) {
-                photoAutoDownloadCheckViaWifi(childViewText)
-            } else if (childPosition == 1) {
-                videoAutoDownloadCheckViaWifi(childViewText)
-            }else if (childPosition == 2) {
-                audioAutoDownloadCheckViaWifi(childViewText)
-            } else {
-                if (dataUsageSettingsFragment.mediaAutoDownloadOption!!.downloadDocumentsOnWifiData) {
-                    childViewText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_selected_tick, 0)
-                } else {
-                    childViewText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_unselected_tick, 0)
+            when (childPosition) {
+                0 -> photoAutoDownloadCheckViaWifi(childViewText)
+                1 -> videoAutoDownloadCheckViaWifi(childViewText)
+                2 -> audioAutoDownloadCheckViaWifi(childViewText)
+                else -> {
+                    if (dataUsageSettingsFragment.mediaAutoDownloadOption!!.downloadDocumentsOnWifiData) {
+                        childViewText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_selected_tick, 0)
+                    } else {
+                        childViewText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_unselected_tick, 0)
+                    }
                 }
             }
         }

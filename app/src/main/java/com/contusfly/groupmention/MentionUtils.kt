@@ -61,12 +61,13 @@ object MentionUtils {
                                          mentionClickable: Boolean, context: Context?): SpannableStringBuilder {
         var count = 0
         var displayText = SpannableStringBuilder(mentionedText)
-        if (!message.mentionedUsersIds.isEmpty()) {
+        if (message.mentionedUsersIds.isNotEmpty()) {
             val mentionedSpannableString = SpannableString(mentionedText)
             val matcher = MENTION1.matcher(mentionedSpannableString)
             val destinations: MutableList<CharSequence> = ArrayList()
             while (matcher.find()) {
-                val mentionedUser = message.mentionedUsersIds[count]
+                val mentionedUser =
+                    if (message.mentionedUsersIds.size > count) message.mentionedUsersIds[count] else null
                 if (count < message.mentionedUsersIds.size && mentionedUser != null) {
                     val isMentionedCurrentUser = isMine(message.mentionedUsersIds[count].jid)
                     val trigger = "@"
@@ -123,25 +124,26 @@ object MentionUtils {
     ): SpannableStringBuilder {
         var count = 0
         var displayText = SpannableStringBuilder(mentionedText)
-        if (!mentionedUsersIds!!.isEmpty()) {
+        if (mentionedUsersIds!!.isNotEmpty()) {
             val mentionedSpannableString = SpannableString(mentionedText)
             val matcher = MENTION1.matcher(mentionedSpannableString)
             val sources: MutableList<String> = ArrayList()
             val destinations: MutableList<CharSequence> = ArrayList()
             while (matcher.find()) {
                 try {
-                    val mentionedUser = mentionedUsersIds?.get(count)
-                    if (count < mentionedUsersIds!!.size && mentionedUser != null) {
-                        var mention = mentionedUsersIds.get(count)
+                    val mentionedUser =
+                        if (mentionedUsersIds.size > count) mentionedUsersIds[count] else null
+                    if (count < mentionedUsersIds.size && mentionedUser != null) {
+                        val mention = mentionedUsersIds[count]
                         val userId = getUserFromJid(mention!!.jid)
                         val mentionUser = MentionUser(userId)
-                        var spannable = chatMessageEditText.unSentedMessageAddMentionSpan(
+                        val spannable = chatMessageEditText.unSentedMessageAddMentionSpan(
                             mention.getDisplayName(),
                             mentionUser
                         )
                         val isMentionedCurrentUser = isMine(mentionedUsersIds[count]!!.jid)
                         setSpanColorText(spannable, context, isMentionedCurrentUser)
-                        count = count + 1
+                        count += 1
                         destinations.add(spannable)
                         sources.add(matcher.group(0))
                     }
@@ -172,7 +174,8 @@ object MentionUtils {
             val sources: MutableList<String> = ArrayList()
             val destinations: MutableList<CharSequence> = ArrayList()
             while (matcher.find()) {
-                val mentionedUser = message.mentionedUsersIds[count]
+                val mentionedUser =
+                    if (message.mentionedUsersIds.size > count) message.mentionedUsersIds[count] else null
                 if (count < message.mentionedUsersIds.size && mentionedUser != null) {
                     val isMentionedCurrentUser = isMine(message.mentionedUsersIds[count].jid)
                     val trigger = "@"
@@ -211,7 +214,8 @@ object MentionUtils {
             val replySources: MutableList<String> = ArrayList()
             val replyDestinations: MutableList<CharSequence> = ArrayList()
             while (matcher.find()) {
-                val replyMentionUser = replyParentMessage.mentionedUsersIds[count]
+                val replyMentionUser =
+                    if (replyParentMessage.mentionedUsersIds.size > count) replyParentMessage.mentionedUsersIds[count] else null
                 if (count < replyParentMessage.mentionedUsersIds.size && replyMentionUser != null) {
                     val isMentionedCurrentUser = isMine(
                         replyParentMessage.mentionedUsersIds[count].jid
@@ -264,7 +268,7 @@ object MentionUtils {
             val recentChatSources: MutableList<String> = ArrayList()
             val recentChatDestinations: MutableList<CharSequence> = ArrayList()
             while (matchers.find()) {
-                val recentChatMentionUser = message.mentionedUsersIds[count]
+                val recentChatMentionUser = if (message.mentionedUsersIds.size > count) message.mentionedUsersIds[count] else null
                 if (count < message.mentionedUsersIds.size && recentChatMentionUser != null) {
                     val trigger = "@"
                     val spannable = SpannableString(trigger + recentChatMentionUser.getDisplayName())

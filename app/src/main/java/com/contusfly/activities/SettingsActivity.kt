@@ -19,8 +19,10 @@ import com.mirrorflysdk.flycommons.Features
 import com.contusfly.R
 import com.contusfly.TAG
 import com.contusfly.applySrcInColorFilter
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.databinding.ActivitySettingsBinding
 import com.contusfly.fragments.SettingsFragment
+import com.contusfly.showToast
 import com.contusfly.utils.Constants
 import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SafeChatUtils
@@ -189,5 +191,12 @@ class SettingsActivity : BaseActivity(), CoroutineScope {
     override fun updateMuteSettings(isSuccess: Boolean,message: String,isMute: Boolean) {
         super.updateMuteSettings(isSuccess,message,isMute)
         viewModel.getNotificationMuteStatus(isMute)
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (groupName.isNotEmpty())
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
     }
 }

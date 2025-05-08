@@ -22,62 +22,63 @@ class PermissionAlertDialog(private var activity: Activity) {
 
     fun showPermissionInstructionDialog(
         permissionType: String,
-        permissionDialogListener: PermissionDialogListener, isFromAudio:Boolean = false
+        permissionDialogListener: PermissionDialogListener, isFromAudio: Boolean = false
     ) {
-                try {
-                    var dialogBinding: ViewBinding? = null
-                    var dialogBuilder: AlertDialog.Builder
-                    if (permissionType == NOTIFCATION_PERMISSION_DENIED) {
-                        dialogBuilder = AlertDialog.Builder(activity, R.style.TrasparentAlertDialog)
-                        val inflater: LayoutInflater = activity.layoutInflater
-                        dialogBinding = NotificationPermissionDialogBinding.inflate(inflater)
-                        dialogBuilder.apply {
-                            setCancelable(false)
-                            setView((dialogBinding)!!.root)
-                            }
-                            val alertDialog = dialogBuilder.create()
-                            alertDialog.show()
-                            adjustAlertDialogWidth(activity, alertDialog)
-                            dialogBinding.turnOnTv.setOnClickListener {
-                                alertDialog.dismiss()
-                                permissionDialogListener.onPositiveButtonClicked()
-                            }
-                                dialogBinding.closeIcon.setOnClickListener {
-                                    permissionDialogListener.onNegativeButtonClicked()
-                                    alertDialog.dismiss()
-                                }
-                                dialogBinding.notNowTv.setOnClickListener {
-                                    permissionDialogListener.onNegativeButtonClicked()
-                                    alertDialog.dismiss()
-                                }
-                            } else {
-                            dialogBuilder = AlertDialog.Builder(activity, R.style.CustomAlertDialog)
-                            val inflater: LayoutInflater = activity.layoutInflater
-                            dialogBinding = PermissionInstructionDialogBinding.inflate(inflater)
-                            dialogBinding.dialogIcon.setImageResource(getDialogIcon(permissionType))
-                        if(isFromAudio)
-                            dialogBinding.dialogDescription.text = getDialogDescription(AUDIO_MUSIC_PERMISSION)
-                        else
-                            dialogBinding.dialogDescription.text = getDialogDescription(permissionType)
-                            dialogBuilder.apply {
-                                setCancelable(false)
-                                setView(dialogBinding.root)
-                                setPositiveButton(activity.getString(R.string.continue_label)) { dialog, _ ->
-                                    dialog.dismiss()
-                                    permissionDialogListener.onPositiveButtonClicked()
-                                }
-                                setNegativeButton(activity.getString(R.string.not_now_label)) { dialog, _ ->
-                                    dialog.dismiss()
-                                    permissionDialogListener.onNegativeButtonClicked()
-                                }
-                            }
-                            val alertDialog = dialogBuilder.create()
-                            alertDialog.show()
-                            adjustAlertDialogWidth(activity, alertDialog)
-                        }
-                        } catch (e:Exception) {
-                             Log.e("TAG", "showPermissionInstructionDialog: $e")
-                        }
+        try {
+            val dialogBinding: ViewBinding?
+            val dialogBuilder: AlertDialog.Builder
+            if (permissionType == NOTIFCATION_PERMISSION_DENIED) {
+                dialogBuilder = AlertDialog.Builder(activity, R.style.TrasparentAlertDialog)
+                val inflater: LayoutInflater = activity.layoutInflater
+                dialogBinding = NotificationPermissionDialogBinding.inflate(inflater)
+                dialogBuilder.apply {
+                    setCancelable(false)
+                    setView((dialogBinding)!!.root)
+                }
+                val alertDialog = dialogBuilder.create()
+                alertDialog.show()
+                adjustAlertDialogWidth(activity, alertDialog)
+                dialogBinding.turnOnTv.setOnClickListener {
+                    alertDialog.dismiss()
+                    permissionDialogListener.onPositiveButtonClicked()
+                }
+                dialogBinding.closeIcon.setOnClickListener {
+                    permissionDialogListener.onNegativeButtonClicked()
+                    alertDialog.dismiss()
+                }
+                dialogBinding.notNowTv.setOnClickListener {
+                    permissionDialogListener.onNegativeButtonClicked()
+                    alertDialog.dismiss()
+                }
+            } else {
+                dialogBuilder = AlertDialog.Builder(activity, R.style.CustomAlertDialog)
+                val inflater: LayoutInflater = activity.layoutInflater
+                dialogBinding = PermissionInstructionDialogBinding.inflate(inflater)
+                dialogBinding.dialogIcon.setImageResource(getDialogIcon(permissionType))
+                if (isFromAudio) {
+                    dialogBinding.dialogDescription.text =
+                        getDialogDescription(AUDIO_MUSIC_PERMISSION)
+                }
+                dialogBinding.dialogDescription.text = getDialogDescription(permissionType)
+                dialogBuilder.apply {
+                    setCancelable(false)
+                    setView(dialogBinding.root)
+                    setPositiveButton(activity.getString(R.string.continue_label)) { dialog, _ ->
+                        dialog.dismiss()
+                        permissionDialogListener.onPositiveButtonClicked()
+                    }
+                    setNegativeButton(activity.getString(R.string.not_now_label)) { dialog, _ ->
+                        dialog.dismiss()
+                        permissionDialogListener.onNegativeButtonClicked()
+                    }
+                }
+                val alertDialog = dialogBuilder.create()
+                alertDialog.show()
+                adjustAlertDialogWidth(activity, alertDialog)
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "showPermissionInstructionDialog: $e")
+        }
     }
 
     private fun getDialogDescription(permissionType: String): CharSequence {

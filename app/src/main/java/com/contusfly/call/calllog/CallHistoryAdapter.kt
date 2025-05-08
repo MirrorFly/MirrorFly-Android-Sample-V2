@@ -27,7 +27,6 @@ import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.views.CircularImageView
 import com.contusfly.views.CustomTextView
 import com.mirrorflysdk.api.contacts.ProfileDetails
-import java.util.*
 import kotlin.collections.ArrayList
 
 class CallHistoryAdapter(val context: Context, private val callLogsList: ArrayList<CallLog>, private val selectedCallLogs: ArrayList<String>, private var listener: OnItemClickListener)
@@ -36,7 +35,7 @@ class CallHistoryAdapter(val context: Context, private val callLogsList: ArrayLi
     private var isLoadingAdded = false
     private var loaderPosition = -1
 
-    interface OnItemClickListener {
+    fun interface OnItemClickListener {
         fun onItemClick(view: ImageView, position: Int)
     }
 

@@ -21,34 +21,40 @@ class ReplyViewUtils {
     fun showSenderReplyWindow(viewHolder: RecyclerView.ViewHolder, item: ChatMessage, context: Context) {
         with(viewHolder) {
             when (this) {
-                is TextSentViewHolder -> {
-                    if (item.isThisAReplyMessage()) {
-                        replyMessageSentView?.show()
-                        replyMessageSentLayout?.show()
-                        ReplyView().showSenderReplyView(context, this, item.getReplyParentChatMessage(), item.isGroupMessage())
-                    } else {
-                        replyMessageSentLayout?.gone()
-                        replyMessageSentView?.gone()
-                    }
-                }
-                is ImageSentViewHolder, is AudioSentViewHolder, is ContactSentViewHolder,
-                is FileSentViewHolder, is LocationSentViewHolder, is VideoSentViewHolder, is MeetSentViewHolder -> {
-                    val replyMessageViewHolder = this as ReplyMessageViewHolder
-                    if (item.isThisAReplyMessage()) {
-                        replyMessageViewHolder.showSentReplyView()
-                        ReplyView().showSenderReplyView(context, replyMessageViewHolder, item.getReplyParentChatMessage(), item.isGroupMessage())
-                    } else
-                        replyMessageViewHolder.hideSentReplyView()
-                }
+                is TextSentViewHolder -> showOrHideSentReplyView(context, item, this)
+                is ImageSentViewHolder -> showOrHideSentReplyView(context, item, this)
+                is AudioSentViewHolder -> showOrHideSentReplyView(context, item, this)
+                is ContactSentViewHolder -> showOrHideSentReplyView(context, item, this)
+                is FileSentViewHolder -> showOrHideSentReplyView(context, item, this)
+                is LocationSentViewHolder -> showOrHideSentReplyView(context, item, this)
+                is VideoSentViewHolder -> showOrHideSentReplyView(context, item, this)
+                is MeetSentViewHolder -> showOrHideSentReplyView(context, item, this)
             }
 
             when (this) {
-                is AudioSentViewHolder -> handleVisibility(audSentStarred, item.isMessageStarred())
-                is LocationSentViewHolder -> handleVisibility(imgSentStarred, item.isMessageStarred())
+                is AudioSentViewHolder -> handleVisibility(audSentStarred, item.isMessageStarred)
+                is LocationSentViewHolder -> handleVisibility(imgSentStarred, item.isMessageStarred)
                 else -> { //Not needed
                 }
             }
         }
+    }
+
+    private fun showOrHideSentReplyView(
+        context: Context,
+        item: ChatMessage,
+        replyMessageViewHolder: ReplyMessageViewHolder
+    ) {
+        if (item.isThisAReplyMessage) {
+            replyMessageViewHolder.showSentReplyView()
+            ReplyView().showSenderReplyView(
+                context,
+                replyMessageViewHolder,
+                item.replyParentChatMessage,
+                item.isGroupMessage()
+            )
+        } else
+            replyMessageViewHolder.hideSentReplyView()
     }
 
     /**
@@ -67,11 +73,14 @@ class ReplyViewUtils {
                     } else
                         replyMessageReceivedView?.gone()
                 }
-                is AudioReceivedViewHolder, is ContactReceivedViewHolder, is FileReceivedViewHolder,
-                is LocationReceivedViewHolder, is ImageReceivedViewHolder, is VideoReceivedViewHolder, is MeetReceivedViewHolder -> {
-                    val replyMessageViewHolder = this as ReplyMessageViewHolder
-                    handleReceiverReplyview(context, this, replyMessageViewHolder, item)
-                }
+
+                is AudioReceivedViewHolder -> handleReceiverReplyview(context, this, this, item)
+                is ContactReceivedViewHolder -> handleReceiverReplyview(context, this, this, item)
+                is FileReceivedViewHolder -> handleReceiverReplyview(context, this, this, item)
+                is LocationReceivedViewHolder -> handleReceiverReplyview(context, this, this, item)
+                is ImageReceivedViewHolder -> handleReceiverReplyview(context, this, this, item)
+                is VideoReceivedViewHolder -> handleReceiverReplyview(context, this, this, item)
+                is MeetReceivedViewHolder -> handleReceiverReplyview(context, this, this, item)
             }
 
             when (this) {
@@ -85,7 +94,7 @@ class ReplyViewUtils {
 
     private fun handleReceiverReplyview(context: Context, viewHolder: RecyclerView.ViewHolder,
                                         replyMessageViewHolder: ReplyMessageViewHolder, item: ChatMessage) {
-        if (item.isThisAReplyMessage()) {
+        if (item.isThisAReplyMessage) {
             if (viewHolder is AudioReceivedViewHolder || viewHolder is ContactReceivedViewHolder || viewHolder is FileReceivedViewHolder)
                 replyMessageViewHolder.showSentReplyView()
             else

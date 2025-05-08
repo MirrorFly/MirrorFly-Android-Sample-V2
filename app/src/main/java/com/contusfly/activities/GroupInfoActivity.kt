@@ -229,6 +229,22 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (groupProfileDetails.jid == groupJid && isGroupNotDeleted) {
+            CustomToast.show(context, getString(R.string.deleted_by_super_admin, groupName))
+            isGroupNotDeleted = false
+            setResult(Activity.RESULT_FIRST_USER)
+            startDashboardActivity()
+        }
+    }
+
     /**
      * check weather the collapsed or not
      */
@@ -991,6 +1007,11 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
 
     public override fun onResume() {
         super.onResume()
+        if (ProfileDetailsUtils.getProfileDetails(groupProfileDetails.jid) == null) {
+            com.contusfly.utils.LogMessage.d(TAG,"on Resume profile is null. So navigate to dashboard-->")
+            startDashboardActivity()
+            return
+        }
         loadGroupNameAndImage()
         loadGroupExistence()
         loadAdapterData()
@@ -1024,6 +1045,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
     private fun launchUserInfoPage() {
         launchActivity<UserInfoActivity> {
             putExtra(AppConstants.PROFILE_DATA, groupMembersList[lastKnownPosition])
+            putExtra(com.contusfly.utils.Constants.GROUP_ID, groupProfileDetails.jid)
         }
     }
 
@@ -1656,11 +1678,12 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this)
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     override fun onStop() {
-        EventBus.getDefault().unregister(this)
         super.onStop()
     }
 

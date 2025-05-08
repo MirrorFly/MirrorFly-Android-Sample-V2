@@ -48,6 +48,7 @@ import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.models.RecentSearch
 import com.mirrorflysdk.utils.Utils
+import com.mirrorflysdk.views.CustomToast
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import dagger.android.AndroidInjection
 import org.greenrobot.eventbus.EventBus
@@ -100,6 +101,19 @@ CommonAlertDialog.CommonDialogClosedListener {
         privateChatsBinding = ActivityPrivateChatListBinding.inflate(layoutInflater)
         setContentView(privateChatsBinding.root)
         init()
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        val index = viewModel.chatList.value?.indexOfFirst { it.jid == groupJid }
+        if (index?.isValidIndex() == true && groupName.isNotEmpty())
+            CustomToast.show(
+                context,
+                getString(R.string.deleted_by_super_admin, groupName)
+            )
+        getPrivateChat()
+
     }
 
     private fun init(){
@@ -596,36 +610,36 @@ CommonAlertDialog.CommonDialogClosedListener {
      * @return boolean True if the item has click handled successfully.
      */
     private fun onClickAction(itemId: Int): Boolean {
-        when (itemId) {
+        return when (itemId) {
             R.id.action_delete -> {
                 privateChatdeleteChatAlert()
-                return true
+                true
             }
 
             R.id.action_mute -> {
                 viewModel.updateArchivedMuteNotification(Constants.MUTE_NOTIFY)
                 updateChatItem()
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_unmute -> {
                 viewModel.updateArchivedMuteNotification(Constants.UN_MUTE_NOTIFY)
                 updateChatItem()
                 actionMode?.finish()
-                return true
+                true
             }
 
             R.id.action_mark_unread -> {
                 viewModel.markAsUnreadPrivateChats()
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_mark_read -> {
                 markasRead()
                 actionMode?.finish()
-                return true
+                true
             }
-            else -> return false
+            else -> false
         }
     }
 

@@ -504,7 +504,7 @@ class CommonAlertDialog(context: Context?) {
     /**
      * Called in CommonDialog for listing the details
      */
-    interface CommonTripleDialogClosedListener {
+    fun interface CommonTripleDialogClosedListener {
         /**
          * On triple option dialog closed.
          *
@@ -517,7 +517,7 @@ class CommonAlertDialog(context: Context?) {
     /**
      * Called in CommonDialog for listing is positive or negative response with action used
      */
-    interface DialogCallbackListener {
+    fun interface DialogCallbackListener {
         /**
          * On triple option dialog closed.
          *

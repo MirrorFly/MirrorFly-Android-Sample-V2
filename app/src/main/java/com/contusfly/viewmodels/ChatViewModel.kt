@@ -39,7 +39,12 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
     }
 
     fun getProfileDetails() {
-        userRoster.value = ProfileDetailsUtils.getProfileDetails(toUserJid)
+        val profile = ProfileDetailsUtils.getProfileDetails(toUserJid)
+        if (profile != null) {
+            userRoster.value = profile
+        } else {
+            LogMessage.e(TAG, "getProfileDetails: Profile is null")
+        }
     }
 
     fun getMessage(messageId: String): ChatMessage? = FlyMessenger.getMessageOfId(messageId)

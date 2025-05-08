@@ -57,7 +57,6 @@ import com.contusfly.chat.AndroidUtils
 import com.contusfly.chat.MessagingClient
 import com.contusfly.chat.ReplyHashMap
 import com.contusfly.chat.ReplyViewHandler
-import com.contusfly.constants.MobileApplication
 import com.contusfly.databinding.ActivityChatBinding
 import com.contusfly.di.factory.AppViewModelFactory
 import com.contusfly.fragments.ScheduleBottomSheetFragment
@@ -270,8 +269,6 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     lateinit var messageId: String
 
     var isLoadNextAvailable = false
-
-    lateinit var mobileApplication: MobileApplication
 
     lateinit var chatAdapter: ChatAdapter
 
@@ -1117,7 +1114,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 chatViewUtils.setUserPresenceStatus(this, Constants.EMPTY_STRING)
             })
         } else {
-            if(typingList.size > 0){
+            if(typingList.isNotEmpty()){
                 chatViewUtils.setUserPresenceStatus(this,
                 "${Chat(toUser = typingList[typingList.size -1]).getUsername()} ${resources.getString(R.string.msg_typing)}")
                 }else {
@@ -1428,7 +1425,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private fun updateCopyMessageMenu(menu: Menu) {
         try {
-            if (clickedMessages.size > 0) {
+            if (clickedMessages.isNotEmpty()) {
                 val chatMessage = getMessagebyID(clickedMessages[0])
                 menu.get(R.id.action_copy).isVisible = chatMessage != null && chatMessage.messageType == MessageType.TEXT || (null != chatMessage && chatMessage.mediaChatMessage.mediaCaptionText != null && !chatMessage.mediaChatMessage.mediaCaptionText.equals(""))
                 if (chatType == ChatType.TYPE_GROUP_CHAT)
@@ -1478,11 +1475,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         menuHashMap: HashMap<String, Boolean>
     ) {
 
-        actionModeMenu?.let { menu ->
+        actionModeMenu.let { menu ->
 
             if (features.isReportEnabled){
                 if (isSingleMessage) {
-                    menu.get(R.id.action_report).isVisible = menuHashMap[Constants.REPORT]!!
+                    menu.get(R.id.action_report).isVisible = menuHashMap[Constants.REPORT] == true
                 } else {
                     menu.get(R.id.action_report).isVisible = false
                 }
@@ -1491,7 +1488,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             }
 
             if (features.isDeleteMessageEnabled){
-                menu.get(R.id.action_delete).isVisible = menuHashMap[Constants.DELETE]!!
+                menu.get(R.id.action_delete).isVisible = menuHashMap[Constants.DELETE] == true
             } else {
                 hideMenu(menu.get(R.id.action_delete))
             }
@@ -1500,8 +1497,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 return
 
             if (features.isStarMessageEnabled){
-                menu.get(R.id.action_favourite).isVisible = menuHashMap[Constants.STAR]!!
-                menu.get(R.id.action_unfavourite).isVisible = menuHashMap[Constants.UNSTAR]!!
+                menu.get(R.id.action_favourite).isVisible = menuHashMap[Constants.STAR] == true
+                menu.get(R.id.action_unfavourite).isVisible = menuHashMap[Constants.UNSTAR] == true
             } else {
                 hideMenu(menu.get(R.id.action_favourite))
                 hideMenu(menu.get(R.id.action_unfavourite))
@@ -2383,7 +2380,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private fun addOtherExtraForMessageInfo(intent: Intent) {
         val message = mainList[getMessagePosition(clickedMessages.first())]
         if (message.messageType == MessageType.AUDIO) {
-            val seekerPosition = chatAdapter.getMediaController().getPlayedTimeOfTrackInSecs(Utils.returnEmptyStringIfNull(message.mediaChatMessage.getMediaLocalStoragePath()))
+            val seekerPosition = chatAdapter.mediaController.getPlayedTimeOfTrackInSecs(Utils.returnEmptyStringIfNull(message.mediaChatMessage.getMediaLocalStoragePath()))
             intent.putExtra(Constants.SEEKER_POS, seekerPosition)
         }
     }
@@ -2429,7 +2426,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     protected fun replyMessageSlideActionClicked(position: Int) {
         selectedMessageIdForReply = mainList[position].messageId
-        if (SharedPreferenceManager.getString(Constants.REPLY_MESSAGE_ID).equals(selectedMessageIdForReply, false)) {
+        if (SharedPreferenceManager.getString(Constants.REPLY_MESSAGE_ID) == selectedMessageIdForReply) {
             if (chatMessageEditText.requestFocus()) {
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(chatMessageEditText, InputMethodManager.SHOW_IMPLICIT)
@@ -2637,7 +2634,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                     //remove all headers which are above this message which are for senderId, except unread header which will be cleared in other code
                     var past = 1
                     while ((it.first - past) >= 0 && mainList[it.first - past].messageId.equals("M" + mainList[it.first].getSenderJid(), true)) {
-                        if (!unreadMessageTypeMessageId.equals("M" + mainList[it.first].getSenderJid(), true))
+                        if (checkEqualString(unreadMessageTypeMessageId,"M" + mainList[it.first].getSenderJid()))
                             clickedMessages.add(mainList[it.first - past].messageId)
                         past++ //go more up to past messages
                     }
@@ -2921,6 +2918,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         updateChatEditText()
     }
 
+    @SuppressWarnings("kotlin:S3776")
     @Synchronized
     protected fun setSearch() {
         addMessagesforSmartReply()
@@ -2929,29 +2927,23 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
         filteredPosition.clear()
         if (searchedText.isNotEmpty()) {
             for (i in mainList.indices)
-                if (mainList[i].messageType == MessageType.TEXT && mainList[i].messageTextContent.startsWithTextInWords(
+                when {
+                    mainList[i].messageType == MessageType.TEXT && mainList[i].messageTextContent.startsWithTextInWords(
                         searchedText
-                    )
-                )
-                    filteredPosition.add(i)
-                else if (mainList[i].messageType == MessageType.IMAGE && mainList[i].mediaChatMessage.mediaCaptionText.isNotEmpty()
-                    && mainList[i].mediaChatMessage.mediaCaptionText.startsWithTextInWords(
+                    ) -> filteredPosition.add(i)
+                    mainList[i].messageType == MessageType.IMAGE && mainList[i].mediaChatMessage.mediaCaptionText.isNotEmpty()
+                            && mainList[i].mediaChatMessage.mediaCaptionText.startsWithTextInWords(
                         searchedText
-                    )
-                )
-                    filteredPosition.add(i)
-                else if (mainList[i].messageType == MessageType.VIDEO && mainList[i].mediaChatMessage.mediaCaptionText.isNotEmpty()
-                    && mainList[i].mediaChatMessage.mediaCaptionText.startsWithTextInWords(
+                    ) -> filteredPosition.add(i)
+                    mainList[i].messageType == MessageType.VIDEO && mainList[i].mediaChatMessage.mediaCaptionText.isNotEmpty()
+                            && mainList[i].mediaChatMessage.mediaCaptionText.startsWithTextInWords(
                         searchedText
-                    )
-                )
-                    filteredPosition.add(i)
-                else if (mainList[i].messageType == MessageType.DOCUMENT && mainList[i].mediaChatMessage.mediaFileName.isNotEmpty()
-                    && mainList[i].mediaChatMessage.mediaFileName.startsWithTextInWords(searchedText))
-                    filteredPosition.add(i)
-                else if (mainList[i].messageType == MessageType.CONTACT && mainList[i].contactChatMessage.contactName.isNotEmpty()
-                    && mainList[i].contactChatMessage.contactName.startsWithTextInWords(searchedText))
-                    filteredPosition.add(i)
+                    ) -> filteredPosition.add(i)
+                    mainList[i].messageType == MessageType.DOCUMENT && mainList[i].mediaChatMessage.mediaFileName.isNotEmpty()
+                            && mainList[i].mediaChatMessage.mediaFileName.startsWithTextInWords(searchedText) -> filteredPosition.add(i)
+                    mainList[i].messageType == MessageType.CONTACT && mainList[i].contactChatMessage.contactName.isNotEmpty()
+                            && mainList[i].contactChatMessage.contactName.startsWithTextInWords(searchedText) -> filteredPosition.add(i)
+                }
         }
     }
 
@@ -2959,7 +2951,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     protected fun handlePrevNextClicked(isPrev: Boolean) {
         val visiblePos = mManager.findLastVisibleItemPosition()
         if (isPrev) {
-            if (!searchedPrev.equals(searchedText, ignoreCase = true)) {
+            if (!checkEqualString(searchedPrev,searchedText)) {
                 j = getPreviousPosition(visiblePos)
                 searchedPrev = searchedText
                 searchedNxt = searchedText
@@ -2976,7 +2968,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 }
             }
         } else {
-            if (!searchedNxt.equals(searchedText, ignoreCase = true)) {
+            if (!checkEqualString(searchedNxt, searchedText)) {
                 j = getNextPosition(visiblePos)
                 searchedNxt = searchedText
                 searchedPrev = searchedText
@@ -2986,11 +2978,11 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             }
         }
 
-        serachKeywordValueSet(j,isPrev)
+        searchKeywordValueSet(j,isPrev)
 
     }
 
-    private fun serachKeywordValueSet(j: Int, isPrev: Boolean) {
+    private fun searchKeywordValueSet(j: Int, isPrev: Boolean) {
 
         if (this.j > -1 && this.j < filteredPosition.size) {
             hideKeyboard()
@@ -3018,26 +3010,29 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             try{
                 searchedPrev=""
                 searchedNxt=""
-                if(keyword.equals(Constants.PREV_LOAD)){
-                    setSearch()
-                    handlePrevNextClicked(true)
-                    optionMenu?.get(R.id.prev_loader)?.isVisible = false
-                    optionMenu?.get(R.id.action_prev)?.isVisible = true
-                } else if(keyword.equals(Constants.NEXT_LOAD)){
-                    setSearch()
-                    handlePrevNextClicked(false)
-                    optionMenu?.get(R.id.next_loader)?.isVisible = false
-                    optionMenu?.get(R.id.action_next)?.isVisible = true
-                }else if(keyword.equals(Constants.NO_DATA)){
-                    showToast(getString(R.string.message_no_result_found))
-                    optionMenu?.get(R.id.next_loader)?.isVisible = false
-                    optionMenu?.get(R.id.action_next)?.isVisible = true
-                    optionMenu?.get(R.id.prev_loader)?.isVisible = false
-                    optionMenu?.get(R.id.action_prev)?.isVisible = true
+                when {
+                    keyword.equals(Constants.PREV_LOAD) -> {
+                        setSearch()
+                        handlePrevNextClicked(true)
+                        optionMenu?.get(R.id.prev_loader)?.isVisible = false
+                        optionMenu?.get(R.id.action_prev)?.isVisible = true
+                    }
+                    keyword.equals(Constants.NEXT_LOAD) -> {
+                        setSearch()
+                        handlePrevNextClicked(false)
+                        optionMenu?.get(R.id.next_loader)?.isVisible = false
+                        optionMenu?.get(R.id.action_next)?.isVisible = true
+                    }
+                    keyword.equals(Constants.NO_DATA) -> {
+                        showToast(getString(R.string.message_no_result_found))
+                        optionMenu?.get(R.id.next_loader)?.isVisible = false
+                        optionMenu?.get(R.id.action_next)?.isVisible = true
+                        optionMenu?.get(R.id.prev_loader)?.isVisible = false
+                        optionMenu?.get(R.id.action_prev)?.isVisible = true
+                    }
                 }
 
-            }catch(e:NullPointerException){
-
+            } catch(e:NullPointerException) {
                 LogMessage.e(TAG,e.toString())
             }
 

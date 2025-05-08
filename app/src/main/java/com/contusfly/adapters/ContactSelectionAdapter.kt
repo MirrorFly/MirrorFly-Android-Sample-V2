@@ -11,7 +11,7 @@ import com.contusfly.utils.Constants
 import com.jakewharton.rxbinding3.view.clicks
 import java.util.concurrent.TimeUnit
 
-class ContactSelectionAdapter(private val context: Context, private val contactList: List<DeviceContactModel>, private val selectedList: MutableList<DeviceContactModel>)
+class ContactSelectionAdapter(private val context: Context, private val contactList: List<DeviceContactModel>, private val selectedList: ArrayList<DeviceContactModel>)
     : GenericSearchAdapter<DeviceContactModel, ContactSelectionAdapter.ContactSelectionViewHolder>(contactList) {
 
     override fun setViewHolder(parent: ViewGroup): ContactSelectionViewHolder {
@@ -66,7 +66,7 @@ class ContactSelectionAdapter(private val context: Context, private val contactL
 
     }
 
-    private fun setSelectedIcon(holder: ContactSelectionViewHolder, selectedList: MutableList<DeviceContactModel>, contactModel: DeviceContactModel) {
+    private fun setSelectedIcon(holder: ContactSelectionViewHolder, selectedList: ArrayList<DeviceContactModel>, contactModel: DeviceContactModel) {
         if (selectedList.contains(contactModel))
             holder.contactListItemBinding.selectContactIcon.show()
         else

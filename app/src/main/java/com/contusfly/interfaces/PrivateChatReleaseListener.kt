@@ -1,6 +1,6 @@
 package com.contusfly.interfaces
 
-interface PrivateChatReleaseListener {
+fun interface PrivateChatReleaseListener {
 
     fun privateChatReleased()
 }
