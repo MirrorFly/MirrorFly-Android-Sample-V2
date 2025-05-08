@@ -928,7 +928,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     }
 
     private fun checkAndUpdateRingingBasedOnUserSize(userJid: String){
-        LogMessage.d(TAG, "$CALL_UI ${com.mirrorflysdk.flycall.call.utils.JOIN_CALL}  checkAndUpdateRingingBasedOnUserSize userJid:$userJid")
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL  checkAndUpdateRingingBasedOnUserSize userJid:$userJid")
         if(GroupCallUtils.getAvailableCallUsersList().size>1)
             callViewHelper.updateStatusAdapter(userJid)
         else{
@@ -1066,12 +1066,12 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 CallStatus.INCOMING_CALL_TIME_OUT -> {
                     LogMessage.d(
                         TAG,
-                        "$CALL_UI ${com.mirrorflysdk.flycall.call.utils.JOIN_CALL} INCOMING_CALL_TIME_OUT userJid:${userJid}"
+                        "$CALL_UI $JOIN_CALL INCOMING_CALL_TIME_OUT userJid:${userJid}"
                     )
                     if (CallManager.isCallConnected()) {
                         LogMessage.d(
                             TAG,
-                            "$CALL_UI ${com.mirrorflysdk.flycall.call.utils.JOIN_CALL} INCOMING_CALL_TIME_OUT userJid:$userJid"
+                            "$CALL_UI $JOIN_CALL INCOMING_CALL_TIME_OUT userJid:$userJid"
                         )
                         val timeOutUserList = userJid.split(",").toList()
                         checkAndUpdateTimeoutUsers(timeOutUserList)

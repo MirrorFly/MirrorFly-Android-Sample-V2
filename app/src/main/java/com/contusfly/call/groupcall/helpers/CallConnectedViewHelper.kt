@@ -299,7 +299,7 @@ class CallConnectedViewHelper(
     }
 
     fun checkAndShowLocalVideoView() {
-        LogMessage.d(TAG, "$CALL_UI ${com.mirrorflysdk.flycall.call.utils.JOIN_CALL} checkAndShowLocalVideoView  isVideoMuted() : ${CallManager.isVideoMuted()}")
+        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL checkAndShowLocalVideoView  isVideoMuted() : ${CallManager.isVideoMuted()}")
         if (GroupCallUtils.isSingleUserInCall()) {
             binding.layoutOneToOneAudioCall.show()
             binding.viewVideoPinned.hide()
