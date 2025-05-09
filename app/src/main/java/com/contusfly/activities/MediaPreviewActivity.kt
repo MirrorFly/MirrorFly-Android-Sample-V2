@@ -29,7 +29,6 @@ import com.contusfly.*
 import com.contusfly.activities.ChatActivity.Companion.addMoreMediaClicked
 import com.contusfly.activities.ChatActivity.Companion.unSentMentionedUserIdList
 import com.contusfly.activities.parent.ChatParent
-import com.contusfly.activities.parent.ChatParent.Companion.isComingFromFilePicker
 import com.contusfly.adapters.GroupTagAdapter
 import com.contusfly.adapters.MediaPreviewAdapter
 import com.contusfly.adapters.MediaPreviewPagerAdapter
@@ -80,7 +79,6 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickListener,
@@ -279,7 +277,11 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         isFromCamera = intent.getBooleanExtra(Constants.FROM_CAMERA, false)
         intentKeyShare = intent.getStringExtra(Constants.INTENT_KEY_SHARE)
         toUser = intent.getStringExtra(Constants.USER_JID)
-
+        if (toUser.isNullOrEmpty() || ProfileDetailsUtils.getProfileDetails(toUser!!) == null) {
+            LogMessage.i(TAG, "onPostCreate profile details is null for : $toUser")
+            finish()
+            return
+        }
         initViews()
         setObservers()
         initMentionAdapter()
@@ -526,8 +528,8 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     }
 
     private fun firstIndexImageMentionUserId(){
-        if(emojiEditText!!.mentionedUsers!=null && emojiEditText!!.mentionedUsers.size>0){
-            selectedImageList[0].mentionedUsersIds= emojiEditText!!.mentionedUsers as List<String>
+        if(emojiEditText!!.mentionedUsers!=null && emojiEditText!!.mentionedUsers.isNotEmpty()) {
+            selectedImageList[0].mentionedUsersIds = (emojiEditText!!.mentionedUsers as? ArrayList<*>)?.filterIsInstance<String>()?.toCollection(ArrayList()) ?: arrayListOf()
         }
     }
 
@@ -607,8 +609,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         var mimeType = contentResolver.getType(uri)
         val multipleImages: MediaPreviewModel
         mimeType = mimeType ?: intent.type
-        var filePathFromUri: String? = ""
-        filePathFromUri = RealPathUtil.getRealPath(this@MediaPreviewActivity, uri)
+        val filePathFromUri = RealPathUtil.getRealPath(this@MediaPreviewActivity, uri)
 
        // filePathFromUri = if (uri.scheme == null) uri.path else RealPathUtil.getRealPath(this@MediaPreviewActivity, uri)
         LogMessage.d(TAG, "file path createAdapterObject = $filePathFromUri")
@@ -637,8 +638,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             selectedImages = ArrayList()
             selectedImages.add(Image(0, mediaPath!!, 0, false))
         } else {
-            selectedImages =
-                intent.getSerializableExtra(Constants.SELECTED_IMAGES) as ArrayList<Image>
+            selectedImages = (intent.getSerializableExtra(Constants.SELECTED_IMAGES) as? ArrayList<*>)?.filterIsInstance<Image>()?.toCollection(ArrayList()) ?: arrayListOf()
         }
         mediaPreviewBinding.previewProgress.previewProgress.gone()
         selectedImages.forEach {
@@ -804,8 +804,8 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
 
     private fun maintainAddedMentionUser(position:Int) {
         try {
-            if (selectedImageList.size == 0) return
-            if (selectedImageList[position].mentionedUsersIds != null && selectedImageList[position].mentionedUsersIds.size > 0 && selectedImageList[position].caption.isNotEmpty()) {
+            if (selectedImageList.isEmpty()) return
+            if (selectedImageList[position].mentionedUsersIds != null && selectedImageList[position].mentionedUsersIds.isNotEmpty() && selectedImageList[position].caption.isNotEmpty()) {
                 val texts = context!!.getString(R.string.chat_text)
                 val textMessage = selectedImageList[position].caption + texts + texts
                 val unSentMentionedUserIdList = ArrayList<ProfileDetails?>()
@@ -928,12 +928,10 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     }
 
     private fun setEmojiKeyBoardListener() {
-        emojiHandler!!.setEmojiKeyBoardListener(object : EmojiHandler.EmojiKeyBoardListener {
-            override fun onKeyBoardStateChanged(isOpened: Boolean) {
-                showingEmojiKeyboard = isOpened
-                checkAndShowPreviewList()
-            }
-        })
+        emojiHandler!!.setEmojiKeyBoardListener { isOpened ->
+            showingEmojiKeyboard = isOpened
+            checkAndShowPreviewList()
+        }
     }
 
     private fun sendMedia() {
@@ -1028,13 +1026,11 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
 
     private fun sendMediaFilesForSingleUser() {
         if (AppUtils.isNetConnected(this)) {
-            shareMessagesController.sendMediaMessagesForSingleUser(fileObjects, selectedUsers!!,object: QuickShareMessageListener{
-                override fun sendMediaSucess() {
-                    progressDialog!!.dismiss()
-                    navigateToAppropriateScreen()
-                    finish()
-                }
-            })
+            shareMessagesController.sendMediaMessagesForSingleUser(fileObjects, selectedUsers!!) {
+                progressDialog!!.dismiss()
+                navigateToAppropriateScreen()
+                finish()
+            }
         } else {
             progressDialog!!.dismiss()
             CustomToast.show(context, getString(R.string.msg_no_internet))
@@ -1184,8 +1180,8 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             runOnUiThread {
                 mediaPreviewBinding.sendMedia.isEnabled = true
                 mediaPreviewBinding.previewProgress.previewProgress.gone()
-                if(errorMessageList.size > 0) {
-                    CustomToast.show(this@MediaPreviewActivity, errorMessageList.get(0))
+                if(errorMessageList.isNotEmpty()) {
+                    CustomToast.show(this@MediaPreviewActivity, errorMessageList[0])
                 }
             }
             ReplyHashMap.saveReplyId(toUser, Constants.EMPTY_STRING)
@@ -1296,15 +1292,13 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         EmojiconsFragment.input(emojiEditText!!, emojicon)
     }
 
-    private fun getKeyboardListener() = object : KeyboardHeightProvider.KeyboardListener {
-        override fun onHeightChanged(height: Int) {
+    private fun getKeyboardListener() = KeyboardHeightProvider.KeyboardListener { height ->
             val isShown = height > 0
             if (isShown == alreadyOpen) {
-                return
+                return@KeyboardListener
             }
             alreadyOpen = isShown
             onKeyboardVisibilityChanged(isShown)
-        }
     }
 
 
@@ -1368,7 +1362,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     }
 
     private fun setTextIncludingMention(mentionedUsersIds:MutableList<String>){
-        sendTextMessageWithMentionFormat = if(mentionedUsersIds.size > 0) {
+        sendTextMessageWithMentionFormat = if(mentionedUsersIds.isNotEmpty()) {
             emojiEditText?.getMentionedTemplate()
         } else {
             emojiEditText!!.text.toString().trim { it <= ' ' }
@@ -1382,6 +1376,18 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         }
     }
 
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (toUser == groupJid){
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
+            setResult(Activity.RESULT_FIRST_USER)
+            startDashboardActivity()
+            finish()
+        }
+    }
+
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -1390,6 +1396,12 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
     override fun onStop() {
         EventBus.getDefault().unregister(this)
         super.onStop()
+    }
+
+    private fun startDashboardActivity() {
+        val dashboardIntent = Intent(applicationContext, DashboardActivity::class.java)
+        dashboardIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(dashboardIntent)
     }
 
 

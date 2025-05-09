@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -17,6 +18,7 @@ import android.os.*
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.AppCompatButton
@@ -24,7 +26,14 @@ import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.contusfly.TelephonyServiceReceiver
+import com.mirrorflysdk.flycall.webrtc.CallType
+import com.mirrorflysdk.flycall.webrtc.api.CallManager
+import com.mirrorflysdk.flycall.webrtc.api.CallManager.isOnTelephonyCall
+import com.mirrorflysdk.flycall.call.utils.CallConstants
+import com.mirrorflysdk.flycommons.models.MessageType
+import com.mirrorflysdk.flycommons.LogMessage
+import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import com.contusfly.*
 import com.contusfly.activities.parent.ChatParent
 import com.contusfly.adapters.ChatAdapter
@@ -39,18 +48,46 @@ import com.contusfly.chat.ReplyHashMap
 import com.contusfly.chat.reply.MessageSwipeController
 import com.contusfly.constants.MobileApplication
 import com.contusfly.databinding.ActivityChatBinding
+import com.contusfly.emptyString
 import com.contusfly.fragments.ScheduleBottomSheetFragment
+import com.contusfly.get
+import com.contusfly.getChatDeleteType
+import com.contusfly.getChatType
+import com.contusfly.getDisplayName
+import com.contusfly.getMessage
+import com.contusfly.getUsername
+import com.contusfly.gone
 import com.contusfly.groupmention.MentionUser
+import com.contusfly.hideMenu
 import com.contusfly.interfaces.OnChatItemClickListener
 import com.contusfly.interfaces.PermissionDialogListener
+import com.contusfly.isAutoMessage
+import com.contusfly.isDeletedContact
+import com.contusfly.isGroupChat
+import com.contusfly.isMediaDownloaded
+import com.contusfly.isMediaUploaded
+import com.contusfly.isNotificationMessage
+import com.contusfly.isOnAnyCall
+import com.contusfly.isSingleChat
+import com.contusfly.isUnknownContact
+import com.contusfly.isValidIndex
+import com.contusfly.launchActivity
+import com.contusfly.makeViewsGone
 import com.contusfly.models.Chat
 import com.contusfly.models.EditMessageParams
 import com.contusfly.models.MediaPreviewModel
 import com.contusfly.models.MeetMessageParams
 import com.contusfly.models.MessageObject
+import com.contusfly.netConditionalCall
 import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.notification.AppNotificationManager
 import com.contusfly.utils.*
+import com.contusfly.show
+import com.contusfly.showAlertDialog
+import com.contusfly.showMenu
+import com.contusfly.showSoftKeyboard
+import com.contusfly.showToast
+import com.contusfly.showViews
 import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.*
@@ -60,17 +97,19 @@ import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import com.mirrorflysdk.api.*
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
-import com.mirrorflysdk.flycall.call.utils.CallConstants
-import com.mirrorflysdk.flycall.webrtc.CallType
-import com.mirrorflysdk.flycall.webrtc.api.CallManager
-import com.mirrorflysdk.flycall.webrtc.api.CallManager.isOnTelephonyCall
-import com.mirrorflysdk.flycommons.*
-import com.mirrorflysdk.flycommons.LogMessage
-import com.mirrorflysdk.flycommons.models.CallMetaData
-import com.mirrorflysdk.flycommons.models.MessageType
 import com.mirrorflysdk.utils.ConstantActions
 import com.mirrorflysdk.views.CustomToast
-import com.mirrorflysdk.xmpp.chat.utils.LibConstants
+import com.mirrorflysdk.api.ChatActionListener
+import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.api.FlyCore
+import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.api.GroupManager
+import com.mirrorflysdk.flycommons.ChatType
+import com.mirrorflysdk.flycommons.Features
+import com.mirrorflysdk.flycommons.FlyUtils
+import com.mirrorflysdk.flycommons.MediaDownloadStatus
+import com.mirrorflysdk.flycommons.MediaUploadStatus
+import com.mirrorflysdk.flycommons.models.CallMetaData
 import dagger.android.AndroidInjection
 import io.github.rockerhieu.emojicon.EmojiconGridFragment
 import io.github.rockerhieu.emojicon.EmojiconsFragment
@@ -229,7 +268,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 makeCallWithCallPermissionUtils(true,callMetaDataList)
                 callDialog.dismiss()
             }
-        }else{
+        } else {
             callOption.text = getString(R.string.video_call)
             callOptionAnonymous.text = getString(R.string.anonymous_video_call)
 
@@ -353,15 +392,14 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         LogMessage.d("TAG","#chat #fetchmsg onMessageReceived-> ")
 
         message.let {
-            if (!ChatManager.getOnGoingChatUser().equals(message.chatUserJid, ignoreCase = true)) {
-                return
-            }else if (message.isMessageSentByMe && message.messageType == MessageType.AUTO_TEXT) {
-                loadNextData()
-            }else if (chat.toUser == message.chatUserJid && (!message.isMessageSentByMe || message.isItCarbonMessage)
-                && !message.isMessageDeleted
-            ) {
-                loadNextData()
-                playForegroundNotificationSound(this)
+            when {
+                !ChatManager.getOnGoingChatUser().equals(message.chatUserJid, ignoreCase = true) -> return
+                message.isMessageSentByMe && message.messageType == MessageType.AUTO_TEXT -> loadNextData()
+                chat.toUser == message.chatUserJid && (!message.isMessageSentByMe || message.isItCarbonMessage)
+                        && !message.isMessageDeleted -> {
+                    loadNextData()
+                    playForegroundNotificationSound(this)
+                }
             }
         }
     }
@@ -507,7 +545,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         handler = Handler(Looper.getMainLooper())
         keyboardHeightProvider = KeyboardHeightProvider(this)
         keyboardHeightProvider?.addKeyboardListener(getKeyboardListener())
-        mobileApplication = mainApplication as MobileApplication
         startObservingViewModel()
         handleMainIntent()
         initialization()
@@ -524,7 +561,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         handleOnNewIntent(intent)
         registerTelephonyCallListener()
         initGroupTag()
-        myApp= application as MobileApplication
+        myApp = application as MobileApplication
         mediaListCaption = myApp?.getMediaCaptionObject()
         setSecureFlag()
         scheduleMeetFabButtonClickAndMove()
@@ -611,22 +648,21 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         listChats.setHasFixedSize(true)
         listChats.adapter = chatAdapter
         chatAdapter.setOnDownloadClickListener(this)
-        val messageSwipeController = MessageSwipeController(this, object : MessageSwipeController.SwipeControllerActions {
-            override fun showSwipeInReplyUI(position: Int) {
-                if (profileDetails.isBlocked || profileDetails.isAdminBlocked || (chatType == ChatType.TYPE_GROUP_CHAT && !parentViewModel.isGroupUserExist(
-                        chat.toUser,
-                        SharedPreferenceManager.getCurrentUserJid()
-                    )))
-                    return
-                Handler(Looper.getMainLooper()).postDelayed({
-                    isReplyTagged = true
-                    replyMessageSlideActionClicked(position)
-                    handleSearchToolbar(showSearch = false, hideKeyboard = false)
-                    if (emojiHandler.isEmojiShowing) emojiHandler.hideEmoji()
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-                }, 150)
-            }
-        })
+        val messageSwipeController = MessageSwipeController(this) { position ->
+            if (profileDetails.isBlocked || profileDetails.isAdminBlocked || (chatType == ChatType.TYPE_GROUP_CHAT && !parentViewModel.isGroupUserExist(
+                    chat.toUser,
+                    SharedPreferenceManager.getCurrentUserJid()
+                ))
+            )
+                return@MessageSwipeController
+            Handler(Looper.getMainLooper()).postDelayed({
+                isReplyTagged = true
+                replyMessageSlideActionClicked(position)
+                handleSearchToolbar(showSearch = false, hideKeyboard = false)
+                if (emojiHandler.isEmojiShowing) emojiHandler.hideEmoji()
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            }, 150)
+        }
         messageSwipeController.getSwipeEscapeVelocity(0.25f)
         val itemTouchHelper = ItemTouchHelper(messageSwipeController)
         itemTouchHelper.attachToRecyclerView(listChats)
@@ -675,12 +711,9 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
             canShowReceivedMessage = isViewingRecentMessage
             showBottomMessage(messageList.size, messageList)
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (chatMessageEditText.text.toString().trim()
-                        .isEmpty() && !isReplyTagged && !attachmentDialog.isShowing
-                )
-                    addMessagesforSmartReply()
-            }, 100)
+            if (chatMessageEditText.text.toString().trim()
+                    .isEmpty() && !isReplyTagged && !attachmentDialog.isShowing)
+                addMessagesforSmartReply()
         }
 
         parentViewModel.replynextMessageList.observe(this) { messageList ->
@@ -703,7 +736,11 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         //Roster Observer
         viewModel.userRoster.observe(this) { userRoster ->
             Log.d(TAG, "#chat #observer userRoster ")
-            rosterObservable.onNext(userRoster)
+            try {
+                rosterObservable.onNext(userRoster)
+            } catch (e: Exception) {
+                LogMessage.e(TAG, "#chat #observer userRoster:$e")
+            }
         }
 
         //Contact Observer
@@ -743,21 +780,24 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun highlightGivenMessage() {
         try {
             if (mainList.isNotEmpty()) {
-                if (messageId.isNotEmpty() && messageId != unreadMessageTypeMessageId)
-                    highlightGivenMessageId(messageId)
-                else if(isUnreadMessageAvailableInDb() && isUnreadMessageAvailableInList()){
-                    listChats.scrollToPosition(getMessagePosition(unreadMessageTypeMessageId))
-                    viewModel.deleteUnreadMessageSeparator(chat.toUser) // we remove the seperator when the user from group info to start chat option.
-                }else if(isUnreadMessageAvailableInDb() && !isUnreadMessageAvailableInList()){
-                    com.contusfly.utils.LogMessage.e("rko","dont scroll to last position-->")
-                    return
-                } else {
-                    com.contusfly.utils.LogMessage.e("rko","tempMessage scroll-->")
-                    val tempMessage = mainList.lastOrNull()
-                    if (tempMessage != null) {
-                        scrollPosition(tempMessage)
-                    } else {
-                        listChats.scrollToPosition(mainList.size - 1)
+                when {
+                    messageId.isNotEmpty() && messageId != unreadMessageTypeMessageId -> highlightGivenMessageId(messageId)
+                    isUnreadMessageAvailableInDb() && isUnreadMessageAvailableInList() -> {
+                        listChats.scrollToPosition(getMessagePosition(unreadMessageTypeMessageId))
+                        viewModel.deleteUnreadMessageSeparator(chat.toUser) // we remove the seperator when the user from group info to start chat option.
+                    }
+                    isUnreadMessageAvailableInDb() && !isUnreadMessageAvailableInList() -> {
+                        com.contusfly.utils.LogMessage.e("highlightGivenMessage","dont scroll to last position-->")
+                        return
+                    }
+                    else -> {
+                        com.contusfly.utils.LogMessage.e("highlightGivenMessage","tempMessage scroll-->")
+                        val tempMessage = mainList.lastOrNull()
+                        if (tempMessage != null) {
+                            scrollPosition(tempMessage)
+                        } else {
+                            listChats.scrollToPosition(mainList.size - 1)
+                        }
                     }
                 }
             }
@@ -773,7 +813,6 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun isUnreadMessageAvailableInList(): Boolean {
         return mainList.size > 0 && mainList.indexOfFirst { it.messageId == unreadMessageTypeMessageId } != -1
     }
-
 
     private fun startObserving() {
         val rosterObservable = rosterObservable.observeOn(AndroidSchedulers.mainThread()).subscribe({ profileDetails ->
@@ -805,19 +844,15 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
      * Handle the list item click and long click from the recycler view of the chat view.
      */
     private fun handleListItemClick() {
-        ItemClickSupport(listChats).addTo().setOnItemLongClickListener(object : ItemClickSupport.OnItemLongClickListener{
-            override fun onItemLongClicked(recyclerView: RecyclerView?, position: Int, v: View?): Boolean {
-                onItemLongClick(position)
-                Log.d(TAG, "setOnItemLongClickListener  $position")
-                return true
-            }
-        })
-        ItemClickSupport(listChats).addTo().setOnItemClickListener(object : ItemClickSupport.OnItemClickListener{
-            override fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?) {
-                Log.d(TAG, "setOnItemClickListener  $position")
-                if (clickedMessages.isNotEmpty() && !dontAllowClick) onItemClick(position)
-            }
-        })
+        ItemClickSupport(listChats).addTo().setOnItemLongClickListener { _, position: Int, _ ->
+            onItemLongClick(position)
+            Log.d(TAG, "setOnItemLongClickListener  $position")
+            true
+        }
+        ItemClickSupport(listChats).addTo().setOnItemClickListener { _, position: Int,_ ->
+            Log.d(TAG, "setOnItemClickListener  $position")
+            if (clickedMessages.isNotEmpty() && !dontAllowClick) onItemClick(position)
+        }
     }
 
     /**
@@ -882,12 +917,23 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     override fun onDeleteGroup(groupJid: String) {
         super.onDeleteGroup(groupJid)
-        if (chat.toUser.equals(groupJid)){
+        if (chat.toUser == groupJid){
             setResult(Activity.RESULT_FIRST_USER)
             startDashboardActivity()
             finish()
         }
     }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        if (chat.toUser == groupJid) {
+            CustomToast.show(context, getString(R.string.deleted_by_super_admin, groupName))
+            setResult(Activity.RESULT_FIRST_USER)
+            startDashboardActivity()
+            finish()
+        }
+        clearDeletedGroupChatNotification(groupJid, context)
+    }
+
     private fun startDashboardActivity() {
         val dashboardIntent = Intent(applicationContext, DashboardActivity::class.java)
         dashboardIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -958,12 +1004,20 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             }
             R.id.action_audio_call -> {
                 checkInternetAndExecute {
-                    callMenuClicked(CallType.AUDIO_CALL)
+                    if (isIncomingCallInProgress()) {
+                        showToastForIncomingCallProgress()
+                    } else {
+                        callMenuClicked(CallType.AUDIO_CALL)
+                    }
                 }
             }
             R.id.action_video_call -> {
                 checkInternetAndExecute {
-                    callMenuClicked(CallType.VIDEO_CALL)
+                    if (isIncomingCallInProgress()) {
+                        showToastForIncomingCallProgress()
+                    } else {
+                        callMenuClicked(CallType.VIDEO_CALL)
+                    }
                 }
             }
             R.id.action_block -> {
@@ -990,6 +1044,22 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showToastForIncomingCallProgress() {
+        val toast = Toast.makeText(
+            CallManager.applicationContext,
+            getString(R.string.incoming_Call_receiving_toast),
+            Toast.LENGTH_SHORT
+        )
+        toast.show()
+        Handler(Looper.getMainLooper()).postDelayed({
+            toast.cancel()
+        }, 500)
+    }
+
+    private fun isIncomingCallInProgress(): Boolean {
+        return (CallManager.isIncomingCallProcessing())
     }
 
     private fun callMenuClicked(@CallType callType: String) {
@@ -1275,22 +1345,24 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun validateAndSendMessage(messageObject: MessageObject) {
         FlyMessenger.saveUnsentMentionedUserId(chat.toUser,"")
         unSentMentionedUserIdList.clear()
-        if (isBlocked) {
-            showBlockedAlert()
-            messagesQueue.add(messageObject)
-        } else if (FlyCore.isBusyStatusEnabled() && chat.isSingleChat()) {
-            showBusyAlert()
-            messagesQueue.add(messageObject)
-        } else if (isUserCanSendMessage())
-            sendMessage(messageObject)
+        when {
+            isBlocked -> {
+                showBlockedAlert()
+                messagesQueue.add(messageObject)
+            }
+            FlyCore.isBusyStatusEnabled() && chat.isSingleChat() -> {
+                showBusyAlert()
+                messagesQueue.add(messageObject)
+            }
+            isUserCanSendMessage() -> sendMessage(messageObject)
+        }
     }
     private fun validateAndSendEditedMessage(editedMessage: EditMessageParams) {
-        if (isBlocked) {
-            showBlockedAlert(true)
-        } else if (FlyCore.isBusyStatusEnabled() && chat.isSingleChat()) {
-            showBusyAlert(isEditMessage = true)
-        } else if (isUserCanSendMessage())
-            messagingClient.sendEditedMessage(editedMessage, this@ChatActivity)
+        when {
+            isBlocked -> showBlockedAlert(true)
+            FlyCore.isBusyStatusEnabled() && chat.isSingleChat() -> showBusyAlert(isEditMessage = true)
+            isUserCanSendMessage() -> messagingClient.sendEditedMessage(editedMessage, this@ChatActivity)
+        }
     }
 
     private fun sendTextMessage() {
@@ -1298,7 +1370,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         Log.e("getMessageUserId",chatMessageEditText.mentionedUsers.toString())
         mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
         Log.e("getMessageUsersId",mentionedUsersIds.toString())
-        sendTextMessageWithMentionFormat = if(mentionedUsersIds.size > 0) {
+        sendTextMessageWithMentionFormat = if(mentionedUsersIds.isNotEmpty()) {
             chatMessageEditText.mentionedTemplate
         } else {
             chatMessageEditText.text.toString().trim()
@@ -1313,7 +1385,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         Log.e("getMessageUserId",chatMessageEditText.mentionedUsers.toString())
         mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
         Log.e("getMessageUsersId",mentionedUsersIds.toString())
-        sendTextMessageWithMentionFormat = if(mentionedUsersIds.size > 0) {
+        sendTextMessageWithMentionFormat = if(mentionedUsersIds.isNotEmpty()) {
             chatMessageEditText.mentionedTemplate
         } else {
             chatMessageEditText.text.toString().trim()
@@ -1347,12 +1419,32 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             validateAndSendMessage(audioMessage.third!!)
     }
 
+    private fun getDocumentFilePath(context: ContextWrapper, filePathUri: Uri?) {
+        parentViewModel.setSwipeLoader(true)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val fileRealPath = RealPathUtil.getRealPath(context, filePathUri)
+                if (fileRealPath == null)
+                    return@launch
+
+                runOnUiThread { sendDocumentsMessage(fileRealPath)
+                    parentViewModel.setSwipeLoader(false)
+                }
+            } catch(e: Exception) {
+                LogMessage.e(TAG,e.toString())
+                dismissProgress()
+            }
+
+        }
+    }
+
     private fun sendDocumentsMessage(filePathUri: Uri?) {
         filePathUri.let {
             try{
                 val fileRealPath = RealPathUtil.getRealPath(this, filePathUri)
-                if (fileRealPath == null)
-                   return
+
+                if (!isValidToUpload() || fileRealPath == null)
+                    return
                 else if (fileRealPath.isNotEmpty()) {
                     if (!ChatManager.getAvailableFeatures().isDocumentAttachmentEnabled) {
                         CustomAlertDialog().showFeatureRestrictionAlert(this)
@@ -1375,6 +1467,50 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             }
 
         }
+    }
+
+    private fun sendDocumentsMessage(fileRealPath: String) {
+        fileRealPath.let {
+            try {
+                /*   val fileRealPath = RealPathUtil.getRealPath(this, filePathUri)
+                   if (fileRealPath == null)
+                      return
+                   else */
+                if (fileRealPath.isNotEmpty()) {
+                    if (!ChatManager.getAvailableFeatures().isDocumentAttachmentEnabled) {
+                        CustomAlertDialog().showFeatureRestrictionAlert(this)
+                        return
+                    }
+                    val fileMessage = messagingClient.composeDocumentsMessage(chat.toUser, fileRealPath, selectedMessageIdForReply)
+                    if (!fileMessage.first)
+                        showFileValidation()
+                    else if (!fileMessage.second)
+                        showUploadAlert(Constants.MAX_DOCUMENT_UPLOAD_SIZE)
+                    else
+                        validateAndSendMessage(fileMessage.third!!)
+                } else
+                    showFileValidation()
+            } catch (e: IOException) {
+                CustomToast.show(this,getString(R.string.insufficient_memory_error))
+                LogMessage.e(e)
+            } catch (e: Exception) {
+                LogMessage.e(e)
+            }
+
+        }
+    }
+
+    private fun isValidToUpload():Boolean{
+        return if (RealPathUtil.isMemoryNotAvailable()) {
+            CustomToast.show(this,"Memory is not sufficient to upload..")
+            RealPathUtil.setIsMemoryNotAvailable(false)
+            false
+        } else if (RealPathUtil.isMaxFileSize()) {
+            RealPathUtil.setIsFileSizeMaxExceed(false)
+            showUploadAlert(Constants.MAX_DOCUMENT_UPLOAD_SIZE)
+            false
+        } else
+            true
     }
 
     private fun sendContactMessage(data: Intent) {
@@ -1635,7 +1771,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.REPORT_MESSAGES
         val reportLabel = getString(R.string.label_report)
         val userName = "$reportLabel ${getReporterName()}?"
-        val reportMessage = if (!clickedMessages.isEmpty()) getString(R.string.label_report_message)
+        val reportMessage = if (clickedMessages.isNotEmpty()) getString(R.string.label_report_message)
         else if (chat.getChatType().name == ChatType.TYPE_GROUP_CHAT) getString(R.string.label_group_report_5_message)
         else getString(R.string.label_user_report_5_message)
 
@@ -1661,12 +1797,17 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         } catch (e: Exception) {
             LogMessage.e(e)
         }
+        if (ProfileDetailsUtils.getProfileDetails(chat.toUser) == null) {
+            LogMessage.e(TAG,"profile details is null for : ${chat.toUser}")
+            finish()
+            return
+        }
         viewModel.getProfileDetails()
         addMessagesforSmartReply()
         handleOnResume()
         showUnsentMessage(parentViewModel.getUnSentMessageForAnUser(chat.toUser))
         removeUnReadMsgSeparator()
-        if (mainList.isNotEmpty() && !parentViewModel.getFetchingIsInProgress())
+        if (mainList.isNotEmpty() && !parentViewModel.getFetchingIsInProgress() && !isComingFromFilePicker)
             parentViewModel.loadNextData()
         else if (mainList.isEmpty() && !parentViewModel.getFetchingIsInProgress())
             parentViewModel.loadInitialData(messageId)
@@ -1678,6 +1819,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         handleCursorAndKeyboardVisibility()
         clearNotification()
         showPausedOngoingRecording()
+        isComingFromFilePicker = false
     }
 
     private fun checkIsGroupAdminBlocked() {
@@ -1746,7 +1888,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 if (action == CommonAlertDialog.DialogAction.SMART_REPLY_UNBLOCK) {
                     mentionedUsersIds = ChatUtils.setSelectedUserIdForMention(chatMessageEditText.mentionedUsers,mentionedUsersIds)
                     Log.e("getMessageUerIsd",mentionedUsersIds.toString())
-                    sendTextMessageWithMentionFormat = if(mentionedUsersIds.size > 0) {
+                    sendTextMessageWithMentionFormat = if(mentionedUsersIds.isNotEmpty()) {
                         chatMessageEditText.mentionedTemplate
                     } else {
                         chatMessageEditText.text.toString().trim()
@@ -1769,25 +1911,25 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     private fun handleSuccessResponse(action: CommonAlertDialog.DialogAction) {
-        if (action == CommonAlertDialog.DialogAction.REPORT_MESSAGES) {
-            LogMessage.d(TAG, "Messages = $selectedReportMessage")
-            if (doProgressDialog == null) doProgressDialog = DoProgressDialog(this)
-            doProgressDialog!!.showProgress()
-            FlyCore.reportUserOrMessages(chat.toUser, chat.chatType, selectedReportMessage) {isSuccess, _, data ->
-                if (isSuccess) {
-                    LogMessage.d(TAG, "Success")
-                    showToast(getString(R.string.label_report_sent))
-                } else {
-                    LogMessage.d(TAG, "Failure")
-                    showToast(data.getMessage())
+        when {
+            action == CommonAlertDialog.DialogAction.REPORT_MESSAGES -> {
+                LogMessage.d(TAG, "Messages = $selectedReportMessage")
+                if (doProgressDialog == null) doProgressDialog = DoProgressDialog(this)
+                doProgressDialog!!.showProgress()
+                FlyCore.reportUserOrMessages(chat.toUser, chat.chatType, selectedReportMessage) {isSuccess, _, data ->
+                    if (isSuccess) {
+                        LogMessage.d(TAG, "Success")
+                        showToast(getString(R.string.label_report_sent))
+                    } else {
+                        LogMessage.d(TAG, "Failure")
+                        showToast(data.getMessage())
+                    }
+                    selectedReportMessage = Constants.EMPTY_STRING
+                    dismissProgress()
                 }
-                selectedReportMessage = Constants.EMPTY_STRING
-                dismissProgress()
             }
-        } else if (action == CommonAlertDialog.DialogAction.STATUS_BUSY && isAttachMenuClick) {
-            onAttachmentClickCallBackAfterDisableBusyStatus()
-        } else if (action == CommonAlertDialog.DialogAction.STATUS_BUSY && isAudioRecordClick) {
-            onAudioClickCallBackAfterDisableBusyStatus()
+            action == CommonAlertDialog.DialogAction.STATUS_BUSY && isAttachMenuClick -> onAttachmentClickCallBackAfterDisableBusyStatus()
+            action == CommonAlertDialog.DialogAction.STATUS_BUSY && isAudioRecordClick -> onAudioClickCallBackAfterDisableBusyStatus()
         }
     }
 
@@ -1814,12 +1956,11 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     }
 
     private fun handleFailureResponse(action: CommonAlertDialog.DialogAction) {
-        if (action == CommonAlertDialog.DialogAction.REPORT_MESSAGES) {
-            selectedReportMessage = Constants.EMPTY_STRING
-        } else if (action == CommonAlertDialog.DialogAction.UNBLOCK || action == CommonAlertDialog.DialogAction.STATUS_BUSY) {
-            messagesQueue.clear()
-        } else if ((action == CommonAlertDialog.DialogAction.SMART_REPLY_UNBLOCK || action == CommonAlertDialog.DialogAction.SMART_REPLY_BUSY)) {
-            chatMessageEditText.setText(Constants.EMPTY_STRING)
+        when (action) {
+            CommonAlertDialog.DialogAction.REPORT_MESSAGES -> selectedReportMessage = Constants.EMPTY_STRING
+            CommonAlertDialog.DialogAction.UNBLOCK, CommonAlertDialog.DialogAction.STATUS_BUSY -> messagesQueue.clear()
+            CommonAlertDialog.DialogAction.SMART_REPLY_UNBLOCK, CommonAlertDialog.DialogAction.SMART_REPLY_BUSY -> chatMessageEditText.setText(Constants.EMPTY_STRING)
+            else -> com.contusfly.utils.LogMessage.e(TAG,"handleFailureResponse")
         }
     }
 
@@ -2432,7 +2573,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
                 }
                 RequestCode.PICK_FILE -> {
                     isFileChooser=true
-                    data?.let { sendDocumentsMessage(data.data) }
+                    data?.let { getDocumentFilePath(this,data.data) }
                 }
                 RequestCode.SELECT_IMAGE_REQ_CODE -> {
                     data?.let {
@@ -2650,7 +2791,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         if (chat.toUser == singleOrGroupJid) {
             if(!typingList.contains(userId))
                 typingList.add(userId)
-            if (composing.equals(Constants.COMPOSING, true)) {
+            if (composing == Constants.COMPOSING) {
                 if (chat.isGroupChat()) {
                     val userName = getChatTypingUserName(Chat(toUser = typingList[typingList.size -1]).getUsername())
                     chatViewUtils.setUserPresenceStatus(this,
@@ -2669,27 +2810,26 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     private fun getChatTypingUserName(userName: String): String{
         val userNameArray = userName.split(" ")
-        when {
-            (userNameArray.size == 1) -> return if(userNameArray[0].length > 10) userNameArray[0].substring(0,11) + "..." else userNameArray[0]
+        return when {
+            (userNameArray.size == 1) -> if(userNameArray[0].length > 10) userNameArray[0].substring(0,11) + "..." else userNameArray[0]
             (userNameArray.size == 2) -> {
-                return when {
+                when {
                     userNameArray[0].length > 10 -> userNameArray[0].substring(0,11) + "..."
                     userNameArray[1].length > 10 -> userNameArray[0]
                     else -> userName
                 }
             }
             else -> {
-                return if(userNameArray[0].length > 10)
-                    userNameArray[0].substring(0,11) + "..."
-                else if(userNameArray[1].length > 10)
-                    userNameArray[0]
-                else if(userNameArray[2].length > 7)
-                    userNameArray[0] +" "+ userNameArray[1]
-                else {
-                    if(userName.length > 20)
-                        userName.substring(0,17)+"..."
-                    else
-                        userName
+                when {
+                    userNameArray[0].length > 10 -> userNameArray[0].substring(0,11) + "..."
+                    userNameArray[1].length > 10 -> userNameArray[0]
+                    userNameArray[2].length > 7 -> userNameArray[0] +" "+ userNameArray[1]
+                    else -> {
+                        if(userName.length > 20)
+                            userName.substring(0,17)+"..."
+                        else
+                            userName
+                    }
                 }
             }
         }
@@ -3054,11 +3194,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         parentViewModel.loadInitialMessages(messageId)
     }
 
-    private fun getKeyboardListener() = object : KeyboardHeightProvider.KeyboardListener {
-        override fun onHeightChanged(height: Int) {
-            softKeyboardHeight = height
-        }
-    }
+    private fun getKeyboardListener() = KeyboardHeightProvider.KeyboardListener { height -> softKeyboardHeight = height }
 
 
     override fun onRecordingStarted() {

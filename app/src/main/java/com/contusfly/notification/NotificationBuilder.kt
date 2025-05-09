@@ -45,6 +45,7 @@ object NotificationBuilder {
      * @param context Context of the application
      * @param message Instance of the ChatMessage
      */
+    @SuppressWarnings("kotlin:S3776")
     fun createNotification(context: Context, message: ChatMessage, isFromDelete:Boolean = false, deletedChatUserJid:List<String> = arrayListOf()) {
         var lastMessageTime: Long = 0
         val chatJid = message.getChatUserJid()
@@ -58,8 +59,10 @@ object NotificationBuilder {
         var messagingStyle =
             NotificationCompat.MessagingStyle(Person.Builder().setName("Me").build())
 
-        if (!chatNotifications.containsKey(notificationId))
+        if (!chatNotifications.containsKey(notificationId)){
             chatNotifications[notificationId] = NotificationModel(messagingStyle, arrayListOf(),0)
+            LogMessage.e("NOT_ID","New_chat $notificationId")
+        }
 
         val notificationModel = chatNotifications[notificationId]
 
@@ -120,17 +123,19 @@ object NotificationBuilder {
        return if (chatMessage.messageId == message.messageId) message else chatMessage
     }
 
-    private fun clearNotificationTray(deletedChatUserJid:List<String>,context: Context){
+    fun clearNotificationTray(deletedChatUserJid: List<String>, context: Context) {
         deletedChatUserJid.forEach {
-            AppNotificationManager.clearConversationOnNotification(context,it)
+            AppNotificationManager.clearConversationOnNotification(context, it)
         }
-        if(chatNotifications.size == 0){
+        if (chatNotifications.size == 0) {
             AppNotificationManager.cancelNotifications(context)
         }
     }
 
     private fun isMessageRecalledOrEditedMessage(isMessageRecalled:Boolean,message: ChatMessage):Boolean{
-        return isMessageRecalled || message.isEdited
+        return isMessageRecalled || (message.isEdited && FlyMessenger.isOriginalMessageAvailable(
+            message.messageId
+        ))
     }
 
     /**
@@ -164,8 +169,7 @@ object NotificationBuilder {
             messagingStyle.addMessage(
                 contentBuilder, message.getMessageSentTime(),
                 Person.Builder().setName(name)
-                    .setIcon(IconCompat.createWithResource(context, R.drawable.ic_notification_blue)).build()
-            )
+                    .setIcon(IconCompat.createWithResource(context, R.drawable.ic_notification_blue)).build())
         }
     }
 
@@ -631,11 +635,9 @@ object NotificationBuilder {
             NotificationManagerCompat.from(context)
         mNotificationManagerCompat.notify(privateChatNotificationChannelId, notificationCompatBuilder.build())
 
-        displaySummaryNotification(context, lastMessageContent)
-
-        if(finalMessageCount == 0){
-            cancelPrivateChatNotifications(context)
-        }
+        if(finalMessageCount > 0) {
+            displaySummaryNotification(context, lastMessageContent)
+        } else cancelPrivateChatNotifications(context)
     }
 
     private fun getPrivateChatNotificationIntent(context: Context, chatJid: String) : Intent {

@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
  * @author ContusTeam <developers@contus.in>
  * @version 1.0
  */
-internal class OtpInteractor(activity: Activity, private var otpBinding: ActivityOtpBinding) : IOtpInteractor {
+internal class OtpInteractor(activity: OtpActivity, private var otpBinding: ActivityOtpBinding) : IOtpInteractor {
 
     private var coroutineScope: CoroutineScope
 
@@ -88,7 +88,7 @@ internal class OtpInteractor(activity: Activity, private var otpBinding: Activit
      * Constructor for the Login interactor to store the IOtpView
      */
     init {
-        otpActivity = activity as OtpActivity
+        otpActivity = activity
         coroutineScope = activity
         iOtpView = activity
 

@@ -104,7 +104,7 @@ class FilesDialogFragment : DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mCallback = try {
-            context as DialogFragmentInterface
+            context as? DialogFragmentInterface ?: throw ClassCastException("$context must implement OnHeadlineSelectedListener")
         } catch (e: ClassCastException) {
             throw ClassCastException("$context must implement OnHeadlineSelectedListener")
         }

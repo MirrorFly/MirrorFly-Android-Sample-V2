@@ -99,11 +99,11 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
         val isPinNotValidated = SharedPreferenceManager.getBoolean(Constants.IS_PIN_VALIDATED)
         if (intent.getBooleanExtra(Constants.FROM_SPLASH_SCREEN, false) || intent.getBooleanExtra(Constants.FROM_ADMIN_BLOCK_SCREEN, false)) {
             val shouldShowPinOrNot = intent.getBooleanExtra("shouldShowPinOrNot", false)
-            if (AppLifecycleListener.fromOnCreate && AppLifecycleListener.isPinEnabled && !SafeChatUtils.safeChatEnabled) pinForDashBoard()
-            else if (AppLifecycleListener.isForeground && shouldShowPinOrNot) checkBioMetricLock()
-            else if (AppLifecycleListener.pinActivityShowing ||
-                (AppLifecycleListener.isPinEnabled && (AppLifecycleListener.isForeground || isPinNotValidated)))
-                pinForDashBoard()
+            when {
+                AppLifecycleListener.fromOnCreate && AppLifecycleListener.isPinEnabled && !SafeChatUtils.safeChatEnabled -> pinForDashBoard()
+                AppLifecycleListener.isForeground && shouldShowPinOrNot -> checkBioMetricLock()
+                AppLifecycleListener.pinActivityShowing || AppLifecycleListener.isPinEnabled && (AppLifecycleListener.isForeground || isPinNotValidated) -> pinForDashBoard()
+            }
         }
     }
 

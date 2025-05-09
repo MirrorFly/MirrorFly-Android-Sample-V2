@@ -1,6 +1,7 @@
 package com.contusfly.call.groupcall.helpers
 
 import android.app.PictureInPictureParams
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -143,14 +144,14 @@ class BaseCallViewHelper(
     /**
      * The Update Timer thread to run continuously when call is going on.
      */
-    private val updateTimerThread: Runnable = object : Runnable {
-        override fun run() {
+    private val updateTimerThread: Runnable by lazy {
+        Runnable {
             timeInMilliseconds = SystemClock.uptimeMillis() - startTime
             callDuration = ChatTimeFormatter.getFormattedCallDurationTime(timeInMilliseconds)
             if (callDuration.isBlank())
                 callDuration = activity.getString(R.string.start_timer)
             callConnectedViewHelper.updateCallDuration(callDuration)
-            durationHandler.postDelayed(this, 1000)
+            durationHandler.postDelayed(updateTimerThread, 1000)
         }
     }
 
@@ -161,10 +162,11 @@ class BaseCallViewHelper(
 
     fun setUpCallUI(isCallOptionAnimation:Boolean,isLocalTrackAddedFromSwitchRequest:Boolean) {
         LogMessage.d(TAG, "$CALL_UI $JOIN_CALL callViewHelper setUpCallUI()")
+        CallLogger.callTestingLog("#BasecallViewHelper setUpCallUI received")
         setOverlayBackground()
         callNotConnectedViewHelper.setUpCallUI()
         callConnectedViewHelper.setUpCallUI(isLocalTrackAddedFromSwitchRequest)
-        callOptionsViewHelper.setUpCallUI()
+        callOptionsViewHelper.setUpCallUI(isCallOptionAnimation)
         retryCallViewHelper.setUpCallUI()
         incomingCallViewHelper.setUpCallUI()
 
@@ -196,8 +198,8 @@ class BaseCallViewHelper(
             }
         } else {
             val index = callUsersListAdapter.callUserList.indexOf(CallManager.getCurrentUserId())
-            LogMessage.d(TAG, "$CALL_UI callViewHelper index: $index  ")
-            if (!GroupCallUtils.isSingleUserInCall() && index.isValidIndex()) { // if local user available in list view then refresh list view
+            LogMessage.d(TAG, "$CALL_UI callViewHelper index: $index  GroupCallUtils.isSingleUserInCall() ${GroupCallUtils.isSingleUserInCall()}")
+            if (!CallManager.isOneToOneCall() && index.isValidIndex()) { // if local user available in list view then refresh list view
                 val bundle = Bundle()
                 bundle.putInt(CallActions.NOTIFY_VIEW_VIDEO_MUTE_UPDATED, 1)
                 callUsersListAdapter.notifyItemChanged(index, bundle)
@@ -208,6 +210,7 @@ class BaseCallViewHelper(
                     callConnectedViewHelper.updatePinnedUserVideoMuteStatus()
             }
         }
+
     }
 
 
@@ -227,6 +230,12 @@ class BaseCallViewHelper(
         else {
             callConnectedViewHelper.updateCallStatus()
             disableCallOptionAnimation()
+        }
+    }
+
+    fun updateCallNotConnected(){
+        if(CallManager.isCallAttended()){
+            callNotConnectedViewHelper.setUpCallUIForCallAttended()
         }
     }
 
@@ -250,16 +259,19 @@ class BaseCallViewHelper(
     }
 
     fun updatedRejoinedUsers(userJid: String?) {
-        LogMessage.d(TAG, "$CALL_UI callViewHelper updateStatusAdapter userJid: $userJid")
+        LogMessage.d(TAG, "$CALL_UI callViewHelper updatedRejoinedUsers userJid: $userJid")
         if (userJid != null) {
-            if (CallUtils.getIsGridViewEnabled()) {
-                if (!callUserGridAdapter.gridCallUserList.contains(userJid) && CallUtils.getPinnedUserJid() != userJid) {
-                    callUserGridAdapter.addUser(userJid)
-                }
-            } else {
-                if (!callUsersListAdapter.callUserList.contains(userJid) && CallUtils.getPinnedUserJid() != userJid) {
-                    callUsersListAdapter.addUser(userJid)
-                }
+            if (CallUtils.getPinnedUserJid().isBlank() && userJid != CallManager.getCurrentUserId()) {
+                CallUtils.setIsUserTilePinned(true)
+                CallLogger.callTestingLog("UIKIT---> updatedRejoinedUsers setPinnedUserJid $userJid")
+                CallUtils.setPinnedUserJid(userJid)
+            }
+            if (!callUserGridAdapter.gridCallUserList.contains(userJid) && CallUtils.getPinnedUserJid() != userJid) {
+                callUserGridAdapter.addUser(userJid)
+            }
+            if (!callUsersListAdapter.callUserList.contains(userJid) && CallUtils.getPinnedUserJid() != userJid) {
+                CallLogger.callTestingLog("UIKIT---> updatedRejoinedUsers userJid: $userJid pinnedUserJid: ${CallUtils.getPinnedUserJid()}")
+                callUsersListAdapter.addUser(userJid)
             }
         }
     }
@@ -277,9 +289,8 @@ class BaseCallViewHelper(
                 binding.viewOverlay.setBackgroundColor(
                     ContextCompat.getColor(
                         activity,
-                        R.color.color_black_transparent
-                    )
-                )
+                        R.color.color_black_transparent))
+
             } else {
                 LogMessage.d(
                     TAG,
@@ -353,6 +364,9 @@ class BaseCallViewHelper(
         binding.imageMinimizeCall.gone()
         callNotConnectedViewHelper.showRetryLayout()
         retryCallViewHelper.showRetryLayout()
+        CallUtils.resetValues()
+        callUserGridAdapter.clearGridAdapterUserList()
+        callUsersListAdapter.clearListAdapterUserList()
     }
 
     /**
@@ -367,24 +381,36 @@ class BaseCallViewHelper(
         callConnectedViewHelper.makeCallAgain()
     }
 
+    /**
+     * Method used to update the group member name in the ui after click call again.
+     */
+    fun makeCallAgainGroupMemberNameUpdate() {
+        callNotConnectedViewHelper.updateCallMemberDetails(GroupCallUtils.getCallUsersList())
+        runOnUiThread {
+            callConnectedViewHelper.setupUserListForListAdapter()
+        }
+    }
+
     fun hidePIPLayout() {
         pipViewHelper.hidePIPLayout()
     }
 
     fun gotoPIPMode() {
-        LogMessage.d(
-            TAG,
-            "$CALL_UI gotoPIPMode(): ${Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && CallManager.isCallConnected() && !CallUtils.isAddUsersToTheCall()}"
-        )
+        LogMessage.d(TAG, "$CALL_UI gotoPIPMode(): ${Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && CallManager.isCallConnected() && !CallUtils.isAddUsersToTheCall()}")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && CallManager.isCallConnected() && !CallUtils.isAddUsersToTheCall()) {
             if (CommonUtils.isPipModeAllowed(activity)) {
                 // Calculate the aspect ratio of the PiP screen.
                 CallManager.unbindCallService()
                 val aspectRatio = Rational(binding.rootLayout.width, binding.rootLayout.height)
-                mPictureInPictureParamsBuilder!!.setAspectRatio(aspectRatio).build()
+                val sourceRectHint = Rect()
+                binding.rootLayout.getGlobalVisibleRect(sourceRectHint)
+                mPictureInPictureParamsBuilder!!.setAspectRatio(aspectRatio)
+                    .setSourceRectHint(sourceRectHint)
+                    .build()
                 val isSuccess =
                     activity.enterPictureInPictureMode(mPictureInPictureParamsBuilder!!.build())
                 if (isSuccess) {
+                    CallManager.unbindCallService()
                     showPIPLayout()
                 }
             } else {
@@ -542,6 +568,7 @@ class BaseCallViewHelper(
 
         params.setMargins(layoutMargin, layoutMargin, layoutMargin, bottomMarginEnd)
         binding.layoutCallConnected.layoutOneToOneAudioCall.layoutParams = params
+
     }
 
     private fun showListViewAboveCallOptions() {
@@ -564,6 +591,7 @@ class BaseCallViewHelper(
         params.addRule(RelativeLayout.ABOVE, binding.layoutCallOptions.layoutCallOptions.id) // Align RecyclerView's bottom to the top of the bottomView
         params.setMargins(layoutMargin, layoutMargin, layoutMargin, bottomMarginTo)
         binding.layoutCallConnected.callUsersRecyclerview.layoutParams = params
+
     }
 
     /**
@@ -721,17 +749,18 @@ class BaseCallViewHelper(
      * This method animates the call options layout with List View
      */
     private fun animateGroupListView() {
-        LogMessage.d(TAG, "$CALL_UI callViewHelper animateCallOptionsView animateGroupListView()")
+        LogMessage.d(TAG, "$CALL_UI animateGroupListView()")
         if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE) {
-            animateCallOptions(R.anim.slide_down, View.GONE, View.GONE)
-            animateCallDetails(R.anim.slide_out_up, View.GONE)
+            animateCallOptions(com.contus.call.R.anim.slide_down, View.GONE, View.GONE)
+            animateCallDetails(com.contus.call.R.anim.slide_out_up, View.GONE)
             isAnimateClicked = false
             durationHandler.removeCallbacks(hideOptionsRunnable)
         } else {
-            animateCallOptions(R.anim.slide_up, View.VISIBLE, View.GONE)
-            animateCallDetails(R.anim.slide_out_down, View.VISIBLE)
-            durationHandler.postDelayed(hideOptionsRunnable, 3000)
+            animateCallOptions(com.contus.call.R.anim.slide_up, View.VISIBLE, View.GONE)
+            animateCallDetails(com.contus.call.R.anim.slide_out_down, View.VISIBLE)
+            isAnimateClicked = false
         }
+        LogMessage.d("anim_issue","animateGroupListView called layoutTitle visible : ${binding.layoutCallConnected.layoutTitle.isVisible}")
     }
 
     /**
@@ -794,6 +823,8 @@ class BaseCallViewHelper(
     }
 
     private fun updateCallConnectedLayout(callStatus: String, animation: Animation) {
+        CallLogger.callTestingLog("UIKIT---> updateCallConnectedLayout called callStatus : ${callStatus}")
+
         binding.layoutCallConnected.textCallDuration.text = callStatus
         if (binding.layoutCallConnected.layoutTitle.visibility == View.GONE) {
             if (CallUtils.getIsGridViewEnabled())
@@ -833,6 +864,8 @@ class BaseCallViewHelper(
             TAG,
             "$CALL_UI #JOIN_CALL #disconnect callViewHelper updateDisconnectedStatus: isCallUIVisible():${isCallUIVisible()} GroupCallUtils.isCallLinkBehaviourMeet(): ${GroupCallUtils.isCallLinkBehaviourMeet()}"
         )
+        CallLogger.callTestingLog("UIKIT---> updateDisconnectedStatus called isCallUIVisible : ${isCallUIVisible()} callStatus: $callStatus")
+
         if (isCallUIVisible()) {
             val animation = AnimationUtils.loadAnimation(activity, com.contus.call.R.anim.blink)
             LogMessage.d(
@@ -1134,9 +1167,7 @@ class BaseCallViewHelper(
         durationHandler.removeCallbacks(hideOptionsRunnable)
     }
 
-    fun updateCallNotConnected(){
-        if(CallManager.isCallAttended()){
-            callNotConnectedViewHelper.setUpCallUIForCallAttended()
-        }
+    fun isCallRetryVisible(): Boolean {
+        return retryCallViewHelper.isCallRetryVisible()
     }
 }

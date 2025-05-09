@@ -386,9 +386,9 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
      * @param messageStatusImageView Image view to display the status
      */
     private fun setMessageStatus(message: ChatMessage, messageStatusImageView: ImageView) {
-        if (message.isMessageSentByMe() && !message.isMessageRecalled()  && !Constants.MSG_TYPE_NOTIFICATION.equals(message.messageType.name, ignoreCase = true)) {
+        if (message.isMessageSentByMe && !message.isMessageRecalled && !checkEqualString(Constants.MSG_TYPE_NOTIFICATION,message.messageType.name)) {
             messageStatusImageView.show()
-            ChatMessageUtils.setChatStatus(messageStatusImageView, message.getMessageStatus())
+            ChatMessageUtils.setChatStatus(messageStatusImageView, message.messageStatus)
         } else messageStatusImageView.gone()
     }
 

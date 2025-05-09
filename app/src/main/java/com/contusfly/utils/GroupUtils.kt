@@ -13,7 +13,7 @@ object GroupUtils {
         var readStatus: List<MessageStatusDetail>? = null
         GroupManager.getGroupMessageDeliveredToList(messageId, FlyCallback { isSuccess, _, data ->
             if (isSuccess) {
-                deliveredStatus = data[Constants.SDK_DATA] as (List<MessageStatusDetail>)
+                deliveredStatus = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<MessageStatusDetail>().orEmpty()
                 if (readStatus != null)
                     getMessageStatusCallback.onGetMessageStatusLoaded(deliveredStatus!!, readStatus!!)
             } else
@@ -22,7 +22,7 @@ object GroupUtils {
 
         GroupManager.getGroupMessageReadByList(messageId, FlyCallback { isSuccess, _, data ->
             if (isSuccess) {
-                readStatus = data[Constants.SDK_DATA] as (List<MessageStatusDetail>)
+                readStatus = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<MessageStatusDetail>().orEmpty()
                 if (deliveredStatus != null)
                     getMessageStatusCallback.onGetMessageStatusLoaded(deliveredStatus!!, readStatus!!)
             } else

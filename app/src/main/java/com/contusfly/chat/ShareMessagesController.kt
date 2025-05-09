@@ -188,7 +188,7 @@ constructor(private val messagingClient: MessagingClient){
             }
             runOnUiThread {
                 if(listener != null) {
-                    listener.sendMediaSucess()
+                    listener.sendMediaSuccess()
                 }
             }
 

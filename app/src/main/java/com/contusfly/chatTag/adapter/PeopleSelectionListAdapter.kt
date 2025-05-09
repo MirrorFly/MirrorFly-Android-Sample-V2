@@ -67,14 +67,7 @@ class PeopleSelectionListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if(isCreateTagPage){
-
-            return TYPE_CREATE_TAG
-
-        } else{
-
-            return TYPE_SELECTION_TAG
-        }
+        return if(isCreateTagPage) { TYPE_CREATE_TAG } else { TYPE_SELECTION_TAG }
     }
 
     inner class PeopleSelectionViewHolder : RecyclerView.ViewHolder(binding.root) {

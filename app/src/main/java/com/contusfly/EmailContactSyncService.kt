@@ -13,7 +13,6 @@ import android.os.RemoteException
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.contusfly.interfaces.ProcessContusContactCallback
 import com.contusfly.models.ContusContactSyncTime
 import com.contusfly.network.NetworkConnection
 import com.contusfly.network.RetrofitClientNetwork
@@ -225,16 +224,14 @@ class EmailContactSyncService : LifecycleService(), LifecycleObserver, Coroutine
                 when (response.status) {
                     200 -> {
                         LogMessage.d(TAG, "#contact #NewContacts getMailContacts success ${response.message}")
-                        ContusContactUtils.processContusContactResponse(response.data, object :
-                            ProcessContusContactCallback {
-                            override fun onProcessContusContactCompleted() {
-                                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(Constants.EMAIL_CONTACT_SYNC_COMPLETE))
-                                isEmailContactSyncFailed = false
-                                isEmailSyncInProgress.set(false)
-                                mNotificationManager.cancel(NOTIFICATION_ID)
-                                stopEmailContactService()
-                            }
-                        })
+                        ContusContactUtils.processContusContactResponse(response.data) {
+                            LocalBroadcastManager.getInstance(applicationContext)
+                                .sendBroadcast(Intent(Constants.EMAIL_CONTACT_SYNC_COMPLETE))
+                            isEmailContactSyncFailed = false
+                            isEmailSyncInProgress.set(false)
+                            mNotificationManager.cancel(NOTIFICATION_ID)
+                            stopEmailContactService()
+                        }
                     }
                     204 -> {
                         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(Constants.EMAIL_CONTACT_SYNC_COMPLETE))

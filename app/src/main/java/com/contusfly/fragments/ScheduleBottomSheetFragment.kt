@@ -227,9 +227,9 @@ class ScheduleBottomSheetFragment(private val activity: Activity) : BottomSheetD
 
     private fun updateDateText(year:Int,month:Int,day:Int){
         val datePick = Calendar.getInstance()
-        datePick.set(Calendar.YEAR, year)
-        datePick.set(Calendar.MONTH, month)
-        datePick.set(Calendar.DAY_OF_MONTH, day)
+        datePick[Calendar.YEAR] = year
+        datePick[Calendar.MONTH] = month
+        datePick[Calendar.DAY_OF_MONTH] = day
         scheduleTimeStamp = datePick.timeInMillis
         LogMessage.e(TAG, "selected date timestamp::$scheduleTimeStamp")
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
@@ -243,8 +243,8 @@ class ScheduleBottomSheetFragment(private val activity: Activity) : BottomSheetD
 
     private fun updateTimeText(hour:Int,minute:Int) {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, hour)
-        calendar.set(Calendar.MINUTE, minute)
+        calendar[Calendar.HOUR_OF_DAY] = hour
+        calendar[Calendar.MINUTE] = minute
         combinedTimeStamp(calendar.timeInMillis, scheduleTimeStamp)
         val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
         val formattedTime = sdf.format(calendar.time)
@@ -272,7 +272,12 @@ class ScheduleBottomSheetFragment(private val activity: Activity) : BottomSheetD
 
 // Create a new Calendar instance for the combined timestamp
         val combinedCalendar = Calendar.getInstance()
-        combinedCalendar.set(year, month, dayOfMonth, hour, minute, second)
+        combinedCalendar[Calendar.YEAR] = year
+        combinedCalendar[Calendar.MONTH] = month
+        combinedCalendar[Calendar.DAY_OF_MONTH] = dayOfMonth
+        combinedCalendar[Calendar.HOUR_OF_DAY] = hour
+        combinedCalendar[Calendar.MINUTE] = minute
+        combinedCalendar[Calendar.SECOND] = second
 
 // Obtain the combined timestamp
         val combinedTimestamp = combinedCalendar.timeInMillis

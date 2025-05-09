@@ -144,31 +144,38 @@ class StartActivity : BaseActivity(), CoroutineScope, BiometricCallback {
     }
 
     private fun goToChatView(jid: String, chatType: String) {
-        if (AppLifecycleListener.fromOnCreate && AppLifecycleListener.isPinEnabled) {
-            Log.d(TAG, "checkNotificationIntent:  oncreate_APP")
-            privateChatNotificationHandle(jid, chatType)
-        }else if (!AppLifecycleListener.isAPPForeground && shouldShowPinOrNot()) {
-            Log.d(TAG, "checkNotificationIntent:  SHOW_PIN")
-            NormalNotificationHandle(jid, chatType)
-        } else if (AppLifecycleListener.pinActivityShowing) {
-            Log.d(TAG, "checkNotificationIntent:  SHOW_PIN1")
-            SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
-            privateChatNotificationHandle(jid, chatType)
-        } else if (intent.hasExtra(Constants.IS_FOR_SAFE_CHAT)){
-            Log.d(TAG, getString(R.string.is_from_chat_shortcut))
-            startActivities(
-                TaskStackBuilder.create(this)
-                    .addNextIntent(
-                        Intent(this,DashboardActivity::class.java)
-                            .setAction(Intent.ACTION_VIEW)
-                            .putExtra(Constants.IS_FOR_SAFE_CHAT, true)
-                    ).intents
-            )
-        } else if (intent.hasExtra(Constants.PRIVATE_CHAT)) {
-            Log.d(TAG, "checkNotificationIntent:  in PRIVATE_CHAT")
-            privateChatNotificationHandle(jid, chatType)
-        } else {
-            checkAndNavigateToDashboard(jid, chatType)
+        when {
+            AppLifecycleListener.fromOnCreate && AppLifecycleListener.isPinEnabled -> {
+                Log.d(TAG, "checkNotificationIntent:  oncreate_APP")
+                privateChatNotificationHandle(jid, chatType)
+            }
+            !AppLifecycleListener.isAPPForeground && shouldShowPinOrNot() -> {
+                Log.d(TAG, "checkNotificationIntent:  SHOW_PIN")
+                NormalNotificationHandle(jid, chatType)
+            }
+            AppLifecycleListener.pinActivityShowing -> {
+                Log.d(TAG, "checkNotificationIntent:  SHOW_PIN1")
+                SharedPreferenceManager.setString(Constants.APP_SESSION, System.currentTimeMillis().toString())
+                privateChatNotificationHandle(jid, chatType)
+            }
+            intent.hasExtra(Constants.IS_FOR_SAFE_CHAT) -> {
+                Log.d(TAG, getString(R.string.is_from_chat_shortcut))
+                startActivities(
+                    TaskStackBuilder.create(this)
+                        .addNextIntent(
+                            Intent(this,DashboardActivity::class.java)
+                                .setAction(Intent.ACTION_VIEW)
+                                .putExtra(Constants.IS_FOR_SAFE_CHAT, true)
+                        ).intents
+                )
+            }
+            intent.hasExtra(Constants.PRIVATE_CHAT) -> {
+                Log.d(TAG, "checkNotificationIntent:  in PRIVATE_CHAT")
+                privateChatNotificationHandle(jid, chatType)
+            }
+            else -> {
+                checkAndNavigateToDashboard(jid, chatType)
+            }
         }
     }
 

@@ -11,10 +11,10 @@ import javax.inject.Singleton
  */
 
 @Suppress("UNCHECKED_CAST")
+@SuppressWarnings("kotlin:S6531")
 @Singleton
 class AppViewModelFactory @Inject
 constructor(private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>) : ViewModelProvider.Factory {
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         var creator: Provider<out ViewModel>? = creators[modelClass]
         if (creator == null) {
@@ -27,9 +27,11 @@ constructor(private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcard
             }
         }
         if (creator == null) {
-            throw IllegalArgumentException("unknown model class $modelClass")
+            error("unknown model class $modelClass")
         }
         try {
+            // The cast is safe because creator is matched via isAssignableFrom
+            //creator.get() returns a ViewModel, but the method signature requires T : ViewModel.
             return creator.get() as T
         } catch (e: Exception) {
             throw RuntimeException(e)

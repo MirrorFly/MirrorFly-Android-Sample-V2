@@ -253,9 +253,8 @@ object MediaPermissions {
     private fun fullScreenNotificationDialogShow(activity: Activity) {
 
         try {
-            var dialogBinding: ViewBinding? = null
-            var dialogBuilder: AlertDialog.Builder
-            dialogBuilder = AlertDialog.Builder(activity, R.style.TrasparentAlertDialog)
+            val dialogBinding: ViewBinding?
+            val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(activity, R.style.TrasparentAlertDialog)
             val inflater: LayoutInflater = activity.layoutInflater
             dialogBinding = NotificationPermissionDialogBinding.inflate(inflater)
             dialogBuilder.apply {

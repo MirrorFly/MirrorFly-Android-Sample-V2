@@ -142,7 +142,7 @@ class ContactsAdapter(val context: Context, private val commonAlertDialog: Commo
             return if (profilesList.size > position)
                 profilesList[position].jid.hashCode().toLong()
             else
-                if(profilesList.size>0) profilesList[0].jid.hashCode().toLong() else 0
+                if(profilesList.isNotEmpty()) profilesList[0].jid.hashCode().toLong() else 0
         }catch(e:ArrayIndexOutOfBoundsException){
             com.contusfly.utils.LogMessage.e(TAG,e.toString())
         }catch(e:Exception){

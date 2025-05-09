@@ -67,18 +67,18 @@ class FileListAdapter(context: Context) : RecyclerView.Adapter<FileListAdapter.F
 
     private fun setColorAndMessageForUnsupportedInfo(holder: FileShareViewHolder, fileObject: FileObject) {
         var invalidTextMessage = ""
-        if (!fileObject.fileValidation!![FileValidation.SIZE]!!) {
+        if (!fileObject.fileValidation?.get(FileValidation.SIZE)!!) {
             val errorMessage = context!!.getString(R.string.file_size_error_message)
             holder.viewBinding.fileSize.setTextColor(ContextCompat.getColor(context!!, R.color.invalid_red))
             invalidTextMessage = errorMessage + " " + getFileMimeTypeMessage()
         } else holder.viewBinding.fileSize.setTextColor(ContextCompat.getColor(context!!, R.color.color_black))
 
-        if (!fileObject.fileValidation!![FileValidation.DURATION]!!) {
+        if (!fileObject.fileValidation?.get(FileValidation.DURATION)!!) {
             holder.viewBinding.fileDuration.setTextColor(ContextCompat.getColor(context!!, R.color.invalid_red))
             invalidTextMessage = "File duration exceeds maximum limit."
         } else holder.viewBinding.fileDuration.setTextColor(ContextCompat.getColor(context!!,R.color.color_black))
 
-        if (!fileObject.fileValidation!![FileValidation.TYPE]!!) {
+        if (!fileObject.fileValidation?.get(FileValidation.TYPE)!!) {
             holder.viewBinding.fileType.setTextColor(ContextCompat.getColor(context!!,R.color.invalid_red))
             invalidTextMessage = when (fileObject.fileMimeType) {
                 AUDIO -> context!!.getString(R.string.audio_file_not_supported)
@@ -89,6 +89,7 @@ class FileListAdapter(context: Context) : RecyclerView.Adapter<FileListAdapter.F
 
         holder.viewBinding.invalidText.text = invalidTextMessage
     }
+
 
     private fun getFileMimeTypeMessage(): String {
         return "2Gb"
@@ -111,16 +112,22 @@ class FileListAdapter(context: Context) : RecyclerView.Adapter<FileListAdapter.F
             }
             APPLICATION -> {
                 val fileExtension: String = fileObject.fileExtension
-                if (fileExtension.contains("xls")) {
-                    holder.viewBinding.fileTypeImage.setImageResource(R.drawable.ic_xls)
-                } else if (fileExtension.contains("doc")) {
-                    holder.viewBinding.fileTypeImage.setImageResource(R.drawable.ic_doc)
-                } else if (fileExtension.contains("pdf")) {
-                    holder.viewBinding.fileTypeImage.setImageResource(R.drawable.ic_pdf)
-                } else if (fileExtension.contains("ppt")) {
-                    holder.viewBinding.fileTypeImage.setImageResource(R.drawable.ic_ppt)
-                } else {
-                    holder.viewBinding.fileTypeImage.setImageResource(R.drawable.share_file)
+                when {
+                    fileExtension.contains("xls") -> {
+                        holder.viewBinding.fileTypeImage.setImageResource(R.drawable.ic_xls)
+                    }
+                    fileExtension.contains("doc") -> {
+                        holder.viewBinding.fileTypeImage.setImageResource(R.drawable.ic_doc)
+                    }
+                    fileExtension.contains("pdf") -> {
+                        holder.viewBinding.fileTypeImage.setImageResource(R.drawable.ic_pdf)
+                    }
+                    fileExtension.contains("ppt") -> {
+                        holder.viewBinding.fileTypeImage.setImageResource(R.drawable.ic_ppt)
+                    }
+                    else -> {
+                        holder.viewBinding.fileTypeImage.setImageResource(R.drawable.share_file)
+                    }
                 }
             }
             UNSUPPORTED_FORMAT -> holder.viewBinding.fileTypeImage.setImageResource(R.drawable.share_file)

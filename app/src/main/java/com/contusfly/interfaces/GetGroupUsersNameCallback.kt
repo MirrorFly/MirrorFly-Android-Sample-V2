@@ -1,5 +1,5 @@
 package com.contusfly.interfaces
 
-interface GetGroupUsersNameCallback {
+fun interface GetGroupUsersNameCallback {
     fun onGroupUsersNamePrepared(names: String)
 }

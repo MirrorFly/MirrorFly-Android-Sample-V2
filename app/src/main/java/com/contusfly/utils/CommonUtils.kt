@@ -235,7 +235,7 @@ open class CommonUtils {
             val metrics = mContext.resources.displayMetrics
             val screenWidth = (metrics.widthPixels * 0.100).toInt()
             val binding = BottomSheetChatTagRemoveLayoutBinding.inflate(LayoutInflater.from(mContext))
-            var view= binding.root
+            val view= binding.root
             val dialog= BottomSheetDialog(mContext, R.style.DialogSlideAnim)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(view)

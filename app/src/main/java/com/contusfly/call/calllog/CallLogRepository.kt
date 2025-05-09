@@ -27,7 +27,8 @@ class CallLogRepository @Inject constructor() {
 
     fun getCallLogs(): MutableList<CallLog> {
         LogMessage.v(tag, "$CALL_UI getCallLogs() is working in thread ${Thread.currentThread().name}")
-        return CallLogManager.getCallLogs() as MutableList<CallLog>
+        val callLogs = (CallLogManager.getCallLogs() as? ArrayList<*>)?.filterIsInstance<CallLog>().orEmpty().toMutableList()
+        return callLogs
     }
 
     suspend fun filteredCallLogs(searchKey: String): MutableList<CallLog> = withContext(Dispatchers.IO) {

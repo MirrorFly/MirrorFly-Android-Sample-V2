@@ -49,6 +49,7 @@ import com.mirrorflysdk.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  *
@@ -110,14 +111,11 @@ open class BaseActivity : FlyBaseActivity() {
     }
 
     private fun setSecureFlag(){
-        if(AppLifecycleListener.isPinEnabled){
-            setFlag()
-        } else if(AppLifecycleListener.pinAvailable && AppLifecycleListener.isPresentPrivateChat){
-            setFlag()
-        } else if(AppLifecycleListener.pinAvailable && AppLifecycleListener.getCurrentChatUserIsPrivateOrNot()){
-            setFlag()
-        } else {
-            removeFlag()
+        when {
+            AppLifecycleListener.isPinEnabled -> setFlag()
+            AppLifecycleListener.pinAvailable && AppLifecycleListener.isPresentPrivateChat -> setFlag()
+            AppLifecycleListener.pinAvailable && AppLifecycleListener.getCurrentChatUserIsPrivateOrNot() -> setFlag()
+            else -> removeFlag()
         }
     }
 
@@ -544,6 +542,12 @@ open class BaseActivity : FlyBaseActivity() {
     ) {
         super.onMuteStatusUpdated(isSuccess, message, jidList, muteStatus)
         LogMessage.d(TAG, "#mute #recentChat update")
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        LogMessage.d(TAG,"super admin called in base activity")
+        EventBus.getDefault().post(groupJid)
     }
 
 

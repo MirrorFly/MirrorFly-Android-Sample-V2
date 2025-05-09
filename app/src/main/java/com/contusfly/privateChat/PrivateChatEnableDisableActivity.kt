@@ -19,6 +19,7 @@ import com.contusfly.activities.BaseActivity
 import com.contusfly.activities.BiometricActivity
 import com.contusfly.activities.PinActivity
 import com.contusfly.activities.PinEntryChange
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.databinding.ActivityPrivateChatEnableDisableBinding
 import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.utils.Constants
@@ -26,6 +27,7 @@ import com.contusfly.utils.LogMessage
 import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CommonAlertDialog
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.views.CustomToast
 import com.mirrorflysdk.xmpp.chat.utils.LibConstants
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -75,6 +77,20 @@ class PrivateChatEnableDisableActivity : BaseActivity() {
         handleMainIntent()
         checkIsAlreadyPrivateChatUser()
         onClick()
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (toUser == groupJid){
+            if (groupName.isNotEmpty())
+                CustomToast.show(
+                    context,
+                    getString(R.string.deleted_by_super_admin, groupName)
+                )
+            com.contusfly.startDashboardActivity(this)
+            finish()
+        }
     }
 
     private fun handleMainIntent() {

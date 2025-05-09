@@ -49,4 +49,8 @@ class RetryCallViewHelper(
     fun hideRetryLayout() {
         binding.layoutCallRetry.gone()
     }
+
+    fun isCallRetryVisible(): Boolean {
+        return binding.layoutCallRetry.visibility == View.VISIBLE
+    }
 }

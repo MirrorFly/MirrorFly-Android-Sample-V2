@@ -8,6 +8,8 @@ import com.contusfly.call.calllog.CallLogRepository
 import com.contusfly.getDisplayName
 import com.contusfly.sortProfileList
 import com.contusfly.utils.Constants
+import com.contusfly.utils.Constants.Companion.SDK_DATA
+import com.contusfly.utils.LogMessage
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
 import com.mirrorflysdk.api.FlyCore
@@ -72,8 +74,8 @@ constructor(private val callLogRepository: CallLogRepository) : ViewModel() {
             setUserListFetching(true)
             FlyCore.getUserList(currentPage, resultPerPage) { isSuccess, _, data ->
                 if (isSuccess) {
-                    val profileList = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
-                    totalUserPage = data[Constants.TOTAL_PAGES] as Int
+                    val profileList = (data[SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty()
+                    totalUserPage = data[Constants.TOTAL_PAGES] as? Int ?: 0
                     var userListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileList, false)
                     userListResult = getFilteredList(callConnectedUserList, userListResult.toMutableList())
                     viewModelScope.launch(Dispatchers.Main) {
@@ -112,8 +114,8 @@ constructor(private val callLogRepository: CallLogRepository) : ViewModel() {
             setSearchUserListFetching(true)
             FlyCore.getUserList(currentSearchPage, resultPerPage, searchString) { isSuccess, _, data ->
                 if (isSuccess) {
-                    val profileList = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
-                    totalUserSearchPage = data[Constants.TOTAL_PAGES] as Int
+                    val profileList = (data[SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty()
+                    totalUserSearchPage = data[Constants.TOTAL_PAGES] as? Int ?: 0
                     var userListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileList, false)
                     userListResult = getFilteredList(callConnectedUserList, userListResult.toMutableList())
                     viewModelScope.launch(Dispatchers.Main) {
@@ -172,20 +174,29 @@ constructor(private val callLogRepository: CallLogRepository) : ViewModel() {
 
     fun getInviteUserListForGroup(groupId: String, callConnectedUserList: ArrayList<String>?) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            var profileDetails: List<ProfileDetails>? = null
+            var profileDetails: List<ProfileDetails>?
             GroupManager.getGroupMembersList(false, groupId) { isSuccess, _, data ->
-                if (isSuccess) profileDetails = data["data"] as ArrayList<ProfileDetails>
-                val groupWithOutCallMembers: MutableList<ProfileDetails> =
-                    profileDetails!!.toMutableList()
-                inviteUserList.value = getUpdatedProfiles(getFilteredList(callConnectedUserList, groupWithOutCallMembers))
+                if (isSuccess) {
+                    profileDetails = data["data"] as ArrayList<ProfileDetails>
+                    val groupWithOutCallMembers: MutableList<ProfileDetails> =
+                        profileDetails!!.toMutableList()
+                    inviteUserList.value = getUpdatedProfiles(
+                        getFilteredList(
+                            callConnectedUserList,
+                            groupWithOutCallMembers
+                        )
+                    )
+                }else{
+                    LogMessage.d("CallViewModel", "failure on getInviteUserListForGroup->")
+                }
             }
         }
     }
 
+
     fun getProfileDetailsWithoutCallMembers(callConnectedUserList: ArrayList<String>?): List<ProfileDetails> {
         val profileDetails = FlyCore.getRegisteredUsers()
-        val withOutCallMembers: MutableList<ProfileDetails> = profileDetails.toMutableList()
-        return sortProfileList(getFilteredList(callConnectedUserList, getSingleProfiles(withOutCallMembers)))
+        return sortProfileList(getFilteredList(callConnectedUserList, getSingleProfiles(profileDetails)))
     }
 
     private fun getFilteredList(
@@ -198,7 +209,7 @@ constructor(private val callLogRepository: CallLogRepository) : ViewModel() {
         }
     }
 
-    private fun getSingleProfiles(profiles: MutableList<ProfileDetails>): MutableList<ProfileDetails> {
+    private fun getSingleProfiles(profiles: ArrayList<ProfileDetails>): MutableList<ProfileDetails> {
         val profileList: MutableList<ProfileDetails> = mutableListOf()
         for (profile in profiles) {
             if (!profile.isGroupProfile)

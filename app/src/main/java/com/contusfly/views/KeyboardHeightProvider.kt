@@ -122,7 +122,7 @@ class KeyboardHeightProvider(private val activity: Activity) : PopupWindow(activ
         imm.hideSoftInputFromWindow(parentView?.windowToken, 0)
     }
 
-    interface KeyboardListener {
+   fun interface KeyboardListener {
         fun onHeightChanged(height: Int)
     }
 }

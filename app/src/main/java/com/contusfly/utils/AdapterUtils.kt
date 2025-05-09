@@ -32,19 +32,26 @@ object AdapterUtils {
             TAG,
             "Join Call via Link indexOfFirstDelimiter:$indexOfFirstDelimiter indexOfNextDelimiter: $indexOfNextDelimiter"
         )
-        if (indexOfFirstDelimiter == -1 && indexOfNextDelimiter == -1) {
-            return indexOfFirstDelimiter
-        } else if (indexOfFirstDelimiter == -1 && indexOfNextDelimiter != -1) {
-            return indexOfNextDelimiter
-        } else if (indexOfFirstDelimiter != -1 && indexOfNextDelimiter != -1) {
-            return minOf(indexOfFirstDelimiter, indexOfNextDelimiter)
+        return when {
+            indexOfFirstDelimiter == -1 && indexOfNextDelimiter == -1 -> {
+                indexOfFirstDelimiter
+            }
+
+            indexOfFirstDelimiter == -1 && indexOfNextDelimiter != -1 -> {
+                indexOfNextDelimiter
+            }
+
+            indexOfFirstDelimiter != -1 && indexOfNextDelimiter != -1 -> {
+                minOf(indexOfFirstDelimiter, indexOfNextDelimiter)
+            }
+
+            else -> indexOfFirstDelimiter
         }
-        return indexOfFirstDelimiter
     }
 
     fun checkIndexOfNewMessageAfterLink(originalMsg: String): Int {
 
-        var indexOfSpace: Int = indexOfDelimiter(originalMsg, " ")
+        val indexOfSpace: Int = indexOfDelimiter(originalMsg, " ")
         val indexOfNewLine: Int = indexOfDelimiter(originalMsg, "\n")
         val indexOfTab: Int = indexOfDelimiter(originalMsg, "\t")
         var indexOfNewMsgAfterLink: Int = -1

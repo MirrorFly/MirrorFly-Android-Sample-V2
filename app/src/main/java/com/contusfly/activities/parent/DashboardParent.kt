@@ -21,6 +21,7 @@ import com.contusfly.adapters.ViewPagerAdapter
 import com.contusfly.di.factory.AppViewModelFactory
 import com.contusfly.call.calllog.CallHistoryFragment
 import com.contusfly.call.calllog.CallLogViewModel
+import com.contusfly.call.groupcall.utils.CallUtils
 import com.contusfly.databinding.ActivityDashboardBinding
 import com.contusfly.fragments.RecentChatListFragment
 import com.contusfly.interfaces.RecentChatEvent
@@ -149,7 +150,7 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
      */
     override fun setTypingStatus(singleOrGroupJid: String, userId: String, typingStatus: String) {
         if (mRecentChatListType == RecentChatListType.RECENT) {
-            if (typingStatus.equals(Constants.COMPOSING, ignoreCase = true))
+            if (checkEqualString(typingStatus,Constants.COMPOSING))
                 viewModel.setTypingStatus(Triple(singleOrGroupJid, userId, true))
             else viewModel.setTypingStatus(Triple(singleOrGroupJid, userId, false))
             viewModel.onTypingStatusGoneUpdate.value=singleOrGroupJid
@@ -209,6 +210,37 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
     override fun onDeleteGroup(groupJid: String) {
         super.onDeleteGroup(groupJid)
         viewModel.getRecentChatOfUser(groupJid, RecentChatEvent.GROUP_EVENT)
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        if (groupName.isNotEmpty())
+            CustomToast.show(
+                context,
+                getString(R.string.deleted_by_super_admin, groupName)
+            )
+        val index = viewModel.recentChatAdapter.indexOfFirst { it.jid == groupJid }
+        if (index.isValidIndex()) {
+            if (groupName.isNotEmpty())
+                CustomToast.show(
+                    context,
+                    getString(R.string.deleted_by_super_admin, groupName)
+                )
+            viewModel.setGroupDeletedBySuperAdmin(groupJid)
+            callLogviewModel.addLoaderToTheList(context = context)
+            callLogviewModel.getCallLogsList(false)
+            CallUtils.setCallsTabToBeShown(false)
+        }
+        viewModel.getPrivateChatStatus()
+        viewModel.getArchivedChatStatus()
+        viewModel.updateUnReadChatCount()
+        viewModel.getRestartActivitygetrecentChatList()
+        val currentFragment = (activity as DashboardActivity).getCurrentVisibleFragment()
+        if (currentFragment is CallHistoryFragment && viewModel.callsSearchKey.value?.isNotEmpty() == true) {
+            viewModel.callsSearchKey.value?.let {
+                callLogviewModel.filterCallLogsList(it)
+            }
+        }
+        clearDeletedGroupChatNotification(groupJid, context)
     }
 
     /**
@@ -422,20 +454,20 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
      * @return boolean True if the item has click handled successfully.
      */
     open fun onClickAction(itemId: Int): Boolean {
-        when (itemId) {
+        return when (itemId) {
             R.id.action_delete -> {
                 if (mViewPager.currentItem == 1) {
                     callHistoryFragment.showClearAlertDialog(false)
                 } else deleteChatAlert()
-                return true
+                 true
             }
             R.id.action_info -> {
                 openChatInfo()
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_pin -> {
-                return if (viewModel.updatePinnedRecentChats()) {
+                if (viewModel.updatePinnedRecentChats()) {
                     actionMode?.finish()
                     true
                 } else {
@@ -445,43 +477,43 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
             R.id.action_un_pin -> {
                 viewModel.updateUnPinnedRecentChats()
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_mute -> {
                 viewModel.updateMuteNotification(Constants.MUTE_NOTIFY)
                 recentChatFragment.updateRecentItem(true)
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_unmute -> {
                 viewModel.updateMuteNotification(Constants.UN_MUTE_NOTIFY)
                 recentChatFragment.updateRecentItem(false)
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_mark_as_unread -> {
                 viewModel.markAsUnreadRecentChats()
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_mark_as_read -> {
                 markasRead()
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_archive_chat -> {
                 viewModel.setArchiveChatTriggeredStatus(true)
                 archiveChats()
                 viewModel.updateUnReadChatCount()
                 actionMode?.finish()
-                return true
+                true
             }
             R.id.action_add_chat_shortcuts -> {
                 viewModel.createPinShortcutForRecentChat(this)
                 actionMode?.finish()
-                return true
+                true
             }
-            else -> return false
+            else -> false
         }
     }
 
@@ -579,9 +611,9 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
                     failedCount++
                     dismissProgress()
                 }
-                val isAdapterNeedSync = (selectedJids.size > 0 && selectedCount == (selectedJids.size + failedCount))
+                val isAdapterNeedSync = (selectedJids.isNotEmpty() && selectedCount == (selectedJids.size + failedCount))
                 if (isAdapterNeedSync) {
-                    updateArchiveChatsData(selectedJids, failedCount)
+                    updateArchiveChatsData(selectedJids.toCollection(ArrayList()), failedCount)
                     dismissProgress()
                 }
             })
@@ -592,7 +624,7 @@ open class DashboardParent : BaseActivity(), CoroutineScope {
         if (doProgressDialog != null && doProgressDialog!!.isShowing) doProgressDialog!!.dismiss()
     }
 
-    private fun updateArchiveChatsData(selectedJids: MutableList<String>, failedCount: Int) {
+    private fun updateArchiveChatsData(selectedJids: ArrayList<String>, failedCount: Int) {
         viewModel.updateArchiveChatsList(selectedJids)
         val chatsSize = selectedJids.size
         if (chatsSize == 1)

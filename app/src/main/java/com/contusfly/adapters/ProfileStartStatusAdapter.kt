@@ -23,7 +23,7 @@ class ProfileStartStatusAdapter(context: Context) : BaseAdapter() {
     /**
      * The status list.
      */
-    private var statusList: MutableList<ProfileStatus>? = mutableListOf()
+    private var statusList: ArrayList<ProfileStatus>? = arrayListOf()
 
     /**
      * Default status for the application user
@@ -36,7 +36,7 @@ class ProfileStartStatusAdapter(context: Context) : BaseAdapter() {
      * @param status        List of available status
      * @param defaultStatus Default status
      */
-    fun setStatus(status: MutableList<ProfileStatus>, defaultStatus: String?) {
+    fun setStatus(status: ArrayList<ProfileStatus>, defaultStatus: String?) {
         statusList = status
         this.defaultStatus = defaultStatus
     }

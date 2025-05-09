@@ -107,7 +107,7 @@ object ContactUtils {
                 val id = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID))
                 val hasPhone = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
                 val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                if ("1".equals(hasPhone, ignoreCase = true)) {
+                if ("1" == hasPhone.lowercase()) {
                     val pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf(id), null)
                     contacts = pCur?.let { getContactsFromCursor(it, name) } ?: contacts

@@ -6,6 +6,8 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.widget.Toast
@@ -124,10 +126,22 @@ object WorkManagerController {
                     LogMessage.i(TAG,"file not Deleted :$filepath")
                 }
             } else {
-                Toast.makeText(appContext, appContext.getString(R.string.file_not_available), Toast.LENGTH_SHORT).show()
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        appContext,
+                        appContext.getString(R.string.file_not_available),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         } else {
-            Toast.makeText(appContext, appContext.getString(R.string.permission_not_given), Toast.LENGTH_SHORT).show()
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    appContext,
+                    appContext.getString(R.string.permission_not_given),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -229,13 +243,13 @@ object WorkManagerController {
         val connMgr =
             appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
         connMgr ?: return false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val network: Network = connMgr.activeNetwork ?: return false
             val capabilities = connMgr.getNetworkCapabilities(network)
-            return capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+            capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
         } else {
             val networkInfo = connMgr.activeNetworkInfo ?: return false
-            return networkInfo.isConnected && networkInfo.type == ConnectivityManager.TYPE_WIFI
+            networkInfo.isConnected && networkInfo.type == ConnectivityManager.TYPE_WIFI
         }
     }
 

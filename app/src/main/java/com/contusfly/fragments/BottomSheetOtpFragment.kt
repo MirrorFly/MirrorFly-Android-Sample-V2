@@ -463,7 +463,7 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
         }
     }
 
-    interface Cancel {
+    fun interface Cancel {
         fun cancelCallBack()
     }
 

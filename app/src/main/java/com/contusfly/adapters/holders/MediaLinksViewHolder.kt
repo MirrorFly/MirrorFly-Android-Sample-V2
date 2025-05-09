@@ -19,16 +19,15 @@ class MediaLinksViewHolder(val context: Context, var viewBinding: RowMediaLinksI
     @SuppressLint("CheckResult")
     fun bindValues(messageItem: GroupedMedia.MessageItem) {
 
-        viewBinding.textLinkContent.text = if (messageItem.chatMessage.isTextMessage())
-            messageItem.chatMessage.getMessageTextContent()
-        else if (messageItem.chatMessage.isImageMessage() || messageItem.chatMessage.isVideoMessage())
-            messageItem.chatMessage.getMediaChatMessage().getMediaCaptionText()
-        else if (messageItem.chatMessage.isMeetMessage())
-            messageItem.chatMessage.meetingChatMessage.link
-        else Constants.EMPTY_STRING
+        viewBinding.textLinkContent.text = when {
+            messageItem.chatMessage.isTextMessage() -> messageItem.chatMessage.messageTextContent
+            messageItem.chatMessage.isImageMessage() || messageItem.chatMessage.isVideoMessage() -> messageItem.chatMessage.mediaChatMessage.mediaCaptionText
+            messageItem.chatMessage.isMeetMessage() -> messageItem.chatMessage.meetingChatMessage.link
+            else -> Constants.EMPTY_STRING
+        }
 
         if (messageItem.chatMessage.isImageMessage() || messageItem.chatMessage.isVideoMessage())
-            ImageUtils.loadBase64(context, viewBinding.imageLinkPreview, messageItem.chatMessage.getMediaChatMessage().getMediaThumbImage(), R.drawable.ic_link_placeholder)
+            ImageUtils.loadBase64(context, viewBinding.imageLinkPreview, messageItem.chatMessage.mediaChatMessage.mediaThumbImage, R.drawable.ic_link_placeholder)
         else
             viewBinding.imageLinkPreview.setImageResource(R.drawable.ic_link_placeholder)
 

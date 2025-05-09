@@ -196,6 +196,10 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
         addParticipantsListFragment.onAdminBlockedStatus(jid, type, status)
     }
 
+    fun onMemberRemovedOrAddedInGroup(isUserLeft: Boolean, jid: String, mGroupId: String?) {
+        addParticipantsListFragment.updateMemberRemovedOrAddedInUserList(isUserLeft, jid, mGroupId)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search_group_call, menu)
         if (tabPosition == 0) hideMenu(menu.findItem(R.id.action_search))

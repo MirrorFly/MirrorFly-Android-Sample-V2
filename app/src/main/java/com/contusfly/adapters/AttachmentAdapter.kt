@@ -15,10 +15,7 @@ import com.contusfly.models.AttachmentMainModel
 class AttachmentAdapter(private val attachmentMainModel: List<AttachmentMainModel>,
                         private val context: Context) : RecyclerView.Adapter<AttachmentAdapter.MyViewHolder>() {
 
-    private var mListener1: RecyclerViewClickListenerType1? = null
-    private var mListener2: RecyclerViewClickListenerType2? = null
-    private var mListener3: RecyclerViewClickListenerType3? = null
-    private var mListener4: RecyclerViewClickListenerType4? = null
+    private var mListener: RecyclerViewClickListenerType? = null
 
     /**
      * Click listener for dialog elements
@@ -40,20 +37,8 @@ class AttachmentAdapter(private val attachmentMainModel: List<AttachmentMainMode
 
     }
 
-    fun setmListener1(mListener1: RecyclerViewClickListenerType1?) {
-        this.mListener1 = mListener1
-    }
-
-    fun setmListener2(mListener2: RecyclerViewClickListenerType2?) {
-        this.mListener2 = mListener2
-    }
-
-    fun setmListener3(mListener3: RecyclerViewClickListenerType3?) {
-        this.mListener3 = mListener3
-    }
-
-    fun setmListener4(mListener4: RecyclerViewClickListenerType4?) {
-        this.mListener4 = mListener4
+    fun setmListener(mListener: RecyclerViewClickListenerType?) {
+        this.mListener = mListener
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): MyViewHolder {
@@ -63,16 +48,16 @@ class AttachmentAdapter(private val attachmentMainModel: List<AttachmentMainMode
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val attachmentMainModels = attachmentMainModel[position]
-        holder.cameralinearLayout.setOnClickListener { v: View? -> mListener1!!.onItemClick1(v, position, attachmentMainModels.attachmentModels1.attachmentName) }
+        holder.cameralinearLayout.setOnClickListener { v: View? -> mListener!!.onItemClick(v, position, attachmentMainModels.attachmentModels1.attachmentName) }
         holder.cameraTextView.text = attachmentMainModels.attachmentModels1.attachmentName
         holder.cameraImageView.setImageResource(attachmentMainModels.attachmentModels1.attachmentDrawable)
-        holder.videolinearLayout.setOnClickListener { v: View? -> mListener2!!.onItemClick2(v, position, attachmentMainModels.attachmentModels2.attachmentName) }
+        holder.videolinearLayout.setOnClickListener { v: View? -> mListener!!.onItemClick(v, position, attachmentMainModels.attachmentModels2.attachmentName) }
         holder.videoTextView.text = attachmentMainModels.attachmentModels2.attachmentName
         holder.videoImageView.setImageResource(attachmentMainModels.attachmentModels2.attachmentDrawable)
-        holder.gallerylinearLayout.setOnClickListener { v: View? -> mListener3!!.onItemClick3(v, position, attachmentMainModels.attachmentModels3.attachmentName) }
+        holder.gallerylinearLayout.setOnClickListener { v: View? -> mListener!!.onItemClick(v, position, attachmentMainModels.attachmentModels3.attachmentName) }
         holder.galleryTextView.text = attachmentMainModels.attachmentModels3.attachmentName
         holder.galleryImageView.setImageResource(attachmentMainModels.attachmentModels3.attachmentDrawable)
-        holder.locationlinearLayout.setOnClickListener { v: View? -> mListener4!!.onItemClick4(v, position, attachmentMainModels.attachmentModels4.attachmentName) }
+        holder.locationlinearLayout.setOnClickListener { v: View? -> mListener!!.onItemClick(v, position, attachmentMainModels.attachmentModels4.attachmentName) }
         holder.locationTextView.text = attachmentMainModels.attachmentModels4.attachmentName
         holder.locationImageView.setImageResource(attachmentMainModels.attachmentModels4.attachmentDrawable)
     }
@@ -84,48 +69,14 @@ class AttachmentAdapter(private val attachmentMainModel: List<AttachmentMainMode
     /**
      * Listeners to get the click action on image item from recent chat view
      */
-    @FunctionalInterface
-    interface RecyclerViewClickListenerType1 {
+    fun interface RecyclerViewClickListenerType {
         /**
          * Method for getting image item click action
          *
          * @param view     - Imageview
          * @param position - Itemview position
          */
-        fun onItemClick1(view: View?, position: Int, selectedOption: String?)
-    }
-
-    @FunctionalInterface
-    interface RecyclerViewClickListenerType2 {
-        /**
-         * Method for getting image item click action
-         *
-         * @param view     - Imageview
-         * @param position - Itemview position
-         */
-        fun onItemClick2(view: View?, position: Int, selectedOption: String?)
-    }
-
-    @FunctionalInterface
-    interface RecyclerViewClickListenerType3 {
-        /**
-         * Method for getting image item click action
-         *
-         * @param view     - Imageview
-         * @param position - Itemview position
-         */
-        fun onItemClick3(view: View?, position: Int, selectedOption: String?)
-    }
-
-    @FunctionalInterface
-    interface RecyclerViewClickListenerType4 {
-        /**
-         * Method for getting image item click action
-         *
-         * @param view     - Imageview
-         * @param position - Itemview position
-         */
-        fun onItemClick4(view: View?, position: Int, selectedOption: String?)
+        fun onItemClick(view: View?, position: Int, selectedOption: String?)
     }
 
 }

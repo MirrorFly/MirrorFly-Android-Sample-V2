@@ -98,16 +98,12 @@ class CallOptionsViewHelper(
      * handles the swap camera functionality and animations
      *
      */
-    private fun switchCamera(v: View) {
+     private fun switchCamera(v: View) {
         if (!isCameraButtonClick) {
             isCameraButtonClick = true
             v.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.alpha))
             swapCamera()
-            Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
-                override fun run() {
-                    isCameraButtonClick = false
-                }
-            }, 1000)
+            Handler(Looper.getMainLooper()).postDelayed({ isCameraButtonClick = false }, 1000)
         }
 
     }
@@ -190,7 +186,7 @@ class CallOptionsViewHelper(
         audioDevicesDialog.show()
     }
 
-    fun setUpCallUI() {
+    fun setUpCallUI(isCallOptionAnimation:Boolean) {
         LogMessage.d(TAG, "$CALL_UI CallOptionsViewHelper setUpCallUI")
         setAudioDeviceIcon(CallAudioManager.getInstance(activity).selectedAudioDevice)
 
@@ -205,7 +201,7 @@ class CallOptionsViewHelper(
 
         if (CallManager.isOutgoingCall() || CallManager.isCallAnswered()) {
             showCallOptions()
-            baseViewOnClickListener.animateListViewWithCallOptions()
+            if(isCallOptionAnimation) baseViewOnClickListener.animateListViewWithCallOptions()
         } else
             hideCallOptions()
     }

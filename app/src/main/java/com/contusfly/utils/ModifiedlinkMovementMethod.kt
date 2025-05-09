@@ -184,7 +184,7 @@ class ModifiedlinkMovementMethod(
         onButtonClickListener = linkbuttonclickstatusListener
     }
 
-    interface OnLinkLongClickListener {
+    fun interface OnLinkLongClickListener {
 
         fun onLongClick(
             textView: TextView?,
@@ -194,12 +194,12 @@ class ModifiedlinkMovementMethod(
         ): Boolean
     }
 
-    interface OnLinkClickListener {
+    fun interface OnLinkClickListener {
 
         fun onClick(textView: TextView?, url: String?, view: ChatMessage): Boolean
     }
 
-    interface OnLinkClickStatusListener {
+    fun interface OnLinkClickStatusListener {
 
         fun onLinkClickStatus(clickStatus: Boolean): Boolean
     }

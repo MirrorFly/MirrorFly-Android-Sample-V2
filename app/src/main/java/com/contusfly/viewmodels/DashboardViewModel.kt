@@ -52,6 +52,7 @@ constructor() : ViewModel() {
     }
 
     var isNeedFetchNextPage: Boolean = false
+
     /**
      * List to add position of the clicked chats for pinning
      */
@@ -98,7 +99,6 @@ constructor() : ViewModel() {
     val paginationLoader = MutableLiveData<Boolean>()
     val swipeRefreshLoader = MutableLiveData<Boolean>()
     var isArchiveChatTriggered =false
-
     val notificationMuteStatus = MutableLiveData<Boolean>()
 
 
@@ -163,6 +163,9 @@ constructor() : ViewModel() {
 
     val updateSelectedChat = MutableLiveData<Boolean>()
 
+    val superAdminDeleteGroup = MutableLiveData<String>()
+
+
 
     /**
      * contact refreshing status
@@ -192,6 +195,10 @@ constructor() : ViewModel() {
         isUserBlockedByAdmin.value = Pair(jid, isAdminBlocked)
     }
 
+    fun setGroupDeletedBySuperAdmin(groupJid: String) {
+        superAdminDeleteGroup.value = groupJid
+    }
+
     // = = = = = = = = CallLogs Data = = = = = = = =
     val callLogList = MutableLiveData<List<CallLog>>()
     val callLogListAdapter: ArrayList<CallLog> by lazy { ArrayList() }
@@ -204,22 +211,22 @@ constructor() : ViewModel() {
     val launchArchiveactivity = MutableLiveData<Boolean>()
 
     fun launchArchive(){
-
         launchArchiveactivity.value = true
-
     }
 
     /*
     * Get Profile List */
     fun getProfileDetailsList() {
         viewModelScope.launch {
-            FlyCore.getRegisteredUsers(false, FlyCallback { isSuccess, _, data ->
+            FlyCore.getRegisteredUsers(false) { isSuccess, _, data ->
                 if (isSuccess) {
-                    val profileDetails = data[SDK_DATA] as MutableList<ProfileDetails>
+                    val profileDetails =
+                        (data[SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>()
+                            .orEmpty().toMutableList()
                     profileDetailsList.value = sortProfileList(profileDetails)
                     getProfileDiffResult()
                 }
-            })
+            }
         }
     }
 
@@ -263,7 +270,7 @@ constructor() : ViewModel() {
     fun chatHistoryMigration() {
         val lastChatTimeStamp: String = com.mirrorflysdk.flycommons.SharedPreferenceManager.instance.getString(
             com.mirrorflysdk.flycommons.SharedPreferenceManager.RECENT_CHAT_LAST_FETCHED_TIMESTAMP)
-        if(recentChatAdapter.size == 0 && lastChatTimeStamp.isEmpty()) {
+        if(recentChatAdapter.isEmpty() && lastChatTimeStamp.isEmpty()) {
             getInitialChatList()
         }
     }
@@ -350,7 +357,7 @@ constructor() : ViewModel() {
     }
 
     private fun nextDataChecking(data: HashMap<String, Any>) {
-        val recent = data.getData() as? MutableList<RecentChat>
+        val recent = (data.getData() as? ArrayList<*>)?.filterIsInstance<RecentChat>().orEmpty()
         if (recent != null) {
             isNeedFetchNextPage =
                 (recent.size < 10 && recentChatListBuilder.hasNextRecentChat()) //for scrolling purpose minimum 10 recent chat should display in ui.
@@ -483,7 +490,7 @@ constructor() : ViewModel() {
         LogMessage.d(TAG, "#recent updateRecentChats")
         val recentChats = data[SDK_DATA] as MutableList<RecentChat>
         getArchivedChatStatus()
-        if(recentChats.size > 0){
+        if (recentChats.isNotEmpty()) {
             LogMessage.d(TAG, "#recent recentChats not empty!! ${recentChats.size}")
             LogMessage.d(TAG, "#recent recentChatAdapter  ${recentChatAdapter.size}")
             val recentChatSize = recentChatAdapter.size
@@ -582,8 +589,8 @@ constructor() : ViewModel() {
             setSearchUserListFetching(true)
             FlyCore.getUserList(currentSearchPage, resultPerPage, searchKey) { isSuccess, _, data ->
                 if (isSuccess) {
-                    val profileDetails = data[SDK_DATA] as MutableList<ProfileDetails>
-                    totalSearchPage = data[com.contusfly.utils.Constants.TOTAL_PAGES] as Int
+                    val profileDetails = (data[SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty().toMutableList()
+                    totalSearchPage = data[com.contusfly.utils.Constants.TOTAL_PAGES] as? Int ?: 0
                     val searchListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileDetails, false)
                     val searchListShareModel = filterSearchList(jidList,searchListResult as MutableList<ProfileDetails>)
                     viewModelScope.launch(Main) {
@@ -1245,7 +1252,7 @@ constructor() : ViewModel() {
         archiveChatUpdated.value = Pair(toUser, archiveStatus)
     }
 
-    fun updateArchiveChatsList(selectedJids: MutableList<String>) {
+    fun updateArchiveChatsList(selectedJids: ArrayList<String>) {
         selectedArchiveChats.value = selectedJids
     }
 

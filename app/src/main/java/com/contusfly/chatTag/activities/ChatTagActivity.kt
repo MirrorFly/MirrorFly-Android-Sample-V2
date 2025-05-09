@@ -3,7 +3,6 @@ package com.contusfly.chatTag.activities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,8 +11,10 @@ import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.FlyCallback
 import com.mirrorflysdk.flycommons.LogMessage
 import com.contusfly.R
+import com.contusfly.activities.BaseActivity
 import com.contusfly.chatTag.adapter.ChatTagAdapter
 import com.contusfly.chatTag.interfaces.ListItemClickListener
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.databinding.ActivityChatTagBinding
 import com.contusfly.getData
 import com.mirrorflysdk.api.ChatManager
@@ -25,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.HashMap
 
-class ChatTagActivity : AppCompatActivity() {
+class ChatTagActivity : BaseActivity() {
 
     private val TAG: String = ChatTagActivity::class.java.simpleName
 
@@ -64,7 +65,7 @@ class ChatTagActivity : AppCompatActivity() {
                 try{
                     if(isSuccess){
                         createdChatTagList.clear()
-                        isRecommendedTag= data.get(Constants.IS_RECOMMENDED_KEY) as String
+                        isRecommendedTag= data[Constants.IS_RECOMMENDED_KEY] as String
                         chatTagnamelist= data.getData() as ArrayList<ChatTagModel>
                         createdChatTagList=chatTagnamelist
                         chatTagAdapterset()
@@ -83,7 +84,7 @@ class ChatTagActivity : AppCompatActivity() {
 
     private fun recommendedChatTagCheking(){
         CoroutineScope(Dispatchers.Main).launch {
-            if(isRecommendedTag.equals("1")){
+            if(isRecommendedTag == "1"){
                 binding.recommendedChatTagTitle.text=resources.getString(R.string.recommended_chat_tag)
                 binding.editInfoLayout.visibility= View.GONE
                 binding.toolbarView.toolbarActionTitleTv.visibility= View.GONE
@@ -175,4 +176,10 @@ class ChatTagActivity : AppCompatActivity() {
                 getChatTagData()
             }
         }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        getChatTagData()
+        clearDeletedGroupChatNotification(groupJid, context)
+    }
 }

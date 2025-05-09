@@ -84,6 +84,7 @@
     <string name="text_logged_in_computers">Logged In Computers</string>
     <string name="scanner_result">Scanner Result</string>
     <string name="alert_dialouge_logout">Are you sure you want to logout?</string>
+    <string name="incoming_Call_receiving_toast"> incoming call receiving</string>
     <!-- Action Menu Strings -->
     <string name="new_group_label">New Group</string>
     <string name="clear_all_call_log">Clear call log</string>
@@ -1020,6 +1021,7 @@
     <string name="video_call">Video Call</string>
     <string name="anonymous_audio_call">Anonymous Audio Call</string>
     <string name="anonymous_video_call">Anonymous Video Call</string>
+    <string name="deleted_by_super_admin">%s deleted by Super Admin.</string>
 
 
 </resources>

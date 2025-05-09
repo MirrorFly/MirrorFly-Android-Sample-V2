@@ -173,7 +173,7 @@ class PeoplelistAdapter(
 
                 try {
 
-                    filterlist = filterResults.values as ArrayList<RecentChat>
+                    filterlist = (filterResults.values as? ArrayList<*>)?.filterIsInstance<RecentChat>()?.toCollection(ArrayList()) ?: arrayListOf()
                     notifyDataSetChanged()
                     clicklistener.filterListUpdated(filterlist)
 

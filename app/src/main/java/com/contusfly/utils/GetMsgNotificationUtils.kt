@@ -2,7 +2,6 @@ package com.contusfly.utils
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.R
 import com.contusfly.getDisplayName
 import com.contusfly.groupmention.MentionUtils
@@ -10,8 +9,10 @@ import com.contusfly.utils.NotifyRefererUtils.getGroupUserAppendedText
 import com.contusfly.utils.NotifyRefererUtils.hasMultipleSenders
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.flycommons.ChatTypeEnum
+import com.mirrorflysdk.flycommons.models.MessageType
 import com.mirrorflysdk.utils.ChatUtils
 import java.util.*
+
 
 /**
  * This Class contains all the common operations for creating and showing notification
@@ -28,7 +29,7 @@ object GetMsgNotificationUtils {
      * @param message Instance of message
      * @return String Summary of the message
      */
-    private fun getMessageSummary(message: ChatMessage,context: Context,): String {
+    private fun getMessageSummary(message: ChatMessage, context: Context): String {
         var lastMessageMentionContent = ChatUtils.getSpannedText(message.getMessageTextContent())
         if(message.messageChatType == ChatTypeEnum.groupchat && message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
             lastMessageMentionContent = com.contusfly.utils.ChatUtils.setMentionFormattedTextForRecentChat(context, message).toString()
@@ -44,24 +45,24 @@ object GetMsgNotificationUtils {
      * @param message Instance of message
      * @return String Summary of the message
      */
-    internal fun getMessageSummary(context: Context, message: ChatMessage): String {
-        return if (MessageType.TEXT == message.getMessageType() || MessageType.NOTIFICATION == message.getMessageType() || MessageType.AUTO_TEXT == message.messageType)
-            if (message.isMessageRecalled())
-                deleted_message
-            else {
-                var lastMessageMentionContent = ChatUtils.getSpannedText(message.messageTextContent)
-                if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
-                    lastMessageMentionContent = com.contusfly.utils.ChatUtils.setMentionFormattedTextForRecentChat(context, message).toString()
+    internal fun getMessageSummary(context: Context, message: ChatMessage ): String {
+        return when {
+            MessageType.TEXT == message.messageType || MessageType.NOTIFICATION == message.messageType || MessageType.AUTO_TEXT == message.messageType ->
+                if (message.isMessageRecalled)
+                    deleted_message
+                else {
+                    var lastMessageMentionContent = ChatUtils.getSpannedText(message.messageTextContent)
+                    if(message.mentionedUsersIds != null && message.mentionedUsersIds.size > 0) {
+                        lastMessageMentionContent = com.contusfly.utils.ChatUtils.setMentionFormattedTextForRecentChat(context, message).toString()
+                    }
+                    lastMessageMentionContent
                 }
-                lastMessageMentionContent
+            message.isMessageRecalled -> deleted_message
+            MessageType.MEET == message.messageType -> {
+                return  Constants.MEET_SCHEDULED_ON +" "+ChatUserTimeUtils.scheduledDateTimeFormat(message.meetingChatMessage.scheduledDateTime.toLong())
             }
-        else if (message.isMessageRecalled())
-            deleted_message
-        else if (MessageType.MEET == message.messageType) {
-            return  Constants.MEET_SCHEDULED_ON +" "+ChatUserTimeUtils.scheduledDateTimeFormat(message.meetingChatMessage.scheduledDateTime.toLong())
+            else -> getMediaMessageContent(context, message)
         }
-        else getMediaMessageContent(context, message)
-
     }
 
     private fun getMediaMessageContent(context: Context, message: ChatMessage): String {

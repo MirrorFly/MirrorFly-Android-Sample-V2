@@ -18,6 +18,7 @@ import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.views.CircularImageView
 import com.contusfly.views.SetDrawable
 import com.mirrorflysdk.api.contacts.ProfileDetails
+import com.mirrorflysdk.flycall.webrtc.CallLogger
 import com.mirrorflysdk.flycall.webrtc.Logger
 import com.mirrorflysdk.flycall.webrtc.ProxyVideoSink
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
@@ -103,6 +104,9 @@ object CallUtils {
     }
 
 
+    private var isFromCallAgainPipMode = false
+
+
     fun setVideoViewInitialization(enabled: Boolean) {
         isVideoViewInitialized = enabled
     }
@@ -137,6 +141,7 @@ object CallUtils {
 
     fun setPinnedUserJid(userJid: String) {
         LogMessage.d(TAG, "${CallConstants.CALL_UI} $JOIN_CALL setPinnedUserJid userJid:$userJid")
+        CallLogger.callTestingLog("UIKIT---> setPinnedUserJid $userJid")
         pinnedUserJid = userJid
     }
 
@@ -231,31 +236,36 @@ object CallUtils {
         var isMaxMemberNameNotReached = true
         for (i in callUsers.indices) {
             val pair = getNameAndProfileDetails(callUsers[i])
-            if (i == 0) {
-                val actualMemberName = getActualMemberName(StringBuilder(pair.first))
-                membersName = actualMemberName.first
-                isMaxMemberNameNotReached = actualMemberName.second
-                loadUserProfilePic(context, imageCallMember1, pair)
-            } else if (isMaxMemberNameNotReached && i == 1) {
-                membersName.append(", ").append(pair.first)
-                val actualMemberName = getActualMemberName(membersName)
-                membersName = actualMemberName.first
-                isMaxMemberNameNotReached = actualMemberName.second
-                imageCallMember2.show()
-                loadUserProfilePic(context, imageCallMember2, pair)
-            } else if (isMaxMemberNameNotReached && i == 2) {
-                membersName.append(", ").append(pair.first)
-                val actualMemberName = getActualMemberName(membersName)
-                membersName = actualMemberName.first
-                imageCallMember3.show()
-                loadUserProfilePic(context, imageCallMember3, pair)
-            } else {
-                membersName.append(" (+").append(callUsers.size - i).append(")")
-                imageCallMember4.show()
-                val text = "+${callUsers.size - i}"
-                val setDrawable = SetDrawable(context)
-                imageCallMember4.setImageDrawable(setDrawable.setDrawableForCustomName(text))
-                break
+            when {
+                i == 0 -> {
+                    val actualMemberName = getActualMemberName(StringBuilder(pair.first))
+                    membersName = actualMemberName.first
+                    isMaxMemberNameNotReached = actualMemberName.second
+                    loadUserProfilePic(context, imageCallMember1, pair)
+                }
+                isMaxMemberNameNotReached && i == 1 -> {
+                    membersName.append(", ").append(pair.first)
+                    val actualMemberName = getActualMemberName(membersName)
+                    membersName = actualMemberName.first
+                    isMaxMemberNameNotReached = actualMemberName.second
+                    imageCallMember2.show()
+                    loadUserProfilePic(context, imageCallMember2, pair)
+                }
+                isMaxMemberNameNotReached && i == 2 -> {
+                    membersName.append(", ").append(pair.first)
+                    val actualMemberName = getActualMemberName(membersName)
+                    membersName = actualMemberName.first
+                    imageCallMember3.show()
+                    loadUserProfilePic(context, imageCallMember3, pair)
+                }
+                else -> {
+                    membersName.append(" (+").append(callUsers.size - i).append(")")
+                    imageCallMember4.show()
+                    val text = "+${callUsers.size - i}"
+                    val setDrawable = SetDrawable(context)
+                    imageCallMember4.setImageDrawable(setDrawable.setDrawableForCustomName(text))
+                    break
+                }
             }
         }
         return membersName
@@ -303,23 +313,28 @@ object CallUtils {
         var isMaxMemberNameNotReached = true
         for (i in callUsers.indices) {
             val pair = getNameAndProfileDetails(callUsers[i])
-            if (i == 0) {
-                membersName.append(pair.first)
-                val actualMemberName = getActualMemberName(membersName)
-                membersName = actualMemberName.first
-                isMaxMemberNameNotReached = actualMemberName.second
-            } else if (isMaxMemberNameNotReached && i == 1) {
-                membersName.append(", ").append(pair.first)
-                val actualMemberName = getActualMemberName(membersName)
-                membersName = actualMemberName.first
-                isMaxMemberNameNotReached = actualMemberName.second
-            } else if (isMaxMemberNameNotReached && i == 2) {
-                membersName.append(", ").append(pair.first)
-                val actualMemberName = getActualMemberName(membersName)
-                membersName = actualMemberName.first
-            } else {
-                membersName.append(" (+").append(callUsers.size - i).append(")")
-                break
+            when {
+                i == 0 -> {
+                    membersName.append(pair.first)
+                    val actualMemberName = getActualMemberName(membersName)
+                    membersName = actualMemberName.first
+                    isMaxMemberNameNotReached = actualMemberName.second
+                }
+                isMaxMemberNameNotReached && i == 1 -> {
+                    membersName.append(", ").append(pair.first)
+                    val actualMemberName = getActualMemberName(membersName)
+                    membersName = actualMemberName.first
+                    isMaxMemberNameNotReached = actualMemberName.second
+                }
+                isMaxMemberNameNotReached && i == 2 -> {
+                    membersName.append(", ").append(pair.first)
+                    val actualMemberName = getActualMemberName(membersName)
+                    membersName = actualMemberName.first
+                }
+                else -> {
+                    membersName.append(" (+").append(callUsers.size - i).append(")")
+                    break
+                }
             }
         }
         return membersName.toString()
@@ -483,12 +498,21 @@ object CallUtils {
         setIsBackCameraCapturing(false)
         setIsViewUpdatesCompleted(true)
         setIsListViewAnimated(false)
+        CallLogger.callTestingLog("UIKIT---> resetValues setPinnedUserJid : EMPTY_STRING")
         setPinnedUserJid(Constants.EMPTY_STRING)
         setIsUserTilePinned(false)
         setIsCallStarted(null)
         setIsAddUsersToTheCall(false)
         setPeakSpeakingUser(Constants.EMPTY_STRING, 0)
         setIsFromPoorInternetUpdate(false)
+    }
+
+    fun setIsFromCallAgainPipMode(isFromPipModeCallAgain: Boolean) {
+        isFromCallAgainPipMode = isFromPipModeCallAgain
+    }
+
+    fun getIsFromCallAgainPipMode(): Boolean {
+        return isFromCallAgainPipMode
     }
 }
 

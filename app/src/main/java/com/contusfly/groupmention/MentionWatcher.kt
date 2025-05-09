@@ -13,7 +13,7 @@ internal class MentionWatcher(
     private val trigger: String
     private val delimiter: String
 
-    internal interface OnMentionTextChanges {
+    internal fun interface OnMentionTextChanges {
         fun onMentionTextDetectStateChanged(isDetected: Boolean, detectedKeyword: CharSequence?)
     }
 

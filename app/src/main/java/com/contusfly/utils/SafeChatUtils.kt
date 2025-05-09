@@ -121,19 +121,13 @@ object SafeChatUtils {
             dialogType = CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL,
             dialogAction = CommonAlertDialog.DialogAction.SAFE_CHAT_ENABLE_APP_LOCK,
             cancelable = false,
-            dismissListener = object : CommonAlertDialog.DialogCallbackListener{
-                override fun onDialogClosed(
-                    dialogAction: CommonAlertDialog.DialogAction,
-                    isSuccess: Boolean
-                ) {
-                    if(dialogAction == CommonAlertDialog.DialogAction.SAFE_CHAT_ENABLE_APP_LOCK && isSuccess){
-                        updateSafeChat = SafeChatUpdate.ENABLE
-                        val safeChatSetPinIntent = Intent(activity, SettingsActivity::class.java)
-                        safeChatSetPinIntent.putExtra(Constants.IS_FOR_SAFE_CHAT,true)
-                        activity.startActivity(safeChatSetPinIntent)
-                    }
+            dismissListener = { dialogAction, isSuccess ->
+                if(dialogAction == CommonAlertDialog.DialogAction.SAFE_CHAT_ENABLE_APP_LOCK && isSuccess){
+                    updateSafeChat = SafeChatUpdate.ENABLE
+                    val safeChatSetPinIntent = Intent(activity, SettingsActivity::class.java)
+                    safeChatSetPinIntent.putExtra(Constants.IS_FOR_SAFE_CHAT,true)
+                    activity.startActivity(safeChatSetPinIntent)
                 }
-
             }
         )
     }
@@ -151,17 +145,11 @@ object SafeChatUtils {
             dialogType = CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE,
             dialogAction = CommonAlertDialog.DialogAction.SAFE_CHAT_ENABLED,
             cancelable = false,
-            dismissListener = object : CommonAlertDialog.DialogCallbackListener{
-                override fun onDialogClosed(
-                    dialogAction: CommonAlertDialog.DialogAction,
-                    isSuccess: Boolean
-                ) {
-                    if(callback!=null) {
-                        callback.invoke()
-                        LogMessage.i("SAFECHAT", "safeChatEnabledPrompt safeChatEnabled : $safeChatEnabled")
-                    }
+            dismissListener = { _, _ ->
+                if(callback!=null) {
+                    callback.invoke()
+                    LogMessage.i("SAFECHAT", "safeChatEnabledPrompt safeChatEnabled : $safeChatEnabled")
                 }
-
             }
         )
     }

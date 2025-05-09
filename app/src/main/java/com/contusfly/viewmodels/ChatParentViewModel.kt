@@ -109,7 +109,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
      */
     fun addMessage(message: ChatMessage?, toUser: String) {
         this.toUser = toUser
-        var list: MutableList<ChatMessage>? = suggestionMessageList.value as MutableList<ChatMessage>?
+        var list: MutableList<ChatMessage>? = (suggestionMessageList.value as? ArrayList<*>)?.filterIsInstance<ChatMessage>()?.toCollection(ArrayList()) ?: arrayListOf()
         if (list == null)
             list = ArrayList()
         if (message != null) {
@@ -217,7 +217,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
                 if (isSuccess) {
                     CoroutineScope(Dispatchers.IO).launch {
                         val participantsNameList: MutableList<String> = ArrayList()
-                        var groupsMembersProfileList: MutableList<ProfileDetails> = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
+                        var groupsMembersProfileList: MutableList<ProfileDetails> = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty().toMutableList()
                         groupsMembersProfileList = ProfileDetailsUtils.sortGroupProfileList(groupsMembersProfileList)
                         groupsMembersProfileList.forEach {
                             if(!it.jid.equals(SharedPreferenceManager.getCurrentUserJid()))
@@ -234,7 +234,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
         initialMessageList.value?.clear()
     }
 
-    private fun setSwipeLoader(isShowStatus:Boolean){
+    fun setSwipeLoader(isShowStatus:Boolean) {
         CoroutineScope(Dispatchers.Main).launch {
             swipeRefreshLoader.value = isShowStatus
         }
@@ -432,7 +432,7 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
 
     private fun getNextMessageList(messageList: ArrayList<ChatMessage>): ArrayList<ChatMessage> {
         val nextMsgList = ArrayList<ChatMessage>()
-        if (paginationMessageList.isNotEmpty()) {
+        return if (paginationMessageList.isNotEmpty()) {
             val idSet = paginationMessageList.map { it.messageId }.toHashSet()
             for (item in messageList) {
                 if (!idSet.contains(item.messageId)) {
@@ -444,9 +444,9 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
             LogMessage.d("Message_Pagination", "nextmsgList size ${nextMsgList.size}")
             if (nextMsgList.isEmpty()) return nextMsgList
             checkAndUpdateMessageList(nextMsgList)
-            return nextMsgList
+            nextMsgList
         } else {
-            return messageList
+            messageList
         }
     }
 

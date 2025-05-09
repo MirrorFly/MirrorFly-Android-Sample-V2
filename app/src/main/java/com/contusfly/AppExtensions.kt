@@ -28,10 +28,13 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
+import com.contusfly.activities.DashboardActivity
 import com.mirrorflysdk.flycommons.*
 import com.mirrorflysdk.flycall.webrtc.api.CallManager
 import com.contusfly.chat.AndroidUtils
 import com.contusfly.models.Chat
+import com.contusfly.notification.AppNotificationManager
+import com.contusfly.notification.NotificationBuilder
 import com.contusfly.utils.*
 import com.contusfly.utils.Constants
 import com.contusfly.utils.SharedPreferenceManager.getCurrentUserJid
@@ -46,6 +49,7 @@ import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.mirrorflysdk.api.models.ReplyParentChatMessage
+import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import java.io.IOException
@@ -258,19 +262,24 @@ val Any.TAG: String
 
 fun AppCompatImageView.loadUserProfileImage(context: Context, recentChat: RecentChat) {
     val drawable: Drawable?
+
     var imageUrl = if (!recentChat.profileThumbImage.isNullOrEmpty()) {
         recentChat.profileThumbImage
     } else recentChat.profileImage ?: Constants.EMPTY_STRING
-    if (recentChat.isBlockedMe || recentChat.isAdminBlocked) {
-        imageUrl = Constants.EMPTY_STRING
-        drawable = CustomDrawable(context).getDefaultDrawable(recentChat)
-    } else if (recentChat.isDeletedContact()) {
-        imageUrl = recentChat.profileImage ?: Constants.EMPTY_STRING
-        drawable = CustomDrawable(context).getDefaultDrawable(recentChat)
-    } else if (TextUtils.isEmpty(imageUrl) || this.drawable == null)
-        drawable = CustomDrawable(context).getDefaultDrawable(recentChat)
-    else
-        drawable = CustomDrawable(context).getDefaultDrawable(recentChat)
+
+    drawable = when {
+        recentChat.isBlockedMe || recentChat.isAdminBlocked -> {
+            imageUrl = Constants.EMPTY_STRING
+            CustomDrawable(context).getDefaultDrawable(recentChat)
+        }
+        recentChat.isDeletedContact() -> {
+            imageUrl = recentChat.profileImage ?: Constants.EMPTY_STRING
+            CustomDrawable(context).getDefaultDrawable(recentChat)
+        }
+        TextUtils.isEmpty(imageUrl) || this.drawable == null -> CustomDrawable(context).getDefaultDrawable(recentChat)
+        else -> CustomDrawable(context).getDefaultDrawable(recentChat)
+    }
+
     if (imageUrl.startsWith(Constants.STORAGE))
         MediaUtils.loadImageWithGlide(context, imageUrl, this, drawable)
     else
@@ -279,19 +288,24 @@ fun AppCompatImageView.loadUserProfileImage(context: Context, recentChat: Recent
 
 fun ImageView.loadUserProfileImage(context: Context, userProfileDetails: ProfileDetails) {
     val drawable: Drawable?
-    var imageUrl = if (!userProfileDetails.thumbImage.isNullOrEmpty()) {
+
+    var imageUrl = if (!userProfileDetails.thumbImage.isNullOrEmpty() && !userProfileDetails.image.isNullOrEmpty()) {
         userProfileDetails.thumbImage
     } else userProfileDetails.image ?: Constants.EMPTY_STRING
-    if (userProfileDetails.isBlockedMe || userProfileDetails.isAdminBlocked) {
-        imageUrl = Constants.EMPTY_STRING
-        drawable = CustomDrawable(context).getDefaultDrawable(userProfileDetails)
-    } else if (userProfileDetails.isDeletedContact()) {
-        imageUrl = userProfileDetails.image ?: Constants.EMPTY_STRING
-        drawable = CustomDrawable(context).getDefaultDrawable(userProfileDetails)
-    } else if (TextUtils.isEmpty(imageUrl) || this.drawable == null)
-        drawable = CustomDrawable(context).getDefaultDrawable(userProfileDetails)
-    else
-        drawable = CustomDrawable(context).getDefaultDrawable(userProfileDetails)
+
+    drawable = when {
+        userProfileDetails.isBlockedMe || userProfileDetails.isAdminBlocked -> {
+            imageUrl = Constants.EMPTY_STRING
+            CustomDrawable(context).getDefaultDrawable(userProfileDetails)
+        }
+        userProfileDetails.isDeletedContact() -> {
+            imageUrl = userProfileDetails.image ?: Constants.EMPTY_STRING
+            CustomDrawable(context).getDefaultDrawable(userProfileDetails)
+        }
+        TextUtils.isEmpty(imageUrl) || this.drawable == null -> CustomDrawable(context).getDefaultDrawable(userProfileDetails)
+        else -> CustomDrawable(context).getDefaultDrawable(userProfileDetails)
+    }
+
     if (imageUrl.startsWith(Constants.STORAGE))
         MediaUtils.loadImageWithGlide(context, imageUrl, this, drawable)
     else
@@ -300,17 +314,23 @@ fun ImageView.loadUserProfileImage(context: Context, userProfileDetails: Profile
 
 fun ImageView.loadUserInfoProfileImage(context: Context, profileDetails: ProfileDetails) {
     val drawable: Drawable?
-    var imageUrl = profileDetails.image ?: Constants.EMPTY_STRING
-    if (profileDetails.isBlockedMe || profileDetails.isAdminBlocked) {
-        imageUrl = Constants.EMPTY_STRING
-        drawable = CustomDrawable(context).getDefaultDrawable(profileDetails)
-    } else if (profileDetails.isDeletedContact()) {
-        imageUrl = profileDetails.image ?: Constants.EMPTY_STRING
-        drawable = CustomDrawable(context).getDefaultDrawable(profileDetails)
-    } else if (TextUtils.isEmpty(imageUrl) || this.drawable == null)
-        drawable = CustomDrawable(context).getDefaultDrawable(profileDetails)
-    else
-        drawable = CustomDrawable(context).getDefaultDrawable(profileDetails)
+    var imageUrl = if (!profileDetails.thumbImage.isNullOrEmpty() && !profileDetails.image.isNullOrEmpty()) {
+        profileDetails.thumbImage
+    } else profileDetails.image ?: Constants.EMPTY_STRING
+
+    drawable = when {
+        profileDetails.isBlockedMe || profileDetails.isAdminBlocked -> {
+            imageUrl = Constants.EMPTY_STRING
+            CustomDrawable(context).getDefaultDrawable(profileDetails)
+        }
+        profileDetails.isDeletedContact() -> {
+            imageUrl = profileDetails.image ?: Constants.EMPTY_STRING
+            CustomDrawable(context).getDefaultDrawable(profileDetails)
+        }
+        TextUtils.isEmpty(imageUrl) || this.drawable == null -> CustomDrawable(context).getDefaultDrawable(profileDetails)
+        else -> CustomDrawable(context).getDefaultDrawable(profileDetails)
+    }
+
     if (imageUrl.startsWith(Constants.STORAGE))
         MediaUtils.loadImageWithGlide(context, imageUrl, this, drawable)
     else {
@@ -529,18 +549,26 @@ fun Chat.getUsername(): String {
     return profileDetails?.getDisplayName() ?: toUser
 }
 
-fun ProfileDetails.getDisplayName() : String {
-    return if (BuildConfig.CONTACT_SYNC_ENABLED) {
-        when {
-            jid.equals(getCurrentUserJid()) -> Constants.YOU
-            isUnknownContact() || nickName.isNullOrBlank() -> Utils.getFormattedPhoneNumber(ChatUtils.getUserFromJid(jid))
-            else -> nickName
+fun ProfileDetails.getDisplayName(): String {
+    try {
+        return if (BuildConfig.CONTACT_SYNC_ENABLED) {
+            when {
+                jid.equals(getCurrentUserJid()) -> Constants.YOU
+                isUnknownContact() || nickName.isNullOrBlank() -> Utils.getFormattedPhoneNumber(
+                    ChatUtils.getUserFromJid(jid)
+                )
+
+                else -> nickName
+            }
+        } else {
+            if ((name ?: jid).isNotBlank())
+                name ?: ChatUtils.getUserFromJid(jid)
+            else
+                ChatUtils.getUserFromJid(jid)
         }
-    } else {
-        if ((name ?: jid).isNotBlank())
-            name ?: ChatUtils.getUserFromJid(jid)
-        else
-            ChatUtils.getUserFromJid(jid)
+    } catch (e: Exception) {
+        com.contusfly.utils.LogMessage.e(TAG, "Exception in getdisplay name: $e")
+        return ""
     }
 }
 
@@ -758,7 +786,7 @@ fun HashMap<String, Any>.getParams(key: String? = null): Any {
 
 }
 
-fun HashMap<String, Any>.getHttpStatusCode(): Int = if (this.containsKey(FlyConstants.HTTP_STATUS_CODE)) this[FlyConstants.HTTP_STATUS_CODE]!! as Int else 500
+fun HashMap<String, Any>.getHttpStatusCode(): Int = if (this.containsKey(FlyConstants.HTTP_STATUS_CODE)) (this[FlyConstants.HTTP_STATUS_CODE]!! as? Int)!! else 500
 
 
 fun <T> returnEmptyListIfNull(nullableList: List<T>?): List<T> {
@@ -845,5 +873,28 @@ fun View.visibilityChanged(action: (View) -> Unit) {
             // visibility has changed
             action(this)
         }
+    }
+}
+
+fun checkEqualString(first:String, second:String) : Boolean {
+    return first.lowercase() == second.lowercase()
+}
+
+fun startDashboardActivity(context: Context) {
+    val dashboardIntent = Intent(context, DashboardActivity::class.java)
+    dashboardIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+    context.startActivity(dashboardIntent)
+}
+
+
+fun clearDeletedGroupChatNotification(groupJid: String, context: Context?){
+    try {
+        if (AppNotificationManager.checkGroupHasNotification(groupJid, context!!)) {
+            val jidList = ArrayList<String>()
+            jidList.add(groupJid)
+            NotificationBuilder.clearNotificationTray(jidList, context)
+        }
+    } catch (e: Exception) {
+        LogMessage.e("clearDeletedGroupChatNotification", "Exception in clearDeletedGroupChatNotification: $e")
     }
 }

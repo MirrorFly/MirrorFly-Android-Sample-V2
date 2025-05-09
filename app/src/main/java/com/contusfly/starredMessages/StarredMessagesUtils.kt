@@ -8,8 +8,9 @@ import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.R
-import com.contusfly.utils.MediaChecker
+import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger
+import com.mirrorflysdk.flycommons.LogMessage
 
 /**
  *
@@ -70,7 +71,7 @@ object StarredMessagesUtils {
     /**
      * Prepare the single item menu for differentiate media end text to copyFiles or share.
      */
-    fun prepareSingleMenuItem(clickedStarredMessages: MutableList<String>,menu: Menu?) {
+    fun prepareSingleMenuItem(clickedStarredMessages: ArrayList<String>,menu: Menu?) {
         val message = FlyMessenger.getMessageOfId(clickedStarredMessages[0])
 
         /**
@@ -78,12 +79,20 @@ object StarredMessagesUtils {
          */
         val getActionCopy = MessageType.TEXT == message!!.messageType
         menu!!.findItem(R.id.action_copy).isVisible = getActionCopy
-        val getActionShare = MediaChecker.isMediaType(message.messageType) && MediaChecker.isMediaAvailable(
-            message
-        )
-        menu.findItem(R.id.action_share).isVisible = getActionShare
-        if (MediaChecker.isMediaType(message.messageType) && !MediaChecker.isMediaAvailable(message))
-            menu.findItem(R.id.action_forward).isVisible = false
+
+    }
+
+    fun validateForwardIcon(clickedStarredMessages: MutableList<String>, menu: Menu) {
+        try {
+            val availableMessageActions = ChatManager.getMessageActions(clickedStarredMessages)
+
+            menu?.findItem(R.id.action_forward)!!.isVisible = availableMessageActions.canBeForwarded
+            menu.findItem(R.id.action_share).isVisible = availableMessageActions.canBeShared
+
+        } catch(e: Exception){
+            LogMessage.e("Error","Error $e")
+        }
+
     }
 
     /**

@@ -45,7 +45,7 @@ object CountriesListObject {
     }
 
     fun getCountriesListByCountryCode(context: Context, countryCode: String): String {
-        val countryList = getCountriesList(context)
+        val countryList = getCountriesList(context).toList()
 
         for (country in countryList) {
             if (country.countryCode.equals(countryCode)) return country.countryName

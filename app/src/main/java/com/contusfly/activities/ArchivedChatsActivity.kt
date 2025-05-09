@@ -1,5 +1,6 @@
 package com.contusfly.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
@@ -42,8 +43,8 @@ import com.mirrorflysdk.api.models.RecentChat
 import com.mirrorflysdk.utils.Utils
 import com.mirrorflysdk.views.CustomToast
 import dagger.android.AndroidInjection
-import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     CommonAlertDialog.CommonDialogClosedListener {
@@ -61,7 +62,12 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         SEARCH;
     }
 
-    private val viewModel by lazy { ViewModelProvider(this, viewModelFactory).get(DashboardViewModel::class.java) }
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            viewModelFactory
+        ).get(DashboardViewModel::class.java)
+    }
 
     private lateinit var archivedListRecent: CustomRecyclerView
 
@@ -72,7 +78,12 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private var isDeleteChat = false
 
     private val mAdapter by lazy {
-        RecentChatListAdapter(this, viewModel.chatAdapter, viewModel.selectedChats, viewModel.typingAndGoneStatus)
+        RecentChatListAdapter(
+            this,
+            viewModel.chatAdapter,
+            viewModel.selectedChats,
+            viewModel.typingAndGoneStatus
+        )
     }
 
     private lateinit var searchKey: String
@@ -85,8 +96,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
 
     private val commonAlertDialog by lazy { CommonAlertDialog(this) }
 
-    private var adminBlockStatus : Boolean = false
-    private var userJid:String = Constants.EMPTY_STRING
+    private var adminBlockStatus: Boolean = false
+    private var userJid: String = Constants.EMPTY_STRING
     private var handler: Handler? = null
 
     /**
@@ -113,7 +124,12 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
 
     private fun initViews() {
         setSupportActionBar(archivedChatsBinding.toolbar)
-        UserInterfaceUtils.setUpToolBar(this, archivedChatsBinding.toolbar, supportActionBar, Constants.EMPTY_STRING)
+        UserInterfaceUtils.setUpToolBar(
+            this,
+            archivedChatsBinding.toolbar,
+            supportActionBar,
+            Constants.EMPTY_STRING
+        )
         archivedListRecent = archivedChatsBinding.viewListChats
         emptyView = archivedChatsBinding.noArchivedMessage
 
@@ -149,10 +165,12 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     }
 
     private fun showGroupUserBlockedByAdminPopup() {
-        commonAlertDialog.showAlertDialog(getString(R.string.group_block_message_label),
+        commonAlertDialog.showAlertDialog(
+            getString(R.string.group_block_message_label),
             getString(R.string.action_Ok),
             getString(R.string.action_cancel),
-            CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
+            CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false
+        )
     }
 
     private fun showProfileDialog(profileDetails: ProfileDetails) {
@@ -172,17 +190,9 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             onProfileUpdated(it)
         })
 
-        viewModel.isContactSyncSuccess.observe(this, { viewModel.getArchivedChats() })
-
-        viewModel.isUserBlockedUnblockedMe.observe(this, {
-            val index = viewModel.chatList.value!!.indexOfFirst { recent -> recent.jid ?: Constants.EMPTY_STRING == it.first.trim() }
-            if (index.isValidIndex()) {
-                viewModel.getArchiveChatOfUser(it.first.trim(), RecentChatEvent.GROUP_EVENT)
-            }
-        })
-
         viewModel.isUserBlockedByAdmin.observe(this, {
-            val index = viewModel.chatList.value!!.indexOfFirst { recent -> recent.jid ?: Constants.EMPTY_STRING == it.first.trim() }
+            val index =
+                viewModel.chatList.value!!.indexOfFirst { recent -> recent.jid ?: Constants.EMPTY_STRING == it.first.trim() }
             if (index.isValidIndex()) {
                 viewModel.chatList.value!![index].isAdminBlocked = it.second
                 val bundle = Bundle()
@@ -190,6 +200,17 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                 mAdapter.notifyItemChanged(index, bundle)
             }
         })
+
+        viewModel.isContactSyncSuccess.observe(this, { viewModel.getArchivedChats() })
+
+        viewModel.isUserBlockedUnblockedMe.observe(this, {
+            val index =
+                viewModel.chatList.value!!.indexOfFirst { recent -> recent.jid ?: Constants.EMPTY_STRING == it.first.trim() }
+            if (index.isValidIndex()) {
+                viewModel.getArchiveChatOfUser(it.first.trim(), RecentChatEvent.GROUP_EVENT)
+            }
+        })
+
 
         viewModel.chatDiffResult.observe(this, {
             LogMessage.i(TAG, "recentChatDiffResult observed")
@@ -207,11 +228,13 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                         bundle.putInt(Constants.NOTIFY_PROFILE_ICON, 1)
                         bundle.putInt(Constants.NOTIFY_MUTE_UNMUTE, 1)
                     }
+
                     RecentChatEvent.GROUP_EVENT -> {
                         bundle.putInt(Constants.NOTIFY_MESSAGE, 1)
                         bundle.putInt(Constants.NOTIFY_USER_NAME, 1)
                         bundle.putInt(Constants.NOTIFY_PROFILE_ICON, 1)
                     }
+
                     RecentChatEvent.MUTE_EVENT -> {
                         bundle.putInt(Constants.NOTIFY_MUTE_UNMUTE, 1)
                     }
@@ -242,14 +265,15 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         viewModel.updateChatMute.observe( this, { pair ->
             try {
                 mAdapter.notifyItemChanged(pair.first)
-            } catch(e: Exception) {
-                com.mirrorflysdk.flycommons.LogMessage.e(TAG,"#mute #chat adapter update exception $e")
+            } catch (e: Exception) {
+                com.mirrorflysdk.flycommons.LogMessage.e(
+                    TAG,
+                    "#mute #chat adapter update exception $e"
+                )
             }
         })
         viewModel.updateSelectedChat.observe(this) {
-
             recentClick(viewModel.selectedChats, false)
-
         }
     }
 
@@ -278,7 +302,11 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         mSearchAdapter.searchItemClickedCallback {
             val recentItem = mArchiveSearchList[it]
             val recentChat = FlyCore.getRecentChatOf(recentItem.jid.returnEmptyIfNull())
-            openChatActivity(recentItem.jid.returnEmptyIfNull(), recentItem.chatType, recentChat!!.isAdminBlocked)
+            openChatActivity(
+                recentItem.jid.returnEmptyIfNull(),
+                recentItem.chatType,
+                recentChat!!.isAdminBlocked
+            )
         }
     }
 
@@ -313,7 +341,11 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
      * @param newMemberJid Jabber id of the User
      * @param addedByMemberJid Jid of user who adds the member
      */
-    override fun onNewMemberAddedToGroup(groupJid: String, newMemberJid: String, addedByMemberJid: String) {
+    override fun onNewMemberAddedToGroup(
+        groupJid: String,
+        newMemberJid: String,
+        addedByMemberJid: String
+    ) {
         super.onNewMemberAddedToGroup(groupJid, newMemberJid, addedByMemberJid)
         viewModel.groupNewUserAddedLiveData.value = groupJid
     }
@@ -325,7 +357,11 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
      * @param removedMemberJid Removed member Jid
      * @param removedByMemberJid Made remove member jid
      */
-    override fun onMemberRemovedFromGroup(groupJid: String, removedMemberJid: String, removedByMemberJid: String) {
+    override fun onMemberRemovedFromGroup(
+        groupJid: String,
+        removedMemberJid: String,
+        removedByMemberJid: String
+    ) {
         super.onMemberRemovedFromGroup(groupJid, removedMemberJid, removedByMemberJid)
         viewModel.groupUserRemovedLiveData.value = groupJid
     }
@@ -347,7 +383,11 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
      * @param newAdminMemberJid New admin jid
      * @param madeByMemberJid Made new admin jid
      */
-    override fun onMemberMadeAsAdmin(groupJid: String, newAdminMemberJid: String, madeByMemberJid: String) {
+    override fun onMemberMadeAsAdmin(
+        groupJid: String,
+        newAdminMemberJid: String,
+        madeByMemberJid: String
+    ) {
         super.onMemberMadeAsAdmin(groupJid, newAdminMemberJid, madeByMemberJid)
         viewModel.groupAdminChangedLiveData.value = groupJid
     }
@@ -367,7 +407,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             if (viewModel.selectedChats.any { it.jid == selectedChats.jid }) {
                 viewModel.selectedChats.remove(viewModel.selectedChats.first { it.jid == selectedChats.jid })
             } else if (!selectedChats.isGroup && !viewModel.selectedChats[0].isGroup
-                || viewModel.selectedChats.isNotEmpty())
+                || viewModel.selectedChats.isNotEmpty()
+            )
                 viewModel.selectedChats.add(selectedChats)
             mAdapter.notifyItemChanged(position, bundle)
             recentClick(viewModel.selectedChats, false)
@@ -417,7 +458,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             if (recentList.size == 1 && startActionMode) setActionMode()
             menuValidationForMuteUnMuteIcon(recentList)
             actionModeMenu.findItem(R.id.action_unarchive).isVisible = true
-            updateActionMenuIcons(ChatManager.getAvailableFeatures(),recentList)
+            updateActionMenuIcons(ChatManager.getAvailableFeatures(), recentList)
             menuValidationForReadUnRead(recentList)
             actionMode?.title = recentList.size.toString()
         }
@@ -440,10 +481,12 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                 actionModeMenu.findItem(R.id.action_mute).isVisible = true
                 actionModeMenu.findItem(R.id.action_unmute).isVisible = false
             }
+
             checkListForMuteUnMuteIcon.contains(true) -> {
                 actionModeMenu.findItem(R.id.action_mute).isVisible = false
                 actionModeMenu.findItem(R.id.action_unmute).isVisible = true
             }
+
             else -> {
                 actionModeMenu.findItem(R.id.action_mute).isVisible = false
                 actionModeMenu.findItem(R.id.action_unmute).isVisible = false
@@ -457,13 +500,17 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             if (recentList[i].isGroup)
                 groupCheck.add(true)
         actionModeMenu.findItem(R.id.action_delete).isVisible = showDeleteOption(recentList)
-        if (FlyCore.isArchivedSettingsEnabled()) actionModeMenu.findItem(R.id.action_unmute).isVisible = false
+        if (FlyCore.isArchivedSettingsEnabled()) actionModeMenu.findItem(R.id.action_unmute).isVisible =
+            false
     }
 
-    private fun showDeleteOption(recentList: List<RecentChat>):Boolean{
-        for(item in recentList){
-            if((item.getChatType() == ChatType.TYPE_GROUP_CHAT) && ChatManager.getAvailableFeatures().isGroupChatEnabled && GroupManager.isMemberOfGroup(item.jid,
-                    SharedPreferenceManager.getCurrentUserJid()))
+    private fun showDeleteOption(recentList: List<RecentChat>): Boolean {
+        for (item in recentList) {
+            if ((item.getChatType() == ChatType.TYPE_GROUP_CHAT) && ChatManager.getAvailableFeatures().isGroupChatEnabled && GroupManager.isMemberOfGroup(
+                    item.jid,
+                    SharedPreferenceManager.getCurrentUserJid()
+                )
+            )
                 return false
         }
         return true
@@ -490,11 +537,15 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private fun updateMessageUpdate(messageId: String) {
         try {
             if (messageId.isEmpty()) return
-            val index = viewModel.chatList.value?.indexOfFirst { it.lastMessageId == messageId }?:-1
+            val index =
+                viewModel.chatList.value?.indexOfFirst { it.lastMessageId == messageId } ?: -1
             if (index.isValidIndex()) {
-                getArchiveChatFor(viewModel.chatList.value!![index].jid, RecentChatEvent.MESSAGE_UPDATED)
+                getArchiveChatFor(
+                    viewModel.chatList.value!![index].jid,
+                    RecentChatEvent.MESSAGE_UPDATED
+                )
             }
-        } catch (e:Exception) {
+        } catch (e: Exception) {
             Log.e(TAG, "updateMessageUpdate: $e")
         }
     }
@@ -503,7 +554,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         val bundle = Bundle()
         bundle.putInt(Constants.NOTIFY_PROFILE_ICON, 2)
         bundle.putInt(Constants.NOTIFY_MUTE_UNMUTE, 2)
-        val index = viewModel.chatList.value?.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == jid } ?: -1
+        val index =
+            viewModel.chatList.value?.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == jid } ?: -1
 
         if (index.isValidIndex()) {
             val recent = FlyCore.getRecentChatOf(jid)
@@ -518,7 +570,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private fun initChatAdapter(diffUtilResult: DiffUtil.DiffResult?) {
         if (diffUtilResult != null) {
             // Save Current Scroll state to retain scroll position after DiffUtils Applied
-            val previousState = archivedListRecent.layoutManager?.onSaveInstanceState() as Parcelable
+            val previousState =
+                archivedListRecent.layoutManager?.onSaveInstanceState() as Parcelable
             diffUtilResult.dispatchUpdatesTo(mAdapter)
             archivedListRecent.layoutManager?.onRestoreInstanceState(previousState)
         }
@@ -532,7 +585,14 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         mSearchAdapter.setRecentChatCount(list.size)
 
         for (recent in list) {
-            val searchItem = com.contusfly.models.RecentSearch(recent.jid, recent.lastMessageId, Constants.TYPE_SEARCH_RECENT, recent.getChatTypeEnum().toString(), true,ProfileDetails())
+            val searchItem = com.contusfly.models.RecentSearch(
+                recent.jid,
+                recent.lastMessageId,
+                Constants.TYPE_SEARCH_RECENT,
+                recent.getChatTypeEnum().toString(),
+                true,
+                ProfileDetails()
+            )
             mArchiveSearchList.add(searchItem)
         }
         mSearchAdapter.setRecentSearch(mArchiveSearchList, searchKey)
@@ -576,8 +636,10 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         inflater.inflate(R.menu.menu_archive, menu)
         actionModeMenu = menu
         with(menu) {
-            hideMenu(get(R.id.action_mute), get(R.id.action_unmute), get(R.id.action_delete),
-                get(R.id.action_unarchive), get(R.id.action_mark_read), get(R.id.action_mark_unread))
+            hideMenu(
+                get(R.id.action_mute), get(R.id.action_unmute), get(R.id.action_delete),
+                get(R.id.action_unarchive), get(R.id.action_mark_read), get(R.id.action_mark_unread)
+            )
         }
     }
 
@@ -603,30 +665,33 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
      * @return boolean True if the item has click handled successfully.
      */
     private fun onClickAction(itemId: Int): Boolean {
-        when (itemId) {
+        return when (itemId) {
             R.id.action_delete -> {
                 deleteChatAlert()
-                return true
+                true
             }
+
             R.id.action_unarchive -> {
                 isDeleteChat = false
                 unArchiveSelectedChats()
                 actionMode?.finish()
-                return true
+                true
             }
+
             R.id.action_mute -> {
                 viewModel.updateArchivedMuteNotification(Constants.MUTE_NOTIFY)
                 updateChatItem()
                 actionMode?.finish()
-                return true
+                true
             }
+
             R.id.action_unmute -> {
                 viewModel.updateArchivedMuteNotification(Constants.UN_MUTE_NOTIFY)
                 updateChatItem()
                 actionMode?.finish()
-                return true
+                true
             }
-            else -> return false
+            else -> false
         }
     }
 
@@ -637,37 +702,43 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         }
         doProgressDialog = DoProgressDialog(this)
         doProgressDialog!!.showProgress()
-        val selectedJids: MutableList<String> = mutableListOf()
+        val selectedJids = arrayListOf<String>()
         var failedCount = 0
         val selectedCount = viewModel.selectedChats.size
         for (recent in viewModel.selectedChats) {
-            FlyCore.updateArchiveUnArchiveChat(recent.jid, false, FlyCallback { isSuccess, _, data ->
-                if (isSuccess)
-                    selectedJids.add(recent.jid)
-                else {
-                    if (failedCount == 0) CustomToast.showShortToast(
-                        context,
-                        data.getMessage()
-                    )
-                    failedCount++
-                    dismissProgress()
-                }
-                isAdapterNeedSync = (selectedJids.size > 0 && selectedCount == (selectedJids.size + failedCount))
-                if (isAdapterNeedSync){
-                    updateArchiveChatsData(selectedJids, failedCount)
-                    setResult(Activity.RESULT_OK)
-                    dismissProgress()
-                }
-            })
+            FlyCore.updateArchiveUnArchiveChat(
+                recent.jid,
+                false,
+                FlyCallback { isSuccess, _, data ->
+                    if (isSuccess)
+                        selectedJids.add(recent.jid)
+                    else {
+                        if (failedCount == 0) CustomToast.showShortToast(
+                            context,
+                            data.getMessage()
+                        )
+                        failedCount++
+                        dismissProgress()
+                    }
+                    isAdapterNeedSync =
+                        (selectedJids.isNotEmpty() && selectedCount == (selectedJids.size + failedCount))
+                    if (isAdapterNeedSync) {
+                        updateArchiveChatsData(selectedJids, failedCount)
+                        setResult(Activity.RESULT_OK)
+                        dismissProgress()
+                    }
+                })
         }
     }
+
     private fun dismissProgress() {
         if (doProgressDialog != null && doProgressDialog!!.isShowing) doProgressDialog!!.dismiss()
     }
-    private fun updateArchiveChatsData(selectedJids: MutableList<String>, failedCount: Int) {
+
+    private fun updateArchiveChatsData(selectedJids: ArrayList<String>, failedCount: Int) {
         updateArchiveChatsList(selectedJids)
         val chatsSize = selectedJids.size
-        if(!isDeleteChat) {
+        if (!isDeleteChat) {
             if (chatsSize == 1)
                 CustomToast.showShortToast(
                     context,
@@ -698,7 +769,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
 
     private fun removeArchiveChatItem(toUser: String?) {
         try {
-            val index = viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == toUser }
+            val index =
+                viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == toUser }
             if (index.isValidIndex()) {
                 viewModel.chatList.value!!.removeAt(index)
                 viewModel.chatAdapter.removeAt(index)
@@ -720,9 +792,14 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         val deleteAlertMessage = if (selectedMessages.size == 1) {
             val userNickName = ProfileDetailsUtils.getDisplayName(selectedMessages[0].jid)
             String.format(getString(R.string.msg_delete_chat_single_conversation), userNickName)
-        } else String.format(getString(R.string.msg_delete_chat_multiple_conversation), selectedMessages.size)// Delete the multiple chats
-        commonAlertDialog.showAlertDialog(deleteAlertMessage, getString(R.string.action_yes), getString(R.string.action_no),
-            CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false)
+        } else String.format(
+            getString(R.string.msg_delete_chat_multiple_conversation),
+            selectedMessages.size
+        )// Delete the multiple chats
+        commonAlertDialog.showAlertDialog(
+            deleteAlertMessage, getString(R.string.action_yes), getString(R.string.action_no),
+            CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false
+        )
     }
 
     private fun getArchiveChatFor(jId: String, @RecentChatEvent event: String) {
@@ -732,9 +809,13 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private fun updateChatItem() {
         if (viewModel.selectedChats.isNotEmpty()) {
             for (item in viewModel.selectedChats) {
-                val index = viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == item.jid }
+                val index =
+                    viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == item.jid }
                 if (index.isValidIndex()) {
-                    getArchiveChatFor(viewModel.chatList.value!![index].jid, RecentChatEvent.MUTE_EVENT)
+                    getArchiveChatFor(
+                        viewModel.chatList.value!![index].jid,
+                        RecentChatEvent.MUTE_EVENT
+                    )
                 }
             }
             viewModel.selectedChats.clear()
@@ -744,8 +825,10 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_archive, menu)
         with(menu) {
-            hideMenu(get(R.id.action_mute), get(R.id.action_unmute), get(R.id.action_delete),
-                get(R.id.action_unarchive), get(R.id.action_mark_read), get(R.id.action_mark_unread))
+            hideMenu(
+                get(R.id.action_mute), get(R.id.action_unmute), get(R.id.action_delete),
+                get(R.id.action_unarchive), get(R.id.action_mark_read), get(R.id.action_mark_unread)
+            )
         }
         return true
     }
@@ -766,7 +849,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
             val bundle = Bundle()
             bundle.putInt(Constants.NOTIFY_SELECTION, 4)
             for (item in viewModel.selectedChats) {
-                val index = viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == item.jid }
+                val index =
+                    viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == item.jid }
                 if (index.isValidIndex())
                     mAdapter.notifyItemChanged(index, bundle)
             }
@@ -803,7 +887,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
 
     private fun updateAdapter() {
         for (item in viewModel.selectedChats) {
-            val index = viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == item.jid }
+            val index =
+                viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == item.jid }
             if (index.isValidIndex()) {
                 viewModel.chatList.value!!.removeAt(index)
                 viewModel.chatAdapter.removeAt(index)
@@ -813,9 +898,10 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         viewModel.selectedChats.clear()
     }
 
-    private fun updateArchiveChatsList(selectedJids: MutableList<String>) {
+    private fun updateArchiveChatsList(selectedJids: ArrayList<String>) {
         for (jid in selectedJids) {
-            val index = viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == jid }
+            val index =
+                viewModel.chatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == jid }
             if (index.isValidIndex()) {
                 viewModel.chatList.value!!.removeAt(index)
                 viewModel.chatAdapter.removeAt(index)
@@ -859,7 +945,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         if (viewModel.selectedChats.size > 0) {
             val index = viewModel.selectedChats?.indexOfFirst { it.jid == jid }
             if (index.isValidIndex()) {
-                viewModel.selectedChats?.removeAt(index)
+                index?.let { viewModel.selectedChats?.removeAt(it) }
                 recentClick(viewModel.selectedChats, true)
             }
         }
@@ -873,6 +959,24 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
         handler?.postDelayed({
             viewModel.setAdminBlockedStatus(userJid, adminBlockStatus)
         }, 500)
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        val index =
+            viewModel.chatList.value?.indexOfFirst {
+                (it.jid ?: Constants.EMPTY_STRING) == groupJid
+            }
+        if (index?.isValidIndex() == true) {
+            if (groupName.isNotEmpty())
+                CustomToast.show(
+                    context,
+                    getString(R.string.deleted_by_super_admin, groupName)
+                )
+            removeArchiveChatItem(groupJid)
+            viewModel.setGroupDeletedBySuperAdmin(groupJid)
+        }
+        clearDeletedGroupChatNotification(groupJid, context)
     }
 
     override fun onResume() {
@@ -891,8 +995,8 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
                     menuValidationForDelete(recentList)
                 else hideMenu(it.get(R.id.action_delete))
             }
-        } catch(e:Exception) {
-            LogMessage.e(TAG,e.toString())
+        } catch (e: Exception) {
+            LogMessage.e(TAG, e.toString())
         }
     }
 

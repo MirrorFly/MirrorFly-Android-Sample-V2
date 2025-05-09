@@ -74,7 +74,7 @@ class ContactViewModel @Inject constructor() : ViewModel() {
         FlyCore.getRegisteredUsers(false) { isSuccess, _, data ->
             if (isSuccess) {
 
-                val profileDetails = data[SDK_DATA] as MutableList<ProfileDetails>
+                val profileDetails = (data[SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty().toMutableList()
                 LogMessage.i(TAG, "#NewContacts getContactList getRegisteredUsers profileDetails: ${profileDetails.size}")
                 profileDetails.forEach { contact ->
                     val index = contusContacts.indexOfFirst { it.jid == contact.jid }
@@ -152,7 +152,7 @@ class ContactViewModel @Inject constructor() : ViewModel() {
             } else {
                 FlyCore.getRegisteredUsers(true) { isSuccess, _, data ->
                     if (isSuccess) {
-                        val profileDetails = data[SDK_DATA] as MutableList<ProfileDetails>
+                        val profileDetails = (data[SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty().toMutableList()
                         viewModelScope.launch(Dispatchers.Main) {
                             contactDetailsList.value = ProfileDetailsUtils.removeAdminBlockedProfiles(profileDetails, true)
                             getContactDiffResult()

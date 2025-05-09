@@ -50,6 +50,7 @@ import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.FlyMessenger.cancelMediaUploadOrDownload
 import com.mirrorflysdk.api.FlyMessenger.downloadMedia
 import com.mirrorflysdk.api.FlyMessenger.uploadMedia
+import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.ContactChatMessage
 import com.mirrorflysdk.utils.*
@@ -208,11 +209,16 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
 
     override fun onResume() {
         super.onResume()
+        refreshStarredMessage()
+    }
+
+    private fun refreshStarredMessage() {
         if (searchEnabled && searchedText.isNotEmpty()) {
             searchStarredMessage(searchedText)
         } else {
             // Save Current Scroll state to retain scroll position after DiffUtils Applied
-            val previousState =  listStarredMessages.layoutManager?.onSaveInstanceState() as Parcelable
+            val previousState =
+                listStarredMessages.layoutManager?.onSaveInstanceState() as Parcelable
             listStarredMessages.layoutManager?.onRestoreInstanceState(previousState)
             viewModelStarredMessage.getStarredMessageList()
         }
@@ -393,12 +399,27 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
             viewModelStarredMessage.getStarredMessageList()
     }
 
-    override fun onUpdateUnStarAllMessages() {
-        super.onUpdateUnStarAllMessages()
-        updateAdapter()
-    }
 
     private fun initObservers() {
+        downloadObserver()
+        viewModelStarredMessage.starredMessagesListValues.observe(this) {
+            if (it != null) viewModelStarredMessage.fetchStarredMessageData(it.toCollection(ArrayList()),searchEnabled)
+        }
+        viewModelStarredMessage.starredMessageDiffResult.observe(this) {
+            starredMessageAdapter!!.setStarredMessages(viewModelStarredMessage.starredMessagesList)
+            it.dispatchUpdatesTo(starredMessageAdapter!!)
+        }
+        viewModelStarredMessage.starredMessageFetched.observe(this) {
+            starredMessageAdapter!!.setStarredMessages(viewModelStarredMessage.starredMessagesList)
+            starredMessageAdapter!!.notifyDataSetChanged()
+        }
+
+        viewModelStarredMessage.starredMessageUpdated.observe(this) {
+            starredMessageAdapter!!.notifyItemChanged(it,viewModelStarredMessage.starredMessagesList[it])
+        }
+    }
+
+    private fun downloadObserver() {
         val uploadDownloadProgressDisposable = uploadDownloadProgressObserver.buffer(5)
             .subscribeOn(Schedulers.io()).map {
                 val messageIdAndPositionList = ArrayList<Int>()
@@ -416,21 +437,11 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
                 }
             }
         compositeDisposable.add(uploadDownloadProgressDisposable)
-        viewModelStarredMessage.starredMessagesListValues.observe(this) {
-            viewModelStarredMessage.fetchStarredMessageData(it as MutableList<ChatMessage>,searchEnabled)
-        }
-        viewModelStarredMessage.starredMessageDiffResult.observe(this) {
-            starredMessageAdapter!!.setStarredMessages(viewModelStarredMessage.starredMessagesList)
-            it.dispatchUpdatesTo(starredMessageAdapter!!)
-        }
-        viewModelStarredMessage.starredMessageFetched.observe(this) {
-            starredMessageAdapter!!.setStarredMessages(viewModelStarredMessage.starredMessagesList)
-            starredMessageAdapter!!.notifyDataSetChanged()
-        }
+    }
 
-        viewModelStarredMessage.starredMessageUpdated.observe(this){
-            starredMessageAdapter!!.notifyItemChanged(it,viewModelStarredMessage.starredMessagesList[it])
-        }
+    override fun onUpdateUnStarAllMessages() {
+        super.onUpdateUnStarAllMessages()
+        updateAdapter()
     }
 
 
@@ -756,8 +767,8 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
 
     private fun inviteUserDialog(contactMessage: ContactChatMessage) {
         selectedContactMessage = contactMessage
-        commonAlertDialog!!.dialogAction = CommonAlertDialog.DialogAction.INVITE
-        commonAlertDialog!!.showListDialog(getString(R.string.title_invite_friend), resources.getStringArray(R.array.array_invite_contact))
+        commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.INVITE
+        commonAlertDialog.showListDialog(getString(R.string.title_invite_friend), resources.getStringArray(R.array.array_invite_contact))
     }
 
     private fun navigateToContactViewPage(messageId: String?) {
@@ -923,29 +934,32 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
         // Validate and show action menu while user selecting the message
 
         // Validate and show action menu while user selecting the message
-        if (clickedStarredMessages.isEmpty() && actionMode != null)
-            actionMode!!.finish()
-        else if (clickedStarredMessages.size == 1 &&
-            actionMode != null
-        ) {
-            actionMode!!.title = java.lang.String.valueOf(
-                clickedStarredMessages.size
-            )
-            menu!!.findItem(R.id.action_favourite).isVisible = false
-            menu!!.findItem(R.id.action_unfavourite).isVisible = false
-            menu!!.findItem(R.id.action_info).isVisible = false
-            StarredMessagesUtils.prepareSingleMenuItem(clickedStarredMessages, menu)
-            StarredMessagesUtils.validateFavouriteAction(clickedStarredMessages, menu)
-            actionMode!!.title = java.lang.String.valueOf(
-                clickedStarredMessages.size
-            )
-        } else if (actionMode != null) {
-            actionMode!!.title = java.lang.String.valueOf(clickedStarredMessages.size)
-            menu!!.findItem(R.id.action_info).isVisible = false
-            menu!!.findItem(R.id.action_copy).isVisible = false
-            menu!!.findItem(R.id.action_share).isVisible = false
-            menu!!.findItem(R.id.action_favourite).isVisible = false
-            StarredMessagesUtils.validateFavouriteAction(clickedStarredMessages, menu)
+        when {
+            clickedStarredMessages.isEmpty() && actionMode != null -> actionMode!!.finish()
+            clickedStarredMessages.size == 1 &&
+                    actionMode != null -> {
+                actionMode!!.title = java.lang.String.valueOf(
+                    clickedStarredMessages.size
+                )
+                menu!!.findItem(R.id.action_favourite).isVisible = false
+                menu!!.findItem(R.id.action_unfavourite).isVisible = false
+                menu!!.findItem(R.id.action_info).isVisible = false
+                StarredMessagesUtils.prepareSingleMenuItem(clickedStarredMessages.toCollection(ArrayList()), menu)
+                StarredMessagesUtils.validateFavouriteAction(clickedStarredMessages, menu)
+                StarredMessagesUtils.validateForwardIcon(clickedStarredMessages,menu!!)
+                actionMode!!.title = java.lang.String.valueOf(
+                    clickedStarredMessages.size
+                )
+            }
+            actionMode != null -> {
+                actionMode!!.title = java.lang.String.valueOf(clickedStarredMessages.size)
+                menu!!.findItem(R.id.action_info).isVisible = false
+                menu!!.findItem(R.id.action_copy).isVisible = false
+                menu!!.findItem(R.id.action_share).isVisible = false
+                menu!!.findItem(R.id.action_favourite).isVisible = false
+                StarredMessagesUtils.validateFavouriteAction(clickedStarredMessages, menu)
+                StarredMessagesUtils.validateForwardIcon(clickedStarredMessages,menu!!)
+            }
         }
     }
 
@@ -973,6 +987,12 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
         super.onAdminBlockedOtherUser(jid, type, status)
         viewModelStarredMessage.updateStarredMessageDataByJid(jid)
 
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        refreshStarredMessage()
     }
 
     override fun updateFeatureActions(features: Features) {

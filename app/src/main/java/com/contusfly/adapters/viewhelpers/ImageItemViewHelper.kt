@@ -197,25 +197,30 @@ class ImageItemViewHelper(private val context: Context, private val messageItemL
                     messageItem.getMediaChatMessage().getMediaProgressStatus()
                 )
             )
-            if (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
-                if (messageItem.mediaChatMessage.mediaLocalStoragePath != null && messageItem.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
-                        messageItem.mediaChatMessage.mediaLocalStoragePath
-                    )
-                ) {
-                    viewUploadProgress.gone()
-                    progressSender.gone()
-                    progressSenderRotation.gone()
+            when(fileUploadStatus.toInt()) {
+                 MediaUploadStatus.MEDIA_UPLOADED,
+                 MediaDownloadStatus.MEDIA_DOWNLOADED -> {
+                    if (messageItem.mediaChatMessage.mediaLocalStoragePath != null && messageItem.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
+                            messageItem.mediaChatMessage.mediaLocalStoragePath
+                        )
+                    ) {
+                        viewUploadProgress.gone()
+                        progressSender.gone()
+                        progressSenderRotation.gone()
+                    }
                 }
-            } else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
-                && progressPercentage > 0 && progressPercentage < 100) {
-                progressSender.show()
-                progressSenderRotation.gone()
-                progressSender.max = 100
-                progressSender.progress = progressPercentage
-            } else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
-                && (progressPercentage < 1 || progressPercentage >= 100)) {
-                progressSender.gone()
-                progressSenderRotation.show()
+                MediaUploadStatus.MEDIA_UPLOADING,
+                MediaDownloadStatus.MEDIA_DOWNLOADING -> {
+                    if (progressPercentage in 1..99) {
+                        progressSender.show()
+                        progressSenderRotation.gone()
+                        progressSender.max = 100
+                        progressSender.progress = progressPercentage
+                    } else if (progressPercentage < 1 || progressPercentage >= 100) {
+                        progressSender.gone()
+                        progressSenderRotation.show()
+                    }
+                }
             }
         }
     }

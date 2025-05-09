@@ -33,8 +33,8 @@ class StarredMessageViewModel @Inject constructor(): ViewModel() {
         starredMessagesListValues.value= FlyMessenger.getFavouriteMessages()
     }
 
-    fun fetchStarredMessageData(it: MutableList<ChatMessage>, searchEnabled:Boolean ) {
-        if (starredMessagesList.size > 0 && !searchEnabled) {
+    fun fetchStarredMessageData(it: ArrayList<ChatMessage>, searchEnabled:Boolean ) {
+        if (starredMessagesList.isNotEmpty() && !searchEnabled) {
             val diffResult = DiffUtil.calculateDiff(StarredMessageDiffCallback(starredMessagesList, it))
             messageListAddClear(it)
             starredMessageDiffResult.value=diffResult
@@ -44,7 +44,7 @@ class StarredMessageViewModel @Inject constructor(): ViewModel() {
         }
     }
 
-    private fun messageListAddClear(it: MutableList<ChatMessage>){
+    private fun messageListAddClear(it: ArrayList<ChatMessage>){
         searchedStarredMessageList.clear()
         starredMessagesList.clear()
         starredMessagesList.addAll(it)

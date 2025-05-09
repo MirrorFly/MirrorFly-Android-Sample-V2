@@ -347,6 +347,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         }
 
         viewModel.recentDeleteChatPosition.observe(viewLifecycleOwner, Observer {
+            updateRecentChatViewEmptyViewVisibility()
             mAdapter.notifyItemRemoved(it)
         })
 
@@ -448,7 +449,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         }
 
         viewModel.selectedArchiveChats.observe(viewLifecycleOwner) {
-            updateArchiveChatsList(it)
+            updateArchiveChatsList(it.toCollection(ArrayList()))
         }
 
         viewModel.chatTagList.observe(viewLifecycleOwner, Observer {
@@ -461,6 +462,32 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
         })
         viewModel.chatTagDataPinUnpinLoad.observe(viewLifecycleOwner) {
             getRecentChatListBasedOnTagData()
+        }
+
+        superAdminDeleteGroupObserver()
+    }
+
+    private fun superAdminDeleteGroupObserver(){
+        viewModel.superAdminDeleteGroup.observe(viewLifecycleOwner) {
+            dialogFragment?.dismissDialogWhenGroupDeleted(it)
+            val index =
+                viewModel.filterRecentChatList.value?.indexOfFirst { recent -> recent.jid.trim() == it }
+            if (index?.isValidIndex() == true && searchKey.isNotEmpty()) {
+                updateSearchAdapter(it)
+            }
+        }
+    }
+
+    private fun updateRecentChatViewEmptyViewVisibility(){
+        if (viewModel.recentChatAdapter.isNotEmpty()) {
+            if (viewModel.recentChatAdapter.size == 4 &&
+                viewModel.recentChatAdapter[0].jid == null && viewModel.recentChatAdapter[3].jid == null
+            ) {
+                emptyViewVisibleOrGone()
+            } else {
+                recentChatBinding.noMessageView.root.visibility = View.GONE
+                recentChatBinding.privateChatUnlockView.root.visibility = View.GONE
+            }
         }
     }
 
@@ -841,11 +868,11 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     private fun emptyViewVisibleOrGone() {
-        var archiveChats: MutableList<RecentChat>? = null
+        var archiveChats: MutableList<RecentChat>?
         FlyCore.getArchivedChatList { _, _, data ->
-            archiveChats = (data["data"] as MutableList<RecentChat>)
+            archiveChats = (data["data"] as? ArrayList<*>)?.filterIsInstance<RecentChat>().orEmpty().toMutableList()
             CoroutineScope(Dispatchers.Main).launch {
-                var privateChatList=ChatManager.getPrivateChatList()
+                val privateChatList=ChatManager.getPrivateChatList()
                 recentChatBinding.noMessageView.root.visibility =
                     if (archiveChats?.size == 0 && privateChatList.size == 0) View.VISIBLE else View.GONE
                 showPrivateChatView(archiveChats!!,privateChatList)
@@ -929,8 +956,8 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
             }
 
             override fun hidePrivateChat() {
-                if(mAdapter!=null && mAdapter.getPrivateChatStatus()){
-                    mAdapter.setPrivateChatStatus(false)
+                if(mAdapter!=null && mAdapter.privateChatStatus){
+                    mAdapter.privateChatStatus = false
                     setRecyclerViewBounceEffectValue(true)
                 }
             }
@@ -948,8 +975,8 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     private fun disablePrivateChatView(){
-        if(mAdapter!=null && mAdapter.getPrivateChatStatus()){
-            mAdapter.setPrivateChatStatus(false)
+        if(mAdapter!=null && mAdapter.privateChatStatus){
+            mAdapter.privateChatStatus = false
         }
         setRecyclerViewBounceEffectValue(false)
     }
@@ -1148,24 +1175,24 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     fun updateAdapter() {
-                try {
-                    for (item in viewModel.selectedRecentChats) {
-                        val index =
-                            viewModel.recentChatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == item.jid }
-                        if (index.isValidIndex()) {
-                            viewModel.recentChatList.value!!.removeAt(index)
-                            viewModel.recentChatAdapter.removeAt(index)
-                            mAdapter.notifyItemRemoved(index)
-                        }
-                    }
-                    viewModel.selectedRecentChats.clear()
-                    viewModel.pinnedListPosition.clear()
-                } catch (e:Exception) {
-                    LogMessage.e(TAG,e)
+        try {
+            for (item in viewModel.selectedRecentChats) {
+                val index =
+                    viewModel.recentChatList.value!!.indexOfFirst { it.jid ?: Constants.EMPTY_STRING == item.jid }
+                if (index.isValidIndex()) {
+                    viewModel.recentChatList.value!!.removeAt(index)
+                    viewModel.recentChatAdapter.removeAt(index)
+                    mAdapter.notifyItemRemoved(index)
                 }
+            }
+            viewModel.selectedRecentChats.clear()
+            viewModel.pinnedListPosition.clear()
+        } catch (e:Exception) {
+            LogMessage.e(TAG,e)
+        }
     }
 
-    fun updateArchiveChatsList(selectedJids: MutableList<String>) {
+    fun updateArchiveChatsList(selectedJids: ArrayList<String>) {
         if (activity == null)
             return
         for (jid in selectedJids) {
@@ -1259,7 +1286,7 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
     }
 
     private fun privateChatAdapterChangeStatus(status:Boolean){
-        mAdapter.setPrivateChatStatus(status)
+        mAdapter.privateChatStatus = status
     }
 
     private fun setRecyclerViewBounceEffectValue(isBounceNeed:Boolean){
@@ -1268,6 +1295,12 @@ class RecentChatListFragment : Fragment(), CoroutineScope, View.OnTouchListener,
             effectFactory.setTranslationValue(0.6f,0.0f)
             privateChatAdapterChangeStatus(false)
         } else {
+            com.contusfly.utils.LogMessage.d(TAG,"private chat visibility is->${recentChatBinding.privateChatReleaseView.privateChatReleaseParentLayout.visibility == View.VISIBLE}")
+            com.contusfly.utils.LogMessage.d("rko","view model privateChatStatus status--${viewModel.privateChatStatus.value}")
+            if (recentChatBinding.privateChatReleaseView.privateChatReleaseParentLayout.visibility == View.VISIBLE && viewModel.privateChatStatus.value == false) {
+                com.contusfly.utils.LogMessage.d(TAG,"private chat status going to set as false notify")
+                privateChatAdapterChangeStatus(false)
+            }
             effectFactory.setTranslationValue(0.0f,0.0f)
         }
     }

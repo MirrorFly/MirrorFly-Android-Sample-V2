@@ -113,7 +113,7 @@ class DialogViewHelper(
     /**
      * Show video call requesting dialog to user once call switch conformation is done
      */
-    private fun showVideoCallRequestingDialog() {
+    fun showVideoCallRequestingDialog() {
         LogMessage.d(TAG, "$CALL_UI showRequestingAlert")
         if (requestingVideoCallDialog.window != null) {
             requestingVideoCallDialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
@@ -143,15 +143,28 @@ class DialogViewHelper(
         } else {
             mBuilder.setMessage("requesting to switch to video call")
         }
-        mBuilder.setPositiveButton(context.getString(R.string.fly_info_call_notification_accept)) { _: DialogInterface?, _: Int ->
-            activityOnClickListener.onCallSwitchDialog(true)
-        }
+
+        mBuilder.setPositiveButton(context.getString(R.string.fly_info_call_notification_accept), null) // Set null here to customize the click later
+
         mBuilder.setNegativeButton(context.getString(R.string.fly_info_call_notification_decline)) { _: DialogInterface?, _: Int ->
             LogMessage.d(TAG, "$CALL_UI showCallSwitchAlert Decline")
             activityOnClickListener.onCallSwitchDialog(false)
             callSwitchDialog.dismiss()
         }
-        mBuilder.create()
+
+        val dialog = mBuilder.create()
+
+        dialog.setOnShowListener {
+            // Get the positive button and set a custom click listener to prevent automatic dismissal
+            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            positiveButton.setOnClickListener {
+                // Perform the necessary action
+                activityOnClickListener.onCallSwitchDialog(true)
+
+            }
+        }
+
+        dialog
     }
 
     /**

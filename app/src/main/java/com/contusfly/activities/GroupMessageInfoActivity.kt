@@ -14,6 +14,7 @@ import com.mirrorflysdk.flycommons.models.MessageType
 import com.contusfly.R
 import com.contusfly.activities.parent.BaseMessageInfoActivity
 import com.contusfly.adapters.MessageinfoExpandadapter
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.interfaces.GetMessageStatusCallback
 import com.contusfly.showToast
 import com.contusfly.utils.ChatMessageUtils
@@ -105,6 +106,7 @@ class GroupMessageInfoActivity : BaseMessageInfoActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_message_info)
+
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -139,7 +141,7 @@ class GroupMessageInfoActivity : BaseMessageInfoActivity() {
 
     override fun onMessageStatusUpdated(messageId: String) {
         super.onMessageStatusUpdated(messageId)
-        if (msgId.equals(messageId)) {
+        if (msgId == messageId) {
             onGroupMsgStatusUpdated()
         }
     }
@@ -177,18 +179,13 @@ class GroupMessageInfoActivity : BaseMessageInfoActivity() {
         ChatMessageUtils.setChatStatus(imgChatStatus!!, messageStatus)
         getMessageStatus(
             msgId!!,
-            object : GetMessageStatusCallback {
-                override fun onGetMessageStatusLoaded(
-                    deliveredStatus: List<MessageStatusDetail>,
-                    readByStatus: List<MessageStatusDetail>
-                ) {
-                    deliveryStatus = deliveredStatus
-                    readStatus = readByStatus
-                    listdeliverDataChild!![listdeliverDataHeader!![0]] = deliveryStatus!!
-                    listreadDataChild!![listreadDataHeader!![0]] = readStatus!!
-                    infoadapterdeliver!!.notifyDataSetChanged()
-                    infoadapterread!!.notifyDataSetChanged()
-                }
+            GetMessageStatusCallback { deliveredStatus, readByStatus ->
+                deliveryStatus = deliveredStatus
+                readStatus = readByStatus
+                listdeliverDataChild!![listdeliverDataHeader!![0]] = deliveryStatus!!
+                listreadDataChild!![listreadDataHeader!![0]] = readStatus!!
+                infoadapterdeliver!!.notifyDataSetChanged()
+                infoadapterread!!.notifyDataSetChanged()
             })
     }
 
@@ -207,34 +204,29 @@ class GroupMessageInfoActivity : BaseMessageInfoActivity() {
         val formatter1 = SimpleDateFormat("MMM dd,yyyy", Locale.getDefault())
         getMessageStatus(
             msgId!!,
-            object : GetMessageStatusCallback {
-                override fun onGetMessageStatusLoaded(
-                    deliveredStatus: List<MessageStatusDetail>,
-                    readByStatus: List<MessageStatusDetail>
-                ) {
-                    deliveryStatus = deliveredStatus
-                    readStatus = readByStatus
-                    var messageDate: String? = null
-                    try {
-                        messageDate = formatter.format(
-                            formatter1.parse(
-                                getMessageOfId(msgId!!)
-                                    ?.getMessageSentTime()?.let {
-                                        ChatUserTimeUtils
-                                            .getDateFromTimestamp(
-                                                it
-                                            )
-                                    }
-                            )
+            GetMessageStatusCallback { deliveredStatus, readByStatus ->
+                deliveryStatus = deliveredStatus
+                readStatus = readByStatus
+                var messageDate: String? = null
+                try {
+                    messageDate = formatter.format(
+                        formatter1.parse(
+                            getMessageOfId(msgId!!)
+                                ?.getMessageSentTime()?.let {
+                                    ChatUserTimeUtils
+                                        .getDateFromTimestamp(
+                                            it
+                                        )
+                                }
                         )
-                    } catch (e: ParseException) {
-                        LogMessage.e(e)
-                    }
-                    if (messageDate != null && !messageDate.contains("1970")) {
-                        txtDate!!.text = messageDate
-                    }
-                    loadChatInformation()
+                    )
+                } catch (e: ParseException) {
+                    LogMessage.e(e)
                 }
+                if (messageDate != null && !messageDate.contains("1970")) {
+                    txtDate!!.text = messageDate
+                }
+                loadChatInformation()
             })
     }
 
@@ -287,7 +279,18 @@ class GroupMessageInfoActivity : BaseMessageInfoActivity() {
 
     override fun onDeleteGroup(groupJid: String) {
         super.onDeleteGroup(groupJid)
-        if (this.groupJid.equals(groupJid)){
+        if (this.groupJid == groupJid){
+            setResult(Activity.RESULT_FIRST_USER)
+            startDashboardActivity()
+            finish()
+        }
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (this.groupJid == groupJid){
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
             setResult(Activity.RESULT_FIRST_USER)
             startDashboardActivity()
             finish()
@@ -308,4 +311,5 @@ class GroupMessageInfoActivity : BaseMessageInfoActivity() {
             finish()
         }
     }
+
 }

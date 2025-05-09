@@ -20,6 +20,7 @@ import com.contusfly.R
 import com.contusfly.TAG
 import com.contusfly.adapters.SectionedShareAdapter
 import com.contusfly.chat.MessageUtils
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.databinding.ActivityForwardMessageBinding
 import com.contusfly.getChatType
 import com.contusfly.getDisplayName
@@ -28,6 +29,7 @@ import com.contusfly.helpers.UserListType
 import com.contusfly.interfaces.RecyclerViewItemClick
 import com.contusfly.isValidIndex
 import com.contusfly.network.NetworkConnection
+import com.contusfly.showToast
 import com.contusfly.utils.Constants
 import com.contusfly.utils.ProfileDetailsUtils
 import com.contusfly.utils.SharedPreferenceManager
@@ -40,7 +42,6 @@ import com.mirrorflysdk.api.ChatActionListener
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.api.contacts.ContactManager
 import com.mirrorflysdk.api.contacts.ProfileDetails
-import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.helpers.ResourceHelper
 import com.mirrorflysdk.views.CustomToast
@@ -531,6 +532,23 @@ class ForwardMessageActivity : BaseActivity(), CoroutineScope {
     override fun onAdminBlockedOtherUser(jid: String, type: String, status: Boolean) {
         super.onAdminBlockedOtherUser(jid, type, status)
         LogMessage.d(TAG, "#ForwardMessage  onAdminBlockedOther jid $jid type: $type status:$status")
+        updateSelectedUsers(jid, status)
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        LogMessage.d(TAG, "#ForwardMessage  onDeleteGroupBySuperAdmin groupJid $groupJid groupName ${groupName}")
+        updateSelectedUsers(groupJid, true)
+        if (groupName.isNotEmpty())
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
+        clearDeletedGroupChatNotification(groupJid, context)
+        if(senderJid == groupJid){
+            com.contusfly.startDashboardActivity(this)
+            finish()
+        }
+    }
+
+    private fun updateSelectedUsers(jid: String, status: Boolean){
         if (status && selectedUsersWithNames.containsKey(jid)) {
             selectedUsersWithNames.remove(jid)
         }

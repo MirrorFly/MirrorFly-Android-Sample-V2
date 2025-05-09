@@ -37,10 +37,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             try {
                 val messageDataString = notificationData["message"]
                 if (messageDataString != null) {
-                    notificationData = Gson().fromJson<Map<String, String>>(messageDataString, object : TypeToken<Map<String, Any>>() {}.type)
+                    notificationData = Gson().fromJson(messageDataString, object : TypeToken<Map<String, Any>>() {}.type)
                     if(notificationData.containsKey("android")) {
-                        val dataMap = notificationData["data"] as? Map<String, String>
-                        dataMap?.let { data ->
+                        val getData = notificationData["data"]
+                        val dataMap: Map<String, String> = Gson().fromJson(getData, object : TypeToken<Map<String, String>>() {}.type)?: emptyMap()
+                        dataMap.let { data ->
                             notificationData = data
                         }
                     }

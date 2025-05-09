@@ -3,7 +3,6 @@ package com.contusfly.chatTag.activities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,20 +13,24 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.contusfly.R
+import com.contusfly.activities.BaseActivity
 import com.contusfly.chatTag.adapter.PeopleSelectionListAdapter
 import com.contusfly.chatTag.adapter.PeoplelistAdapter
 import com.contusfly.chatTag.interfaces.ChatTagClickListener
 import com.contusfly.chatTag.viewmodel.ChatTagViewModel
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.databinding.ActivityAddPeopleBinding
 import com.contusfly.isDeletedContact
+import com.contusfly.isValidIndex
 import com.contusfly.utils.LogMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mirrorflysdk.api.ChatManager
+import com.mirrorflysdk.views.CustomToast
 import java.lang.reflect.Type
 
-class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
+class AddPeopleActivity : BaseActivity(), ChatTagClickListener {
 
     private val TAG: String = AddPeopleActivity::class.java.simpleName
     private lateinit var mContext: Context
@@ -173,6 +176,39 @@ class AddPeopleActivity : AppCompatActivity(), ChatTagClickListener {
                 //Nothing Do
             }
         })
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        val selectionIndex = chatSelectedList.indexOfFirst { it.jid == groupJid }
+        val recentIndex = recentChatList.indexOfFirst { it.jid == groupJid }
+        val item= recentChatList[recentIndex]
+        if (selectionIndex.isValidIndex() || recentIndex.isValidIndex()) {
+            if (groupName.isNotEmpty())
+                CustomToast.show(
+                    context,
+                    getString(R.string.deleted_by_super_admin, groupName)
+                )
+            chatSelectedList.removeAt(selectionIndex)
+            recentChatList.removeAt(recentIndex)
+            setResult()
+            if(chatSelectedList.size == 0) {
+                mAdapter.notifyDataSetChanged()
+                setSelectionListChatAdapter()
+                mSelectionAdapter.clear()
+            } else {
+                mAdapter.notifyDataSetChanged()
+                setSelectionListChatAdapter()
+                mSelectionAdapter.updateList(
+                    chatSelectedList,
+                    recentIndex,
+                    true,
+                    item.isSelected
+                )
+            }
+            addButtonEnableDisable()
+        }
+        clearDeletedGroupChatNotification(groupJid, context)
     }
 
     override fun selectUnselectChat(position: Int, item: RecentChat, isSelectionlist: Boolean) {

@@ -173,26 +173,30 @@ class VideoItemViewHelper(private val context: Context, private val messageItemL
     private fun uploadImgProgressView(messageItem: ChatMessage, videoViewHolder: VideoSentViewHolder, fileUploadStatus: String) {
         with(videoViewHolder) {
             val videoProgressPercentage = Utils.returnZeroIfStringEmpty(Utils.returnEmptyStringIfNull(messageItem.mediaChatMessage.mediaProgressStatus))
-            if (fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADED || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADED) {
-                if (messageItem.mediaChatMessage.mediaLocalStoragePath != null && messageItem.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
-                        messageItem.mediaChatMessage.mediaLocalStoragePath
-                    )
-                ) {
-                    viewUploadProgress.gone()
-                    progressSender.gone()
-                    progressSenderRotation.gone()
+            when(fileUploadStatus.toInt()) {
+                MediaUploadStatus.MEDIA_UPLOADED,
+                MediaDownloadStatus.MEDIA_DOWNLOADED -> {
+                    if (messageItem.mediaChatMessage.mediaLocalStoragePath != null && messageItem.mediaChatMessage.mediaLocalStoragePath != "" && ChatMessageUtils.isMediaExists(
+                            messageItem.mediaChatMessage.mediaLocalStoragePath
+                        )
+                    ) {
+                        viewUploadProgress.gone()
+                        progressSender.gone()
+                        progressSenderRotation.gone()
+                    }
                 }
-            }else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
-                && videoProgressPercentage > 0 && videoProgressPercentage < 100) {
-                progressSender.show()
-                progressSenderRotation.gone()
-                progressSender.max = 100
-                progressSender.progress = videoProgressPercentage
-            } else if ((fileUploadStatus.toInt() == MediaUploadStatus.MEDIA_UPLOADING || fileUploadStatus.toInt() == MediaDownloadStatus.MEDIA_DOWNLOADING)
-                && (videoProgressPercentage < 1 || videoProgressPercentage >= 100)) {
-                progressSender.progress = 0
-                progressSender.gone()
-                progressSenderRotation.show()
+                MediaUploadStatus.MEDIA_UPLOADING,MediaDownloadStatus.MEDIA_DOWNLOADING -> {
+                    if (videoProgressPercentage in 1..99) {
+                        progressSender.show()
+                        progressSenderRotation.gone()
+                        progressSender.max = 100
+                        progressSender.progress = videoProgressPercentage
+                    } else if (videoProgressPercentage < 1 || videoProgressPercentage >= 100) {
+                        progressSender.progress = 0
+                        progressSender.gone()
+                        progressSenderRotation.show()
+                    }
+                }
             }
         }
     }

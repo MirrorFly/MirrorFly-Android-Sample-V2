@@ -677,7 +677,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
         backupData.backupTime = lastBackupDate
         fileId = id
         fileName = driveFile!!.name
-        fileSize = driveFile!!["size"] as Long
+        fileSize = driveFile!!["size"] as? Long ?: 0L
         fileSizeString = getFileSizeInStringFormat(fileSize)!!
         SharedPreferenceManager.setString(BackupConstants.BACKUP_FILE_SIZE, backupData.backupSize)
         SharedPreferenceManager.setString(BackupConstants.BACKUP_FILE_DATE, backupData.backupTime)
@@ -703,7 +703,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
         input.timeZone = TimeZone.getTimeZone("UTC")
         val output = SimpleDateFormat("dd MMM yyyy | hh.mm aa")
         output.timeZone = TimeZone.getDefault()
-        var finalTime = ""
+        val finalTime:String
         try {
             val date = input.parse(cd)
             finalTime = output.format(date)

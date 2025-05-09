@@ -132,7 +132,7 @@ class MessageInfoActivity : BaseMessageInfoActivity() {
      * @param messageId Message item contains message data
      */
     override fun onMessageStatusUpdated(messageId: String) {
-        if (messageId.equals(message!!.getMessageId(), ignoreCase = true)) {
+        if (messageId == message!!.messageId) {
             message = FlyMessenger.getMessageOfId(messageId)
             ChatMessageUtils.setChatStatus(imgChatStatus, message!!.getMessageStatus())
             setReceiptView(message!!)
@@ -141,7 +141,7 @@ class MessageInfoActivity : BaseMessageInfoActivity() {
 
     override fun onUpdateUnStarAllMessages() {
         super.onUpdateUnStarAllMessages()
-        if (!message!!.getMessageId().isNullOrEmpty()) {
+        if (!message!!.messageId.isNullOrEmpty()) {
             message = FlyMessenger.getMessageOfId(message!!.getMessageId())
             if ((message!!.messageType == MessageType.IMAGE || message!!.messageType == MessageType.VIDEO)
                 && message!!.getMediaChatMessage().getMediaCaptionText() != null

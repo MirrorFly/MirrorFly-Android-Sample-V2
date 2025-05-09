@@ -18,8 +18,10 @@ import android.provider.OpenableColumns
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import androidx.documentfile.provider.DocumentFile
+import com.contusfly.checkEqualString
 import com.contusfly.mediapicker.helper.ImagePickerUtils
 import com.contusfly.utils.Constants
+import com.contusfly.utils.PickFileUtils
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.FilePathUtils
 import com.mirrorflysdk.utils.MemoryInfoHelper
@@ -38,6 +40,8 @@ import java.util.*
 object RealPathUtil {
     private val TAG = RealPathUtil::class.java.simpleName
     private var intentType: String? = null
+    private var isMaxFileSizeRestrict = false
+    private var isMemoryNotSufficient = false
 
     fun getIntentType(): String? {
         return intentType
@@ -69,6 +73,22 @@ object RealPathUtil {
         }
     }
 
+    fun setIsMemoryNotAvailable(isMemoryAvailable:Boolean){
+        isMemoryNotSufficient = isMemoryAvailable
+    }
+
+    fun isMemoryNotAvailable(): Boolean {
+        return isMemoryNotSufficient
+    }
+
+    fun setIsFileSizeMaxExceed(isFileSizeExceed:Boolean){
+        isMaxFileSizeRestrict = isFileSizeExceed
+    }
+
+    fun isMaxFileSize():Boolean{
+        return isMaxFileSizeRestrict
+    }
+
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access Framework
      * Documents, as well as the _data field for the MediaStore and other file-based
@@ -97,10 +117,10 @@ object RealPathUtil {
                     isGoogleCloudPhotosUri(uri) -> return handleCloudAttach(context, uri)
                 }
             }
-            "content".equals(uri.scheme, ignoreCase = true) -> {
+            checkEqualString("content",uri.scheme!!) -> {
                 return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(context, uri, uri, null, null)
             }
-            "file".equals(uri.scheme, ignoreCase = true) -> {
+            checkEqualString("file",uri.scheme!!) -> {
                 return uri.path
             }
         }
@@ -129,8 +149,13 @@ object RealPathUtil {
         val split = docId.split(":".toRegex()).toTypedArray()
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             val type = split[0]
-            if ("primary".equals(type, ignoreCase = true)) {
-                return FilePathUtils.getExternalStorage().toString() + "/" + split[1]
+            if (checkEqualString("primary",type)) {
+                val file = File(FilePathUtils.getExternalStorage().toString() + "/" + split[1])
+                return if(file.isFile){
+                    FilePathUtils.getExternalStorage().toString() + "/" + split[1]
+                } else {
+                    getDataColumn(context, null, uri, null,null)
+                }
             }
         }
         var realPath: String?
@@ -161,18 +186,19 @@ object RealPathUtil {
         val docId = DocumentsContract.getDocumentId(uri)
         val split = docId.split(":".toRegex()).toTypedArray()
         val type = split[0]
-        var contentUri: Uri? = null
-        when (type) {
+        val contentUri: Uri? = when (type) {
             "image" -> {
-                contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             }
+
             "video" -> {
-                contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             }
+
             "audio" -> {
-                contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
             } else -> {
-                contentUri = MediaStore.Files.getContentUri("external")
+                MediaStore.Files.getContentUri("external")
             }
         }
         val selection = "_id=?"
@@ -292,6 +318,11 @@ object RealPathUtil {
 
         val documentFile = DocumentFile.fromSingleUri(context, fileUri)
         if(!MemoryInfoHelper.isTransferPossible(documentFile!!.length())) {
+            isMemoryNotSufficient = true
+            return null
+        }
+        if(!PickFileUtils.checkFileSize(documentFile.length(), Constants.MAX_DOCUMENT_UPLOAD_SIZE)){
+            isMaxFileSizeRestrict = true
             return null
         }
 
@@ -317,6 +348,7 @@ object RealPathUtil {
         try {
             if(filePath!=null) {
                 if (filePath.exists()) finalPath = filePath.path
+                com.contusfly.utils.LogMessage.e(TAG,"checkFilePath $finalPath")
                 val inputStream = context.contentResolver.openInputStream(fileUri!!)
                 val fileOutputStream = FileOutputStream(filePath)
                 finalPath =  if (inputStream != null) {
@@ -571,8 +603,7 @@ object RealPathUtil {
     }
 
     private fun handleFileExtension(extension: String): String {
-        var fileExtension = ""
-        fileExtension = when (extension) {
+        return when (extension) {
             "excel" -> "xls"
             "ppt" -> "ppt"
             "pdf" -> "pdf"
@@ -596,6 +627,5 @@ object RealPathUtil {
             "csv" -> "csv"
             else -> ""
         }
-        return fileExtension
     }
 }

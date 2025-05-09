@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.contusfly.R
 import com.contusfly.TAG
+import com.contusfly.clearDeletedGroupChatNotification
 import com.contusfly.databinding.ActivityImageViewBinding
 import com.contusfly.getDisplayName
 import com.contusfly.showToast
@@ -250,8 +251,11 @@ class ImageViewActivity : BaseActivity(), DialogInterface.OnClickListener, Commo
             val menuItem = menu.findItem(R.id.action_share_image)
             try {
                 val uri = URI(imageUrl)
-                val isWeb = ("http".equals(uri.scheme, ignoreCase = true)
-                        || "https".equals(uri.scheme, ignoreCase = true))
+                var isWeb = false
+                if (uri.scheme != null) {
+                    isWeb = ("http" == uri.scheme.toLowerCase()
+                            || "https" == uri.scheme.toLowerCase())
+                }
                 menuItem.isVisible = isWeb
             } catch (e: URISyntaxException) {
                 LogMessage.e(TAG, e)
@@ -326,6 +330,17 @@ class ImageViewActivity : BaseActivity(), DialogInterface.OnClickListener, Commo
     override fun onDeleteGroup(groupJid: String) {
         super.onDeleteGroup(groupJid)
         if (this.groupId != null && groupJid == this.groupId) {
+            setResult(Activity.RESULT_FIRST_USER)
+            startDashboardActivity()
+            finish()
+        }
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (this.groupId != null && groupJid == this.groupId) {
+            showToast(getString(R.string.deleted_by_super_admin, groupName))
             setResult(Activity.RESULT_FIRST_USER)
             startDashboardActivity()
             finish()

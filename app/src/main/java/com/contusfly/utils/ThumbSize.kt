@@ -42,9 +42,17 @@ internal class ThumbSize {
      * @return int Size of bitmap
      */
     private fun resizeBitmap(bitmapWidth: Int, thbSize: Int): Int {
-        var tempSize = thbSize
+        val tempSize = thbSize
         try {
-            if (bitmapWidth < WIDTH_200) tempSize = THUMB_64 else if (bitmapWidth < WIDTH_500) tempSize = THUMB_200 else if (bitmapWidth < WIDTH_1000) tempSize = THUMB_250 else if (bitmapWidth < WIDTH_2000) tempSize = THUMB_300 else if (bitmapWidth < WIDTH_4000) tempSize = THUMB_400 else if (bitmapWidth > WIDTH_4000) tempSize = THUMB_450
+            return when {
+                bitmapWidth < WIDTH_200 -> THUMB_64
+                bitmapWidth < WIDTH_500 -> THUMB_200
+                bitmapWidth < WIDTH_1000 -> THUMB_250
+                bitmapWidth < WIDTH_2000 -> THUMB_300
+                bitmapWidth < WIDTH_4000 -> THUMB_400
+                bitmapWidth > WIDTH_4000 -> THUMB_450
+                else -> thbSize
+            }
         } catch (e: Exception) {
             LogMessage.e(Constants.TAG, e)
         }
@@ -58,13 +66,23 @@ internal class ThumbSize {
      * @return int Thumb size
      */
     private fun resizeImage(bitmapWidth: Int): Int {
-        var thumbsize = 0
+        val thumbSize = 0
         try {
-            if (bitmapWidth < WIDTH_200) thumbsize = THUMB_64 else if (bitmapWidth < WIDTH_500) thumbsize = THUMB_100 else if (bitmapWidth < WIDTH_1000) thumbsize = THUMB_150 else if (bitmapWidth < WIDTH_2000) thumbsize = THUMB_250 else if (bitmapWidth < WIDTH_4000) thumbsize = THUMB_300 else if (bitmapWidth > WIDTH_4000) thumbsize = THUMB_450
+            return when {
+                bitmapWidth < WIDTH_200 -> THUMB_64
+                bitmapWidth < WIDTH_500 -> THUMB_100
+                bitmapWidth < WIDTH_1000 -> THUMB_150
+                bitmapWidth < WIDTH_2000 -> THUMB_250
+                bitmapWidth < WIDTH_4000 -> THUMB_300
+                bitmapWidth > WIDTH_4000 -> THUMB_450
+                else -> {
+                    0
+                }
+            }
         } catch (e: Exception) {
             LogMessage.e(Constants.TAG, e)
         }
-        return thumbsize
+        return thumbSize
     }
 
     companion object {

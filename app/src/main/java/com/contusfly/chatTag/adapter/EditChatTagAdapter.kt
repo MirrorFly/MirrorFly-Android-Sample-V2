@@ -88,7 +88,7 @@ class EditChatTagAdapter (
 
 }
 
-interface ReorderList {
-    public fun onItemMoved(fromPosition: Int, toPosition: Int)
+fun interface ReorderList {
+    fun onItemMoved(fromPosition: Int, toPosition: Int)
 
 }

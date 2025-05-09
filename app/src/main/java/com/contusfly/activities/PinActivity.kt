@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener,
@@ -185,7 +186,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
         commonAlertDialog = CommonAlertDialog(this)
         commonAlertDialog!!.setOnDialogCloseListener(this)
         binding.keyboardNumeric.setmPasswordField(binding.pinEditText)
-        setPinEmptyDrawable(mutableListOf(binding.pin1, binding.pin2, binding.pin3, binding.pin4))
+        setPinEmptyDrawable(arrayListOf(binding.pin1, binding.pin2, binding.pin3, binding.pin4))
         binding.forgotPin.setOnClickListener {
             binding.forgotPin.setOnClickListener(null)
             sendOtpAlert()
@@ -203,27 +204,27 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
                 try {
                     when (s.length) {
                         1 -> {
-                            setPinFillDrawable(mutableListOf(binding.filledPin1))
-                            hidePinFilledView(mutableListOf(binding.filledPin2, binding.filledPin3, binding.filledPin4))
-                            setPinEmptyDrawable(mutableListOf(binding.pin2, binding.pin3, binding.pin4))
+                            setPinFillDrawable(arrayListOf(binding.filledPin1))
+                            hidePinFilledView(arrayListOf(binding.filledPin2, binding.filledPin3, binding.filledPin4))
+                            setPinEmptyDrawable(arrayListOf(binding.pin2, binding.pin3, binding.pin4))
                         }
                         2 -> {
-                            setPinFillDrawable(mutableListOf(binding.filledPin1, binding.filledPin2))
-                            hidePinFilledView(mutableListOf(binding.filledPin3, binding.filledPin4))
-                            setPinEmptyDrawable(mutableListOf(binding.pin3, binding.pin4))
+                            setPinFillDrawable(arrayListOf(binding.filledPin1, binding.filledPin2))
+                            hidePinFilledView(arrayListOf(binding.filledPin3, binding.filledPin4))
+                            setPinEmptyDrawable(arrayListOf(binding.pin3, binding.pin4))
                         }
                         3 -> {
-                            setPinFillDrawable(mutableListOf(binding.filledPin1, binding.filledPin2, binding.filledPin3))
-                            hidePinFilledView(mutableListOf(binding.filledPin4))
-                            setPinEmptyDrawable(mutableListOf(binding.pin4))
+                            setPinFillDrawable(arrayListOf(binding.filledPin1, binding.filledPin2, binding.filledPin3))
+                            hidePinFilledView(arrayListOf(binding.filledPin4))
+                            setPinEmptyDrawable(arrayListOf(binding.pin4))
                         }
                         4 -> {
-                            setPinFillDrawable(mutableListOf(binding.filledPin1, binding.filledPin2, binding.filledPin3, binding.filledPin4))
+                            setPinFillDrawable(arrayListOf(binding.filledPin1, binding.filledPin2, binding.filledPin3, binding.filledPin4))
                             validateAndUnlock(s.toString())
                         }
                         else -> {
-                            hidePinFilledView(mutableListOf(binding.filledPin1, binding.filledPin2, binding.filledPin3, binding.filledPin4))
-                            setPinEmptyDrawable(mutableListOf(binding.pin1, binding.pin2, binding.pin3, binding.pin4))
+                            hidePinFilledView(arrayListOf(binding.filledPin1, binding.filledPin2, binding.filledPin3, binding.filledPin4))
+                            setPinEmptyDrawable(arrayListOf(binding.pin1, binding.pin2, binding.pin3, binding.pin4))
                         }
                     }
                 } catch (e: Exception) {
@@ -249,21 +250,21 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
     }
 
     override fun onBackPressed() {
-        if (isFromDisableBoth || isFromDisableBio ||isFromSettings) {
-            SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.BACKPRESS, true)
-            finish()
-            super.onBackPressed()
-        } else if (goTo == Constants.LOGOUT_PIN)
-            finish()
-        else if (goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_DISABLE || goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_ENABLE || goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_LIST) {
-            finish()
-        }
-        else {
-            SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.BACK_PRESS, false)
-            SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.IS_PIN_VALIDATED, true)
-            callAppListener(false)
-            ChatManager.closeXMPPConnection()
-            ActivityCompat.finishAffinity(this)
+        when {
+            isFromDisableBoth || isFromDisableBio || isFromSettings -> {
+                SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.BACKPRESS, true)
+                finish()
+                super.onBackPressed()
+            }
+            goTo == Constants.LOGOUT_PIN -> finish()
+            goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_DISABLE || goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_ENABLE || goTo == com.contusfly.utils.Constants.PRIVATE_CHAT_LIST -> finish()
+            else -> {
+                SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.BACK_PRESS, false)
+                SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.IS_PIN_VALIDATED, true)
+                callAppListener(false)
+                ChatManager.closeXMPPConnection()
+                ActivityCompat.finishAffinity(this)
+            }
         }
     }
 
@@ -274,7 +275,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
      */
     fun validateAndUnlock(pin: String?) {
         currentPin
-        if (myPin!!.isNotEmpty() && myPin.equals(pin, ignoreCase = true)) {
+        if (myPin!!.isNotEmpty() && myPin == pin?.lowercase()) {
             when {
                 isFromDisableBoth -> {
                     SharedPreferenceManager.setBoolean(com.contusfly.utils.Constants.SHOW_PIN, false)
@@ -403,11 +404,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
 
     private fun handleReDirections() {
         if (SafeChatUtils.updateSafeChat != SafeChatUtils.SafeChatUpdate.NONE) {
-            SafeChatUtils.actionAuthorized(this, object : () -> Unit {
-                override fun invoke() {
-                    finish()
-                }
-            })
+            SafeChatUtils.actionAuthorized(this) { finish() }
         } else if ("DASHBOARD" == goTo || !SharedPreferenceManager.getBoolean(com.contusfly.utils.Constants.RESET_PIN)) {
             if (isFromSettings) finish()
             else if (goTo == "")
@@ -419,7 +416,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
         } else finish()
     }
 
-    fun hidePinFilledView(imageView: MutableList<AppCompatImageView>) {
+    fun hidePinFilledView(imageView: ArrayList<AppCompatImageView>) {
         for (iv in imageView) iv.visibility = View.GONE
     }
 
@@ -428,7 +425,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
      *
      * @param imageView- view of the pin
      */
-    fun setPinFillDrawable(imageView: MutableList<AppCompatImageView>) {
+    fun setPinFillDrawable(imageView: ArrayList<AppCompatImageView>) {
         for (iv in imageView) {
             iv.visibility = View.VISIBLE
             iv.setImageResource(R.drawable.ic_pin_filled_drawable)
@@ -440,7 +437,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
      *
      * @param imageView- view of the pin
      */
-    fun setPinEmptyDrawable(imageView: MutableList<AppCompatImageView>) {
+    fun setPinEmptyDrawable(imageView: ArrayList<AppCompatImageView>) {
         for (iv in imageView) iv.setImageResource(R.drawable.ic_pin_empty)
     }
 
@@ -593,10 +590,10 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
             val intentKey = com.contusfly.utils.Constants.GO_TO
             if (intent.hasExtra(intentKey)) {
                 goTo = intent.getStringExtra(intentKey).toString()
-                if (goTo.equals("CHATVIEW", ignoreCase = true)) {
+                if (goTo == "CHATVIEW") {
                     jid = intent.getStringExtra(LibConstants.JID)
                     chatType = intent.getStringExtra(Constants.CHAT_TYPE)
-                } else if (goTo.equals(Constants.PIN_EXPIRE_BIOMETRIC, ignoreCase = true))
+                } else if (goTo == Constants.PIN_EXPIRE_BIOMETRIC)
                     showDialog()
             }
         }
@@ -730,7 +727,7 @@ class PinActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedListener
         val intentKey = com.contusfly.utils.Constants.GO_TO
         if (intent != null && intent.hasExtra(intentKey)) {
             goTo = intent.getStringExtra(intentKey).toString()
-            if (goTo.equals("CHATVIEW", ignoreCase = true)) {
+            if (goTo == "CHATVIEW") {
                 jid = intent.getStringExtra(LibConstants.JID)
                 chatType = intent.getStringExtra(Constants.CHAT_TYPE)
             }

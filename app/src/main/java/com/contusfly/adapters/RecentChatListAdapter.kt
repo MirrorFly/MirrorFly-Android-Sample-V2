@@ -10,9 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import com.contusfly.*
-
 import androidx.recyclerview.widget.RecyclerView
+import com.contusfly.*
 import com.contusfly.adapters.holders.ArchiveChatViewHolder
 import com.contusfly.adapters.holders.PaginationLoaderViewHolder
 import com.contusfly.adapters.holders.PrivateChatViewHolder
@@ -21,15 +20,16 @@ import com.contusfly.databinding.RowLayoutArchivedBinding
 import com.contusfly.databinding.RowLayoutLoaderBinding
 import com.contusfly.databinding.RowRecentChatItemBinding
 import com.contusfly.utils.*
+import com.jakewharton.rxbinding3.view.clicks
 import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.api.models.RecentChat
 import com.mirrorflysdk.utils.Utils
-import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import java.util.concurrent.TimeUnit
+
 
 /**
  *
@@ -48,7 +48,12 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     private var archiveChatStatus: Triple<Boolean, Boolean, Int>? = null
 
-    private var privateChatStatus:Boolean=false
+    var privateChatStatus: Boolean = false
+        set(value) {
+            field = value
+            notifyItemChanged(0)
+        }
+        get() = field
 
     private var isLoading:Boolean=false
 
@@ -105,30 +110,43 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is PrivateChatViewHolder) {
-            holder.bindValues(privateChatStatus)
-        } else if (holder is ArchiveChatViewHolder) {
-            if (archiveChatStatus == null) {
-                holder.hideView()
-            } else {
-                holder.bindValues(archiveChatStatus!!, position)
+        try {
+
+            when (holder) {
+                is PrivateChatViewHolder -> {
+                    holder.bindValues(privateChatStatus)
+                }
+
+                is ArchiveChatViewHolder -> {
+                    if (archiveChatStatus == null) {
+                        holder.hideView()
+                    } else {
+                        holder.bindValues(archiveChatStatus!!, position)
+                    }
+                }
+
+                is PaginationLoaderViewHolder -> {
+                    holder.bindValues(isLoading)
+                }
+
+                else -> {
+                    val binding = holder as RecentChatViewHolder
+                    val item = mainlist[position]
+                    setUserView(item, binding.viewBinding)
+                    setMessageView(item, binding.viewBinding, position)
+                    setSelected(binding.itemView, item)
+                    setPinnedIcon(item, binding.viewBinding)
+                    switchBetweenMuteUnmute(item, binding.viewBinding)
+                    if (position == mainlist.size - 1) {
+                        holder.viewBinding.viewDivider.visibility = View.GONE
+                    } else {
+                        holder.viewBinding.viewDivider.visibility = View.VISIBLE
+                    }
+                }
             }
-        } else if(holder is PaginationLoaderViewHolder) {
-            holder.bindValues(isLoading)
-        } else {
-              val binding = holder as RecentChatViewHolder
-              val item = mainlist[position]
-              setUserView(item, binding.viewBinding)
-              setMessageView(item, binding.viewBinding, position)
-              setSelected(binding.itemView, item)
-              setPinnedIcon(item, binding.viewBinding)
-              switchBetweenMuteUnmute(item, binding.viewBinding)
-              if (position == mainlist.size - 1) {
-                  holder.viewBinding.viewDivider.visibility = View.GONE
-              } else {
-                  holder.viewBinding.viewDivider.visibility = View.VISIBLE
-              }
-          }
+        }catch (e:Exception){
+            LogMessage.e(TAG, "exception-->$e")
+        }
     }
 
     private fun setPinnedIcon(item: RecentChat, holder: RowRecentChatItemBinding) {
@@ -162,16 +180,6 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
         notifyItemChanged(mainlist.size - 2)
     }
 
-    fun setPrivateChatStatus(privateChatShowStatus: Boolean){
-        privateChatStatus = privateChatShowStatus
-        notifyItemChanged(0)
-    }
-
-    fun getPrivateChatStatus() : Boolean{
-
-        return privateChatStatus
-    }
-
     fun setLoader(isLoading:Boolean){
         this.isLoading = isLoading
         notifyItemChanged(mainlist.size - 1)
@@ -191,22 +199,29 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     private fun handlePayloads(bundle: Bundle, holder: RecentChatViewHolder, item: RecentChat, position: Int) {
         for (key in bundle.keySet()) {
-            if (key == Constants.NOTIFY_MESSAGE || key == Constants.NOTIFY_MSG_TYPING
-                    || key == Constants.NOTIFY_MESSAGE_UPDATE) {
-                setMessageView(item, holder.viewBinding, position)
-            } else if (key == Constants.NOTIFY_USER_NAME) {
-                updateName(item, holder)
-            } else if (key == Constants.NOTIFY_PROFILE_ICON) {
-                setUserView(item, holder.viewBinding)
-            } else if (key == Constants.NOTIFY_SELECTION) {
-                setSelected(holder.itemView, item)
-            } else if (key == Constants.NOTIFY_PINNED_ICON) {
-                setPinnedIcon(item, holder.viewBinding)
-            } else if (key == Constants.NOTIFY_MUTE_UNMUTE) {
-                switchBetweenMuteUnmute(item, holder.viewBinding)
-                setSelected(holder.itemView, item)
-            } else if (key == Constants.NOTIFY_UNREAD_ICON) {
-                setUnreadIcon(item, holder.viewBinding)
+            when (key) {
+                Constants.NOTIFY_MESSAGE, Constants.NOTIFY_MSG_TYPING, Constants.NOTIFY_MESSAGE_UPDATE -> {
+                    setMessageView(item, holder.viewBinding, position)
+                }
+                Constants.NOTIFY_USER_NAME -> {
+                    updateName(item, holder)
+                }
+                Constants.NOTIFY_PROFILE_ICON -> {
+                    setUserView(item, holder.viewBinding)
+                }
+                Constants.NOTIFY_SELECTION -> {
+                    setSelected(holder.itemView, item)
+                }
+                Constants.NOTIFY_PINNED_ICON -> {
+                    setPinnedIcon(item, holder.viewBinding)
+                }
+                Constants.NOTIFY_MUTE_UNMUTE -> {
+                    switchBetweenMuteUnmute(item, holder.viewBinding)
+                    setSelected(holder.itemView, item)
+                }
+                Constants.NOTIFY_UNREAD_ICON -> {
+                    setUnreadIcon(item, holder.viewBinding)
+                }
             }
         }
     }
@@ -346,30 +361,34 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
         val item = mainlist[position]
         val isTypingStatusAvailable = typingAndGoneStatus.indexOfFirst { it.first == item.jid }
-        if (isTypingStatusAvailable.isValidIndex()) {
-            setUserTypingStatus(holder, item, isTypingStatusAvailable)
-            holder.imageChatStatus.gone()
-            holder.imageMediaType.gone()
-        } else if (recent.isGroupInOfflineMode) {
-            holder.textChatMessage.text = context.resources.getString(R.string.offline_group_status)
-            holder.imageChatStatus.gone()
-            holder.imageMediaType.gone()
-        } else if (!msgType.isNullOrBlank()) {
-            when {
-                Constants.MSG_TYPE_TEXT.equals(msgType, ignoreCase = true)||Constants.MSG_TYPE_AUTO_TEXT.equals(msgType, ignoreCase = true) -> {
-                    holder.imageMediaType.gone()
-                    setDataForTextMessage(chatMessage,holder,isRecall)
-                }
-                Constants.MSG_TYPE_NOTIFICATION.equals(msgType, ignoreCase = true) -> {
-                    holder.textChatMessage.text = messageContent
-                    holder.imageMediaType.gone()
-                }
-                else -> {
-                    holder.imageMediaType.show()
-                    setImageStatus(holder, msgType!!.toLowerCase(Locale.getDefault()), messageContent, chatMessage,chatMessage?.mediaChatMessage?.isAudioRecorded() ?: false)
-                }
+        when {
+            isTypingStatusAvailable.isValidIndex() -> {
+                setUserTypingStatus(holder, item, isTypingStatusAvailable)
+                holder.imageChatStatus.gone()
+                holder.imageMediaType.gone()
             }
-            setChatStatus(holder, chatMessage, isFromSender, isRecall)
+            recent.isGroupInOfflineMode -> {
+                holder.textChatMessage.text = context.resources.getString(R.string.offline_group_status)
+                holder.imageChatStatus.gone()
+                holder.imageMediaType.gone()
+            }
+            !msgType.isNullOrBlank() -> {
+                when {
+                    checkEqualString(Constants.MSG_TYPE_TEXT,msgType!!) || checkEqualString(Constants.MSG_TYPE_AUTO_TEXT,msgType!!) -> {
+                        holder.imageMediaType.gone()
+                        setDataForTextMessage(chatMessage,holder,isRecall)
+                    }
+                    checkEqualString(Constants.MSG_TYPE_NOTIFICATION, msgType!!) -> {
+                        holder.textChatMessage.text = messageContent
+                        holder.imageMediaType.gone()
+                    }
+                    else -> {
+                        holder.imageMediaType.show()
+                        setImageStatus(holder, msgType!!.toLowerCase(Locale.getDefault()), messageContent, chatMessage,chatMessage?.mediaChatMessage?.isAudioRecorded() ?: false)
+                    }
+                }
+                setChatStatus(holder, chatMessage, isFromSender, isRecall)
+            }
         }
     }
 
@@ -381,12 +400,11 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
 
     private fun setGroupMessageSenderName(
         holder: RowRecentChatItemBinding,
-        chatMessage: ChatMessage
-    ) {
+        chatMessage: ChatMessage) {
         holder.textChatPerson.visibility = View.VISIBLE
         if((Utils.returnEmptyStringIfNull(chatMessage.senderUserName)).split(" ").size ==1)
-            holder.textChatPerson.text = Utils.returnEmptyStringIfNull(chatMessage.senderUserName) + ":"
-        else{
+            holder.textChatPerson.text = Utils.returnEmptyStringIfNull(chatMessage!!.senderUserName) + ":"
+        else {
             val userName = Utils.returnEmptyStringIfNull(chatMessage.senderUserName).split(" ")[0] +" "+
                     Utils.returnEmptyStringIfNull(chatMessage.senderUserName).split(" ")[1]
             holder.textChatPerson.text = Utils.returnEmptyStringIfNull(userName) + ":"
@@ -429,7 +447,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
             val typingUser = ProfileDetailsUtils.getProfileDetails(typingAndGoneStatus[indexOfTypingStatus].second)
             val userName = if((Utils.returnEmptyStringIfNull(typingUser?.getDisplayName())).split(" ").size ==1)
                 Utils.returnEmptyStringIfNull(typingUser?.getDisplayName()) + ":"
-            else{
+            else {
                 Utils.returnEmptyStringIfNull(typingUser?.getDisplayName()).split(" ")[0] +" "+
                         Utils.returnEmptyStringIfNull(typingUser?.getDisplayName()).split(" ")[1]
 
@@ -509,7 +527,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
     }
 
     private fun setCaptionForImageAndVideo(chatMessage: ChatMessage?,holder:RowRecentChatItemBinding,
-                                           messageContent:String?,mediaType: String){
+                                           messageContent:String?,mediaType: String) {
         if (messageContent!!.isNotEmpty())
             if(chatMessage?.mentionedUsersIds != null && chatMessage.mentionedUsersIds.size > 0)
                 holder.textChatMessage.text = ChatUtils.setMentionFormattedTextForRecentChat(context,chatMessage)

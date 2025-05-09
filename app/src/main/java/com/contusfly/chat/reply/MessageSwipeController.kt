@@ -190,7 +190,7 @@ class MessageSwipeController(private val context: Context, private val swipeCont
         return AndroidUtils.dp(pixel.toFloat(), context)
     }
 
-    interface SwipeControllerActions {
+    fun interface SwipeControllerActions {
         fun showSwipeInReplyUI(position: Int)
     }
 

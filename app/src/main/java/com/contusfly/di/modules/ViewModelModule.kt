@@ -14,7 +14,9 @@ import dagger.multibindings.IntoMap
  * @author ContusTeam <developers@contus.in>
  * @version 1.0
  */
+// Dagger requires @Module to be an abstract class, not an interface
 @Module
+@SuppressWarnings("kotlin:S6526")
 abstract class ViewModelModule {
 
     @Binds

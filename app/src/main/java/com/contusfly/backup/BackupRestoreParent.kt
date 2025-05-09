@@ -46,7 +46,7 @@ open class BackupRestoreParent : BaseActivity(), CoroutineScope {
             }
     }
 
-    interface CommonBackupDialogListener {
+    fun interface CommonBackupDialogListener {
         fun onDialogClosed()
     }
 

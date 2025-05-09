@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import com.mirrorflysdk.flycommons.ChatType
 import com.contusfly.R
+import com.contusfly.checkEqualString
 
 /**
  *
@@ -22,12 +23,11 @@ object ProfilePicUtil {
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     fun getDefaultDrawable(context: Context, chatType: String): Drawable? {
-        if (chatType.equals(ChatType.TYPE_CHAT, ignoreCase = true))
-            return context.resources.getDrawable(R.drawable.ic_profile)
-        else if (chatType.equals(ChatType.TYPE_GROUP_CHAT, ignoreCase = true))
-            return context.resources.getDrawable(R.drawable.ic_grp_bg)
-        else if (chatType.equals(ChatType.TYPE_BROADCAST_CHAT, ignoreCase = true))
-            return context.resources.getDrawable(R.drawable.ic_broadcast)
-        return context.resources.getDrawable(R.drawable.ic_profile)
+        return when {
+            checkEqualString(chatType,ChatType.TYPE_CHAT) -> context.resources.getDrawable(R.drawable.ic_profile, null)
+            checkEqualString(chatType,ChatType.TYPE_GROUP_CHAT) -> context.resources.getDrawable(R.drawable.ic_grp_bg, null)
+            checkEqualString(chatType,ChatType.TYPE_BROADCAST_CHAT) -> context.resources.getDrawable(R.drawable.ic_broadcast, null)
+            else -> context.resources.getDrawable(R.drawable.ic_profile, null)
+        }
     }
 }

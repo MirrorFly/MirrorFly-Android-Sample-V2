@@ -130,10 +130,9 @@ class MessageinfoExpandadapter(private val context: Context, chattype: ChatTypeE
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertViews: View?, parent: ViewGroup): View {
-        var convertView = convertViews
         val infalInflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        convertView = infalInflater.inflate(R.layout.message_child_item, null)
+        val convertView = infalInflater.inflate(R.layout.message_child_item, null)
         try {
             val txtName: EmojiAppCompatTextView = convertView.findViewById(R.id.text_chat_name)
             val txtStatus: EmojiAppCompatTextView = convertView.findViewById(R.id.text_user_status)
@@ -172,7 +171,7 @@ class MessageinfoExpandadapter(private val context: Context, chattype: ChatTypeE
                 chatDate = formatter.format(dateFormat.parse(ChatUserTimeUtils.getDateFromTimestamp(time.toLong())))
                 chatTime = Utils.returnEmptyStringIfNull(time)
             }
-            if (!chatTime.isEmpty() && TextUtils.isDigitsOnly(chatTime)) {
+            if (chatTime.isNotEmpty() && TextUtils.isDigitsOnly(chatTime)) {
                 val chatdate = "$chatDate at " + mChatMsgTime.getDaySentMsg(context, chatTime.toLong())
                 txtStatus.text = chatdate
             }

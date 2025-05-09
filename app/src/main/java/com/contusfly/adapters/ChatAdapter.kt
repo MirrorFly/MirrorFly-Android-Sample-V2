@@ -124,7 +124,7 @@ class ChatAdapter(
     /**
      * The media controller which used to play the audio in the chat view
      */
-    private val mediaController: MediaController = MediaController(context)
+    val mediaController: MediaController = MediaController(context)
 
     /**
      * Selected translated language
@@ -277,24 +277,28 @@ class ChatAdapter(
         position: Int
     ) {
         with(textSentViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
-                    bindSenderTextView(this, item, position)
-                else {
-                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
-                    setStatus(item, imgChatStatus)
-                    replyViewUtils.markFavoriteItem(this, item)
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
+                    )
                 }
-            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
-                bindSenderTextView(this, item, position)
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled)
+                        bindSenderTextView(this, item, position)
+                    else {
+                        isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
+                        setStatus(item, imgChatStatus)
+                        replyViewUtils.markFavoriteItem(this, item)
+                    }
+                }
+                Constants.NOTIFY_EDITED_MESSAGES -> {
+                    bindSenderTextView(this, item, position)
+                }
             }
         }
     }
@@ -306,22 +310,26 @@ class ChatAdapter(
         position: Int
     ) {
         with(textReceivedViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
-                    bindReceiverTextView(this, item, position)
-                else {
-                    replyViewUtils.markFavoriteItem(this, item)
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
+                    )
                 }
-            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
-                bindReceiverTextView(this, item, position)
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled)
+                        bindReceiverTextView(this, item, position)
+                    else {
+                        replyViewUtils.markFavoriteItem(this, item)
+                    }
+                }
+                Constants.NOTIFY_EDITED_MESSAGES -> {
+                    bindReceiverTextView(this, item, position)
+                }
             }
         }
     }
@@ -467,28 +475,30 @@ class ChatAdapter(
         position: Int
     ) {
         with(fileSentViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    fileSentViewLayout,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
-                fileItemView.handleSenderFileItemProgressUpdate(item, this)
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
-                setFileMediaStatusSenderView(this, item)
-                fileItemView.fileSenderItemView(fileSentViewHolder,  time, item)
-            }
-            else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
-                    getFileView(this, item, position)
-                else {
-                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
-                    setStatus(item, fileStatusImage)
-                    setStaredStatus(item.isMessageStarred, fileFavoriteImage)
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        fileSentViewLayout,
+                        isHighLighted,
+                        context
+                    )
+                }
+                Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED -> fileItemView.handleSenderFileItemProgressUpdate(item, this)
+                Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED -> {
+                    val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+                    setFileMediaStatusSenderView(this, item)
+                    fileItemView.fileSenderItemView(fileSentViewHolder,  time, item)
+                }
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled)
+                        getFileView(this, item, position)
+                    else {
+                        isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
+                        setStatus(item, fileStatusImage)
+                        setStaredStatus(item.isMessageStarred, fileFavoriteImage)
+                    }
                 }
             }
         }
@@ -501,26 +511,28 @@ class ChatAdapter(
         position: Int
     ) {
         with(fileReceivedViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    fileReceivedViewLayout,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
-                fileItemView.handleReceiverFileItemProgressUpdate(item, this)
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                setFileMediaStatusReceiverView(this, item)
-                val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
-                fileItemView.fileReceiverItemView(this,  time, item)
-            }
-            else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
-                    getFileView(this, item, position)
-                else {
-                    replyViewUtils.markFavoriteItem(this, item)
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        fileReceivedViewLayout,
+                        isHighLighted,
+                        context
+                    )
+                }
+                Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED -> fileItemView.handleReceiverFileItemProgressUpdate(item, this)
+                Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED -> {
+                    setFileMediaStatusReceiverView(this, item)
+                    val time = chatMsgTime.getDaySentMsg(context, item.messageSentTime)
+                    fileItemView.fileReceiverItemView(this,  time, item)
+                }
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled)
+                        getFileView(this, item, position)
+                    else {
+                        replyViewUtils.markFavoriteItem(this, item)
+                    }
                 }
             }
         }
@@ -533,40 +545,44 @@ class ChatAdapter(
         position: Int
     ) {
         with(audioSentViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED) {
-                audioItemView.handleSenderAudioItemProgressUpdate(item, this)
-                getAudioMediaStatus(item, sentAudioForwardImage)
-            }
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                audioItemView.setAudioSenderMediaStatus(this, item)
-                if (item.isMediaDownloaded())
-                    audioPlayClick(
-                        item,
-                        this,
-                        imgAudioPlay,
-                        audioMirrorFlySeekBar,
-                        txtAudioDuration,
-                        true
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
                     )
-                 getAudioMediaStatus(item, sentAudioForwardImage)
-
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
-                    getAudioView(this, item, position)
-                else {
-                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
-                    setStatus(item, imgSenderStatus)
-                    replyViewUtils.showSenderReplyWindow(this, item, context)
+                }
+                Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED -> {
+                    audioItemView.handleSenderAudioItemProgressUpdate(item, this)
+                    getAudioMediaStatus(item, sentAudioForwardImage)
+                }
+                Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED -> {
+                    audioItemView.setAudioSenderMediaStatus(this, item)
+                    if (item.isMediaDownloaded())
+                        audioPlayClick(
+                            item,
+                            this,
+                            imgAudioPlay,
+                            audioMirrorFlySeekBar,
+                            txtAudioDuration,
+                            true
+                        )
                     getAudioMediaStatus(item, sentAudioForwardImage)
 
+                }
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled)
+                        getAudioView(this, item, position)
+                    else {
+                        isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
+                        setStatus(item, imgSenderStatus)
+                        replyViewUtils.showSenderReplyWindow(this, item, context)
+                        getAudioMediaStatus(item, sentAudioForwardImage)
+
+                    }
                 }
             }
         }
@@ -598,34 +614,37 @@ class ChatAdapter(
         position: Int
     ) {
         with(audioReceiverViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
-                audioItemView.handleReceiverAudioItemProgressUpdate(item, this)
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                audioItemView.setAudioReceiverMediaStatus(this, item)
-                if (item.isMediaDownloaded())
-                    audioPlayClick(
-                        item,
-                        this,
-                        imgAudioPlay,
-                        audioMirrorFlySeekBar,
-                        txtAudioDuration,
-                        false
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
                     )
-                 getAudioMediaStatus(item, sentAudioForwardImage)
+                }
+                Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED -> audioItemView.handleReceiverAudioItemProgressUpdate(item, this)
+                Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED -> {
+                    audioItemView.setAudioReceiverMediaStatus(this, item)
+                    if (item.isMediaDownloaded())
+                        audioPlayClick(
+                            item,
+                            this,
+                            imgAudioPlay,
+                            audioMirrorFlySeekBar,
+                            txtAudioDuration,
+                            false
+                        )
+                    getAudioMediaStatus(item, sentAudioForwardImage)
 
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled)
-                    getAudioView(this, item, position)
-                else {
-                    setStaredStatus(item.isMessageStarred, audRevStarred)
+                }
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled)
+                        getAudioView(this, item, position)
+                    else {
+                        setStaredStatus(item.isMessageStarred, audRevStarred)
+                    }
                 }
             }
         }
@@ -638,33 +657,38 @@ class ChatAdapter(
         position: Int
     ) {
         with(imageSentViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED) {
-                imageItemViewHelper.handleSenderImageItemProgressUpdate(item, this)
-            }
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                handleImageMediaStatusChanged(this, item)
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled ||item.isEdited)
-                    bindSenderImageView(this, item, position)
-                else {
-                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
-                    setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
-                    forwardImgVisibilityForSentImageItem(imageSentViewHolder, item)
-                    setStaredStatus(
-                        item.isMessageStarred,
-                        getStarIcon(item, imgSentStarred, imgSentCaptionStar)
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
                     )
                 }
-            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
-                bindSenderImageView(this, item, position)
+                Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED -> {
+                    imageItemViewHelper.handleSenderImageItemProgressUpdate(item, this)
+                }
+                Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED -> {
+                    handleImageMediaStatusChanged(this, item)
+                }
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled ||item.isEdited)
+                        bindSenderImageView(this, item, position)
+                    else {
+                        isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
+                        setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
+                        forwardImgVisibilityForSentImageItem(imageSentViewHolder, item)
+                        setStaredStatus(
+                            item.isMessageStarred,
+                            getStarIcon(item, imgSentStarred, imgSentCaptionStar)
+                        )
+                    }
+                }
+                Constants.NOTIFY_EDITED_MESSAGES -> {
+                    bindSenderImageView(this, item, position)
+                }
             }
         }
     }
@@ -709,39 +733,43 @@ class ChatAdapter(
         position: Int
     ) {
         with(imageReceivedViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
-                imageItemViewHelper.handleReceiverImageItemProgressUpdate(item, this)
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                if (item.isMediaDownloaded())
-                    imageItemViewHelper.handleReceiverImageLoading(
-                        this,
-                        Utils.returnEmptyStringIfNull(
-                            item.mediaChatMessage.mediaLocalStoragePath
-                        ),
-                        Utils.returnEmptyStringIfNull(
-                            item.mediaChatMessage.mediaThumbImage
-                        )
-                    )
-                imageItemViewHelper.setImageReceiverMediaStatus(this, item)
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled )
-                    bindReceiverImageView(this, item, position)
-                else {
-                    setStaredStatus(
-                        item.isMessageStarred,
-                        getStarIcon(item, imgStarred, txtRevCaptionStar)
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
                     )
                 }
-            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
-                bindReceiverImageView(this, item, position)
+                Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED -> imageItemViewHelper.handleReceiverImageItemProgressUpdate(item, this)
+                Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED -> {
+                    if (item.isMediaDownloaded())
+                        imageItemViewHelper.handleReceiverImageLoading(
+                            this,
+                            Utils.returnEmptyStringIfNull(
+                                item.mediaChatMessage.mediaLocalStoragePath
+                            ),
+                            Utils.returnEmptyStringIfNull(
+                                item.mediaChatMessage.mediaThumbImage
+                            )
+                        )
+                    imageItemViewHelper.setImageReceiverMediaStatus(this, item)
+                }
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled )
+                        bindReceiverImageView(this, item, position)
+                    else {
+                        setStaredStatus(
+                            item.isMessageStarred,
+                            getStarIcon(item, imgStarred, txtRevCaptionStar)
+                        )
+                    }
+                }
+                Constants.NOTIFY_EDITED_MESSAGES -> {
+                    bindReceiverImageView(this, item, position)
+                }
             }
         }
     }
@@ -753,33 +781,38 @@ class ChatAdapter(
         position: Int
     ) {
         with(videoSentViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED) {
-                videoItemViewHelper.handleSenderVideoItemProgressUpdate(item, videoSentViewHolder)
-            }
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                handleVideoMediaStatusChanged(this, item)
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled || item.isEdited)
-                    bindSenderVideoView(this, item, position)
-                else {
-                    isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
-                    setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
-                    forwardImgVisibilityForSentVideoItem(videoSentViewHolder,item)
-                    setStaredStatus(
-                        item.isMessageStarred,
-                        getStarIcon(item, imgSentStarred, imgSentCaptionStar)
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
                     )
                 }
-            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
-                bindSenderVideoView(this, item, position)
+                Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED -> {
+                    videoItemViewHelper.handleSenderVideoItemProgressUpdate(item, videoSentViewHolder)
+                }
+                Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED -> {
+                    handleVideoMediaStatusChanged(this, item)
+                }
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled || item.isEdited)
+                        bindSenderVideoView(this, item, position)
+                    else {
+                        isSentMessage = item.isMessageSentByMe && !item.isMessageSent()
+                        setStatus(item, getStatusIcon(item, imgSenderStatus, imgSentImageCaptionStatus))
+                        forwardImgVisibilityForSentVideoItem(videoSentViewHolder,item)
+                        setStaredStatus(
+                            item.isMessageStarred,
+                            getStarIcon(item, imgSentStarred, imgSentCaptionStar)
+                        )
+                    }
+                }
+                Constants.NOTIFY_EDITED_MESSAGES -> {
+                    bindSenderVideoView(this, item, position)
+                }
             }
         }
     }
@@ -835,42 +868,46 @@ class ChatAdapter(
         position: Int
     ) {
         with(videoReceivedViewHolder) {
-            if (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || key == Constants.NOTIFY_MESSAGE_UNHIGHLIGHT) {
-                val isHighLighted =
-                    (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
-                ChatUtils.setSelectedChatItem(
-                    viewRowItem,
-                    isHighLighted,
-                    context
-                )
-            } else if (key == Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED)
-                videoItemViewHelper.handleReceiverVideoItemProgressUpdate(
+            when (key) {
+                Constants.NOTIFY_MESSAGE_HIGHLIGHT, Constants.NOTIFY_MESSAGE_UNHIGHLIGHT -> {
+                    val isHighLighted =
+                        (key == Constants.NOTIFY_MESSAGE_HIGHLIGHT || selectedMessages.contains(item.messageId))
+                    ChatUtils.setSelectedChatItem(
+                        viewRowItem,
+                        isHighLighted,
+                        context
+                    )
+                }
+                Constants.NOTIFY_MESSAGE_PROGRESS_CHANGED -> videoItemViewHelper.handleReceiverVideoItemProgressUpdate(
                     item,
                     videoReceivedViewHolder
                 )
-            else if (key == Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED) {
-                if (item.isMediaDownloaded())
-                    videoItemViewHelper.handleReceiverVideoLoading(
-                        this,
-                        Utils.returnEmptyStringIfNull(
-                            item.mediaChatMessage.mediaLocalStoragePath
-                        ),
-                        Utils.returnEmptyStringIfNull(
-                            item.mediaChatMessage.mediaThumbImage
+                Constants.NOTIFY_MESSAGE_MEDIA_STATUS_CHANGED -> {
+                    if (item.isMediaDownloaded())
+                        videoItemViewHelper.handleReceiverVideoLoading(
+                            this,
+                            Utils.returnEmptyStringIfNull(
+                                item.mediaChatMessage.mediaLocalStoragePath
+                            ),
+                            Utils.returnEmptyStringIfNull(
+                                item.mediaChatMessage.mediaThumbImage
+                            )
                         )
-                    )
-                videoItemViewHelper.setVideoReceiverMediaStatus(this, item)
-            } else if (key == Constants.NOTIFY_MESSAGE_STATUS_CHANGED) {
-                if (item.isMessageRecalled )
-                    bindReceiverVideoView(this, item, position)
-                else {
-                    setStaredStatus(
-                        item.isMessageStarred,
-                        getStarIcon(item, imgStarred, txtRevCaptionStar)
-                    )
+                    videoItemViewHelper.setVideoReceiverMediaStatus(this, item)
                 }
-            }else if (key == Constants.NOTIFY_EDITED_MESSAGES){
-                bindReceiverVideoView(this, item, position)
+                Constants.NOTIFY_MESSAGE_STATUS_CHANGED -> {
+                    if (item.isMessageRecalled )
+                        bindReceiverVideoView(this, item, position)
+                    else {
+                        setStaredStatus(
+                            item.isMessageStarred,
+                            getStarIcon(item, imgStarred, txtRevCaptionStar)
+                        )
+                    }
+                }
+                Constants.NOTIFY_EDITED_MESSAGES -> {
+                    bindReceiverVideoView(this, item, position)
+                }
             }
         }
     }
@@ -1003,7 +1040,7 @@ class ChatAdapter(
                 }
                 TYPE_MEET_SENDER -> bindSenderMeetView(holder, item, position)
 
-                TYPE_MEET_RECEIVER ->{
+                TYPE_MEET_RECEIVER -> {
                     showSenderNameIfGroupChat(holder, item, position)
                     bindReceiverMeetView(holder, item, position)
                 }
@@ -2031,71 +2068,74 @@ class ChatAdapter(
     ) {
         with(holder) {
             if (!mainList[layoutPosition].isMessageRecalled)
-                if (selectedMessages.isNotEmpty()) {
-                    listener?.onSenderItemClicked(mainList[layoutPosition], layoutPosition)
-                } else if (!ChatManager.getAvailableFeatures().isTranslationEnabled) {
-                    return
-                } else if (isTranslationChecked && (mainList[layoutPosition].messageCustomField == null
+                when {
+                    selectedMessages.isNotEmpty() -> {
+                        listener?.onSenderItemClicked(mainList[layoutPosition], layoutPosition)
+                    }
+                    !ChatManager.getAvailableFeatures().isTranslationEnabled -> {
+                        return
+                    }
+                    isTranslationChecked && (mainList[layoutPosition].messageCustomField == null
                             || mainList[layoutPosition].messageCustomField[Constants.IS_MESSAGE_TRANSLATED] == null
                             || mainList[layoutPosition].messageCustomField[Constants.IS_MESSAGE_TRANSLATED].equals(
                         "false"
                     )
                             || !mainList[layoutPosition].messageCustomField[Constants.TRANSLATED_LANGUAGE].equals(
                         selectedLanguage
-                    ))
-                ) {
+                    )) -> {
 
-                    val pressTime = System.currentTimeMillis()
-                    if (pressTime - lastPressTime <= doublePRESSINTERVAL) {
-                        activity.checkInternetAndExecute(true) {
-                            com.contusfly.utils.LogMessage.d(TAG, "#translate Initiated")
-                            GoogleTranslation.getInstance().getTranslatedText(context,
-                                txtRevChatCaption.text.toString(),
-                                selectedLanguage,
-                                googleTranslatedKey,
-                                object : GoogleTranslation.GoogleTranslationListener {
-                                    override fun onSuccess(s: String) {
-                                        com.contusfly.utils.LogMessage.d(TAG, "#translate Success")
-                                        FlyMessenger.setCustomValue(
-                                            mainList[layoutPosition].messageId,
-                                            Constants.TRANSLATED_MESSAGE_CONTENT,
-                                            s
-                                        )
-                                        FlyMessenger.setCustomValue(
-                                            mainList[layoutPosition].messageId,
-                                            Constants.IS_MESSAGE_TRANSLATED,
-                                            "true"
-                                        )
-                                        FlyMessenger.setCustomValue(
-                                            mainList[layoutPosition].messageId,
-                                            Constants.TRANSLATED_LANGUAGE,
-                                            selectedLanguage
-                                        )
-                                        txtTranslatedText?.show()
-                                        translatedLinearLayout?.show()
-                                        txtTranslatedText?.text = s
-                                        val hashMap = hashMapOf<String, String>()
-                                        hashMap[Constants.TRANSLATED_MESSAGE_CONTENT] = s
-                                        hashMap[Constants.IS_MESSAGE_TRANSLATED] = "true"
-                                        hashMap[Constants.TRANSLATED_LANGUAGE] = selectedLanguage
-                                        mainList[layoutPosition].messageCustomField = hashMap
-                                    }
+                        val pressTime = System.currentTimeMillis()
+                        if (pressTime - lastPressTime <= doublePRESSINTERVAL) {
+                            activity.checkInternetAndExecute(true) {
+                                com.contusfly.utils.LogMessage.d(TAG, "#translate Initiated")
+                                GoogleTranslation.getInstance().getTranslatedText(context,
+                                    txtRevChatCaption.text.toString(),
+                                    selectedLanguage,
+                                    googleTranslatedKey,
+                                    object : GoogleTranslation.GoogleTranslationListener {
+                                        override fun onSuccess(s: String) {
+                                            com.contusfly.utils.LogMessage.d(TAG, "#translate Success")
+                                            FlyMessenger.setCustomValue(
+                                                mainList[layoutPosition].messageId,
+                                                Constants.TRANSLATED_MESSAGE_CONTENT,
+                                                s
+                                            )
+                                            FlyMessenger.setCustomValue(
+                                                mainList[layoutPosition].messageId,
+                                                Constants.IS_MESSAGE_TRANSLATED,
+                                                "true"
+                                            )
+                                            FlyMessenger.setCustomValue(
+                                                mainList[layoutPosition].messageId,
+                                                Constants.TRANSLATED_LANGUAGE,
+                                                selectedLanguage
+                                            )
+                                            txtTranslatedText?.show()
+                                            translatedLinearLayout?.show()
+                                            txtTranslatedText?.text = s
+                                            val hashMap = hashMapOf<String, String>()
+                                            hashMap[Constants.TRANSLATED_MESSAGE_CONTENT] = s
+                                            hashMap[Constants.IS_MESSAGE_TRANSLATED] = "true"
+                                            hashMap[Constants.TRANSLATED_LANGUAGE] = selectedLanguage
+                                            mainList[layoutPosition].messageCustomField = hashMap
+                                        }
 
-                                    override fun onFailed(s: String) {
-                                        com.contusfly.utils.LogMessage.d(TAG, "#translate Failed")
-                                        txtTranslatedText?.gone()
-                                        translatedLinearLayout?.gone()
-                                        Toast.makeText(context, s, Toast.LENGTH_SHORT).show()
-                                        FlyMessenger.setCustomValue(
-                                            mainList[layoutPosition].messageId,
-                                            Constants.IS_MESSAGE_TRANSLATED,
-                                            "false"
-                                        )
-                                    }
-                                })
+                                        override fun onFailed(s: String) {
+                                            com.contusfly.utils.LogMessage.d(TAG, "#translate Failed")
+                                            txtTranslatedText?.gone()
+                                            translatedLinearLayout?.gone()
+                                            Toast.makeText(context, s, Toast.LENGTH_SHORT).show()
+                                            FlyMessenger.setCustomValue(
+                                                mainList[layoutPosition].messageId,
+                                                Constants.IS_MESSAGE_TRANSLATED,
+                                                "false"
+                                            )
+                                        }
+                                    })
+                            }
                         }
+                        lastPressTime = pressTime
                     }
-                    lastPressTime = pressTime
                 }
         }
     }
@@ -3346,11 +3386,9 @@ class ChatAdapter(
                 }
             }))
 
-            mirrorFlySeekBar.setLongClickListener(object : MirrorFlySeekBar.LongClickListener {
-                override fun onLongClick() {
-                    listener?.onSenderItemLongClick(item, layoutPosition)
-                }
-            })
+            mirrorFlySeekBar.setLongClickListener {
+                listener?.onSenderItemLongClick(item, layoutPosition)
+            }
         }
     }
     private fun updateSeekbarChanges(
@@ -3807,7 +3845,7 @@ class ChatAdapter(
         if (!fileSize.isNullOrEmpty() && downloadView?.visibility == View.VISIBLE) {
             var size = 0
             val txtSize = context.getString(R.string.title_kb)
-            if (!fileSize.equals(Constants.COUNT_ZERO.toString(), ignoreCase = true))
+            if (!checkEqualString(fileSize,Constants.COUNT_ZERO.toString()))
                 size = fileSize.toInt() / Constants.ONE_KB
             if (size >= Constants.ONE_KB) {
                 fileSizeView?.text = ChatUtils.getFileSizeText(fileSize)
@@ -3923,49 +3961,28 @@ class ChatAdapter(
 
     }
 
-    fun getMediaController(): MediaController {
-        return mediaController
-    }
-
 
     private val longClickListener: ModifiedlinkMovementMethod.OnLinkLongClickListener =
-        object : ModifiedlinkMovementMethod.OnLinkLongClickListener {
-
-            override fun onLongClick(
-                textView: TextView?,
-                url: String?,
-                view: ChatMessage,
-                onclickLinkStatus: Boolean
-            ): Boolean {
-                var clickedPosition = mainList.indexOf(view)
-                if (clickedPosition == -1) clickedPosition = mainList.size - 1
-                isLinkLongClick = onclickLinkStatus
-                listener?.onSenderItemLongClick(view, clickedPosition)
-                return true
-            }
+        ModifiedlinkMovementMethod.OnLinkLongClickListener { _, _, view, onclickLinkStatus ->
+            var clickedPosition = mainList.indexOf(view)
+            if (clickedPosition == -1) clickedPosition = mainList.size - 1
+            isLinkLongClick = onclickLinkStatus
+            listener?.onSenderItemLongClick(view, clickedPosition)
+            true
         }
 
     private val linkClickListener: ModifiedlinkMovementMethod.OnLinkClickListener =
-        object : ModifiedlinkMovementMethod.OnLinkClickListener {
-
-            override fun onClick(
-                textView: TextView?,
-                url: String?,
-                view: ChatMessage
-            ): Boolean {
-                var clickedPosition = mainList.indexOf(view)
-                if (clickedPosition == -1) clickedPosition = mainList.size - 1
-                listener?.onSenderItemClicked(view, clickedPosition)
-                return true
-            }
+        ModifiedlinkMovementMethod.OnLinkClickListener { _, _, view ->
+            var clickedPosition = mainList.indexOf(view)
+            if (clickedPosition == -1) clickedPosition = mainList.size - 1
+            listener?.onSenderItemClicked(view, clickedPosition)
+            true
         }
 
     private val linkButtonClickStatusListener: ModifiedlinkMovementMethod.OnLinkClickStatusListener =
-        object : ModifiedlinkMovementMethod.OnLinkClickStatusListener {
-            override fun onLinkClickStatus(onclickLinkStatus: Boolean): Boolean {
-                isLinkLongClick = onclickLinkStatus
-                return true
-            }
+        ModifiedlinkMovementMethod.OnLinkClickStatusListener { onclickLinkStatus ->
+            isLinkLongClick = onclickLinkStatus
+            true
         }
 
     /**

@@ -52,6 +52,9 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
 
     private lateinit var userProfileDetails: ProfileDetails
 
+    private lateinit var navigatedFromJid : String
+
+
     private var commonAlertDialog: CommonAlertDialog? = null
 
     /**
@@ -69,6 +72,7 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
         binding = ActivityUserInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         userProfileDetails = intent.getParcelableExtra(AppConstants.PROFILE_DATA)!!
+        navigatedFromJid  = intent.getStringExtra(com.contusfly.utils.Constants.GROUP_ID)?: emptyString()
         commonAlertDialog = CommonAlertDialog(this)
         commonAlertDialog!!.setOnDialogCloseListener(this)
 
@@ -274,6 +278,22 @@ class UserInfoActivity : BaseActivity(), CommonAlertDialog.CommonDialogClosedLis
         super.userWentOffline(jid)
         if (jid == userProfileDetails.jid) {
             getLastSeenData()
+        }
+    }
+
+    override fun onSuperAdminDeleteGroup(groupJid: String, groupName: String) {
+        super.onSuperAdminDeleteGroup(groupJid, groupName)
+        clearDeletedGroupChatNotification(groupJid, context)
+        if (groupJid == navigatedFromJid) {
+            if (groupName.isNotEmpty())
+                showToast(
+                    getString(
+                        R.string.deleted_by_super_admin,
+                        groupName
+                    )
+                )
+            startDashboardActivity(this)
+            finish()
         }
     }
 

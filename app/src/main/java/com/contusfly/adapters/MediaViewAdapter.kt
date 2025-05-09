@@ -77,7 +77,7 @@ internal class MediaViewAdapter : FragmentStatePagerAdapter {
     }
 
     override fun getItem(position: Int): Fragment {
-        var fragment: Fragment? = null
+        val fragment: Fragment?
         if (isFromQuickShare) {
             fragment = MediaViewFragment.newInstance(fileObjectList!![position], position, fileObjectList!!.size)
         } else {

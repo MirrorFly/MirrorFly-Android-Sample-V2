@@ -1,6 +1,6 @@
 package com.contusfly.interfaces
 
-interface ProcessContusContactCallback {
+fun interface ProcessContusContactCallback {
     fun onProcessContusContactCompleted()
 }
 

@@ -513,18 +513,15 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
     private fun validateUserMail() {
         isProfilePending = true
         isUpdateClickedOnStart = true
-        if (profileStartBinding.editProfileName.text.toString().trim().isEmpty())
-            CustomToast.show(this, getString(R.string.error_enter_user_name))
-        else if (!profileNameCharValidation(profileStartBinding.editProfileName.text.toString().trim()))
-            CustomToast.show(this, getString(R.string.error_username_too_short))
-        else if (profileStartBinding.textEmail.text.toString().trim().isEmpty())
-            CustomToast.show(this, getString(R.string.msg_enter_mail))
-        else if (!Pattern.compile(Constants.EMAIL_PATTERN).matcher(profileStartBinding.textEmail.text.toString()).matches())
-            CustomToast.show(this, getString(R.string.msg_enter_valid_mail))
-        else if (!isProfileStart && SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME) == profileStartBinding.editProfileName.text.toString()
-                && SharedPreferenceManager.getString(Constants.USER_EMAIL) == profileStartBinding.textEmail.text.toString())
-            CustomToast.show(this, getString(R.string.msg_no_update))
-        else redirectToUpdateProfile()
+        when {
+            profileStartBinding.editProfileName.text.toString().trim().isEmpty() -> CustomToast.show(this, getString(R.string.error_enter_user_name))
+            !profileNameCharValidation(profileStartBinding.editProfileName.text.toString().trim()) -> CustomToast.show(this, getString(R.string.error_username_too_short))
+            profileStartBinding.textEmail.text.toString().trim().isEmpty() -> CustomToast.show(this, getString(R.string.msg_enter_mail))
+            !Pattern.compile(Constants.EMAIL_PATTERN).matcher(profileStartBinding.textEmail.text.toString()).matches() -> CustomToast.show(this, getString(R.string.msg_enter_valid_mail))
+            !isProfileStart && SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME) == profileStartBinding.editProfileName.text.toString()
+                    && SharedPreferenceManager.getString(Constants.USER_EMAIL) == profileStartBinding.textEmail.text.toString() -> CustomToast.show(this, getString(R.string.msg_no_update))
+            else -> redirectToUpdateProfile()
+        }
     }
 
     private fun redirectToUpdateProfile() {
@@ -602,7 +599,7 @@ open class ProfileStartActivity : BaseActivity(), View.OnClickListener, DialogIn
                 val selectedImageUri: Uri? = intentData?.data
                 if (selectedImageUri != null) {
                     val pictureExtension = getFileExtension(selectedImageUri)
-                    if (pictureExtension.equals("tiff")) {
+                    if (pictureExtension == "tiff") {
                         CustomToast.show(this, getString(R.string.file_format_not_supported))
                         return
                     }

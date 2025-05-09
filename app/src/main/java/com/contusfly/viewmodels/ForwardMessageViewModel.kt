@@ -69,7 +69,8 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
                 groupList = mutableListOf()
                 if (isSuccess) {
                     LogMessage.d(TAG, "#ForwardMessage loadForwardChatList() getAllGroups isSuccess")
-                    var groupFilterList=loadPrivateChatGroupList(data[Constants.SDK_DATA] as MutableList<ProfileDetails>,privateChatPair)
+                    val groups = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty().toMutableList()
+                    val groupFilterList= loadPrivateChatGroupList(groups,privateChatPair).toList()
                     groupList!!.addAll(ProfileDetailsUtils.sortProfileList(groupFilterList))
 
                    // groupList!!.addAll(ProfileDetailsUtils.sortProfileList(data[Constants.SDK_DATA] as ArrayList<ProfileDetails>))
@@ -95,8 +96,8 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
     ): MutableList<ProfileDetails> {
 
         for (i in groupList.indices.reversed()) {
-            var profile=groupList.get(i)
-            var isPrivateChat = ChatManager.isPrivateChat(profile.jid)
+            val profile=groupList[i]
+            val isPrivateChat = ChatManager.isPrivateChat(profile.jid)
             if(!privateChatPair.first && isPrivateChat) {
                 groupList.removeAt(i)
             }
@@ -180,8 +181,8 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
             FlyCore.getUserList(currentPage, resultPerPage) { isSuccess, _, data ->
                 if (isSuccess) {
                     LogMessage.d(TAG, "#ForwardMessage getUserList isSuccess")
-                    val profileList = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
-                    totalPage = data[Constants.TOTAL_PAGES] as Int
+                    val profileList = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty()
+                    totalPage = data[Constants.TOTAL_PAGES] as? Int ?: 0
                     val userListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileList, false)
                     val profileListShareModel = filterUserList(userListResult as MutableList<ProfileDetails>)
                     viewModelScope.launch(Dispatchers.Main) {
@@ -361,8 +362,8 @@ class ForwardMessageViewModel @Inject constructor() : ViewModel() {
             FlyCore.getUserList(currentSearchPage, resultPerPage, searchString) { isSuccess, _, data ->
                 if (isSuccess) {
                     LogMessage.d(TAG, "#ForwardMessage  searchProfileList getUserList: isSuccess")
-                    val profileList = data[Constants.SDK_DATA] as MutableList<ProfileDetails>
-                    totalSearchPage = data[Constants.TOTAL_PAGES] as Int
+                    val profileList = (data[Constants.SDK_DATA] as? ArrayList<*>)?.filterIsInstance<ProfileDetails>().orEmpty()
+                    totalSearchPage = data[Constants.TOTAL_PAGES] as? Int ?: 0
                     val searchListResult = ProfileDetailsUtils.removeAdminBlockedProfiles(profileList, false)
                     val searchListShareModel = filterSearchList(searchListResult as MutableList<ProfileDetails>)
                     viewModelScope.launch(Dispatchers.Main) {

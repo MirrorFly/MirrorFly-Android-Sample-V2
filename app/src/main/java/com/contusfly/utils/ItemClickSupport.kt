@@ -126,7 +126,7 @@ class ItemClickSupport constructor(private val recyclerView: RecyclerView) {
      * @return ItemClickSupport Instance of ItemClickSupport
      */
     fun addTo(): ItemClickSupport {
-        return recyclerView.getTag(R.id.rv_item_click_support) as ItemClickSupport
+        return recyclerView.getTag(R.id.rv_item_click_support) as? ItemClickSupport ?: ItemClickSupport(recyclerView)
     }
 
     /**
