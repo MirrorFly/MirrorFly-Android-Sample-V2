@@ -67,7 +67,7 @@ class ViewAllMediaActivity : BaseActivity() {
                 viewModel.getLinksList(it)
             }
         } else {
-            CustomToast.show(this,resources.getString(R.string.fly_error_forbidden_exception))
+            CustomToast.show(this,resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
         }
 
         setObservers()

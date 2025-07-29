@@ -4,6 +4,7 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar

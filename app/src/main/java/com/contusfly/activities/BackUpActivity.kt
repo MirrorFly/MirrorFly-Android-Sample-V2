@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,6 +36,8 @@ import com.contusfly.backup.workers.RestoreDataWorker
 import com.contusfly.chat.RealPathUtil
 import com.contusfly.checkInternetAndExecute
 import com.contusfly.databinding.ActivityBackUpBinding
+import com.contusfly.databinding.BackupDialogBinding
+import com.contusfly.databinding.ConnectivityDialogBinding
 import com.contusfly.emptyString
 import com.contusfly.getFileSizeInStringFormat
 import com.contusfly.gone
@@ -58,17 +60,6 @@ import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
 import com.mirrorflysdk.flycommons.Constants
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.Utils
-import kotlinx.android.synthetic.main.activity_back_up.driveEmail
-import kotlinx.android.synthetic.main.activity_back_up.localProgressText
-import kotlinx.android.synthetic.main.activity_back_up.localWorkProgress
-import kotlinx.android.synthetic.main.backup_dialog.view.back_up_progress
-import kotlinx.android.synthetic.main.backup_dialog.view.back_up_text
-import kotlinx.android.synthetic.main.backup_dialog.view.dialog_title
-import kotlinx.android.synthetic.main.connectivity_dialog.view.cancel
-import kotlinx.android.synthetic.main.connectivity_dialog.view.cellImage
-import kotlinx.android.synthetic.main.connectivity_dialog.view.cellularBox
-import kotlinx.android.synthetic.main.connectivity_dialog.view.wifiImage
-import kotlinx.android.synthetic.main.connectivity_dialog.view.wifiOnlyBox
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -85,6 +76,8 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     BackupRestoreParent.CommonBackupDialogListener {
 
     private lateinit var activityBackUpBinding: ActivityBackUpBinding
+    private lateinit var dialogBinding: BackupDialogBinding
+    private lateinit var connectdialogBinding: ConnectivityDialogBinding
 
     private var isDriveBackup = false
 
@@ -682,7 +675,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                     backupProgressBar?.progress = percentage
                     backupProgressText?.text =
                         "${getString(R.string.please_wait_msg)} ($percentage%)"
-                    localWorkProgress?.progress = percentage
+                    activityBackUpBinding.localWorkProgress?.progress = percentage
                     updateProgress("${getString(R.string.please_wait_msg)} ($percentage%)")
                     LogMessage.e(TAG, "#backup new method backup on progress:::$percentage")
 
@@ -829,12 +822,12 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         if (!isOnlyBackup) {
             if (genericDialog == null) {
                 val builder = AlertDialog.Builder(this)
-                val dialogView: View = layoutInflater.inflate(R.layout.backup_dialog, null)
-                builder.setView(dialogView)
+                dialogBinding = BackupDialogBinding.inflate(LayoutInflater.from(context))
+                builder.setView(dialogBinding.root)
 
-                titleTv = dialogView.dialog_title
-                backupProgressBar = dialogView.back_up_progress
-                backupProgressText = dialogView.back_up_text
+                titleTv = dialogBinding.dialogTitle
+                backupProgressBar = dialogBinding.backUpProgress
+                backupProgressText = dialogBinding.backUpText
 
                 if (isAuthentication) {
                     titleTv?.text = getString(R.string.authenticating)
@@ -883,10 +876,10 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
 
         var connectDialog: AlertDialog? = null
         val cBuilder = AlertDialog.Builder(this)
-        val connectDialogView: View = layoutInflater.inflate(R.layout.connectivity_dialog, null)
-        cBuilder.setView(connectDialogView)
-        val wifiImage = connectDialogView.wifiImage
-        val cellImage = connectDialogView.cellImage
+        connectdialogBinding = ConnectivityDialogBinding.inflate(LayoutInflater.from(context))
+        cBuilder.setView(connectdialogBinding.root)
+        val wifiImage = connectdialogBinding.wifiImage
+        val cellImage = connectdialogBinding.cellImage
         val isWifiOnly = SharedPreferenceManager.getBoolean(BackupConstants.WIFI_BACKUP_ONLY)
 
         if (isWifiOnly) {
@@ -895,19 +888,19 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
             setImageForImageView(1, listOf(wifiImage, cellImage))
         }
 
-        connectDialogView.wifiOnlyBox.setOnClickListener {
+        connectdialogBinding.wifiOnlyBox.setOnClickListener {
             setImageForImageView(0, listOf(wifiImage, cellImage))
             SharedPreferenceManager.setBoolean(BackupConstants.WIFI_BACKUP_ONLY, true)
             connectDialog?.dismiss()
         }
 
-        connectDialogView.cellularBox.setOnClickListener {
+        connectdialogBinding.cellularBox.setOnClickListener {
             setImageForImageView(1, listOf(wifiImage, cellImage))
             SharedPreferenceManager.setBoolean(BackupConstants.WIFI_BACKUP_ONLY, false)
             connectDialog?.dismiss()
         }
 
-        connectDialogView.cancel.setOnClickListener {
+        connectdialogBinding.cancel.setOnClickListener {
             connectDialog?.dismiss()
         }
 
@@ -1005,7 +998,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
         when (requestCode) {
             REQUEST_CODE_SIGN_IN -> {
                 if (resultCode == Activity.RESULT_OK && data != null)
-                    handleSignInResult(data, driveEmail)
+                    handleSignInResult(data, activityBackUpBinding.driveEmail)
                 else if (SharedPreferenceManager.getString(BackupConstants.DRIVE_EMAIL)
                         .isNotEmpty()
                 )
@@ -1027,7 +1020,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                         accountName.toString()
                     )
                     SharedPreferenceManager.setBoolean(BackupConstants.NEED_RELOGIN, false)
-                    driveEmail.text = accountName.toString()
+                    activityBackUpBinding.driveEmail.text = accountName.toString()
                     checkAndLoginMail(accountName.toString())
                 }
             }
@@ -1099,7 +1092,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
                 LogMessage.i(TAG, "RestoreWorker RUNNING progressValue$percentage")
                 Handler(Looper.getMainLooper()).post {
                     updateProgress("${getString(R.string.restoring_msg)} ($percentage%)")
-                    localWorkProgress.progress = percentage
+                    activityBackUpBinding.localWorkProgress.progress = percentage
                 }
             }
 
@@ -1121,7 +1114,7 @@ open class BackUpActivity : BackupRestoreParent(), CoroutineScope,
     }
 
     private fun updateProgress(info: String) {
-        localProgressText?.text = info
+        activityBackUpBinding.localProgressText?.text = info
     }
 
     interface WorkerProgress {

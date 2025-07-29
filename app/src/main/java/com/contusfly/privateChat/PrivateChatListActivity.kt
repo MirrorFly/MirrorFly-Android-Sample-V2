@@ -806,7 +806,7 @@ CommonAlertDialog.CommonDialogClosedListener {
         try {
             var feature = ChatManager.getAvailableFeatures()
             if (!feature.isDeleteChatEnabled) {
-                context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+                context!!.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
                 return
             }
             ChatManager.deleteRecentChats(selectedJids, object : ChatActionListener {

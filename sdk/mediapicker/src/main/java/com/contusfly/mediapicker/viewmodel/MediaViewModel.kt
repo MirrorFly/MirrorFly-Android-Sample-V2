@@ -210,7 +210,7 @@ class MediaViewModel : ViewModel() {
             mContext.packageManager.queryIntentActivities(pickerListIntent, 0)
         if (pickerApps.isNotEmpty()) {
             for (app in pickerApps) {
-                applications.add(app.activityInfo.packageName.toLowerCase(Locale.getDefault()))
+                applications.add(app.activityInfo.packageName.lowercase(Locale.getDefault()))
             }
         }
         pickerApplications.postValue(applications)
@@ -272,10 +272,10 @@ class MediaViewModel : ViewModel() {
     private fun getExtension(path: String): String {
         val extension = MimeTypeMap.getFileExtensionFromUrl(path)
         if (!TextUtils.isEmpty(extension)) {
-            return extension.toLowerCase(Locale.getDefault())
+            return extension.lowercase(Locale.getDefault())
         }
         return if (path.contains(".")) {
-            path.substring(path.lastIndexOf(".") + 1, path.length).toLowerCase(Locale.getDefault())
+            path.substring(path.lastIndexOf(".") + 1, path.length).lowercase(Locale.getDefault())
         } else {
             ""
         }

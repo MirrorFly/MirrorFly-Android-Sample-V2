@@ -42,9 +42,9 @@ class CallLogRepository @Inject constructor() {
                 callLogsWithNickName.add(setProfile(getEndUserJid(callLog)!!, callLog))
             }
             callLogs.clear()
-            val searchKeyWithoutSpace = searchKey.toLowerCase(Locale.getDefault()).replace(" ", "")
+            val searchKeyWithoutSpace = searchKey.lowercase(Locale.getDefault()).replace(" ", "")
             for (callLog in callLogsWithNickName)
-                if ((callLog.nickName != null && callLog.nickName!!.toLowerCase(Locale.getDefault()).replace(" ", "").contains(searchKeyWithoutSpace))
+                if ((callLog.nickName != null && callLog.nickName!!.lowercase(Locale.getDefault()).replace(" ", "").contains(searchKeyWithoutSpace))
                         || (callLog.mobileNumber != null && callLog.mobileNumber!!.replace(" ", "").contains(searchKeyWithoutSpace))) {
                     callLog.searchKey = searchKeyWithoutSpace
                     callLogs.add(callLog)

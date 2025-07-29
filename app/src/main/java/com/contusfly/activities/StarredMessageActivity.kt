@@ -881,7 +881,7 @@ class StarredMessageActivity : ChatParent(), OnChatItemClickListener,
 
     private fun deleteMessage() {
         if (!ChatManager.getAvailableFeatures().isDeleteMessageEnabled) {
-            context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+            context!!.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             return
         }
 

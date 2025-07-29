@@ -639,7 +639,7 @@ fun Drawable.applySourceColorFilter(@ColorInt color: Int) {
 @SuppressLint("DefaultLocale")
 fun CustomDrawable.getMoreUsersDrawable(name: String): Drawable {
     setText(name)
-    setTransparentDrawableColour(R.color.color_dark_gray_transparent)
+    setTransparentDrawableColour(com.contus.call.R.color.color_dark_gray_transparent)
     return this
 }
 
@@ -649,7 +649,7 @@ fun showAlertDialog(activity: Activity, title: String) {
     commonAlertDialog.showAlertDialog(
         title,
         activity.getString(R.string.action_Ok),
-        activity.getString(R.string.fly_action_cancel),
+        activity.getString(com.contus.call.R.string.fly_action_cancel),
         CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE,
         false
     )

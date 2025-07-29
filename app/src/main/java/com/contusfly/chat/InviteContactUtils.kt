@@ -71,7 +71,7 @@ object InviteContactUtils {
             context.resources.getString(R.string.invite_app_link)
         )
         clipboard.setPrimaryClip(clip)
-        CustomToast.show(context, context.getString(R.string.fly_info_msg_link_copied))
+        CustomToast.show(context, context.getString(com.mirrorflysdk.R.string.fly_info_msg_link_copied))
     }
 
     /**
@@ -95,7 +95,7 @@ object InviteContactUtils {
                 )
                 smsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 activity.startActivity(smsIntent)
-            } else CustomToast.show(activity, activity.getString(R.string.fly_error_no_mobile_nos))
+            } else CustomToast.show(activity, activity.getString(com.mirrorflysdk.R.string.fly_error_no_mobile_nos))
         } catch (e: Exception) {
             LogMessage.e(e)
         }

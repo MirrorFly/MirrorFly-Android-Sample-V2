@@ -40,7 +40,7 @@ class RetryCallViewHelper(
 
         binding.textCallAgain.setCompoundDrawablesWithIntrinsicBounds(
             0,
-            if (CallManager.getCallType() == CallType.AUDIO_CALL) R.drawable.ic_group_call_again else R.drawable.ic_group_video_call_again,
+            if (CallManager.getCallType() == CallType.AUDIO_CALL) com.contus.call.R.drawable.ic_group_call_again else com.contus.call.R.drawable.ic_group_video_call_again,
             0,
             0
         )

@@ -281,10 +281,10 @@
         <!-- android:screenOrientation="portrait" /> -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCe4m08a3eMvInU8LBxAjAyEIyG-Kj_Ayw" />
+            android:value="Please enter your google API KEY" />
         <meta-data
             android:name="com.google.android.geo.API_THUMP_KEY"
-            android:value="AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ" />
+            android:value="Please enter your google API THUMP KEY" />
 
         <activity android:name=".activities.SelectMapViewActivity" />
         <activity

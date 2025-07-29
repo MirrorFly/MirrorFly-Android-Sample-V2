@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/color_white"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/common_toolbar" />

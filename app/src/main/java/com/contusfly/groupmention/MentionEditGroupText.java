@@ -51,7 +51,7 @@ public class MentionEditGroupText extends EmojiconEditText {
     }
 
     public MentionEditGroupText(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, R.attr.editTextStyle);
+        this(context, attrs, com.google.android.material.R.attr.editTextStyle);
     }
 
     public MentionEditGroupText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {

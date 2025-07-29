@@ -49,7 +49,7 @@ class ChatTagAdapter(
             if (item.isRecomendedTag) {
                 binding.chatTagNameTv.text = item.tagname
                 binding.chatTagInformationTv.text=item.taginfo
-                binding.chatTagNameTv.setTextColor(ContextCompat.getColor(mContext, R.color.blue))
+                binding.chatTagNameTv.setTextColor(ContextCompat.getColor(mContext, com.contus.call.R.color.blue))
                 binding.addView.visibility = View.VISIBLE
                 binding.rightArrowIcon.visibility = View.GONE
             } else {

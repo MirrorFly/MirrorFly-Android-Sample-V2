@@ -115,13 +115,13 @@ class CallHistoryDetailActivity : BaseActivity(), CoroutineScope, CommonAlertDia
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_call_detail_items, menu)
+        menuInflater.inflate(com.contus.call.R.menu.menu_call_detail_items, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_removelog -> {
+            com.contus.call.R.id.action_removelog -> {
                 showClearAlertDialog()
             }
         }
@@ -134,7 +134,7 @@ class CallHistoryDetailActivity : BaseActivity(), CoroutineScope, CommonAlertDia
      *
      */
     private fun showClearAlertDialog() {
-        commonAlertDialog.showAlertDialog(resources.getQuantityString(R.plurals.action_delete_call_log_message, 1),
+        commonAlertDialog.showAlertDialog(resources.getQuantityString(com.contus.call.R.plurals.action_delete_call_log_message, 1),
                 resources.getString(R.string.action_Ok), resources.getString(R.string.action_cancel),
                 CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false)
     }
@@ -353,9 +353,9 @@ class CallHistoryDetailActivity : BaseActivity(), CoroutineScope, CommonAlertDia
         setIconAlpha(callLogs)
         // Display the icon whether the call is audio or video
         if (callLogs.callType == CallType.AUDIO_CALL) {
-            callHistoryDetailBinding.imgCallType.setImageResource(R.drawable.ic_call_log_voice_call)
+            callHistoryDetailBinding.imgCallType.setImageResource(com.contus.call.R.drawable.ic_call_log_voice_call)
         } else if (callLogs.callType == CallType.VIDEO_CALL) {
-            callHistoryDetailBinding.imgCallType.setImageResource(R.drawable.ic_call_log_video_call)
+            callHistoryDetailBinding.imgCallType.setImageResource(com.contus.call.R.drawable.ic_call_log_video_call)
         }
     }
 
@@ -373,11 +373,11 @@ class CallHistoryDetailActivity : BaseActivity(), CoroutineScope, CommonAlertDia
     }
 
     private fun setCallStatusIcon(callLogs: CallLog) {
-        var drawable = R.drawable.ic_arrow_down_red
+        var drawable = com.contus.call.R.drawable.ic_arrow_down_red
         when (callLogs.callState) {
-            CallState.MISSED_CALL -> drawable = R.drawable.ic_arrow_down_red
-            CallState.INCOMING_CALL -> drawable = R.drawable.ic_arrow_down_green
-            CallState.OUTGOING_CALL -> drawable = R.drawable.ic_arrow_up_green
+            CallState.MISSED_CALL -> drawable = com.contus.call.R.drawable.ic_arrow_down_red
+            CallState.INCOMING_CALL -> drawable = com.contus.call.R.drawable.ic_arrow_down_green
+            CallState.OUTGOING_CALL -> drawable = com.contus.call.R.drawable.ic_arrow_up_green
         }
         callHistoryDetailBinding.imgCallStatus.setImageResource(drawable)
     }

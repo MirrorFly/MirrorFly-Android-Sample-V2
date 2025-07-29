@@ -201,7 +201,7 @@ class ParticipantsListFragment : Fragment(), CoroutineScope {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_search_group_call, menu)
+        inflater.inflate(com.contus.call.R.menu.menu_search_group_call, menu)
         if (tabPosition == 0) hideMenu(menu.findItem(R.id.action_search))
         else showMenu(menu.findItem(R.id.action_search))
         if(GroupCallUtils.isCallLinkBehaviourMeet()){

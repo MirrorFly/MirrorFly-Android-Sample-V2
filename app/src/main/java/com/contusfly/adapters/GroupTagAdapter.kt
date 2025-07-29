@@ -30,7 +30,9 @@ class GroupTagAdapter(private val context: Context, val userTagClickListener: Us
         holder.bind(item)
     }
     override fun hasSearchKey(item: ProfileDetails, filterKey: String): Boolean {
-        return item.getDisplayName().toLowerCase(Locale.getDefault()).contains(filterKey.toLowerCase(Locale.getDefault()))
+        return item.getDisplayName().lowercase(Locale.getDefault()).contains(filterKey.lowercase(
+            Locale.getDefault()
+        ))
     }
     override fun setViewHolder(parent: ViewGroup): GroupTagViewHolder {
         var adapterBinding =

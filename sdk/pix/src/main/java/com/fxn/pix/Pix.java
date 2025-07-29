@@ -1,5 +1,7 @@
 package com.fxn.pix;
 
+import static android.os.Build.VERSION.SDK_INT;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -10,10 +12,10 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
@@ -360,6 +362,7 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener {
         for (Img i : selectionList) {
             list.add(i.getUrl());
         }
+        Log.d("front_camera","front camera" + options.isFrontfacing() + "file uri"+" "+list.get(0));
         Intent mediaPreviewIntent = new Intent(this, MediaPreviewIntent.getInstance().getMediaClass(options));
         mediaPreviewIntent.putExtra("user_jid", MediaPreviewIntent.getInstance().getToUser());
         mediaPreviewIntent.putExtra("is_image", !list.get(0).toLowerCase().contains(".mp4"));
@@ -403,9 +406,13 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener {
         super.onPause();
     }
 
+
+
+
+
     private void initialize() {
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        if (SDK_INT >= Build.VERSION_CODES.P) {
             params.layoutInDisplayCutoutMode =
                     WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
@@ -442,7 +449,15 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener {
                 SizeSelectors.and(ratio3, dimensions)
         );
         camera.setPictureSize(result);
-        camera.setVideoSize(result);
+        String manufacturer = Build.MANUFACTURER.toUpperCase(Locale.getDefault());
+        if ((manufacturer.contains("VIVO") || manufacturer.contains("REALME")) && SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            camera.setVideoSize(SizeSelectors.and(SizeSelectors.maxWidth(Utility.WIDTH), SizeSelectors.smallest()));
+        } else if (manufacturer.contains("XIAOMI")) {
+            camera.setVideoSize(SizeSelectors.and(SizeSelectors.maxWidth(Utility.WIDTH), SizeSelectors.biggest()));
+        } else {
+            camera.setVideoSize(result);
+        }
+//        camera.setVideoSize(SizeSelectors.smallest());
         camera.setLifecycleOwner(Pix.this);
 
         if (options.isFrontfacing()) {
@@ -454,10 +469,17 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener {
         camera.addCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(PictureResult result) {
+                File dir;
                 String folderPath = options.getPath() + File.separator + options.getOutputPath()+" Camera Roll";
-                File dir = new File(Utility.getExternalStorage(Pix.this), folderPath);
+                dir = new File(Utility.getExternalStorage(Pix.this), folderPath);
+
                 if (!dir.exists()) {
-                    dir.mkdirs();
+                    if(dir.mkdirs()) {
+                        Log.d("#Camera","File Directory Created Successfully..");
+                    } else {
+                        dir = new File(Utility.getExternalFileStorage(Pix.this), folderPath);
+                        dir.mkdirs();
+                    }
                 }
                 File photo = new File(dir, options.getOutputPath()+"_IMG_"
                         + new SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(new Date())
@@ -650,6 +672,12 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener {
                         File dir = new File(Utility.getExternalStorage(Pix.this), folderPath);
                         if (!dir.exists()) {
                             dir.mkdirs();
+                            if(dir.mkdirs()) {
+                                Log.d("#Camera","File Directory Created Successfully..");
+                            } else {
+                                dir = new File(Utility.getExternalFileStorage(Pix.this), folderPath);
+                                dir.mkdirs();
+                            }
                         }
                         File video = new File(dir, options.getOutputPath()+"_VID_"
                                 + new SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(new Date())
@@ -667,7 +695,7 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener {
         clickme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                camera.setMode(Mode.PICTURE);
                 if (SystemClock.elapsedRealtime() - lastClickTime < 1000)
                     return;
                 lastClickTime = SystemClock.elapsedRealtime();

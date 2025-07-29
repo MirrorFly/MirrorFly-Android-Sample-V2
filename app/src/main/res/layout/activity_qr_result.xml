@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorG"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".activities.QrResultActivity">
 
     <include

@@ -57,10 +57,10 @@ object CustomFontUtil {
      */
     private fun getCustomTypeface(context: Context, attrs: AttributeSet?): Typeface? {
         var typeface = TypefaceFactory.getFontTypeFace(context, "")
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomWidget)
+        val typedArray = context.obtainStyledAttributes(attrs, com.contus.call.R.styleable.CustomWidget)
         for (i in 0 until typedArray.indexCount) {
             val attribute = typedArray.getIndex(i)
-            if (attribute == R.styleable.CustomWidget_font_name) {
+            if (attribute == com.contus.call.R.styleable.CustomWidget_font_name) {
                 typeface = TypefaceFactory.getFontTypeFace(context,
                         Utils.returnEmptyStringIfNull(typedArray.getString(attribute)))
             }

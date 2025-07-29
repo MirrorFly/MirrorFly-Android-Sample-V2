@@ -176,7 +176,7 @@ class ScheduleBottomSheetFragment(private val activity: Activity) : BottomSheetD
                     val clipboardManager  = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clipData  = ClipData.newPlainText("text", binding.meetLinkTextView.text)
                     clipboardManager .setPrimaryClip(clipData )
-                    CustomToast.show(context, context?.getString(R.string.link_copied_clipboard))
+                    CustomToast.show(context, context?.getString(com.contus.call.R.string.link_copied_clipboard))
                 }
 
                 R.id.rl_schedule_meet_time->{

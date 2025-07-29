@@ -165,7 +165,7 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
         }
 
         override fun onSelectBlockedUser(profileDetails: ProfileDetails) {
-            showAlertDialog(this@UsersSelectionActivity, String.format(if (callType == CallType.AUDIO_CALL) getString(R.string.msg_unblockGroupAudioCall) else getString(R.string.msg_unblockGroupVideoCall), ProfileDetailsUtils.getDisplayName(profileDetails.jid)))
+            showAlertDialog(this@UsersSelectionActivity, String.format(if (callType == CallType.AUDIO_CALL) getString(com.contus.call.R.string.msg_unblockGroupAudioCall) else getString(com.contus.call.R.string.msg_unblockGroupVideoCall), ProfileDetailsUtils.getDisplayName(profileDetails.jid)))
         }
 
         override fun isSelected(userId: String): Boolean {
@@ -184,7 +184,7 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
         super.onPostCreate(savedInstanceState)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        UserInterfaceUtils.setUpToolBar(this, toolbar, supportActionBar, getString(R.string.add_participants))
+        UserInterfaceUtils.setUpToolBar(this, toolbar, supportActionBar, getString(com.contus.call.R.string.add_participants))
         handler = Handler(Looper.getMainLooper())
 
         /*
@@ -260,9 +260,9 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
      */
     private fun checkCallIcon() {
         if (callType == CallType.VIDEO_CALL) {
-            callNowIcon.setImageResource(R.drawable.ic_video_call_button)
+            callNowIcon.setImageResource(com.contus.call.R.drawable.ic_video_call_button)
         } else {
-            callNowIcon.setImageResource(R.drawable.ic_phone_call_button)
+            callNowIcon.setImageResource(com.contus.call.R.drawable.ic_phone_call_button)
         }
     }
 
@@ -279,7 +279,7 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
                 progressDialog!!.show()
                 FlyCore.unblockUser(blockedUserJid!!) { _, _, _ -> }
                 isUnblockRequested = true
-            } else CustomToast.show(this, getString(R.string.fly_error_msg_no_internet))
+            } else CustomToast.show(this, getString(com.mirrorflysdk.R.string.fly_error_msg_no_internet))
         }
     }
 
@@ -288,7 +288,7 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_search_group_call, menu)
+        menuInflater.inflate(com.contus.call.R.menu.menu_search_group_call, menu)
         searchKey = menu!!.findItem(R.id.action_search).actionView as SearchView
         searchKey!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
@@ -329,7 +329,7 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
     fun onUserSelectRestriction() {
         Toast.makeText(
             context,
-            String.format(context!!.getString(R.string.msg_user_call_limit), CallManager.getMaxCallUsersCount() - 1),
+            String.format(context!!.getString(com.contus.call.R.string.msg_user_call_limit), CallManager.getMaxCallUsersCount() - 1),
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -341,10 +341,10 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
         get() {
             return if (selectedList?.isEmpty() != false) {
                 callNowLayout.isEnabled = false
-                getString(R.string.msg_no_selected_user_call)
+                getString(com.contus.call.R.string.msg_no_selected_user_call)
             } else {
                 callNowLayout.isEnabled = true
-                String.format(getString(R.string.msg_selected_user_call), selectedList.size)
+                String.format(getString(com.contus.call.R.string.msg_selected_user_call), selectedList.size)
             }
         }
 
@@ -378,20 +378,20 @@ class UsersSelectionActivity : BaseActivity(), View.OnClickListener, CommonAlert
         if (selectedList.isNotEmpty()) {
             when {
                 !AppUtils.isNetConnected(this) -> {
-                    CustomToast.show(this, getString(R.string.fly_error_msg_no_internet))
+                    CustomToast.show(this, getString(com.mirrorflysdk.R.string.fly_error_msg_no_internet))
                 }
                 isOnTelephonyCall(this) -> {
-                    showAlertDialog(this, getString(R.string.msg_telephony_call_alert))
+                    showAlertDialog(this, getString(com.contus.call.R.string.msg_telephony_call_alert))
                 }
                 isOnAnyCall() -> {
-                    showAlertDialog(this, getString(R.string.msg_ongoing_call_alert_for_group_call))
+                    showAlertDialog(this, getString(com.contus.call.R.string.msg_ongoing_call_alert_for_group_call))
                 }
                 else -> {
                     makeCall()
                 }
             }
         } else {
-            Toast.makeText(context, context!!.getString(R.string.error_select_atleast_one), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context!!.getString(com.contus.call.R.string.error_select_atleast_one), Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -189,7 +189,7 @@ class PickContactActivity : BaseActivity() {
             intent.putStringArrayListExtra(MessagingClient.INTENT_PHONE_NUMBERS, phoneNumbers as ArrayList<String?>?)
             setResult(Activity.RESULT_OK, intent)
             finish()
-        } else CustomToast.show(this, getString(R.string.error_select_atleast_one))
+        } else CustomToast.show(this, getString(com.contus.call.R.string.error_select_atleast_one))
     }
 
     /**

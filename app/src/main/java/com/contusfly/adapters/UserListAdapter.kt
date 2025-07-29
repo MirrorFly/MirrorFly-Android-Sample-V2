@@ -127,7 +127,7 @@ class UserListAdapter(val context: Context, private val commonAlertDialog: Commo
 
     private fun setUserName(holder: ContactsViewHolder, profile: ProfileDetails) {
         if(searchKey.isNotBlank()) {
-            val startIndex = profile.getDisplayName()!!.toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(Locale.getDefault()))
+            val startIndex = profile.getDisplayName()!!.lowercase(Locale.getDefault()).indexOf(searchKey.lowercase(Locale.getDefault()))
             if (startIndex.isValidIndex()) {
                 val stopIndex = startIndex + searchKey.length
                 EmojiUtils.setEmojiTextAndHighLightSearchContact(context, holder.contactViewBinding.textChatName, profile.getDisplayName(), startIndex, stopIndex)

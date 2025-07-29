@@ -211,9 +211,9 @@ class UserListActivity : BaseContactActivity() {
             userListBinding.buttonMakeCall.gone()
             userListBinding.buttonMakeCall.text = String.format(getString(R.string.action_call_now), selectedUsersJid.size)
             if (callType == CallType.VIDEO_CALL) {
-                userListBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, R.drawable.ic_fab_video_call)
+                userListBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, com.contus.call.R.drawable.ic_fab_video_call)
             } else {
-                userListBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, R.drawable.ic_fab_voice_call)
+                userListBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, com.contus.call.R.drawable.ic_fab_voice_call)
             }
             userListBinding.buttonMakeCall.setOnClickListener(1000) {
                 checkInternetAndExecute {

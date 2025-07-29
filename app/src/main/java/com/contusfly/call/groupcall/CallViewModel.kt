@@ -169,7 +169,7 @@ constructor(private val callLogRepository: CallLogRepository) : ViewModel() {
         userProfilesList.forEach { profileDetail ->
             if (!profileDetail.isAdminBlocked) filteredProfiles.add(profileDetail)
         }
-        return filteredProfiles.sortedBy { it.getDisplayName().toLowerCase() }
+        return filteredProfiles.sortedBy { it.getDisplayName().lowercase() }
     }
 
     fun getInviteUserListForGroup(groupId: String, callConnectedUserList: ArrayList<String>?) {

@@ -1,139 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/Dashboard_ToolBar"
-            app:layout_scrollFlags="scroll|enterAlways">
-
-            <ProgressBar
-                android:id="@+id/progress_spinner"
-                android:layout_width="@dimen/margin_24"
-                android:layout_height="@dimen/margin_24"
-                android:layout_gravity="end"
-                android:indeterminate="true"
-                android:theme="@style/WhiteAccent"
-                android:visibility="gone" />
-        </androidx.appcompat.widget.Toolbar>
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            style="@style/MyTabLayoutTextAppearance"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height"
-            android:fontFamily="@font/sf_ui_display_semi_bold" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/color_menu_divider" />
-
-        <FrameLayout
-            android:id="@+id/dashboard_xmpp_connection_status_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/dashboard_xmpp_connection_text"
-                style="@style/Connection_status"
-                android:layout_width="match_parent"
-                android:layout_height="33dp"
-                android:animateLayoutChanges="true"
-                android:text="@string/msg_no_internet" />
-
-        </FrameLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_to_refresh_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"/>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <FrameLayout
-        android:id="@+id/new_chat_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_chat_fab"
-            android:layout_gravity="center"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_chat"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/margin_2.5"
-            android:layout_marginBottom="@dimen/margin_2.5"/>
-
-    </FrameLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-<!--
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    tools:context=".activities.DashboardActivity">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Dashboard_ToolBar"/>
-
-    <RelativeLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            style="@style/MyTabLayoutTextAppearance"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height"
-            android:fontFamily="@font/sf_ui_display_semi_bold" />
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
 
-        <View
-            android:id="@+id/tab_line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/tabs"
-            android:background="?attr/menu_divider_color" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Dashboard_ToolBar"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <ProgressBar
+                    android:id="@+id/progress_spinner"
+                    android:layout_width="@dimen/margin_24"
+                    android:layout_height="@dimen/margin_24"
+                    android:layout_gravity="end"
+                    android:indeterminate="true"
+                    android:theme="@style/WhiteAccent"
+                    android:visibility="gone" />
+            </androidx.appcompat.widget.Toolbar>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                style="@style/MyTabLayoutTextAppearance"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_height"
+                android:fontFamily="@font/sf_ui_display_semi_bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_menu_divider" />
+
+            <FrameLayout
+                android:id="@+id/dashboard_xmpp_connection_status_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/dashboard_xmpp_connection_text"
+                    style="@style/Connection_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:animateLayoutChanges="true"
+                    android:text="@string/msg_no_internet" />
+
+            </FrameLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_to_refresh_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tab_line"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.viewpager.widget.ViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -141,25 +77,95 @@
             android:id="@+id/new_chat_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true">
+            android:layout_gravity="end|bottom">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_chat_fab"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_chat_fab" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_chat"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/margin_2.5"
-                android:layout_marginBottom="@dimen/margin_2.5"/>
+                android:layout_marginBottom="@dimen/margin_2.5"
+                app:srcCompat="@drawable/ic_chat" />
 
         </FrameLayout>
 
-    </RelativeLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>-->
+    <!--
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        tools:context=".activities.DashboardActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Dashboard_ToolBar"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                style="@style/MyTabLayoutTextAppearance"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_height"
+                android:fontFamily="@font/sf_ui_display_semi_bold" />
+
+            <View
+                android:id="@+id/tab_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/tabs"
+                android:background="?attr/menu_divider_color" />
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_to_refresh_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tab_line"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <FrameLayout
+                android:id="@+id/new_chat_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_chat_fab"
+                    android:layout_gravity="center"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_chat"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/margin_2.5"
+                    android:layout_marginBottom="@dimen/margin_2.5"/>
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>-->

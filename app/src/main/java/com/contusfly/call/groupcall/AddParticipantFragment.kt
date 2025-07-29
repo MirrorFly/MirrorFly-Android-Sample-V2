@@ -162,11 +162,11 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
             return if (selectedList.isEmpty()) {
                 addParticipantsLayout.visibility = View.GONE
                 addParticipantsLayout.isEnabled = false
-                getString(R.string.msg_add_participant)
+                getString(com.contus.call.R.string.msg_add_participant)
             } else {
                 addParticipantsLayout.visibility = View.VISIBLE
                 addParticipantsLayout.isEnabled = true
-                String.format(getString(R.string.msg_add_participants), selectedList.size)
+                String.format(getString(com.contus.call.R.string.msg_add_participants), selectedList.size)
             }
         }
 
@@ -232,8 +232,8 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
             viewModel.inviteUserList.observe(viewLifecycleOwner) {
                 if (it.isEmpty()) {
                     val message =
-                        if (isAddUsersToOneToOneCall) requireContext().getString(R.string.all_members_already_in_call) else requireContext().getString(
-                            R.string.all_members_already_in_group_call
+                        if (isAddUsersToOneToOneCall) requireContext().getString(com.contus.call.R.string.all_members_already_in_call) else requireContext().getString(
+                            com.contus.call.R.string.all_members_already_in_group_call
                         )
                     emptyView.text = message
                     emptyView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
@@ -250,7 +250,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
         viewModel.callUserList.observe(viewLifecycleOwner) { userList ->
             userList?.let {
                 if (it.isEmpty()) {
-                    val message = if (isAddUsersToOneToOneCall) requireContext().getString(R.string.all_members_already_in_call) else requireContext().getString(R.string.all_members_already_in_group_call)
+                    val message = if (isAddUsersToOneToOneCall) requireContext().getString(com.contus.call.R.string.all_members_already_in_call) else requireContext().getString(com.contus.call.R.string.all_members_already_in_group_call)
                     emptyView.text = message
                     emptyView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
                 }
@@ -333,7 +333,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
                 val clipboardManager  = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clipData  = ClipData.newPlainText("text", BuildConfig.WEB_CHAT_LOGIN + onGoingCallLink)
                 clipboardManager .setPrimaryClip(clipData )
-                CustomToast.show(context, getString(R.string.link_copied_clipboard))
+                CustomToast.show(context, getString(com.contus.call.R.string.link_copied_clipboard))
             }
         }
 
@@ -342,7 +342,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
         if(GroupCallUtils.isCallLinkBehaviourMeet()){
             emptyView.text = ""
             listContact.visibility = View.GONE
-            callLinkTitleTextView.text = getString(R.string.meet_link)
+            callLinkTitleTextView.text = getString(com.contus.call.R.string.meet_link)
         }
         addParticipantButtonAdjustOverKeyboard(view)
 
@@ -461,7 +461,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
             Toast.makeText(
                 requireContext(),
                 String.format(
-                    requireContext().getString(R.string.msg_user_call_limit_one_user),
+                    requireContext().getString(com.contus.call.R.string.msg_user_call_limit_one_user),
                     availableCount
                 ),
                 Toast.LENGTH_SHORT
@@ -469,7 +469,7 @@ class AddParticipantFragment : Fragment(), CoroutineScope{
         else
             Toast.makeText(
                 requireContext(),
-                String.format(getString(R.string.max_members_in_call), CallManager.getMaxCallUsersCount()),
+                String.format(getString(com.contus.call.R.string.max_members_in_call), CallManager.getMaxCallUsersCount()),
                 Toast.LENGTH_SHORT
             ).show()
     }

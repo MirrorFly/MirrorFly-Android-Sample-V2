@@ -17,7 +17,7 @@ import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.backup.*
 import com.mirrorflysdk.flydatabase.model.Backup
 import com.mirrorflysdk.utils.Utils
-import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
@@ -89,7 +89,7 @@ class GoogleDriveWorker(private val appContext: Context, workerParams: WorkerPar
             null
         } else {
             Drive.Builder(
-                AndroidHttp.newCompatibleTransport(),
+                NetHttpTransport(),
                 JacksonFactory.getDefaultInstance(),
                 credential
             )
@@ -347,7 +347,7 @@ class GoogleDriveWorker(private val appContext: Context, workerParams: WorkerPar
         }
 
         return rootFilePath + File.separator +
-                ChatManager.applicationContext.resources.getString(R.string.title_app_name)
+                ChatManager.applicationContext.resources.getString(com.mirrorflysdk.R.string.title_app_name)
                     .replace(" ", "") + File.separator + Constants.BACKUP_FOLDER.also {
             LogMessage.i(TAG, "getBackUpFolderPath: $it")
         }

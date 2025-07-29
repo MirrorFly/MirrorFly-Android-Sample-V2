@@ -37,7 +37,8 @@ object PickerConstants {
         "zip",
         "rar",
         "pptx",
-        "acc"
+        "acc",
+        "mov"
     )
 
 }

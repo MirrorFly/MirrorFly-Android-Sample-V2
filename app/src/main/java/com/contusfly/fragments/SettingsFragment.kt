@@ -128,7 +128,7 @@ class SettingsFragment(val navigateToSafeChat: Boolean?=false) : Fragment(), Com
             if(feature.isBlockEnabled)
                 settingsActivity!!.performFragmentTransaction(BlockedContactsFragment.newInstance())
             else
-                context.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+                context.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
         }
 
         settingsBinding.layoutNotifications.setOnClickListener{
@@ -144,7 +144,7 @@ class SettingsFragment(val navigateToSafeChat: Boolean?=false) : Fragment(), Com
             if(feature.isStarMessageEnabled)
             startActivity(Intent(settingsActivity, StarredMessageActivity::class.java))
             else
-                context.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+                context.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
         }
 
         settingsBinding.btnSwitchConnection.setOnCheckedChangeListener(onCheckedChanged())

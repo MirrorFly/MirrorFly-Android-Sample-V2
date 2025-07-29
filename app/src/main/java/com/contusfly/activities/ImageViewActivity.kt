@@ -253,8 +253,8 @@ class ImageViewActivity : BaseActivity(), DialogInterface.OnClickListener, Commo
                 val uri = URI(imageUrl)
                 var isWeb = false
                 if (uri.scheme != null) {
-                    isWeb = ("http" == uri.scheme.toLowerCase()
-                            || "https" == uri.scheme.toLowerCase())
+                    isWeb = ("http" == uri.scheme.lowercase()
+                            || "https" == uri.scheme.lowercase())
                 }
                 menuItem.isVisible = isWeb
             } catch (e: URISyntaxException) {

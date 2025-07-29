@@ -28,10 +28,10 @@ class ConfigurationUtils {
          * Set Default values in Mobile Application
          */
         fun setDefaultValues(context: Context) {
-            if (!context.getSharedPreferences(context.resources.getString(R.string.title_app_name), Context.MODE_PRIVATE)
+            if (!context.getSharedPreferences(context.resources.getString(com.mirrorflysdk.R.string.title_app_name), Context.MODE_PRIVATE)
                     .contains(Constants.NOTIFICATION_SOUND)) {
                 SharedPreferenceManager.setBoolean(Constants.NOTIFICATION_SOUND, true)
-                if (!context.getSharedPreferences(context.resources.getString(R.string.title_app_name), Context.MODE_PRIVATE)
+                if (!context.getSharedPreferences(context.resources.getString(com.mirrorflysdk.R.string.title_app_name), Context.MODE_PRIVATE)
                         .contains(Constants.VIBRATION)) {
                     SharedPreferenceManager.setBoolean(Constants.VIBRATION, false)
                     SharedPreferenceManager.setBoolean(Constants.KEY_CHANGE_FLAG, false)

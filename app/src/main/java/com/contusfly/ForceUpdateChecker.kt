@@ -78,7 +78,7 @@ class ForceUpdateChecker(private val activity: Activity) {
         var result = ""
         try {
             result = context.packageManager
-                .getPackageInfo(context.packageName, 0).versionName
+                .getPackageInfo(context.packageName, 0).versionName.toString()
             result = result.replace("[a-zA-Z]|-".toRegex(), "")
         } catch (e: PackageManager.NameNotFoundException) {
             LogMessage.e(TAG, e)

@@ -189,16 +189,16 @@ object ChatMessageUtils {
         val fileSize = fileSizeInBytes.toLong().toDouble()
         when {
             fileSize > 1.073741824E9 -> {
-                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1.073741824E9)).append(" ").append(applicationContext.resources.getString(R.string.fly_file_size_convention_gb))
+                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1.073741824E9)).append(" ").append(applicationContext.resources.getString(com.mirrorflysdk.R.string.fly_file_size_convention_gb))
             }
             fileSize > 1048576.0 -> {
-                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1048576.0)).append(" ").append(applicationContext.resources.getString(R.string.fly_file_size_convention_mb))
+                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1048576.0)).append(" ").append(applicationContext.resources.getString(com.mirrorflysdk.R.string.fly_file_size_convention_mb))
             }
             fileSize > 1024.0 -> {
-                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1024.0)).append(" ").append(applicationContext.resources.getString(R.string.fly_file_size_convention_kb))
+                fileSizeBuilder.append(getRoundedFileSize(fileSize / 1024.0)).append(" ").append(applicationContext.resources.getString(com.mirrorflysdk.R.string.fly_file_size_convention_kb))
             }
             else -> {
-                fileSizeBuilder.append(fileSizeInBytes).append(" ").append(applicationContext.resources.getString(R.string.fly_file_size_convention_b))
+                fileSizeBuilder.append(fileSizeInBytes).append(" ").append(applicationContext.resources.getString(com.mirrorflysdk.R.string.fly_file_size_convention_b))
             }
         }
         return fileSizeBuilder.toString()

@@ -13,9 +13,10 @@ The minimum requirements to run the Sample App:
 ```groovy
 - Android Lollipop 5.0 (API Level 21) or above
 - Java 7 or higher
-- Gradle 4.1.0 or higher
+- Gradle 8.6.0 or higher
+- Kotlin 20.0.20 or higher
 ```
-> **Note :** If you're utilizing Chat SDK version 7.11.4 or higher, it's necessary to adjust the target SDK version to 34. This is due to the migration of Chat SDK to Android 14.
+> **Note :** If you're utilizing Chat SDK version 7.13.27 or higher, it's must to set the target SDK version to 35. This is due to the migration of Chat SDK to Android 15.
 
 ## Getting started
 This section explains the steps you need to take before testing the sample app.

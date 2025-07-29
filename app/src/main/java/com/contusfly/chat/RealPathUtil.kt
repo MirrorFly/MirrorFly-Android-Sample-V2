@@ -378,7 +378,7 @@ object RealPathUtil {
 
     private fun getExtension(path: String): String {
         return if (path.contains(".")) {
-            path.substring(path.lastIndexOf("."), path.length).toLowerCase(Locale.getDefault())
+            path.substring(path.lastIndexOf("."), path.length).lowercase(Locale.getDefault())
         } else {
             ""
         }
@@ -390,7 +390,7 @@ object RealPathUtil {
             cr.getType(uri) ?: ""
         } else {
             val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase())?:""
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.lowercase())?:""
         }
     }
 

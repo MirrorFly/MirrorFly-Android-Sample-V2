@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".call.groupcall.OnGoingCallPreviewActivity"
     android:background="@drawable/ic_ongng_call_preview_bg">

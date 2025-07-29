@@ -255,7 +255,7 @@ class GroupCallListAdapter(val context: Context) :
                     context,
                     "",
                     holder.binding.imgProfileImage,
-                    ContextCompat.getDrawable(context, R.drawable.ic_group_call_user_default_pic)
+                    ContextCompat.getDrawable(context, com.contus.call.R.drawable.ic_group_call_user_default_pic)
                 )
 
                 if(BuildConfig.CONTACT_SYNC_ENABLED)
@@ -263,7 +263,7 @@ class GroupCallListAdapter(val context: Context) :
                         context,
                         "",
                         holder.binding.imgProfileImage,
-                        ContextCompat.getDrawable(context, R.drawable.ic_group_call_user_default_pic)
+                        ContextCompat.getDrawable(context, com.contus.call.R.drawable.ic_group_call_user_default_pic)
                     )
                 else{
                     val setDrawable = SetDrawable(context)

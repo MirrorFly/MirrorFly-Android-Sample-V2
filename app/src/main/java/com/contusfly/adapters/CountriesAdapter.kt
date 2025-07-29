@@ -80,7 +80,7 @@ class CountriesAdapter(context: Context) : RecyclerView.Adapter<CountriesAdapter
             countryTempData?.addAll(countryList!!)
         } else {
             for (mKey in countryList!!) {
-                if (mKey.countryName.toLowerCase().contains(filterKey.toLowerCase()) || mKey.dialCode.toLowerCase().contains(filterKey.toLowerCase()))
+                if (mKey.countryName.lowercase().contains(filterKey.lowercase()) || mKey.dialCode.lowercase().contains(filterKey.lowercase()))
                     countryTempData?.add(mKey)
             }
         }

@@ -184,7 +184,7 @@ object MissedCallNotificationUtils {
         LogMessage.d(TAG, "#getMissedCallNotificationContent callMetadata Size : ${callMeta?.size}")
         var messageContent : String
         val missedCallMessage = StringBuilder()
-        missedCallMessage.append(ChatManager.applicationContext.resources.getString(R.string.you_missed_call))
+        missedCallMessage.append(ChatManager.applicationContext.resources.getString(com.contus.call.R.string.you_missed_call))
         if (isOneToOneCall && groupId.isNullOrEmpty()) {
             if (callType == CallType.AUDIO_CALL) {
                 missedCallMessage.append("an ")
@@ -202,7 +202,7 @@ object MissedCallNotificationUtils {
             }
         }
         if (BuildConfig.HIPAA_COMPLIANCE_ENABLED)
-            messageContent = ChatManager.applicationContext.resources.getString(R.string.new_missed_call)
+            messageContent = ChatManager.applicationContext.resources.getString(com.contus.call.R.string.new_missed_call)
         return Pair(missedCallMessage.toString(), messageContent)
     }
 

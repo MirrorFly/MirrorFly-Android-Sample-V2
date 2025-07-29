@@ -15,6 +15,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
@@ -410,6 +411,16 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
             }
             false
         }
+
+        emojiEditText?.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                emojiEditText?.clearFocus() // Important: explicitly remove focus
+                hideKeyboard()
+                true
+            } else {
+                false
+            }
+        }
     }
 
     private fun initializeAdapterForViewPager() {
@@ -732,7 +743,7 @@ class MediaPreviewActivity : BaseActivity(), MediaPreviewAdapter.OnItemClickList
         val options: Options? = Options.init()
             .setRequestCode(100)
             .setCount(Constants.MAX_MEDIA_SELECTION_RESTRICTION)
-            .setOutputPath(Constants.LOCAL_PATH.toUpperCase(Locale.getDefault()))
+            .setOutputPath(Constants.LOCAL_PATH.uppercase(Locale.getDefault()))
             .setFrontfacing(false)
             .setPreSelectedUrls(ArrayList())
             .setExcludeVideos(false)

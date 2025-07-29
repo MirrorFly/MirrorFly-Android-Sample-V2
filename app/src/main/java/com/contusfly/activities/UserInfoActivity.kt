@@ -15,7 +15,7 @@ import androidx.core.view.ViewCompat
 import com.mirrorflysdk.flycommons.*
 import com.contusfly.*
 import com.contusfly.R
-import com.contusfly.R.string.fly_error_forbidden_exception
+import com.mirrorflysdk.R.string.fly_error_forbidden_exception
 import com.contusfly.databinding.ActivityUserInfoBinding
 import com.contusfly.models.PrivateChatAuthenticationModel
 import com.contusfly.network.NetworkConnection

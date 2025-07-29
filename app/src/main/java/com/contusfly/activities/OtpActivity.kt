@@ -255,7 +255,7 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
     private fun setupCountryCode() {
         val telephonyManager =
             activityContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        countryCode = telephonyManager.simCountryIso.toUpperCase()
+        countryCode = telephonyManager.simCountryIso.uppercase()
         val countryName = CountriesListObject.getCountriesListByCountryCode(this, countryCode)
         if (countryName.isNotEmpty()) {
             country = countryName
@@ -668,7 +668,7 @@ class OtpActivity : BaseActivity(), IOtpView, View.OnClickListener,
             val phoneUtil: PhoneNumberUtil = PhoneNumberUtil.createInstance(activity)
             val numberProto: Phonenumber.PhoneNumber = phoneUtil.parse(
                 telephonyManager.line1Number,
-                telephonyManager.simCountryIso.toUpperCase(Locale.getDefault())
+                telephonyManager.simCountryIso.uppercase(Locale.getDefault())
             )
             nationalNumber = numberProto.nationalNumber.toString()
         } catch (e: NumberParseException) {

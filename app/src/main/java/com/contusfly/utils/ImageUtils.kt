@@ -482,7 +482,7 @@ object ImageUtils {
         if (tempDrawable is BitmapDrawable)
             bitmap = tempDrawable.bitmap
         if (bitmap != null) {
-            bitmap = bitmap.copy(bitmap.config, bitmap.isMutable)
+            bitmap = bitmap.config?.let { bitmap!!.copy(it, bitmap!!.isMutable) }
             return BitmapDrawable(context.resources, bitmap)
         }
         return null

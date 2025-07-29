@@ -45,7 +45,7 @@ import com.mirrorflysdk.flydatabase.model.Backup
 import com.mirrorflysdk.utils.Utils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.googleapis.media.MediaHttpDownloader
 import com.google.api.client.json.jackson2.JacksonFactory
@@ -55,11 +55,6 @@ import com.google.api.services.drive.model.File
 import com.mirrorflysdk.api.ChatManager
 import com.mirrorflysdk.backup.BackupManager
 import com.mirrorflysdk.flycommons.LogMessage
-import kotlinx.android.synthetic.main.activity_back_up.*
-import kotlinx.android.synthetic.main.activity_back_up.driveEmail
-import kotlinx.android.synthetic.main.activity_restore.*
-import kotlinx.android.synthetic.main.backup_dialog.view.*
-import kotlinx.android.synthetic.main.frequency_dialog.view.*
 import kotlinx.coroutines.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -161,7 +156,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
             null
         } else {
             Drive.Builder(
-                AndroidHttp.newCompatibleTransport(),
+                NetHttpTransport(),
                 JacksonFactory.getDefaultInstance(),
                 credential
             )
@@ -385,7 +380,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
                 driveWorkerId = workerIds.first
                 initDriveListeners(driveWorkerId)
                 restoreWorkerID = workerIds.second
-                progressText.text = "Downloading : 0.0KB  of $fileSizeString (0%)"
+                activityRestoreBinding.progressText.text = "Downloading : 0.0KB  of $fileSizeString (0%)"
             }
             switchImageView()
             createRestoreNotificationChannel()
@@ -513,7 +508,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
                         accountName.toString()
                     )
                     SharedPreferenceManager.setBoolean(BackupConstants.NEED_RELOGIN, false)
-                    driveEmail.text = accountName.toString()
+                    activityRestoreBinding.driveEmail.text = accountName.toString()
                     setNewUserMail(accountName.toString())
                     checkAndLoginMail(accountName.toString())
                 }
@@ -569,7 +564,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
                     Utils.getGSONInstance().toJson(googleAccount.account)
                 )
                 SharedPreferenceManager.setBoolean(BackupConstants.NEED_RELOGIN, false)
-                driveEmail.text = googleAccount.email.toString()
+                activityRestoreBinding.driveEmail.text = googleAccount.email.toString()
 
                 if (isExisting && drive != null) {
 
@@ -744,7 +739,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
                                     progressData.getInt(BackupConstants.PROGRESS, 0)
                                 if (progressValue > 0) {
                                     activityRestoreBinding.workProgress.progress = progressValue
-                                    progressText.text =
+                                    activityRestoreBinding.progressText.text =
                                         "Downloading : ${getFileSizeInStringFormat((fileSize / 100) * progressValue)}  of ${fileSizeString} (${progressValue}%)"
                                 }
                                 activityRestoreBinding.workProgress.progress = progressValue
@@ -824,11 +819,11 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
                     activityRestoreBinding.workProgress.progress = percentage
 
                     if (percentage == 100) {
-                        progressText?.text =
+                        activityRestoreBinding.progressText?.text =
                             "${getString(R.string.restoring_msg)} ($percentage%)"
-                        progressText.text = getString(R.string.clean_up_data)
+                        activityRestoreBinding.progressText.text = getString(R.string.clean_up_data)
                     } else {
-                        progressText?.text =
+                        activityRestoreBinding.progressText?.text =
                             "${getString(R.string.restoring_msg)} ($percentage%)"
                     }
                     LogMessage.e(TAG, "Restore worker Progress UI In StartActivity::$percentage")
@@ -874,7 +869,7 @@ class RestoreActivity : BackupRestoreParent(), CoroutineScope,
     }
 
     private fun resetUIInCaseOfFailure() {
-        progressText.text = getString(R.string.downloading)
+        activityRestoreBinding.progressText.text = getString(R.string.downloading)
         activityRestoreBinding.workProgress.progress = 0
         WorkManagerController.cancelRestoreWorkers()
         activityRestoreBinding.initialBox.show()

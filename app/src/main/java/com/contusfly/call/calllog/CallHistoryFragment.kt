@@ -954,7 +954,7 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
         this.isClearAll = isClearAll
         if (isClearAll && viewModel.callLogAdapterList.isNotEmpty()) {
             commonAlertDialog.showAlertDialog(
-                resources.getString(R.string.action_clear_call_log_message),
+                resources.getString(com.contus.call.R.string.action_clear_call_log_message),
                 resources.getString(R.string.action_Ok),
                 resources.getString(R.string.action_cancel),
                 CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL,
@@ -963,7 +963,7 @@ class CallHistoryFragment : Fragment(), CoroutineScope,
         } else if (viewModel.selectedCallLogs.isNotEmpty()) {
             commonAlertDialog.showAlertDialog(
                 resources.getQuantityString(
-                    R.plurals.action_delete_call_log_message,
+                    com.contus.call.R.plurals.action_delete_call_log_message,
                     viewModel.selectedCallLogs.size
                 ),
                 resources.getString(R.string.action_Ok),

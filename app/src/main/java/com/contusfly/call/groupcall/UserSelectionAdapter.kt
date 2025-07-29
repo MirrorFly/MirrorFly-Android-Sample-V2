@@ -215,7 +215,7 @@ class UserSelectionAdapter(val context: Context, private val isAddUserInCall: Bo
 
     private fun setUserName(holder: UserSelectionAdapter.UserViewHolder, profileDetails: ProfileDetails) {
         if(searchKey.isNotBlank()) {
-            val startIndex = profileDetails.getDisplayName()!!.toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(
+            val startIndex = profileDetails.getDisplayName()!!.lowercase(Locale.getDefault()).indexOf(searchKey.lowercase(
                 Locale.getDefault()))
             if (startIndex.isValidIndex()) {
                 val stopIndex = startIndex + searchKey.length

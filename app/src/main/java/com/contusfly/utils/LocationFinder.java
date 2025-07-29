@@ -117,7 +117,7 @@ public class LocationFinder extends LocationCallback implements GoogleApiClient.
                     break;
                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                     notifyLocationFixFail(ResourceHelper
-                            .getString(R.string.fly_message_cannot_launch_location_settings));
+                            .getString(com.mirrorflysdk.R.string.fly_message_cannot_launch_location_settings));
                     // Location settings are not satisfied. However, we have no way
                     // to fix the settings so we won't show the dialog.
                     break;
@@ -148,7 +148,7 @@ public class LocationFinder extends LocationCallback implements GoogleApiClient.
 
                     @Override
                     public void onSomePermissionsDenied() {
-                        notifyLocationFixFail(ResourceHelper.getString(R.string.fly_error_permission_denied));
+                        notifyLocationFixFail(ResourceHelper.getString(com.mirrorflysdk.R.string.fly_error_permission_denied));
                     }
                 });
     }
@@ -166,7 +166,7 @@ public class LocationFinder extends LocationCallback implements GoogleApiClient.
 
             @Override
             public void onSomePermissionsDenied() {
-                notifyLocationFixFail(ResourceHelper.getString(R.string.fly_error_permission_denied));
+                notifyLocationFixFail(ResourceHelper.getString(com.mirrorflysdk.R.string.fly_error_permission_denied));
             }
         });
     }
@@ -182,7 +182,7 @@ public class LocationFinder extends LocationCallback implements GoogleApiClient.
                     mActivityContext,
                     SETTINGS_RESOLUTION_REQUEST);
         } catch (IntentSender.SendIntentException e) {
-            notifyLocationFixFail(ResourceHelper.getString(R.string.fly_message_cannot_launch_location_settings));
+            notifyLocationFixFail(ResourceHelper.getString(com.mirrorflysdk.R.string.fly_message_cannot_launch_location_settings));
         }
     }
 
@@ -195,7 +195,7 @@ public class LocationFinder extends LocationCallback implements GoogleApiClient.
 
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
             //If google client has not connected by this time, probably there is no google play services.
-            notifyLocationFixFail(ResourceHelper.getString(R.string.fly_error_cannot_find_location));
+            notifyLocationFixFail(ResourceHelper.getString(com.mirrorflysdk.R.string.fly_error_cannot_find_location));
             return;
         }
 
@@ -252,7 +252,7 @@ public class LocationFinder extends LocationCallback implements GoogleApiClient.
             if (resultCode == Activity.RESULT_OK) {
                 requestLocation();
             } else {
-                notifyLocationFixFail(ResourceHelper.getString(R.string.fly_error_permission_denied));
+                notifyLocationFixFail(ResourceHelper.getString(com.mirrorflysdk.R.string.fly_error_permission_denied));
             }
         }
     }
@@ -269,7 +269,7 @@ public class LocationFinder extends LocationCallback implements GoogleApiClient.
         } else {
             // Either there is something wrong with play services, or we're dealing with outdated play services.
             // Worst case, no play services at all.
-            notifyLocationFixFail(ResourceHelper.getString(R.string.fly_error_cannot_connect_to_play_services));
+            notifyLocationFixFail(ResourceHelper.getString(com.mirrorflysdk.R.string.fly_error_cannot_connect_to_play_services));
         }
     }
 

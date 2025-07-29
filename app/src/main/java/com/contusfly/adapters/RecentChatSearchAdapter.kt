@@ -296,7 +296,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
                         setSearchTextHighlightExceptionMention(viewBinding.searchTextRecentChatmsg,mentionText,mentionUserNames)
                     }else{
                         val textToHighlight = SpannableString(messageContent)
-                        val startIndex = messageContent!!.toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(Locale.getDefault()))
+                        val startIndex = messageContent!!.lowercase(Locale.getDefault()).indexOf(searchKey.lowercase(Locale.getDefault()))
                         if (startIndex.isValidIndex() && !message.isMessageRecalled()) {
                             val stopIndex = startIndex + searchKey.length
                             textToHighlight.setSpan(ForegroundColorSpan(Color.BLUE), startIndex, stopIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -447,7 +447,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
                 viewBinding.searchTextRecentchatTime.gone()
                 if (emptyList<RecentSearch>() != this@RecentChatSearchAdapter.recentSearchList
                         && this@RecentChatSearchAdapter.recentSearchList[position].search!!) {
-                    val startIndex = profileDetail.getDisplayName().toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(Locale.getDefault()))
+                    val startIndex = profileDetail.getDisplayName().lowercase(Locale.getDefault()).indexOf(searchKey.lowercase(Locale.getDefault()))
                     val stopIndex = startIndex + searchKey.length
                     EmojiUtils.setEmojiTextAndHighLightSearchText(searchTextChatPerson, profileDetail.getDisplayName(), startIndex, stopIndex)
                 } else EmojiUtils.setEmojiText(searchTextChatPerson, profileDetail.getDisplayName().toString())
@@ -541,7 +541,7 @@ class RecentChatSearchAdapter(val context: Context, private var recentSearchList
         try {
             if (emptyList<RecentSearch>() != this.recentSearchList && this.recentSearchList[position].search!!) {
                 Log.e("setUserView:searchAd ", "vcard is always not null")
-                val startIndex = profileDetail.getDisplayName().toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(Locale.getDefault()))
+                val startIndex = profileDetail.getDisplayName().lowercase(Locale.getDefault()).indexOf(searchKey.lowercase(Locale.getDefault()))
                 val stopIndex = startIndex + searchKey.length
                 EmojiUtils.setEmojiTextAndHighLightSearchText(viewBinding.searchTextChatPerson, profileDetail.getDisplayName(), startIndex, stopIndex)
                 setAdapterIcon(profileDetail, viewBinding)

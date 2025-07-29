@@ -92,7 +92,7 @@ object NotificationBuilderBelow24 {
      * @return String Summary of the message
      */
     private fun getMessageContent(message: ChatMessage): String {
-        return if (MessageType.TEXT == message.getMessageType()) message.getMessageTextContent() else message.getMessageType().name.toUpperCase()
+        return if (MessageType.TEXT == message.getMessageType()) message.getMessageTextContent() else message.getMessageType().name.uppercase()
     }
 
     /**

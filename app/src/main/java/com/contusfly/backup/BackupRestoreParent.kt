@@ -3,6 +3,7 @@ package com.contusfly.backup
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
+import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatImageView
@@ -11,6 +12,7 @@ import com.mirrorflysdk.flycommons.Constants
 import com.contusfly.R
 import com.contusfly.activities.BaseActivity
 import com.contusfly.checkInternetAndExecute
+import com.contusfly.databinding.FrequencyDialogBinding
 import com.contusfly.emptyString
 import com.contusfly.utils.ChatUtils
 import com.contusfly.utils.PickFileUtils
@@ -23,7 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
 import com.google.api.services.drive.DriveScopes
-import kotlinx.android.synthetic.main.frequency_dialog.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -65,12 +66,12 @@ open class BackupRestoreParent : BaseActivity(), CoroutineScope {
 
         var dialog: AlertDialog? = null
         val fBuilder = AlertDialog.Builder(this)
-        val dialogView: View = layoutInflater.inflate(R.layout.frequency_dialog, null)
-        fBuilder.setView(dialogView)
+        val dialogBinding = FrequencyDialogBinding.inflate(LayoutInflater.from(context))
+        fBuilder.setView(dialogBinding.root)
 
-        val dailyImage = dialogView.dailyImage
-        val weeklyImage = dialogView.weeklyImage
-        val monthlyImage = dialogView.monthlyImage
+        val dailyImage = dialogBinding.dailyImage
+        val weeklyImage = dialogBinding.weeklyImage
+        val monthlyImage = dialogBinding.monthlyImage
 
         when (SharedPreferenceManager.getString(BackupConstants.BACKUP_FREQUENCY)) {
             BackupConstants.DAILY -> setImageForImageView(
@@ -87,28 +88,28 @@ open class BackupRestoreParent : BaseActivity(), CoroutineScope {
         }
 
 
-        dialogView.dailyBox.setOnClickListener {
+        dialogBinding.dailyBox.setOnClickListener {
             setImageForImageView(0, listOf(dailyImage, weeklyImage, monthlyImage))
             SharedPreferenceManager.setString(BackupConstants.BACKUP_FREQUENCY, BackupConstants.DAILY)
             SharedPreferenceManager.setString(BackupConstants.NEXT_BACKUP_TIME, emptyString())
             dialog?.dismiss()
         }
 
-        dialogView.weeklyBox.setOnClickListener {
+        dialogBinding.weeklyBox.setOnClickListener {
             setImageForImageView(1, listOf(dailyImage, weeklyImage, monthlyImage))
             SharedPreferenceManager.setString(BackupConstants.BACKUP_FREQUENCY, BackupConstants.WEEKLY)
             SharedPreferenceManager.setString(BackupConstants.NEXT_BACKUP_TIME, emptyString())
             dialog?.dismiss()
         }
 
-        dialogView.monthlyBox.setOnClickListener {
+        dialogBinding.monthlyBox.setOnClickListener {
             setImageForImageView(2, listOf(dailyImage, weeklyImage, monthlyImage))
             SharedPreferenceManager.setString(BackupConstants.BACKUP_FREQUENCY, BackupConstants.MONTHLY)
             SharedPreferenceManager.setString(BackupConstants.NEXT_BACKUP_TIME, emptyString())
             dialog?.dismiss()
         }
 
-        dialogView.cancelBtn.setOnClickListener {
+        dialogBinding.cancelBtn.setOnClickListener {
             dialog?.dismiss()
         }
 

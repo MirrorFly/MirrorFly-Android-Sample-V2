@@ -246,7 +246,7 @@ class CreateTagActivity : BaseActivity(), ChatTagClickListener,
             binding.toolbarView.titleTv.text=if(isFromEditTagItem) resources.getString(R.string.edit_tag) else resources.getString(R.string.create_tag)
             binding.toolbarView.toolbarActionTitleTv.text =if(isFromEditTagItem) resources.getString(R.string.label_update) else resources.getString(R.string.label_create)
             binding.toolbarView.toolbarActionTitleTv.setTextColor(
-                ContextCompat.getColor(mContext, R.color.blue)
+                ContextCompat.getColor(mContext, com.contus.call.R.color.blue)
             )
             binding.toolbarView.toolbarActionTitleTv.visibility= View.VISIBLE
         } else {

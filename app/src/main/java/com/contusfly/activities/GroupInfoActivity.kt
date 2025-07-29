@@ -312,7 +312,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
                     putExtra(Constants.ROSTER_JID, groupProfileDetails.jid)
                 }
             } else {
-                showToast(resources.getString(R.string.fly_error_forbidden_exception))
+                showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             }
         }
         groupMembersAdapter.onProfileClickedCallback{position,profile->
@@ -388,7 +388,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
     }
 
     private fun initFileObjects() {
-        val directoryName = (FilePathUtils.getExternalStorage()).toString() + File.separator + getString(R.string.title_app_name)
+        val directoryName = (FilePathUtils.getExternalStorage()).toString() + File.separator + getString(com.mirrorflysdk.R.string.title_app_name)
             .replace(" ", "") +
                 File.separator + Constants.IMAGE_LOCAL_PATH + File.separator + Constants.MSG_SENT_PATH
         val directory = File(directoryName)
@@ -956,7 +956,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
     private fun onDeleteGroup() {
         if(!ChatManager.getAvailableFeatures().isDeleteChatEnabled){
             loadGroupExistence()
-            showToast(resources.getString(R.string.fly_error_forbidden_exception))
+            showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             return
         }
         progressDialog = DoProgressDialog(this)
@@ -1064,7 +1064,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
             .putExtra(com.contusfly.utils.Constants.ADD_PARTICIAPANTS, true)
             .putExtra(com.contusfly.utils.Constants.FROM_GROUP_INFO, true)
             .putExtra(com.contusfly.utils.Constants.GROUP_ID, groupProfileDetails.jid)
-            .putExtra(Constants.TITLE, getString(R.string.add_participants)), Constants.ACTIVITY_REQ_CODE)
+            .putExtra(Constants.TITLE, getString(com.contus.call.R.string.add_participants)), Constants.ACTIVITY_REQ_CODE)
     }
 
     /**
@@ -1222,7 +1222,7 @@ class GroupInfoActivity : BaseActivity(),CommonAlertDialog.CommonDialogClosedLis
     private fun validateParticipantOption() {
         isGroupAdmin = ChatManager.getAvailableFeatures().isGroupChatEnabled && GroupManager.isAdmin(groupProfileDetails.jid!!, SharedPreferenceManager.getCurrentUserJid())
         if (ChatType.TYPE_BROADCAST_CHAT == groupProfileDetails.getChatType() || isGroupAdmin) {
-            binding.addParticipant.text = context!!.resources.getString(R.string.add_participants)
+            binding.addParticipant.text = context!!.resources.getString(com.contus.call.R.string.add_participants)
             binding.addParticipant.isEnabled = true
             showOrHideAddParticipant(true)
         } else {

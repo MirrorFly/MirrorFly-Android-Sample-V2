@@ -384,7 +384,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
                     }
                     else -> {
                         holder.imageMediaType.show()
-                        setImageStatus(holder, msgType!!.toLowerCase(Locale.getDefault()), messageContent, chatMessage,chatMessage?.mediaChatMessage?.isAudioRecorded() ?: false)
+                        setImageStatus(holder, msgType!!.lowercase(Locale.getDefault()), messageContent, chatMessage,chatMessage?.mediaChatMessage?.isAudioRecorded() ?: false)
                     }
                 }
                 setChatStatus(holder, chatMessage, isFromSender, isRecall)
@@ -520,7 +520,7 @@ class RecentChatListAdapter(val context: Context, val mainlist: LinkedList<Recen
             }
             Constants.MSG_TYPE_MEET ->{
                 holder.imageMediaType.setImageResource(R.drawable.ic_meet_recent)
-                holder.textChatMessage.text = getString(R.string.scheduled_on_txt)+" "+ ChatUserTimeUtils.scheduledDateTimeFormat(chatMessage?.meetingChatMessage!!.scheduledDateTime.toLong())
+                holder.textChatMessage.text = getString(com.contus.call.R.string.scheduled_on_txt)+" "+ ChatUserTimeUtils.scheduledDateTimeFormat(chatMessage?.meetingChatMessage!!.scheduledDateTime.toLong())
             }
             else -> holder.imageMediaType.gone()
         }
