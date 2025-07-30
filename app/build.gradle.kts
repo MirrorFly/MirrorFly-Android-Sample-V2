@@ -46,7 +46,7 @@ android {
     buildTypes {
         getByName("debug") {
             buildConfigField("Boolean", "IS_QA_BUILD", "true")
-            buildConfigField("String", "LICENSE", "\"2sdgNtr3sFBSM3bYRa7RKDPEiB38Xo\"")
+            buildConfigField("String", "LICENSE", "\"Please enter your License key\"")
             buildConfigField("String", "WEB_CHAT_LOGIN", "\"https://webchat-preprod-sandbox.mirrorfly.com/\"")
             buildConfigField("String", "SUPPORT_MAIL", "\"contussupport@gmail.com\"")
             buildConfigField("Boolean", "IS_SKIP_OTP", "true")
