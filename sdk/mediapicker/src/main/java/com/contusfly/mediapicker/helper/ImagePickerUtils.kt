@@ -67,9 +67,11 @@ object ImagePickerUtils {
      * @param path Path of the folder
      */
     fun createFolderIfNotExist(path: String?): Boolean {
-        val folder = File(path)
-        if (!folder.exists()) {
-            return folder.mkdirs()
+        val folder = path?.let { File(it) }
+        if (folder != null) {
+            if (!folder.exists()) {
+                return folder.mkdirs()
+            }
         }
 
         return true

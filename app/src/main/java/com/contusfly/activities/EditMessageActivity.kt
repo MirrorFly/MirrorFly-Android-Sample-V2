@@ -106,6 +106,9 @@ class EditMessageActivity : EditChatParent(), View.OnTouchListener,
             MessageType.IMAGE, MessageType.VIDEO -> {
                 setMediaTypeContent(message)
             }
+            else -> {
+                // do nothing
+            }
         }
     }
 

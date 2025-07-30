@@ -150,7 +150,7 @@ class BlockedContactsFragment : Fragment(), CoroutineScope, CommonAlertDialog.Co
     override fun onDialogClosed(dialogType: CommonAlertDialog.DIALOGTYPE?, isSuccess: Boolean) {
         isBlockClicked=false
         if(!ChatManager.getAvailableFeatures().isBlockEnabled){
-            context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+            context!!.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             settingsActivity!!.onBackPressed()
             return
         }

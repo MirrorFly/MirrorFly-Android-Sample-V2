@@ -211,7 +211,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
      * Utils to handle the chat view operations
      */
     @Inject
-    protected lateinit var chatViewUtils: ChatViewUtils
+    lateinit var chatViewUtils: ChatViewUtils
 
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
@@ -227,7 +227,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     protected val commonAlertDialog: CommonAlertDialog by lazy { CommonAlertDialog(this) }
 
     @Inject
-    protected lateinit var messagingClient: MessagingClient
+    lateinit var messagingClient: MessagingClient
 
     private val _messageRefreshFlow = MutableSharedFlow<Pair<String, String>>(1)
     private val messageRefreshFlow = _messageRefreshFlow.asSharedFlow()
@@ -899,8 +899,8 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     }) }
 
     protected fun setCallButtonVisibility() {
-        audioCallDrawable = this.drawable(R.drawable.ic_call_log_voice_call)
-        videoCallDrawable = this.drawable(R.drawable.ic_call_log_video_call)
+        audioCallDrawable = this.drawable(com.contus.call.R.drawable.ic_call_log_voice_call)
+        videoCallDrawable = this.drawable(com.contus.call.R.drawable.ic_call_log_video_call)
         optionMenu?.let {
             when {
                 (profileDetails.isBlocked || profileDetails.isAdminBlocked || profileDetails.isDeletedContact()) -> {
@@ -1649,7 +1649,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     protected fun showBlockUserDialog(isBlock: Boolean) {
         if (!ChatManager.getAvailableFeatures().isBlockEnabled) {
-            context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+            context!!.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             isBlockUnblockCalled = false
             return
         }
@@ -1753,7 +1753,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
      * @param maxSize Size of the Media
      */
     protected fun showUploadAlert(maxSize: Int) {
-        val message: String = String.format(getString(R.string.media_max_limit_restriction), maxSize)
+        val message: String = String.format(getString(com.contusfly.mediapicker.R.string.media_max_limit_restriction), maxSize)
         commonAlertDialog.showAlertDialog(
             message, Constants.EMPTY_STRING, getString(R.string.action_Ok),
             CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, false
@@ -1884,7 +1884,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
                 val options: Options? = Options.init()
                     .setRequestCode(100)
                     .setCount(Constants.MAX_MEDIA_SELECTION_RESTRICTION)
-                    .setOutputPath(Constants.LOCAL_PATH.toUpperCase(Locale.getDefault()))
+                    .setOutputPath(Constants.LOCAL_PATH.uppercase(Locale.getDefault()))
                     .setFrontfacing(false)
                     .setPreSelectedUrls(returnValue)
                     .setExcludeVideos(false)
@@ -2008,7 +2008,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
 
     private fun selectAudioFileFromStorage() {
         isFileChooser = true
-        val manufacturer = Build.MANUFACTURER.toUpperCase(Locale.getDefault())
+        val manufacturer = Build.MANUFACTURER.uppercase(Locale.getDefault())
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
         val audioListIntent = Intent(Intent.ACTION_GET_CONTENT)
         audioListIntent.type = Constants.AUDIO_FILE
@@ -2139,13 +2139,13 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
     private fun showLocationAlert(context: Context) {
         try {
             val mBuilder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
-            mBuilder.setMessage(context.getString(R.string.fly_info_msg_location_disabled))
-            mBuilder.setPositiveButton(context.getString(R.string.fly_info_action_enable)) { dialog: DialogInterface, _: Int ->
+            mBuilder.setMessage(context.getString(com.mirrorflysdk.R.string.fly_info_msg_location_disabled))
+            mBuilder.setPositiveButton(context.getString(com.mirrorflysdk.R.string.fly_info_action_enable)) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 val myIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 context.startActivity(myIntent)
             }
-            mBuilder.setNegativeButton(context.getString(R.string.fly_action_cancel)) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+            mBuilder.setNegativeButton(context.getString(com.mirrorflysdk.R.string.fly_action_cancel)) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
             val dialog = mBuilder.create()
             dialog.setCancelable(false)
             dialog.show()
@@ -2560,7 +2560,7 @@ open class ChatParent : BaseActivity(), CoroutineScope, MessageListener,
             if (ChatManager.getAvailableFeatures().isGroupChatEnabled)
                 txtNoMsg.text = getString(R.string.msg_not_participant)
             else
-                txtNoMsg.text = getString(R.string.fly_error_forbidden_exception)
+                txtNoMsg.text = getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception)
             showViews(txtNoMsg)
         }
     }

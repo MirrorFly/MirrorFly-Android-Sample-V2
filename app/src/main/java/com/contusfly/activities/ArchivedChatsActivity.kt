@@ -944,7 +944,7 @@ class ArchivedChatsActivity : BaseActivity(), ActionMode.Callback,
     private fun unSelectCountForRestoredChat(jid: String) {
         if (viewModel.selectedChats.size > 0) {
             val index = viewModel.selectedChats?.indexOfFirst { it.jid == jid }
-            if (index.isValidIndex()) {
+            if (index!!.isValidIndex()) {
                 index?.let { viewModel.selectedChats?.removeAt(it) }
                 recentClick(viewModel.selectedChats, true)
             }

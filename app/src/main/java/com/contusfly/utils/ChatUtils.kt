@@ -493,7 +493,7 @@ object ChatUtils {
             var status = DateUtils.getRelativeTimeSpanString(context, lastSeen, true).toString()
             val todayDate = Calendar.getInstance()
             if (todayDate[Calendar.DATE] - calendar[Calendar.DATE] == 1) status = "on Yesterday" // date are not equal to current date it's taken an yesterday
-            String.format(context.getString(R.string.fly_info_status_last_seen), status)
+            String.format(context.getString(com.mirrorflysdk.R.string.fly_info_status_last_seen), status)
         }
     }
 

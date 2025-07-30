@@ -276,8 +276,8 @@ class CommonAlertDialog(context: Context?) {
     fun showCallSwitchAlertDialog(callLink: String, positiveString: String?, negativeString: String?,
                                   dialogType: DIALOGTYPE, isCheckBoxShown: Boolean = false) {
         val builder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
-        builder.setTitle(context!!.getString(R.string.already_in_call))
-        builder.setMessage(context!!.getString(R.string.already_in_call_msg))
+        builder.setTitle(context!!.getString(com.contus.call.R.string.already_in_call))
+        builder.setMessage(context!!.getString(com.contus.call.R.string.already_in_call_msg))
         if (isCheckBoxShown) builder.setView(createAndSetCheckBox())
         if (dialogType == DIALOGTYPE.DIALOG_DUAL) {
             builder.setNegativeButton(negativeString) { dialog: DialogInterface, _: Int ->
@@ -295,8 +295,8 @@ class CommonAlertDialog(context: Context?) {
     fun showCallSwitchDialog(callLink: String, positiveString: String?, negativeString: String?,
                              dialogType: DIALOGTYPE, isCheckBoxShown: Boolean = false) {
         val builder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
-        builder.setTitle(context!!.getString(R.string.already_in_call))
-        builder.setMessage(context!!.getString(R.string.already_in_call_msg))
+        builder.setTitle(context!!.getString(com.contus.call.R.string.already_in_call))
+        builder.setMessage(context!!.getString(com.contus.call.R.string.already_in_call_msg))
         if (isCheckBoxShown) builder.setView(createAndSetCheckBox())
         if (dialogType == DIALOGTYPE.DIALOG_DUAL) {
             builder.setNegativeButton(negativeString) { dialog: DialogInterface, _: Int ->
@@ -442,7 +442,7 @@ class CommonAlertDialog(context: Context?) {
             val clipboardManager  = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clipData  = ClipData.newPlainText("text", BuildConfig.WEB_CHAT_LOGIN +  meetLink)
             clipboardManager .setPrimaryClip(clipData )
-            CustomToast.show(context, context?.getString(R.string.link_copied_clipboard))
+            CustomToast.show(context, context?.getString(com.contus.call.R.string.link_copied_clipboard))
         }
 
         val layoutParams = WindowManager.LayoutParams()

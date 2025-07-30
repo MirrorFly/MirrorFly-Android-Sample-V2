@@ -77,7 +77,7 @@ class DeleteMyAccountFragment : Fragment(), View.OnClickListener {
     private fun setupCountryCode() {
         val telephonyManager =
             requireActivity().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        var countryCode = telephonyManager.simCountryIso.toUpperCase(Locale.getDefault())
+        var countryCode = telephonyManager.simCountryIso.uppercase(Locale.getDefault())
         val countryName =
             CountriesListObject.getCountriesListByCountryCode(requireContext(), countryCode)
         val country: String
@@ -120,15 +120,15 @@ class DeleteMyAccountFragment : Fragment(), View.OnClickListener {
         when {
             mobileNumber.isBlank() -> {
                 commonAlertDialog.showAlertDialog(getString(R.string.error_enter_mobile_number), getString(R.string.action_Ok),
-                    getString(R.string.fly_action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
+                    getString(com.mirrorflysdk.R.string.fly_action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
             }
             formattedMobileNumber != profileMobileNumber -> {
                 commonAlertDialog.showAlertDialog(getString(R.string.error_mobile_number_not_matched), getString(R.string.action_Ok),
-                    getString(R.string.fly_action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
+                    getString(com.mirrorflysdk.R.string.fly_action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
             }
             !isInternetAvailable(requireContext()) -> {
                 commonAlertDialog.showAlertDialog(getString(R.string.msg_no_internet), getString(R.string.action_Ok),
-                    getString(R.string.fly_action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
+                    getString(com.mirrorflysdk.R.string.fly_action_cancel), CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE, false)
             }
             else -> moveToReasonForDeleteAccount()
         }

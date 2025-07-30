@@ -63,7 +63,7 @@ class IncomingCallViewHelper(
             binding.btnCallSwipe.setImageDrawable(
                 ContextCompat.getDrawable(
                     context,
-                    R.drawable.ic_group_call_swipe_button
+                    com.contus.call.R.drawable.ic_group_call_swipe_button
                 )
             )
 

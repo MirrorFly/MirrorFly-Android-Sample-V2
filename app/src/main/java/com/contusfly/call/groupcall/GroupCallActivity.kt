@@ -50,7 +50,6 @@ import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.flycommons.exception.FlyException
 import com.mirrorflysdk.views.CustomToast
-import kotlinx.android.synthetic.main.custom_toast.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 
@@ -316,7 +315,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
 
         groupCallViewModel.internetConnectionNotAvailable.observe(this) {
             if (!AppUtils.isNetConnected(this)) {
-                showToast(getString(R.string.fly_error_msg_no_internet))
+                showToast(getString(com.mirrorflysdk.R.string.fly_error_msg_no_internet))
             }
         }
 
@@ -805,7 +804,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             CallManager.makeCallAgain()
             callViewHelper.makeCallAgainGroupMemberNameUpdate()
         } else {
-            CustomToast.show(applicationContext, getString(R.string.fly_error_msg_no_internet))
+            CustomToast.show(applicationContext, getString(com.mirrorflysdk.R.string.fly_error_msg_no_internet))
             cancelCallAgain()
         }
     }
@@ -928,7 +927,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     }
 
     private fun checkAndUpdateRingingBasedOnUserSize(userJid: String){
-        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL  checkAndUpdateRingingBasedOnUserSize userJid:$userJid")
+        LogMessage.d(TAG, "$CALL_UI ${JOIN_CALL}  checkAndUpdateRingingBasedOnUserSize userJid:$userJid")
         if(GroupCallUtils.getAvailableCallUsersList().size>1)
             callViewHelper.updateStatusAdapter(userJid)
         else{
@@ -1066,12 +1065,12 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 CallStatus.INCOMING_CALL_TIME_OUT -> {
                     LogMessage.d(
                         TAG,
-                        "$CALL_UI $JOIN_CALL INCOMING_CALL_TIME_OUT userJid:${userJid}"
+                        "$CALL_UI ${JOIN_CALL} INCOMING_CALL_TIME_OUT userJid:${userJid}"
                     )
                     if (CallManager.isCallConnected()) {
                         LogMessage.d(
                             TAG,
-                            "$CALL_UI $JOIN_CALL INCOMING_CALL_TIME_OUT userJid:$userJid"
+                            "$CALL_UI ${JOIN_CALL} INCOMING_CALL_TIME_OUT userJid:$userJid"
                         )
                         val timeOutUserList = userJid.split(",").toList()
                         checkAndUpdateTimeoutUsers(timeOutUserList)
@@ -1351,7 +1350,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
             if (!isInPIPMode())
                 callsUsersToast(
                     String.format(
-                        getString(R.string.call_member_joined),
+                        getString(com.contus.call.R.string.call_member_joined),
                         ProfileDetailsUtils.getDisplayNameFromJid(userJid)
                     )
                 )
@@ -1396,7 +1395,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
                 if (!isInPIPMode() && leftStatus)
                     callsUsersToast(
                         String.format(
-                            getString(R.string.call_member_left),
+                            getString(com.contus.call.R.string.call_member_left),
                             ProfileDetailsUtils.getDisplayNameFromJid(userJid)
                         )
                     )
@@ -1425,7 +1424,7 @@ class GroupCallActivity : BaseActivity(), View.OnClickListener, ActivityOnClickL
     private fun callsUsersToast(msg: String) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             //getting the View object as defined in the custom_toast.xml file
-            val customLayout = layoutInflater.inflate(R.layout.custom_toast, toast_layout)
+            val customLayout = layoutInflater.inflate(R.layout.custom_toast, null)
             val toast = Toast(this)
             toast.duration = Toast.LENGTH_LONG
             toast.setGravity(Gravity.BOTTOM, 0, 180)

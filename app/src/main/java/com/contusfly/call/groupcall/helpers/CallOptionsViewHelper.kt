@@ -101,7 +101,7 @@ class CallOptionsViewHelper(
      private fun switchCamera(v: View) {
         if (!isCameraButtonClick) {
             isCameraButtonClick = true
-            v.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.alpha))
+            v.startAnimation(AnimationUtils.loadAnimation(activity, com.contus.call.R.anim.alpha))
             swapCamera()
             Handler(Looper.getMainLooper()).postDelayed({ isCameraButtonClick = false }, 1000)
         }
@@ -224,18 +224,18 @@ class CallOptionsViewHelper(
      */
     fun setAudioDeviceIcon(@AudioDevice device: String?) {
         when (device) {
-            AudioDevice.BLUETOOTH -> binding.imgSpeaker.setImageResource(R.drawable.ic_device_bluetooth)
+            AudioDevice.BLUETOOTH -> binding.imgSpeaker.setImageResource(com.contus.call.R.drawable.ic_device_bluetooth)
             AudioDevice.EARPIECE -> {
-                binding.imgSpeaker.setImageResource(R.drawable.ic_speaker_inactive)
+                binding.imgSpeaker.setImageResource(com.contus.call.R.drawable.ic_speaker_inactive)
                 binding.imgSpeaker.isActivated = false
             }
 
             AudioDevice.SPEAKER_PHONE -> {
-                binding.imgSpeaker.setImageResource(R.drawable.ic_speaker_active)
+                binding.imgSpeaker.setImageResource(com.contus.call.R.drawable.ic_speaker_active)
                 binding.imgSpeaker.isActivated = true
             }
 
-            AudioDevice.WIRED_HEADSET -> binding.imgSpeaker.setImageResource(R.drawable.ic_device_headset)
+            AudioDevice.WIRED_HEADSET -> binding.imgSpeaker.setImageResource(com.contus.call.R.drawable.ic_device_headset)
         }
     }
 

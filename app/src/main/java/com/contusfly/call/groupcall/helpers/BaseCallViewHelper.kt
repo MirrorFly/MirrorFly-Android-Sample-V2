@@ -149,7 +149,7 @@ class BaseCallViewHelper(
             timeInMilliseconds = SystemClock.uptimeMillis() - startTime
             callDuration = ChatTimeFormatter.getFormattedCallDurationTime(timeInMilliseconds)
             if (callDuration.isBlank())
-                callDuration = activity.getString(R.string.start_timer)
+                callDuration = activity.getString(com.contus.call.R.string.start_timer)
             callConnectedViewHelper.updateCallDuration(callDuration)
             durationHandler.postDelayed(updateTimerThread, 1000)
         }
@@ -173,7 +173,7 @@ class BaseCallViewHelper(
         hidePIPLayout()
         resizeLocalTile(isCallOptionAnimation)
 
-        if (CallManager.isCallAnswered()) callDuration = activity.getString(R.string.start_timer)
+        if (CallManager.isCallAnswered()) callDuration = activity.getString(com.contus.call.R.string.start_timer)
         if (CallManager.isCallConnected() && (!GroupCallUtils.isCallLinkBehaviourMeet())) {
             startCallTimer()
             if(isCallOptionAnimation) enableCallOptionAnimation()
@@ -297,7 +297,7 @@ class BaseCallViewHelper(
                     "$CALL_UI $JOIN_CALL callViewHelper setOverlayBackground() call not connected and audio call set audio blue call layout!!"
                 )
                 binding.viewOverlay.background =
-                    ContextCompat.getDrawable(activity, R.drawable.ic_audio_call_bg)
+                    ContextCompat.getDrawable(activity, com.contus.call.R.drawable.ic_audio_call_bg)
             }
         } else {
             LogMessage.d(
@@ -308,7 +308,7 @@ class BaseCallViewHelper(
                 binding.viewOverlay.setBackgroundColor(
                     ContextCompat.getColor(
                         activity,
-                        R.color.audio_caller_background
+                        com.contus.call.R.color.audio_caller_background
                     )
                 )
             else
@@ -639,11 +639,11 @@ class BaseCallViewHelper(
         LogMessage.d(TAG, "$CALL_UI callViewHelper animateCallOptionsView animateGridView()")
         durationHandler.removeCallbacks(hideOptionsRunnable)
         if (binding.layoutCallOptions.layoutCallOptions.visibility == View.VISIBLE && binding.layoutCallConnected.layoutTitle.visibility == View.VISIBLE) {
-            animateCallOptions(R.anim.slide_down, View.GONE, View.GONE)
-            animateGridCallDetails(R.anim.slide_out_up, View.GONE)
+            animateCallOptions(com.contus.call.R.anim.slide_down, View.GONE, View.GONE)
+            animateGridCallDetails(com.contus.call.R.anim.slide_out_up, View.GONE)
         } else {
-            animateCallOptions(R.anim.slide_up, View.VISIBLE, View.GONE)
-            animateGridCallDetails(R.anim.slide_out_down, View.VISIBLE)
+            animateCallOptions(com.contus.call.R.anim.slide_up, View.VISIBLE, View.GONE)
+            animateGridCallDetails(com.contus.call.R.anim.slide_out_down, View.VISIBLE)
         }
     }
 

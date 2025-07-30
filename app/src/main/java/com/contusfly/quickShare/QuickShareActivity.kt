@@ -524,7 +524,7 @@ class QuickShareActivity : BaseActivity(),
          userIdList= ArrayList<String>()
          userIdList = getSelectedUserIdList()
         for (fileObj in fileList!!) {
-            if (videoImageFormats.contains(fileObj.fileExtension.toLowerCase())) {
+            if (videoImageFormats.contains(fileObj.fileExtension.lowercase())) {
                 if (fileObj.uri != null) uriList.add(fileObj.uri!!)
                 mediaFileList.add(fileObj)
             } else otherFileList.add(fileObj)
@@ -948,7 +948,7 @@ class QuickShareActivity : BaseActivity(),
             cr.getType(uri) ?: ""
         } else {
             val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase()) ?: ""
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.lowercase()) ?: ""
         }
     }
 
@@ -958,7 +958,7 @@ class QuickShareActivity : BaseActivity(),
         fileValidation[FileValidation.SIZE] = true
         fileValidation[FileValidation.DURATION] = true
 
-        if (!formats.contains(fileObject.fileExtension.toLowerCase()) || fileObject.fileMimeType == FileMimeType.UNSUPPORTED_FORMAT)
+        if (!formats.contains(fileObject.fileExtension.lowercase()) || fileObject.fileMimeType == FileMimeType.UNSUPPORTED_FORMAT)
             fileValidation[FileValidation.TYPE] = false
 
         validateVideoObject(fileObject, fileValidation)

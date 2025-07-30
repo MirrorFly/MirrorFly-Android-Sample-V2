@@ -262,7 +262,7 @@ class SectionedShareAdapter(private val context: Context, private val commonAler
      */
     private fun setRosterImage(holder: ShareViewHolder, profileDetails: ProfileDetails) {
         if(searchKey.isNotBlank()){
-            val startIndex = profileDetails.getDisplayName()!!.toLowerCase(Locale.getDefault()).indexOf(searchKey.toLowerCase(Locale.getDefault()))
+            val startIndex = profileDetails.getDisplayName()!!.lowercase(Locale.getDefault()).indexOf(searchKey.lowercase(Locale.getDefault()))
             if (startIndex.isValidIndex()) {
                 val stopIndex = startIndex + searchKey.length
                 EmojiUtils.setEmojiTextAndHighLightSearchContact(context, holder.viewBinding.textChatName, profileDetails.getDisplayName(), startIndex, stopIndex)

@@ -116,7 +116,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
         commonAlertDialog.setOnDialogCloseListener(this)
         commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.UNBLOCK
         commonAlertDialog.showAlertDialog(
-            activity.getString(R.string.msg_unblockAudioCall),
+            activity.getString(com.contus.call.R.string.msg_unblockAudioCall),
             activity.getString(R.string.action_unblock), activity.getString(R.string.action_cancel),
             DIALOGTYPE.DIALOG_DUAL, false
         )
@@ -159,7 +159,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
         commonAlertDialog.setOnDialogCloseListener(this)
         commonAlertDialog.dialogAction = CommonAlertDialog.DialogAction.UNBLOCK
         commonAlertDialog.showAlertDialog(
-            activity.getString(R.string.msg_unblockVideoCall),
+            activity.getString(com.contus.call.R.string.msg_unblockVideoCall),
             activity.getString(R.string.action_unblock),
             activity.getString(R.string.action_cancel),
             DIALOGTYPE.DIALOG_DUAL,
@@ -383,7 +383,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
             // The common alert dialog to display the alert dialogs in the alert view.
             val commonAlertDialog = CommonAlertDialog(activity)
             commonAlertDialog.showAlertDialog(
-                activity.getString(R.string.msg_telephony_call_alert),
+                activity.getString(com.contus.call.R.string.msg_telephony_call_alert),
                 activity.getString(R.string.action_Ok),
                 activity.getString(R.string.action_cancel), DIALOGTYPE.DIALOG_SINGLE, false
             )
@@ -396,7 +396,7 @@ class CallPermissionUtils(activity: Activity, isBlocked: Boolean, isAdminBlocked
             // The common alert dialog to display the alert dialogs in the alert view.
             val commonAlertDialog = CommonAlertDialog(activity)
             commonAlertDialog.showAlertDialog(
-                activity.getString(R.string.msg_ongoing_call_alert),
+                activity.getString(com.contus.call.R.string.msg_ongoing_call_alert),
                 activity.getString(R.string.action_Ok),
                 activity.getString(R.string.action_cancel), DIALOGTYPE.DIALOG_SINGLE, false
             )

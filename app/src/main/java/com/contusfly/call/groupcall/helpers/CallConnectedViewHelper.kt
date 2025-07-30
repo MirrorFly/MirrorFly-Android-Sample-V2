@@ -65,7 +65,6 @@ import com.mirrorflysdk.flycall.webrtc.api.ConnectionQuality
 import com.mirrorflysdk.flycommons.LogMessage
 import com.mirrorflysdk.utils.ChatUtils
 import com.mirrorflysdk.utils.Utils
-import kotlinx.android.synthetic.main.layout_call_connected.view.local_profile_image
 import org.webrtc.RendererCommon
 import java.util.Collections
 import java.util.concurrent.atomic.AtomicBoolean
@@ -299,7 +298,7 @@ class CallConnectedViewHelper(
     }
 
     fun checkAndShowLocalVideoView() {
-        LogMessage.d(TAG, "$CALL_UI $JOIN_CALL checkAndShowLocalVideoView  isVideoMuted() : ${CallManager.isVideoMuted()}")
+        LogMessage.d(TAG, "$CALL_UI ${JOIN_CALL} checkAndShowLocalVideoView  isVideoMuted() : ${CallManager.isVideoMuted()}")
         if (GroupCallUtils.isSingleUserInCall()) {
             binding.layoutOneToOneAudioCall.show()
             binding.viewVideoPinned.hide()
@@ -355,7 +354,7 @@ class CallConnectedViewHelper(
                 binding.callGridUsersRecyclerview, binding.gridBackgroundView,
                 binding.callUsersRecyclerview, binding.imageUnpin
             )
-            binding.layoutOneToOneAudioCall.local_profile_image.hide()
+            binding.localProfileImage.hide()
             binding.layoutOneToOneAudioCall.show()
             binding.viewVideoLocal.show()
         } else
@@ -492,9 +491,9 @@ class CallConnectedViewHelper(
         LogMessage.d(TAG, "$CALL_UI $JOIN_CALL showViewsForOneToOneCall:")
         makeViewsGone(binding.callUsersRecyclerview, binding.imageUnpin)
         if (CallManager.isVideoCall()) {
-            binding.layoutOneToOneAudioCall.local_profile_image.hide()
+            binding.localProfileImage.hide()
         } else {
-            binding.layoutOneToOneAudioCall.local_profile_image.show()
+            binding.localProfileImage.show()
         }
         binding.layoutOneToOneAudioCall.show()
     }
@@ -556,7 +555,7 @@ class CallConnectedViewHelper(
     }
 
     fun updateLocalUserImage(){
-        binding.layoutOneToOneAudioCall.local_profile_image.show()
+        binding.localProfileImage.show()
         LogMessage.d(TAG, "updateLocalUserImage: ")
         val userName =
             Utils.returnEmptyStringIfNull(SharedPreferenceManager.getString(Constants.USER_PROFILE_NAME))
@@ -660,7 +659,7 @@ class CallConnectedViewHelper(
     private fun showMenuPopUp(view: View) {
         val menuBuilder = MenuBuilder(activity)
         val inflater = MenuInflater(activity)
-        inflater.inflate(R.menu.menu_switch_call_view, menuBuilder)
+        inflater.inflate(com.contus.call.R.menu.menu_switch_call_view, menuBuilder)
         val optionsMenu = MenuPopupHelper(activity, menuBuilder, view)
         optionsMenu.setForceShowIcon(true)
 
@@ -678,12 +677,12 @@ class CallConnectedViewHelper(
         menuBuilder.setCallback(object : MenuBuilder.Callback {
             override fun onMenuItemSelected(menu: MenuBuilder, item: MenuItem): Boolean {
                 return when (item.itemId) {
-                    R.id.grid_view -> {
+                    com.contus.call.R.id.grid_view -> {
                         activityOnClickListener.switchToGridView()
                         true
                     }
 
-                    R.id.tile_view -> {
+                    com.contus.call.R.id.tile_view -> {
                         activityOnClickListener.switchToTileView()
                         true
                     }
@@ -948,23 +947,23 @@ class CallConnectedViewHelper(
             binding.imageUnpin.setImageDrawable(
                 ContextCompat.getDrawable(
                     activity,
-                    R.drawable.ic_tile_pinned_icon
+                    com.contus.call.R.drawable.ic_tile_pinned_icon
                 )
             )
         else
             binding.imageUnpin.setImageDrawable(
                 ContextCompat.getDrawable(
                     activity,
-                    R.drawable.ic_pin_tile
+                    com.contus.call.R.drawable.ic_pin_tile
                 )
             )
     }
 
     private fun hideOrShowLocalProfileImage(){
         if (CallManager.isVideoCall()) {
-            binding.layoutOneToOneAudioCall.local_profile_image.hide()
+            binding.localProfileImage.hide()
         } else {
-            binding.layoutOneToOneAudioCall.local_profile_image.show()
+            binding.localProfileImage.show()
         }
     }
 

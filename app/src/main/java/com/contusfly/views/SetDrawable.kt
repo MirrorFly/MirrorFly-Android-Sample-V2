@@ -44,7 +44,7 @@ class SetDrawable : BaseDrawable {
                     icon
                 }
                 username.length == 1 -> {
-                    icon.setText(username.toUpperCase())
+                    icon.setText(username.uppercase())
                     icon.setDrawableProfileColour(R.color.colorSecondary)
                     icon
                 }
@@ -63,7 +63,7 @@ class SetDrawable : BaseDrawable {
             if (initialName[1].trim { it <= ' ' }.isNotEmpty()) {
                 secondletter = String(Character.toChars(initialName[1].trim { it <= ' ' }.codePointAt(0)))
             }
-            icon.setText(firstletter.toUpperCase() + secondletter.toUpperCase())
+            icon.setText(firstletter.uppercase() + secondletter.uppercase())
             icon.setDrawableProfileColour(R.color.colorSecondary)
             icon
         }
@@ -86,7 +86,7 @@ class SetDrawable : BaseDrawable {
         var profileLetters = username.substring(0, 2)
 
         if (username.length <= 2)//old implementation allowed username with space in front with emoji which caused crash
-            return profileLetters.toUpperCase()
+            return profileLetters.uppercase()
 
         if (isEmojiOnly(profileLetters) == true) { //where first letter is emoji of size 2 followed by character
             profileLetters = if (username.length >= 4 && isEmojiOnly(
@@ -96,7 +96,7 @@ class SetDrawable : BaseDrawable {
                     )
                 ) == true
             ) username.substring(0, 4) else username.substring(0, 3)
-            return profileLetters.toUpperCase()
+            return profileLetters.uppercase()
         }
         if (username.length >= 3 && isEmojiOnly(
                 username.substring(
@@ -107,6 +107,6 @@ class SetDrawable : BaseDrawable {
         )//if we reach here it means second character may have been emoji so we check for emoji here
             profileLetters = username.substring(0, 3)
 
-        return profileLetters.toUpperCase()
+        return profileLetters.uppercase()
     }
 }

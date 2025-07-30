@@ -155,10 +155,10 @@ class CallHistorySearchAdapter(val context: Context, private val mCallLogsList: 
         holder.imgRoster.addImage(arrayListOf(profileDetails.jid))
         if (searchKey.isNotEmpty()) {
             Log.d(TAG, "highlightMessageContent:txtChatName $txtChatName ")
-            val highlightMessageContent = txtChatName.toLowerCase(Locale.getDefault())
+            val highlightMessageContent = txtChatName.lowercase(Locale.getDefault())
             Log.d(TAG, "highlightMessageContent:highlightMessageContent $highlightMessageContent ")
-            val startIndex = highlightMessageContent.toLowerCase(Locale.getDefault())
-                    .indexOf(searchKey.toLowerCase(Locale.getDefault()))
+            val startIndex = highlightMessageContent.lowercase(Locale.getDefault())
+                    .indexOf(searchKey.lowercase(Locale.getDefault()))
             EmojiUtils.setEmojiTextAndHighLightSearchText(holder.txtChatPersonName, txtChatName,
                     startIndex, startIndex + searchKey.length)
             Log.d(TAG, "highlightMessageContent: ${holder.txtChatPersonName.text}")
@@ -171,17 +171,17 @@ class CallHistorySearchAdapter(val context: Context, private val mCallLogsList: 
     // Displays icon whether the call is audio or video
     private fun setCallType(holder: CallHistorySearchViewHolder, callLogs: CallLog) {
         if (callLogs.callType == CallType.AUDIO_CALL)
-            holder.imageViewCallIcon.setImageResource(R.drawable.ic_call_log_voice_call)
+            holder.imageViewCallIcon.setImageResource(com.contus.call.R.drawable.ic_call_log_voice_call)
         else if (callLogs.callType == CallType.VIDEO_CALL)
-            holder.imageViewCallIcon.setImageResource(R.drawable.ic_call_log_video_call)
+            holder.imageViewCallIcon.setImageResource(com.contus.call.R.drawable.ic_call_log_video_call)
     }
 
     //Shows icon whether the call is missed call or attended call
     private fun setCallStatusIcon(holder: CallHistorySearchViewHolder, callLogs: CallLog) {
         when (callLogs.callState) {
-            CallState.MISSED_CALL -> holder.imgCallStatus.setImageResource(R.drawable.ic_arrow_down_red)
-            CallState.INCOMING_CALL -> holder.imgCallStatus.setImageResource(R.drawable.ic_arrow_down_green)
-            CallState.OUTGOING_CALL -> holder.imgCallStatus.setImageResource(R.drawable.ic_arrow_up_green)
+            CallState.MISSED_CALL -> holder.imgCallStatus.setImageResource(com.contus.call.R.drawable.ic_arrow_down_red)
+            CallState.INCOMING_CALL -> holder.imgCallStatus.setImageResource(com.contus.call.R.drawable.ic_arrow_down_green)
+            CallState.OUTGOING_CALL -> holder.imgCallStatus.setImageResource(com.contus.call.R.drawable.ic_arrow_up_green)
         }
     }
 

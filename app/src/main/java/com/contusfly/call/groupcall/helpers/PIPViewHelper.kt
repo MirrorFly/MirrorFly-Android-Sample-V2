@@ -56,7 +56,7 @@ class PIPViewHelper(private val context: Context, private val binding: LayoutPip
 
         if (callConnectedUserList.size > 1) {
             binding.participantsCount.show()
-            binding.participantsCount.text = String.format(context.getString(R.string.call_member_count), callConnectedUserList.size - 1)
+            binding.participantsCount.text = String.format(context.getString(com.contus.call.R.string.call_member_count), callConnectedUserList.size - 1)
         } else
             binding.participantsCount.gone()
 

@@ -82,7 +82,7 @@ class NewGroupActivity : BaseActivity(), OnEmojiconBackspaceClickedListener, OnE
 
         if(readPermissionGranted && cameraPermissionGranted) {
             takePhotoFromCamera(this, FilePathUtils.getExternalStorage().toString() + "/"
-                    + getString(R.string.title_app_name) + "/" + MediaPaths.MEDIA_PATH_PROFILE_PHOTOS, true)
+                    + getString(com.mirrorflysdk.R.string.title_app_name) + "/" + MediaPaths.MEDIA_PATH_PROFILE_PHOTOS, true)
         }
     }
 
@@ -194,7 +194,7 @@ class NewGroupActivity : BaseActivity(), OnEmojiconBackspaceClickedListener, OnE
         } else {
             val intent = Intent(this, UserListActivity::class.java).apply {
                 putExtra(Constants.ADD_PARTICIAPANTS, true)
-                putExtra(Constants.TITLE, getString(R.string.add_participants))
+                putExtra(Constants.TITLE, getString(com.contus.call.R.string.add_participants))
             }
             startActivityForResult(intent, RequestCode.ADD_PARTICIPANTS)
         }
@@ -204,7 +204,7 @@ class NewGroupActivity : BaseActivity(), OnEmojiconBackspaceClickedListener, OnE
     private fun addParticipant() {
         val intent = Intent(this, NewContactsActivity::class.java).apply {
             putExtra(Constants.ADD_PARTICIAPANTS, true)
-            putExtra(Constants.TITLE, getString(R.string.add_participants))
+            putExtra(Constants.TITLE, getString(com.contus.call.R.string.add_participants))
         }
         startActivityForResult(intent, RequestCode.ADD_PARTICIPANTS)
     }
@@ -423,7 +423,7 @@ class NewGroupActivity : BaseActivity(), OnEmojiconBackspaceClickedListener, OnE
         if (MediaPermissions.isPermissionAllowed(this, Manifest.permission.CAMERA)
             && MediaPermissions.isWriteFilePermissionAllowed(this)) {
             takePhotoFromCamera(this, FilePathUtils.getExternalStorage().toString() + "/"
-                    + getString(R.string.title_app_name) + "/" + MediaPaths.MEDIA_PATH_PROFILE_PHOTOS, true)
+                    + getString(com.mirrorflysdk.R.string.title_app_name) + "/" + MediaPaths.MEDIA_PATH_PROFILE_PHOTOS, true)
         } else {
             MediaPermissions.requestCameraStoragePermissions(this, permissionAlertDialog, cameraPermissionLauncher)
         }

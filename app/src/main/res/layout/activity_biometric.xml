@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_bio_background"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:padding="15dp">
 
     <ImageView

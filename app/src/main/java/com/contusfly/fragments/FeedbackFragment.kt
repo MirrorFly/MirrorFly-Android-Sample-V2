@@ -104,7 +104,7 @@ class FeedbackFragment : Fragment(), View.OnClickListener {
                 commonAlertDialog.showAlertDialogWithTitle(requireActivity(), getString(R.string.delete_account_popup_title),
                     getString(R.string.delete_account_popup_description),
                     getString(R.string.action_Ok),
-                    getString(R.string.fly_action_cancel),
+                    getString(com.mirrorflysdk.R.string.fly_action_cancel),
                     CommonAlertDialog.DIALOGTYPE.DIALOG_DUAL, object : CommonAlertDialog.CommonDialogClosedListener{
                         override fun onDialogClosed(
                             dialogType: CommonAlertDialog.DIALOGTYPE?,

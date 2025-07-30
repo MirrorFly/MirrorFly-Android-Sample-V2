@@ -128,7 +128,7 @@ class BottomSheetOtpFragment(private val activity: Activity) : BottomSheetDialog
     private fun initViews(){
         dialog?.setOnShowListener {
             val dialog = it as BottomSheetDialog
-            val bottomSheet = dialog.findViewById<View>(R.id.design_bottom_sheet)
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let { sheet ->
                 dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 sheet.parent.parent.requestLayout()

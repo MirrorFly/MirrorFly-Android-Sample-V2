@@ -59,7 +59,7 @@ class LanguageListAdapter(activity: Activity, list: MutableList<Languages>) : Re
             if(!ChatManager.getAvailableFeatures().isTranslationEnabled){
                 SharedPreferenceManager.setString(Constants.GOOGLE_LANGUAGE_NAME, "English")
                 SharedPreferenceManager.setString(Constants.GOOGLE_TRANSLATION_LANGUAGE_CODE, "en")
-                mActivity!!.showToast(mActivity!!.resources.getString(R.string.fly_error_forbidden_exception))
+                mActivity!!.showToast(mActivity!!.resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             }
             SharedPreferenceManager.setString(Constants.GOOGLE_LANGUAGE_NAME, item.name)
             SharedPreferenceManager.setString(Constants.GOOGLE_TRANSLATION_LANGUAGE_CODE, item.language)
@@ -83,7 +83,7 @@ class LanguageListAdapter(activity: Activity, list: MutableList<Languages>) : Re
             languageTempData?.addAll(mLanguageList!!)
         } else {
             for (mKey in mLanguageList!!) {
-                if (mKey.language.toLowerCase().contains(filterKey.toLowerCase()) || mKey.name.toLowerCase().contains(filterKey.toLowerCase()))
+                if (mKey.language.lowercase().contains(filterKey.lowercase()) || mKey.name.lowercase().contains(filterKey.lowercase()))
                     languageTempData?.add(mKey)
             }
         }

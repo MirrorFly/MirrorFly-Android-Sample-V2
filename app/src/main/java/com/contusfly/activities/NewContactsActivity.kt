@@ -290,9 +290,9 @@ class NewContactsActivity : BaseActivity(), CoroutineScope, CommonAlertDialog.Co
             newContactsBinding.buttonMakeCall.gone()
             newContactsBinding.buttonMakeCall.text = String.format(getString(R.string.action_call_now), viewModel.selectedUsersJid.size)
             if (callType == CallType.VIDEO_CALL) {
-                newContactsBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, R.drawable.ic_fab_video_call)
+                newContactsBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, com.contus.call.R.drawable.ic_fab_video_call)
             } else {
-                newContactsBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, R.drawable.ic_fab_voice_call)
+                newContactsBinding.buttonMakeCall.icon = ContextCompat.getDrawable(this, com.contus.call.R.drawable.ic_fab_voice_call)
             }
             newContactsBinding.buttonMakeCall.setOnClickListener(1000) {
                 makeCall()

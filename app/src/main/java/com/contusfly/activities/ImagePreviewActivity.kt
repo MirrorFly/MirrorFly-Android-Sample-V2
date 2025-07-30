@@ -572,7 +572,7 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
         val options: Options? = Options.init()
             .setRequestCode(100)
             .setCount(Constants.MAX_MEDIA_SELECTION_RESTRICTION)
-            .setOutputPath(Constants.LOCAL_PATH.toUpperCase(Locale.getDefault()))
+            .setOutputPath(Constants.LOCAL_PATH.uppercase(Locale.getDefault()))
             .setFrontfacing(false)
             .setPreSelectedUrls(ArrayList())
             .setExcludeVideos(false)
@@ -747,7 +747,7 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
          */
         if (intent.getBooleanExtra(Constants.IS_IMAGE, false)) {
             for (img in selectedImageList) {
-                if (img.imagePath.contains(Constants.LOCAL_PATH.toUpperCase(Locale.getDefault()) + "_IMG_")) saveImageToCameraRoll(
+                if (img.imagePath.contains(Constants.LOCAL_PATH.uppercase(Locale.getDefault()) + "_IMG_")) saveImageToCameraRoll(
                     img
                 )
             }
@@ -763,7 +763,7 @@ class ImagePreviewActivity : BaseActivity(), View.OnClickListener,
             )
         } else {
             if (intent.getStringExtra(Constants.FILE_PATH)!!
-                    .contains(Constants.LOCAL_PATH.toUpperCase(Locale.getDefault()) + "_VID_")
+                    .contains(Constants.LOCAL_PATH.uppercase(Locale.getDefault()) + "_VID_")
             ) saveVideoToCameraRoll(intent.getStringExtra(Constants.FILE_PATH)!!)
             startActivity(
                 Intent(this, ChatActivity::class.java)

@@ -35,21 +35,21 @@ open class BaseDrawable {
                             charLength <= 1 -> {
                                 val firstLetter = String(Character.toChars(initialName[0].codePointAt(0)))
                                 icon.setDrawableColour(nameValue.getColourCode())
-                                icon.setText(firstLetter.toUpperCase())
+                                icon.setText(firstLetter.uppercase())
                                 icon
                             }
                             else -> {
                                 val firstLetter = String(Character.toChars(initialName[0].codePointAt(0)))
                                 val secondLetter = String(Character.toChars(initialName[0].codePointAt(1)))
                                 icon.setDrawableColour(nameValue.getColourCode())
-                                icon.setText(firstLetter.toUpperCase() + secondLetter.toUpperCase())
+                                icon.setText(firstLetter.uppercase() + secondLetter.uppercase())
                                 icon
                             }
                         }
                     } else {
                         val firstLetter = String(Character.toChars(initialName[0].codePointAt(0)))
                         val secondLetter = String(Character.toChars(initialName[1].codePointAt(0)))
-                        icon.setText(firstLetter.toUpperCase() + secondLetter.toUpperCase())
+                        icon.setText(firstLetter.uppercase() + secondLetter.uppercase())
                         icon.setDrawableColour(nameValue.getColourCode())
                         icon
                     }

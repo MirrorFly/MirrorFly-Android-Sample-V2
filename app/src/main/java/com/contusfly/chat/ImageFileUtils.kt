@@ -20,7 +20,7 @@ object ImageFileUtils {
      */
     fun setFileImage(fileViewHolder: ImageView, fileName: String) {
         if (TextUtils.isEmpty(fileName) || !fileName.contains(".")) return
-        when (fileName.toLowerCase(Locale.getDefault()).substring(fileName.lastIndexOf(".")+1)) {
+        when (fileName.lowercase(Locale.getDefault()).substring(fileName.lastIndexOf(".")+1)) {
             "csv" -> fileViewHolder.setImageResource(R.drawable.ic_media_csv)
             "pdf" -> fileViewHolder.setImageResource(R.drawable.ic_media_pdf)
             "doc" -> fileViewHolder.setImageResource(R.drawable.ic_media_doc)
@@ -43,7 +43,7 @@ object ImageFileUtils {
      */
     fun setSenderFileImage(fileViewHolder: ImageView, fileName: String) {
         if (TextUtils.isEmpty(fileName) || !fileName.contains(".")) return
-        when (fileName.toLowerCase(Locale.getDefault()).substring(fileName.lastIndexOf(".")+1)) {
+        when (fileName.lowercase(Locale.getDefault()).substring(fileName.lastIndexOf(".")+1)) {
             "csv" -> fileViewHolder.setImageResource(R.drawable.ic_sender_reply_csv)
             "pdf" -> fileViewHolder.setImageResource(R.drawable.ic_sender_reply_pdf)
             "doc" -> fileViewHolder.setImageResource(R.drawable.ic_sender_reply_doc)
@@ -66,7 +66,7 @@ object ImageFileUtils {
      */
     fun setReceiverFileImage(fileViewHolder: ImageView, fileName: String) {
         if (TextUtils.isEmpty(fileName) || !fileName.contains(".")) return
-        when (fileName.toLowerCase(Locale.getDefault()).substring(fileName.lastIndexOf(".")+1)) {
+        when (fileName.lowercase(Locale.getDefault()).substring(fileName.lastIndexOf(".")+1)) {
             "csv" -> fileViewHolder.setImageResource(R.drawable.ic_receiver_reply_csv)
             "pdf" -> fileViewHolder.setImageResource(R.drawable.ic_receiver_reply_pdf)
             "doc" -> fileViewHolder.setImageResource(R.drawable.ic_receiver_reply_doc)

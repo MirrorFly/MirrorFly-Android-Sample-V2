@@ -43,6 +43,8 @@ import com.mirrorflysdk.flycall.webrtc.api.CallLogManager
 import com.mirrorflysdk.flycommons.ChatType
 import com.mirrorflysdk.flycommons.Features
 import com.mirrorflysdk.flycommons.Result
+import com.mirrorflysdk.utils.MFTextLocalization
+import com.mirrorflysdk.utils.StringConstants
 import dagger.android.AndroidInjection
 
 /**
@@ -189,6 +191,7 @@ class DashboardActivity : DashboardParent(), View.OnClickListener, ActionMode.Ca
     }
 
     private fun setUpViewPager() {
+
         mViewPager.offscreenPageLimit = 2
         mViewPager.adapter = mAdapter
         mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){

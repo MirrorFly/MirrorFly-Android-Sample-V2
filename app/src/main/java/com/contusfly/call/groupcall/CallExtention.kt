@@ -66,7 +66,7 @@ fun CallManager.getCallConnectedStatus(context: Context): String {
     return if (isOneToOneCall() || GroupCallUtils.isSingleUserInCall()) {
         when (val localCallStatus = getCallStatus(getCurrentUserId())) {
             CallStatus.ON_HOLD -> localCallStatus
-            CallStatus.RECONNECTING -> context.getString(R.string.reconnecting)
+            CallStatus.RECONNECTING -> context.getString(com.contus.call.R.string.reconnecting)
             else -> {
                 when (val remoteCallStatus = getCallStatus(getEndCallerJid())) {
                     CallStatus.CALLING, CallStatus.RINGING, CallStatus.ON_HOLD,CallStatus.RECONNECTING,CallStatus.CONNECTING -> remoteCallStatus
@@ -82,8 +82,8 @@ fun CallManager.getOutGoingCallStatus(context: Context): String {
     val localCallStatus = getCallStatus(getCurrentUserId())
     LogMessage.d(TAG, "${CallConstants.CALL_UI} ${CallConstants.JOIN_CALL}  getOutGoingCallStatus : $localCallStatus")
     return when {
-        isCallTryingToConnect(localCallStatus) -> context.getString(R.string.trying_to_connect)
-        isCallTimeOut(localCallStatus) -> context.getString(R.string.call_try_again_info)
+        isCallTryingToConnect(localCallStatus) -> context.getString(com.contus.call.R.string.trying_to_connect)
+        isCallTimeOut(localCallStatus) -> context.getString(com.contus.call.R.string.call_try_again_info)
         isCallRinging(localCallStatus) -> CallStatus.RINGING
         isCallConnecting(localCallStatus) -> CallStatus.CONNECTING
         else -> localCallStatus
@@ -106,14 +106,14 @@ fun isCallTimeOut(callStatus: String) =
 fun CallManager.getInComingCallStatus(context: Context): String {
     return if (isAudioCall())
         if (isOneToOneCall())
-            context.getString(R.string.incoming_audio_call)
+            context.getString(com.contus.call.R.string.incoming_audio_call)
         else
-            context.getString(R.string.incoming_audio_group_call)
+            context.getString(com.contus.call.R.string.incoming_audio_group_call)
     else
         if (isOneToOneCall())
-            context.getString(R.string.incoming_video_call)
+            context.getString(com.contus.call.R.string.incoming_video_call)
         else
-            context.getString(R.string.incoming_video_group_call)
+            context.getString(com.contus.call.R.string.incoming_video_group_call)
 }
 
 fun CallManager.getEndCallerJid(): String {

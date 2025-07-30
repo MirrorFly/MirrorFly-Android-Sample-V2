@@ -628,7 +628,7 @@ constructor(val application: Application) : CoroutineScope {
         replyMessageId: String = Constants.EMPTY_STRING
     )
             : Triple<Boolean, Boolean, MessageObject?> {
-        val fileExtension = mediaFilePath.substring(mediaFilePath.lastIndexOf('.')).toLowerCase()
+        val fileExtension = mediaFilePath.substring(mediaFilePath.lastIndexOf('.')).lowercase()
 
         var isValidAudioType = true
         var isAudioSizeUnderLimit = true

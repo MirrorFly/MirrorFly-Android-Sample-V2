@@ -45,7 +45,7 @@ class EditChatTagAdapter (
             if (item.isRecomendedTag) {
                 binding.editChatTagNameTv.text = item.tagname
                 binding.editChatTagInformationTv.text=item.taginfo
-                binding.editChatTagNameTv.setTextColor(ContextCompat.getColor(mContext, R.color.blue))
+                binding.editChatTagNameTv.setTextColor(ContextCompat.getColor(mContext, com.contus.call.R.color.blue))
             } else {
                 binding.editChatTagNameTv.text = item.tagname
                 binding.editChatTagInformationTv.text = FlyCore.getChatTagSummary(item.memberidlist!!)

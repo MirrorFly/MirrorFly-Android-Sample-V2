@@ -117,8 +117,8 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
 
     private fun setPinnedUserView(imageGridPinned: ImageView, userJid: String) {
         if (CallUtils.getIsUserTilePinned() && userJid == CallUtils.getPinnedUserJid())
-            imageGridPinned.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_grid_pinned_icon))
-        else imageGridPinned.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_pin_tile))
+            imageGridPinned.setImageDrawable(ContextCompat.getDrawable(context, com.contus.call.R.drawable.ic_grid_pinned_icon))
+        else imageGridPinned.setImageDrawable(ContextCompat.getDrawable(context, com.contus.call.R.drawable.ic_pin_tile))
     }
 
     private fun setMirrorView(holder: CallUserGridViewHolder, position: Int) {
@@ -203,7 +203,7 @@ class GroupCallGridAdapter(val context: Context) : RecyclerView.Adapter<GroupCal
                     context,
                     "",
                     holder.binding.imgProfileImage,
-                    ContextCompat.getDrawable(context, R.drawable.ic_group_call_user_default_pic)
+                    ContextCompat.getDrawable(context, com.contus.call.R.drawable.ic_group_call_user_default_pic)
                 )
             else{
                 val setDrawable = SetDrawable(context)

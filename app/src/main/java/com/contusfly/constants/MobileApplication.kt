@@ -209,9 +209,9 @@ class MobileApplication : Application(), HasAndroidInjector {
             override fun getNotificationContent(callDirection: String, callMetaDataArray: Array<CallMetaData>?): String {
                 return if (BuildConfig.HIPAA_COMPLIANCE_ENABLED) {
                     when (callDirection) {
-                        CallDirection.INCOMING_CALL -> resources.getString(R.string.new_incoming_call)
-                        CallDirection.OUTGOING_CALL -> resources.getString(R.string.new_outgoing_call)
-                        else -> resources.getString(R.string.new_ongoing_call)
+                        CallDirection.INCOMING_CALL -> resources.getString(com.contus.call.R.string.new_incoming_call)
+                        CallDirection.OUTGOING_CALL -> resources.getString(com.contus.call.R.string.new_outgoing_call)
+                        else -> resources.getString(com.contus.call.R.string.new_ongoing_call)
                     }
                 }else{
                     getNotificationMessage()

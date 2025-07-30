@@ -238,7 +238,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
         var isInvalidLink = false
         when (error) {
             Error.INVALID_CALL_LINK -> {
-                callEnded = getString(R.string.invalid_link)
+                callEnded = getString(com.contus.call.R.string.invalid_link)
                 callEndedMessage = getString(R.string.return_to_chat)
                 isInvalidLink = true
             }
@@ -271,7 +271,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
             Error.MAX_USERS_REACHED -> {
                 showToast(
                     String.format(
-                        getString(R.string.max_members_in_call),
+                        getString(com.contus.call.R.string.max_members_in_call),
                         CallManager.getMaxCallUsersCount()
                     )
                 )
@@ -477,7 +477,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
             onGoingCallPreviewScreenBinding.callEndedIcon.setImageDrawable(
                 AppCompatResources.getDrawable(
                     this,
-                    R.drawable.ic_join_call_ended
+                    com.contus.call.R.drawable.ic_join_call_ended
                 )
             )
             callEndedTextMessage!!.visibility = View.VISIBLE
@@ -510,7 +510,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
         if (!usersNotExceeded) CustomToast.show(
             this@OnGoingCallPreviewActivity,
             String.format(
-                getString(R.string.max_members_in_call),
+                getString(com.contus.call.R.string.max_members_in_call),
                 CallManager.getMaxCallUsersCount()
             )
         )
@@ -593,7 +593,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
         LogMessage.d(TAG, "#OnGngCall showAlertForTelephonyCall")
         if (CallManager.isOnTelephonyCall(this)) {
             commonAlertDialog!!.showAlertDialog(
-                this.getString(R.string.msg_telephony_call_alert),
+                this.getString(com.contus.call.R.string.msg_telephony_call_alert),
                 this.getString(R.string.action_Ok),
                 this.getString(R.string.action_cancel),
                 CommonAlertDialog.DIALOGTYPE.DIALOG_SINGLE,
@@ -614,7 +614,7 @@ class OnGoingCallPreviewActivity : BaseActivity(), View.OnClickListener,
                     else -> {
                         handleJoinNowButton(false)
                         checkInternetConnection!!.visibility = View.VISIBLE
-                        checkInternetConnection!!.text = getString(R.string.connecting_label)
+                        checkInternetConnection!!.text = getString(com.contus.call.R.string.connecting_label)
                         CallManager.joinCall(object : JoinCallActionListener {
                             override fun onFailure(error: Error) {
                                 LogMessage.d(TAG, "$CALL_UI $JOIN_CALL onFailure()")

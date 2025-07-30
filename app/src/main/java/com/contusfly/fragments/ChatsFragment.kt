@@ -367,11 +367,17 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
                 ChatSettingsAction.EXPORT_CALL_LOG ->{
                     CallLogger.callLogExportToChosenApp(context)
                 }
+                else -> {
+                    // do nothing
+                }
             }
         }else{
             when(chatSettingsAction){
                 ChatSettingsAction.EXPORT_CALL_LOG->{
                     CallLogger.deleteCallLogFile(context)
+                }
+                else -> {
+                    // do nothing
                 }
             }
         }
@@ -379,7 +385,7 @@ class ChatsFragment : Fragment(), CoroutineScope, View.OnClickListener,
 
     private fun clearAllConversation(){
         if(!ChatManager.getAvailableFeatures().isClearChatEnabled){
-            CustomToast.show(settingsActivity!!.applicationContext, resources.getString(R.string.fly_error_forbidden_exception))
+            CustomToast.show(settingsActivity!!.applicationContext, resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             return
         }
         ChatManager.clearAllConversation(object : ChatActionListener {

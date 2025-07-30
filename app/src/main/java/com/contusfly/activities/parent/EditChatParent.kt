@@ -87,7 +87,7 @@ open class EditChatParent : BaseActivity(), CoroutineScope, MessageListener{
      * Utils to handle the chat view operations
      */
     @Inject
-    protected lateinit var chatViewUtils: ChatViewUtils
+    lateinit var chatViewUtils: ChatViewUtils
 
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
@@ -98,7 +98,7 @@ open class EditChatParent : BaseActivity(), CoroutineScope, MessageListener{
     protected val commonAlertDialog: CommonAlertDialog by lazy { CommonAlertDialog(this) }
 
     @Inject
-    protected lateinit var messagingClient: MessagingClient
+    lateinit var messagingClient: MessagingClient
     /**
      * Instance of the EmojiHandler to access the emoji and text keypad
      */

@@ -22,32 +22,32 @@ interface ContusContactDao {
     @Query("DELETE FROM ContusContact WHERE jid = :jid")
     suspend fun deleteContusContact(jid: String)
 
-    @Query("delete from ContusContact where jid in (:jidList)")
+    @Query("DELETE FROM ContusContact WHERE jid IN (:jidList)")
     suspend fun deleteContusContacts(jidList: List<String>)
 
-    @Query("delete from ContusContact ")
+    @Query("DELETE FROM ContusContact")
     fun deleteAllContusContacts()
 
     @Query("SELECT * FROM ContusContact WHERE jid LIKE (:jid)")
     fun getContusContact(jid: String): ContusContact?
 
     @Query("SELECT * FROM ContusContact")
-    suspend fun getAllContusContact(): List<ContusContact>?
+    suspend fun getAllContusContact(): List<ContusContact>
 
-    @Query("SELECT * FROM ContusContact WHERE isBlocked")
-    fun getBlockedContusContactS(): List<ContusContact>?
+    @Query("SELECT * FROM ContusContact WHERE isBlocked = 1")
+    fun getBlockedContusContactS(): List<ContusContact>
 
-    @Query("SELECT * FROM ContusContact WHERE isBlockedMe")
-    fun getBlockedMeContusContactS(): List<ContusContact>?
+    @Query("SELECT * FROM ContusContact WHERE isBlockedMe = 1")
+    fun getBlockedMeContusContactS(): List<ContusContact>
 
-    @Query("SELECT * FROM ContusContact WHERE isAdminBlocked")
-    fun getAdminBlockedContusContactS(): List<ContusContact>?
+    @Query("SELECT * FROM ContusContact WHERE isAdminBlocked = 1")
+    fun getAdminBlockedContusContactS(): List<ContusContact>
 
     @Update
     suspend fun updateContusContact(contusContact: ContusContact)
 
     @Update
-    suspend fun updateContusContacts(list: List<ContusContact?>?)
+    suspend fun updateContusContacts(list: List<ContusContact>)
 
     @Query("SELECT count(*) FROM ContusContact WHERE jid LIKE (:jid)")
     fun isContusContact(jid: String): Int

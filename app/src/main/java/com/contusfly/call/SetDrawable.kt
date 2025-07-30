@@ -32,7 +32,7 @@ class SetDrawable : BaseDrawable {
             val username = initialname[0]
             if (username.length == 1) {
                 val firstletter = initialname[0][0].toString()
-                icon.setText(firstletter.toUpperCase())
+                icon.setText(firstletter.uppercase())
                 icon.setDrawableProfileColour(com.contus.call.R.color.light_blue)
                 icon
             } else {
@@ -69,7 +69,7 @@ class SetDrawable : BaseDrawable {
                     icon
                 }
                 username.length == 1 -> {
-                    icon.setText(username.toUpperCase())
+                    icon.setText(username.uppercase())
                     setDrawableProfileColour(icon, isProfile)
                     icon
                 }
@@ -88,7 +88,7 @@ class SetDrawable : BaseDrawable {
             if (initialName[1].trim { it <= ' ' }.isNotEmpty()) {
                 secondletter = String(Character.toChars(initialName[1].trim { it <= ' ' }.codePointAt(0)))
             }
-            icon.setText(firstletter.toUpperCase() + secondletter.toUpperCase())
+            icon.setText(firstletter.uppercase() + secondletter.uppercase())
             setDrawableProfileColour(icon, isProfile)
             icon
         }
@@ -123,6 +123,6 @@ class SetDrawable : BaseDrawable {
         if (isEmojiOnly(profileLetters)) {
             profileLetters = if (isEmojiOnly(username.substring(0, 4))) username.substring(0, 4) else username.substring(0, 3)
         }
-        return profileLetters.toUpperCase()
+        return profileLetters.uppercase()
     }
 }

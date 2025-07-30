@@ -36,7 +36,7 @@ object GetMsgNotificationUtils {
         }
         return if (MessageType.TEXT == message.getMessageType() || MessageType.NOTIFICATION == message.getMessageType()) if (message.isMessageRecalled()) deleted_message else lastMessageMentionContent else if (MessageType.IMAGE == message.getMessageType() || MessageType.VIDEO == message.getMessageType()) {
             getMentionMediaCaptionTextFormat(context,message)
-        } else message.getMessageType().name.toUpperCase(Locale.getDefault())
+        } else message.getMessageType().name.uppercase(Locale.getDefault())
     }
 
     /**
@@ -127,7 +127,7 @@ object GetMsgNotificationUtils {
         inboxStyle.setSummaryText(summaryText)
         notificationCompatBuilder.setContentText(summaryText)
         if (hasMultipleSenders) {
-            val title = context.getString(R.string.title_app_name)
+            val title = context.getString(com.mirrorflysdk.R.string.title_app_name)
             inboxStyle.setBigContentTitle(title)
             notificationCompatBuilder.setContentTitle(title)
         } else {
@@ -159,7 +159,7 @@ object GetMsgNotificationUtils {
                 message.mediaChatMessage.mediaCaptionText.isNotEmpty()) {
                 MentionUtils.formatMentionTextForMediaCaption(context,message,message.mediaChatMessage.mediaCaptionText,false).toString()
             } else {
-                message.messageType.name.toUpperCase(Locale.getDefault())
+                message.messageType.name.uppercase(Locale.getDefault())
             }
         return  mediaCaption
     }

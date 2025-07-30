@@ -61,7 +61,7 @@ class WebLoginAdapter(context: Context) : RecyclerView.Adapter<WebLoginAdapter.R
     override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
         holder.browserNameTextView.text = dataProvider!![position].webBrowserName
         holder.osVersionTextView.text = dataProvider!![position].lastLoginTime
-        val bName = dataProvider!![position].webBrowserName.toLowerCase()
+        val bName = dataProvider!![position].webBrowserName.lowercase()
         when {
             bName.contains("chrome") -> {
                 holder.circularImageView.setImageResource(R.drawable.ic_chrome)

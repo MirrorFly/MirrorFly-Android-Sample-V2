@@ -287,9 +287,9 @@ class CallHistoryAdapter(val context: Context, private val callLogsList: ArrayLi
         setIconAlpha(holder, callLogs)
         // Display the icon whether the call is audio or video
         if (callLogs.callType == CallType.AUDIO_CALL) {
-            holder.imageViewCallIcon.setImageResource(R.drawable.ic_call_log_voice_call)
+            holder.imageViewCallIcon.setImageResource(com.contus.call.R.drawable.ic_call_log_voice_call)
         } else if (callLogs.callType == CallType.VIDEO_CALL) {
-            holder.imageViewCallIcon.setImageResource(R.drawable.ic_call_log_video_call)
+            holder.imageViewCallIcon.setImageResource(com.contus.call.R.drawable.ic_call_log_video_call)
         }
     }
 
@@ -312,11 +312,11 @@ class CallHistoryAdapter(val context: Context, private val callLogsList: ArrayLi
     }
 
     private fun setCallStatusIcon(holder: CallHistoryViewHolder, callLogs: CallLog) {
-        var drawable = R.drawable.ic_arrow_down_red
+        var drawable = com.contus.call.R.drawable.ic_arrow_down_red
         when (callLogs.callState) {
-            CallState.MISSED_CALL -> drawable = R.drawable.ic_arrow_down_red
-            CallState.INCOMING_CALL -> drawable = R.drawable.ic_arrow_down_green
-            CallState.OUTGOING_CALL -> drawable = R.drawable.ic_arrow_up_green
+            CallState.MISSED_CALL -> drawable = com.contus.call.R.drawable.ic_arrow_down_red
+            CallState.INCOMING_CALL -> drawable = com.contus.call.R.drawable.ic_arrow_down_green
+            CallState.OUTGOING_CALL -> drawable = com.contus.call.R.drawable.ic_arrow_up_green
         }
         holder.imgCallStatus.setImageResource(drawable)
     }

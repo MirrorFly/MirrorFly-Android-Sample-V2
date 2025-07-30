@@ -23,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fxn.modals.Img;
@@ -245,8 +246,30 @@ public class Utility {
     public static File getExternalStorage(ContextWrapper contextWrapper){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
             return Environment.getExternalStorageDirectory();
-        else
-            return contextWrapper.getExternalMediaDirs()[0];
+        else {
+            File[] externalMediaDirs = contextWrapper.getExternalMediaDirs();
+            // Check if the array is empty or null
+            if (externalMediaDirs == null || externalMediaDirs.length == 0) {
+                // External media directories are not available or accessible
+                File[] externalStorageVolumes = ContextCompat.getExternalFilesDirs(contextWrapper, null);
+                return externalStorageVolumes[0];
+            } else {
+                // External media directories are available
+                return externalMediaDirs[0];
+            }
+        }
+    }
+
+    public static File getExternalFileStorage(ContextWrapper contextWrapper) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+                return Environment.getExternalStorageDirectory();
+            else
+                return contextWrapper.getFilesDir();
+        } else {
+            File[] externalStorageVolumes = ContextCompat.getExternalFilesDirs(contextWrapper, null);
+            return externalStorageVolumes[0];
+        }
     }
 
 
@@ -337,15 +360,23 @@ public class Utility {
     }
 
     public static void scanPhoto(Context pix, File photo) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            final Uri contentUri = Uri.fromFile(photo);
-            scanIntent.setData(contentUri);
-            pix.sendBroadcast(scanIntent);
-        } else {
-            pix.sendBroadcast(
-                    new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse(photo.getAbsolutePath())));
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                if(photo == null) return;
+                final Uri contentUri = Uri.fromFile(photo);
+                scanIntent.setData(contentUri);
+                pix.sendBroadcast(scanIntent);
+            } else {
+                pix.sendBroadcast(
+                        new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse(photo.getAbsolutePath())));
+            }
+        } catch(NullPointerException e) {
+            Log.e("Error",e.toString());
+        } catch(Exception e){
+            Log.e("Error",e.toString());
         }
+
     }
 
     public static int gcd(int p, int q) {

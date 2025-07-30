@@ -5,11 +5,10 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.contusfly.R
 
 class GridSpacingItemDecoration(context: Context, private val spanCount: Int) :
     RecyclerView.ItemDecoration() {
-    private val spacing = context.resources.getDimensionPixelSize(R.dimen.decoration_height_for_four)
+    private val spacing = context.resources.getDimensionPixelSize(com.contusfly.mediapicker.R.dimen.decoration_height_for_four)
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val itemPosition = parent.getChildAdapterPosition(view)

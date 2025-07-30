@@ -32,7 +32,7 @@ object PickFileUtils {
     fun pickFile(context: Activity) {
         /* setting isActivityStartedForResult to true to avoid xmpp disconnection */
         isActivityStartedForResult = true
-        val manufacturer = Build.MANUFACTURER.toUpperCase(Locale.getDefault())
+        val manufacturer = Build.MANUFACTURER.uppercase(Locale.getDefault())
         /*
           If the device is samsung
          */
@@ -104,7 +104,7 @@ object PickFileUtils {
     @JvmStatic
     fun isValidFileType(fileType: String?): Boolean {
         if (fileType.isNullOrEmpty()) return false
-        val type = fileType.toLowerCase(Locale.getDefault())
+        val type = fileType.lowercase(Locale.getDefault())
         val extension2 = PickerConstants.supportedFormats
         for (extension in extension2) {
             if (type.endsWith(extension)) return true

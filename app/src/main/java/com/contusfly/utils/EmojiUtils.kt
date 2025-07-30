@@ -126,7 +126,7 @@ object EmojiUtils {
             }
             val textToHighlight: Spannable = SpannableString(profileName)
             if (startIndex != -1 && stopIndex != -1)
-                textToHighlight.setSpan(ForegroundColorSpan(ContextCompat.getColor(context!!, R.color.blue)), startIndex, stopIndex, Spannable.SPAN_INTERMEDIATE)
+                textToHighlight.setSpan(ForegroundColorSpan(ContextCompat.getColor(context!!, com.contus.call.R.color.blue)), startIndex, stopIndex, Spannable.SPAN_INTERMEDIATE)
             textView.text = textToHighlight
         } catch (e: java.lang.Exception) {
             LogMessage.e(e)
@@ -145,7 +145,7 @@ object EmojiUtils {
             }
             val textToHighlight: Spannable = SpannableString(userText)
             if (startIndex != -1 && stopIndex != -1)
-                textToHighlight.setSpan(ForegroundColorSpan(ContextCompat.getColor(context!!, R.color.blue)), startIndex, stopIndex, Spannable.SPAN_INTERMEDIATE)
+                textToHighlight.setSpan(ForegroundColorSpan(ContextCompat.getColor(context!!, com.contus.call.R.color.blue)), startIndex, stopIndex, Spannable.SPAN_INTERMEDIATE)
             textView.text = textToHighlight
         } catch (e: java.lang.Exception) {
             LogMessage.e(e)

@@ -58,7 +58,7 @@ class DialogViewHelper(
     private val callSwitchConfirmationDialog: AlertDialog by lazy {
         val mBuilder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
         mBuilder.setMessage("Are you sure you want to switch to Video call?")
-        mBuilder.setPositiveButton(context.getString(R.string.action_switch)) { _: DialogInterface?, _: Int ->
+        mBuilder.setPositiveButton(context.getString(com.contus.call.R.string.action_switch)) { _: DialogInterface?, _: Int ->
             outGoingRequest = true
             inComingRequest = CallManager.isCallConversionRequestAvailable()
             callSwitchConfirmationDialog.dismiss()
@@ -144,9 +144,9 @@ class DialogViewHelper(
             mBuilder.setMessage("requesting to switch to video call")
         }
 
-        mBuilder.setPositiveButton(context.getString(R.string.fly_info_call_notification_accept), null) // Set null here to customize the click later
+        mBuilder.setPositiveButton(context.getString(com.mirrorflysdk.R.string.fly_info_call_notification_accept), null) // Set null here to customize the click later
 
-        mBuilder.setNegativeButton(context.getString(R.string.fly_info_call_notification_decline)) { _: DialogInterface?, _: Int ->
+        mBuilder.setNegativeButton(context.getString(com.mirrorflysdk.R.string.fly_info_call_notification_decline)) { _: DialogInterface?, _: Int ->
             LogMessage.d(TAG, "$CALL_UI showCallSwitchAlert Decline")
             activityOnClickListener.onCallSwitchDialog(false)
             callSwitchDialog.dismiss()

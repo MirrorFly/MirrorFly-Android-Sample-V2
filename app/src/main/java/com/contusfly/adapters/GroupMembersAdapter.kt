@@ -91,7 +91,9 @@ class GroupMembersAdapter(val context: Context, private var profilesList: ArrayL
     }
 
     override fun hasSearchKey(item: ProfileDetails, filterKey: String): Boolean {
-        return item.getDisplayName().toLowerCase(Locale.getDefault()).contains(filterKey.toLowerCase(Locale.getDefault()))
+        return item.getDisplayName().lowercase(Locale.getDefault()).contains(filterKey.lowercase(
+            Locale.getDefault()
+        ))
     }
 
     override fun onBindData(holder: GroupMemberViewHolder, item: ProfileDetails, position: Int, payloads: MutableList<Any>) {

@@ -136,11 +136,11 @@ class EmailContactSyncService : LifecycleService(), LifecycleObserver, Coroutine
                 retryBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                     .addAction(-1, "Retry", serviceIntent)
                     .setContentTitle(applicationContext.getString(R.string.app_name))
-                    .setContentText(getString(R.string.fly_error_msg_no_internet))
+                    .setContentText(getString(com.mirrorflysdk.R.string.fly_error_msg_no_internet))
                     .setSubText("Email Contacts Sync failed.")
                     .setSmallIcon(R.mipmap.ic_notification_small)
                     .setAutoCancel(false)
-                    .setTicker(getString(R.string.fly_error_msg_no_internet))
+                    .setTicker(getString(com.mirrorflysdk.R.string.fly_error_msg_no_internet))
                     .setWhen(System.currentTimeMillis())
                 startForeground(NOTIFICATION_ID, retryBuilder.build())
             }
@@ -193,7 +193,7 @@ class EmailContactSyncService : LifecycleService(), LifecycleObserver, Coroutine
                     if (AppUtils.isNetConnected(this)) {//Execute the sync when Retry is clicked in notification
                         showNotification()
                         handleRetrySync()
-                    } else CustomToast.show(this, getString(R.string.fly_error_msg_no_internet))
+                    } else CustomToast.show(this, getString(com.mirrorflysdk.R.string.fly_error_msg_no_internet))
                 } else {
                     showNotification()
                     launch(coroutineContext) {

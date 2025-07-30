@@ -1076,10 +1076,10 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
             } else if (profileDetails.getChatType() == ChatType.TYPE_GROUP_CHAT) {
                 when {
                     isOnTelephonyCall(this) -> {
-                        showAlertDialog(this, getString(R.string.msg_telephony_call_alert))
+                        showAlertDialog(this, getString(com.contus.call.R.string.msg_telephony_call_alert))
                     }
                     isOnAnyCall() -> {
-                        showAlertDialog(this, getString(R.string.msg_ongoing_call_alert_for_group_call))
+                        showAlertDialog(this, getString(com.contus.call.R.string.msg_ongoing_call_alert_for_group_call))
                     }
                     else -> {
                         hideKeyboard()
@@ -2099,7 +2099,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
 
     private fun deleteChat(dialogType: CommonAlertDialog.DIALOGTYPE, position: Int) {
         if(!ChatManager.getAvailableFeatures().isDeleteMessageEnabled){
-            context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+            context!!.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             return
         }
         var isRecalled = false
@@ -2140,7 +2140,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun blockContact() {
         val feature=ChatManager.getAvailableFeatures()
         if(!feature.isBlockEnabled){
-            context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+            context!!.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             isBlockUnblockCalled=false
             return
         }
@@ -2166,7 +2166,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
     private fun unblockContact(isFromEditMessage:Boolean = false) {
         val feature=ChatManager.getAvailableFeatures()
         if(!feature.isBlockEnabled){
-            context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+            context!!.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
             isBlockUnblockCalled=false
             return
         }
@@ -2481,7 +2481,7 @@ class ChatActivity : ChatParent(), ActionMode.Callback, View.OnTouchListener, Em
         try {
             val feature=ChatManager.getAvailableFeatures()
             if(!feature.isClearChatEnabled){
-                context!!.showToast(resources.getString(R.string.fly_error_forbidden_exception))
+                context!!.showToast(resources.getString(com.mirrorflysdk.R.string.fly_error_forbidden_exception))
                 return
             }
             doProgressDialog = DoProgressDialog(this)

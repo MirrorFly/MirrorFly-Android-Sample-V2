@@ -29,6 +29,7 @@ import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.contacts.ProfileDetails
 import com.mirrorflysdk.api.models.ChatMessage
 import com.mirrorflysdk.flycommons.ChatType
+import com.mirrorflysdk.flycommons.models.MessageType
 import java.io.File
 
 
@@ -152,7 +153,9 @@ object NotificationBuilder {
         message: ChatMessage
     ) {
         val userProfile: ProfileDetails? =
-            ProfileDetailsUtils.getProfileDetails(message.getSenderUserJid())
+            if (message.isGroupMessage() && message.messageType == MessageType.NOTIFICATION) ProfileDetailsUtils.getProfileDetails(
+                message.chatUserJid
+            ) else ProfileDetailsUtils.getProfileDetails(message.getSenderUserJid())
         val name = userProfile?.getDisplayName() ?: Constants.EMPTY_STRING
         val contentBuilder = StringBuilder()
         contentBuilder.append(GetMsgNotificationUtils.getMessageSummary(context, message))
@@ -293,7 +296,7 @@ object NotificationBuilder {
     private fun displaySummaryNotification(context: Context, lastMessageContent: StringBuilder) {
         try {
             val summaryText = StringBuilder()
-            val appTitle = context.resources.getString(R.string.title_app_name)
+            val appTitle = context.resources.getString(com.mirrorflysdk.R.string.title_app_name)
             summaryText.append(getMessagesCount()).append(" messages from ")
                 .append(chatNotifications.size).append(" chats")
 
