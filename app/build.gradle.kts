@@ -57,7 +57,7 @@ android {
             val googleTranslateKey = project.findProperty("GOOGLE_TRANSLATE_KEY") as String? ?: ""
             val hipaaComplianceEnabled = project.findProperty("HIPAA_COMPLIANCE_ENABLED") as String? ?: "false"
             val contactSyncEnabled = project.findProperty("CONTACT_SYNC_ENABLED") as String? ?: "false"
-            val host = project.findProperty("HOST") as String? ?: "127.0.0.1"
+            val host = project.findProperty("HOST") as String? ?: "8.8.8.8"
             buildConfigField("String", "GOOGLE_TRANSLATE_KEY", googleTranslateKey)
             buildConfigField("Boolean", "HIPAA_COMPLIANCE_ENABLED", hipaaComplianceEnabled)
             buildConfigField("Boolean", "CONTACT_SYNC_ENABLED", contactSyncEnabled)
@@ -83,7 +83,7 @@ android {
             val googleTranslateKey = project.findProperty("GOOGLE_TRANSLATE_KEY") as String? ?: ""
             val hipaaComplianceEnabled = project.findProperty("HIPAA_COMPLIANCE_ENABLED") as String? ?: "false"
             val contactSyncEnabled = project.findProperty("CONTACT_SYNC_ENABLED") as String? ?: "false"
-            val host = project.findProperty("HOST") as String? ?: "127.0.0.1"
+            val host = project.findProperty("HOST") as String? ?: "8.8.8.8"
             buildConfigField("String", "GOOGLE_TRANSLATE_KEY", googleTranslateKey)
             buildConfigField("Boolean", "HIPAA_COMPLIANCE_ENABLED", hipaaComplianceEnabled)
             buildConfigField("Boolean", "CONTACT_SYNC_ENABLED", contactSyncEnabled)
