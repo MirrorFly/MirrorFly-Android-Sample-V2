@@ -17,11 +17,10 @@ import com.contusfly.utils.SharedPreferenceManager
 import com.contusfly.views.CustomToast
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage
-import com.google.firebase.ml.naturallanguage.smartreply.FirebaseTextMessage
-import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestion
+import com.google.mlkit.nl.smartreply.SmartReply
+import com.google.mlkit.nl.smartreply.SmartReplySuggestion
+import com.google.mlkit.nl.smartreply.TextMessage
 import com.mirrorflysdk.api.ChatManager
-import com.mirrorflysdk.api.FlyCore
 import com.mirrorflysdk.api.FlyMessenger
 import com.mirrorflysdk.api.GroupManager
 import com.mirrorflysdk.api.chat.FetchMessageListParams
@@ -166,12 +165,12 @@ constructor(private val messageRepository: MessageRepository) : ViewModel() {
     }
 
     private fun createSmartReply(lastMessage: ChatMessage): Task<List<SmartReplySuggestion>> {
-        val chatHistory = ArrayList<FirebaseTextMessage>()
+        val chatHistory = ArrayList<TextMessage>()
         if (lastMessage.chatUserJid == SharedPreferenceManager.getCurrentUserJid() && lastMessage.isMessageSentByMe)
-            chatHistory.add(FirebaseTextMessage.createForLocalUser(lastMessage.messageTextContent, System.currentTimeMillis()))
+            chatHistory.add(TextMessage.createForLocalUser(lastMessage.messageTextContent, System.currentTimeMillis()))
         else
-            chatHistory.add(FirebaseTextMessage.createForRemoteUser(lastMessage.messageTextContent, System.currentTimeMillis(), remoteUserId))
-        return FirebaseNaturalLanguage.getInstance().smartReply
+            chatHistory.add(TextMessage.createForRemoteUser(lastMessage.messageTextContent, System.currentTimeMillis(), remoteUserId))
+        return SmartReply.getClient()
             .suggestReplies(chatHistory).continueWith { task -> task.result!!.suggestions }
     }
 

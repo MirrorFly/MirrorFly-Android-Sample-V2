@@ -8,7 +8,7 @@ import androidx.emoji.widget.EmojiAppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.contusfly.R
 import com.contusfly.adapters.ReplySuggestionsAdapter.ReplySuggestionViewHolder
-import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestion
+import com.google.mlkit.nl.smartreply.SmartReplySuggestion
 import java.util.*
 
 class ReplySuggestionsAdapter(private val context: Context, private val suggestionClickListener: SuggestionClickListener) : RecyclerView.Adapter<ReplySuggestionViewHolder>() {

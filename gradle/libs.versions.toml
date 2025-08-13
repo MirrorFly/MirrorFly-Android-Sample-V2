@@ -92,7 +92,7 @@ localbroadcastmanager = "1.0.0"
 
 play-services-location = "18.0.0"
 
-mirrorfly-webrtc = "0.0.11"
+mirrorfly-webrtc = "0.0.15"
 
 lottie = "6.1.0"
 
