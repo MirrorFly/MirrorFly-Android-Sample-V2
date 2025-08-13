@@ -227,9 +227,6 @@ dependencies {
     implementation("com.github.lisawray.groupie:groupie:2.9.0")
     implementation("com.github.lisawray.groupie:groupie-viewbinding:2.9.0")
 
-    //for webrtc
-    implementation("com.mirrorfly.sdk:webrtc:0.0.12")
-
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${rootProject.extra["kotlin_version"]}")
 
     //coroutines
@@ -241,9 +238,7 @@ dependencies {
     kapt("androidx.room:room-compiler:2.7.1")
     implementation("androidx.room:room-ktx:2.7.1")
 
-
-    implementation("com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.8")
-
+    implementation("com.google.mlkit:smart-reply:17.0.4")
 
     //QR Code Scanner
     implementation("com.journeyapps:zxing-android-embedded:3.6.0@aar")
@@ -279,6 +274,9 @@ dependencies {
     implementation("com.github.instacart:truetime-android:3.5") // true timer dependency implemented To avoid recording timer differ if system date & time changes while recording.
 
 
-    implementation("com.mirrorfly.sdk:mirrorflysdk:7.13.27")
+    //for webrtc
+    implementation("com.mirrorfly.sdk:webrtc:0.0.15")
+
+    implementation("com.mirrorfly.sdk:mirrorflysdk:7.13.28")
 
 }
